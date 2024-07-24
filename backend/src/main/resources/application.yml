@@ -1,0 +1,19 @@
+OPENVIDU_URL: http://localhost:4443/
+OPENVIDU_SECRET: MY_SECRET
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/raidu
+    username: raidu
+    password: raidu1!
+  jpa:
+    hibernate:
+#      ??? none?? ??
+      ddl-auto: none
+      dialect: org.hibernate.dialect.MySQLDialect
+    properties:
+      hibernate:
+        show_sql: true
+  jwt:
+    secret: klmqskdlnpqncoqkwmdklcksoandfmklmqfmwqkdfcxnjkspring.application.name=raidu
