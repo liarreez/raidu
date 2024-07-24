@@ -33,6 +33,8 @@ public class BossMonster {
   private LocalDateTime createdAt;
   @Column(nullable = false)
   private LocalDateTime updatedAt;
+  @Column(nullable = false)
+  private Long hp;
   @ManyToOne
   @JoinColumn(name = "season_id")
   private Season season;
@@ -47,12 +49,13 @@ public class BossMonster {
 
   @Builder
   public BossMonster(String name, String imageUrl, LocalDateTime createdAt, LocalDateTime updatedAt,
-      Season season, List<UserBossMonster> userBossMonsters) {
+      Season season, List<UserBossMonster> userBossMonsters, Long hp) {
     this.name = name;
     this.imageUrl = imageUrl;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.season = season;
     this.userBossMonsters = userBossMonsters;
+    this.hp = hp;
   }
 }

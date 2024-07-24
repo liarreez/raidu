@@ -40,6 +40,8 @@ public class ExerciseRoomRecord {
   private Integer totalCombatPower;
   @Column(nullable = false)
   private Integer participantsCount;
+  @Column(nullable = false)
+  private Integer stage;
   @OneToMany(mappedBy = "exerciseRoomRecord")
   private List<RoundRecord> roundRecords;
 
@@ -52,7 +54,7 @@ public class ExerciseRoomRecord {
   @Builder
   public ExerciseRoomRecord(UserProfile userProfile, Room room, LocalDateTime endTime,
       Integer personalCombatPower, Integer totalCombatPower, Integer participantsCount,
-      List<RoundRecord> roundRecords) {
+      List<RoundRecord> roundRecords, Integer stage) {
     this.userProfile = userProfile;
     this.room = room;
     this.endTime = endTime;
@@ -60,5 +62,6 @@ public class ExerciseRoomRecord {
     this.totalCombatPower = totalCombatPower;
     this.participantsCount = participantsCount;
     this.roundRecords = roundRecords;
+    this.stage = stage;
   }
 }
