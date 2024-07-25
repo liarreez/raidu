@@ -3,17 +3,25 @@ OPENVIDU_SECRET: MY_SECRET
 
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/raidu
+    url: jdbc:mysql://db:3306/raidu
     username: raidu
-    password: raidu1!
+    password: raidu1! # 여기에 실제 비밀번호를 입력하세요
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
-#      ??? none?? ??
-      ddl-auto: none
-      dialect: org.hibernate.dialect.MySQLDialect
+      ddl-auto: create
     properties:
       hibernate:
-        show_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
   jwt:
     secret: klmqskdlnpqncoqkwmdklcksoandfmklmqfmwqkdfcxnjkspring.application.name=raidu
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    com.yourcompany.yourapp: DEBUG
+
+server:
+  port: 8080
