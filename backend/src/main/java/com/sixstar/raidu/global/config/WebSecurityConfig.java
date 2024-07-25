@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-<<<<<<< HEAD
   private final AuthenticationConfiguration authenticationConfiguration;
 
   @Bean
@@ -49,35 +48,4 @@ public class WebSecurityConfig {
 //            .anyRequest().authenticated());
     return http.build();
   }
-=======
-    private final AuthenticationConfiguration authenticationConfiguration;
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .cors(AbstractHttpConfigurer::disable)
-            .csrf(AbstractHttpConfigurer::disable)
-            .httpBasic(AbstractHttpConfigurer::disable)
-            .formLogin(AbstractHttpConfigurer::disable)
-            .logout(AbstractHttpConfigurer::disable)
-
-            .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable).disable())
-
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-//        .authorizeHttpRequests((auth) -> auth
-//            .anyRequest().authenticated());
-        return http.build();
-    }
->>>>>>> 50e08d3808899c23ef692ec5531c91b143a11d7e
 }
