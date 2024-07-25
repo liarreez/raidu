@@ -1,7 +1,7 @@
 package com.sixstar.raidu.domain.users.entity;
 
-import com.sixstar.raidu.domain.rooms.entity.RoundRecord;
 import com.sixstar.raidu.domain.userpage.entity.UserProfile;
+import com.sixstar.raidu.domain.users.enums.Roles;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,13 +9,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,10 +39,10 @@ public class User {
   private String socialId;
   private String refreshToken;
   @CreatedDate
-  @Column(nullable = false)
+//  @Column(nullable = false)
   private LocalDateTime createdAt;
   @LastModifiedDate
-  @Column(nullable = false)
+//  @Column(nullable = false)
   private LocalDateTime updatedAt;
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
   private UserProfile userProfile;
@@ -54,7 +51,7 @@ public class User {
   @PrePersist
   public void prePersist() {
     this.isActive = this.isActive == null ? true: this.isActive;
-    this.role = this.role == null ? "user" : this.role;
+    this.role = this.role == null ? Roles.USER.name() : this.role;
   }
 
   @Builder

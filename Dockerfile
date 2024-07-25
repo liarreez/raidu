@@ -9,11 +9,12 @@ RUN npm run build
 # 베이스 이미지로 JDK를 사용하여 백엔드 빌드
 FROM openjdk:17-jdk-slim AS backend-build
 WORKDIR /app
-COPY backend/gradlew backend/gradlew
-COPY backend/gradle backend/gradle
-COPY backend/build.gradle backend/build.gradle
-COPY backend/settings.gradle backend/settings.gradle
-COPY backend/src backend/src
+COPY backend/gradlew .
+COPY backend/gradle gradle
+COPY backend/build.gradle build.gradle
+COPY backend/settings.gradle settings.gradle
+COPY backend/src src
+RUN chmod +x gradlew
 RUN ./gradlew clean bootJar
 
 # 최종 실행 이미지
