@@ -15,6 +15,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "monster")
@@ -29,27 +31,21 @@ public class Monster {
   @Column(nullable = false)
   private Integer stage;
   private String imageUrl;
+  @CreatedDate
   @Column(nullable = false)
   private LocalDateTime createdAt;
+  @LastModifiedDate
   @Column(nullable = false)
   private LocalDateTime updatedAt;
   @OneToMany(mappedBy = "monster")
   private List<UserMonster> userMonsters;
 
-  @PrePersist
-  public void prePersist() {
-    this.createdAt = this.createdAt == null ? LocalDateTime.now() : this.createdAt;
-    this.updatedAt = this.updatedAt == null ? LocalDateTime.now() : this.updatedAt;
-  }
 
   @Builder
-  public Monster(String name, Integer stage, String imageUrl, LocalDateTime createdAt,
-      LocalDateTime updatedAt, List<UserMonster> userMonsters) {
+  public Monster(String name, Integer stage, String imageUrl,  List<UserMonster> userMonsters) {
     this.name = name;
     this.stage = stage;
     this.imageUrl = imageUrl;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
     this.userMonsters = userMonsters;
   }
 }
