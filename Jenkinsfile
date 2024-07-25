@@ -4,13 +4,15 @@ pipeline {
     environment {
         DOCKER_REGISTRY = 'your_docker_registry'
         DOCKER_IMAGE = 'your_app_image_name'
+        GIT_CREDENTIALS_ID = 'gitlab-access-token' // GitLab 자격 증명 ID
+        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Docker Registry 자격 증명 ID
     }
 
     stages {
         stage('Clone Repository') {
             steps {
                 git branch: 'master',
-                    credentialsId: 'gitlab-access-token',
+                    credentialsId: "${GIT_CREDENTIALS_ID}",
                     url: 'https://lab.ssafy.com/s11-webmobile1-sub2/S11P12A108.git'
             }
         }
@@ -19,7 +21,7 @@ pipeline {
             steps {
                 script {
                     def dockerImage = docker.build("${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER}")
-                    docker.withRegistry('https://your_docker_registry_url', 'docker-credentials-id') {
+                    docker.withRegistry('https://your_docker_registry_url', "${DOCKER_CREDENTIALS_ID}") {
                         dockerImage.push()
                         dockerImage.push('latest')
                     }
