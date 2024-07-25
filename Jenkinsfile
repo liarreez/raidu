@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'goldenkiwi971202/myapp'
-        GIT_CREDENTIALS_ID = 'JenkinsAccessToken' // GitLab 자격 증명 ID
+        GIT_CREDENTIALS_ID = 'Jenkins-AccessToken' // GitLab 자격 증명 ID
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Docker Registry 자격 증명 ID
     }
 
