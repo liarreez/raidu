@@ -8,7 +8,8 @@ public enum BaseSuccessResponse {
   //2XX : Success
   OK(HttpStatus.OK, "success"),
   REGISTER_SUCCESS(HttpStatus.CREATED, "User registered successfully"),
-  ROOM_CREATE_SUCCESS(HttpStatus.CREATED, "Room created successfully")
+  ROOM_CREATE_SUCCESS(HttpStatus.CREATED, "Room created successfully"),
+  ROOM_ENTER_SUCCESS(HttpStatus.OK, "Entered successfully")
   ;
 
   private final HttpStatus status;
