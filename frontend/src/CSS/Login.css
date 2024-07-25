@@ -1,0 +1,203 @@
+@import url('./KeyColor.css');
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: auto;
+}
+
+#page-wrapper {
+    height: 100vh;
+    margin: auto;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    padding: 20px;
+    min-width: 1300px;
+}
+
+#background-img {
+    background-image: url('../Imgs/back.jpg');
+    width: calc(100% - 40px); /* 좌우 20px 여백 */
+    height: calc(100% - 40px); /* 상하 20px 여백 */
+    background-color: rgb(112, 112, 112);
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    background-position: center;
+    background-size: cover;
+    z-index: 1;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    gap: 20px;
+}
+
+.content-left {
+    position: relative;
+    z-index: 2; /* 배경 이미지 위에 위치 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    flex-shrink: 0;
+    height: 100%;
+    color: white; /* 필요시 텍스트 색상 설정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    min-width: 500px;
+}
+
+.content-right {
+    position: relative;
+    z-index: 2; /* 배경 이미지 위에 위치 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    max-width: 500px;
+    height: 100%;
+    color: white; /* 필요시 텍스트 색상 설정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    display: flex;
+    flex-direction: row;
+}
+
+.logo {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 15px 15px 15px 15px;
+    box-sizing: border-box;
+}
+
+.logo img{
+    max-width: 200px;
+    max-height: 100px;
+    object-fit: contain;
+    padding-bottom: 10px;
+}
+
+.service-description {
+    max-width: 800px;
+    max-height: 500px;
+    border-radius: 8px;
+    margin: auto;
+    padding: 30px 0px 30px 0px;
+
+    background: rgba( 255, 255, 255, 0.7 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    position: relative;
+    top: -20px;
+}
+
+/* 로그인 부분 CSS 입니다 */
+.login-form {
+    color: var(--hard-color-black);
+    width: 360px;
+    height: 100%;
+
+    background: rgba( 255, 255, 255, 0.7 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 2px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    
+    box-sizing: border-box;
+    padding: 15px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0px 5px 20px 3px rgba(0,0,0,0.1);
+}
+
+.icon-circle img {
+    width: 90%;
+    height: 90%;
+}
+
+.login-content {
+    position: absolute;
+    top: 90px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+
+}
+
+.title-login {
+    border-bottom: 2px dashed var(--hard-color-green);
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+.login-button {
+    width: 250px;
+    height: 38px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    font-family: inherit;
+    font-size: 14px;
+    background-color: var(--hard-color-green);
+    margin-top: 50px;
+}
+
+.login-button:hover {
+    background-color: #0ea80c;
+}
+
+.social-login {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.signup-link {
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 14px;
+}

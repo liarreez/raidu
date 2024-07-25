@@ -1,0 +1,18 @@
+:root {
+    /* 자연물 (산, 흙 등...) 어울리는 색입니다. */
+    --soft-color-blue: #8ECEF2;
+    --soft-color-green: #66CD79;
+    --soft-color-brown: #9E8A6C;
+    --soft-color-ivory: #DFBC94;   
+
+    /* 도표, 폰트 등의 색입니다. */
+    --hard-color-black: #3E3A3A;
+    --hard-color-white: #F6F6F6;
+    --hard-color-green: #12D20E;
+
+    /* 지역 색입니다. */
+    --region-color-one: #FF5C5C;
+    --region-color-two: #FFDA55;
+    --region-color-three: #B758E3;
+    --region-color-four: #2B78C0;
+}

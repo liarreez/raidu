@@ -1,0 +1,23 @@
+.homeslider-container {
+    width: 100%;
+    margin: auto;
+    border-right: 3px solid var(--hard-color-black);
+    border-left: 3px solid var(--hard-color-black);
+    box-sizing: border-box;
+}
+
+.homeslider-desc {
+    display: flex;
+    height: 400px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.homeslider-desc-img {
+    height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
