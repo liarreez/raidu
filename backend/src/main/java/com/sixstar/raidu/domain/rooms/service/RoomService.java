@@ -1,8 +1,8 @@
 package com.sixstar.raidu.domain.rooms.service;
 
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
-import com.sixstar.raidu.domain.rooms.dto.RoomCreateResponse;
+import java.util.Map;
 
 public interface RoomService {
-    RoomCreateResponse createRoom(RoomCreateRequest request);
+    Map<String, Object> createRoom(RoomCreateRequest request);
 }

@@ -1,11 +1,14 @@
 package com.sixstar.raidu.domain.rooms.service;
 
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
-import com.sixstar.raidu.domain.rooms.dto.RoomCreateResponse;
 import com.sixstar.raidu.domain.rooms.entity.Room;
 import com.sixstar.raidu.domain.rooms.repository.RoomRepository;
 import com.sixstar.raidu.domain.userpage.entity.UserProfile;
 import com.sixstar.raidu.domain.userpage.repository.UserProfileRepository;
+import com.sixstar.raidu.global.response.BaseException;
+import com.sixstar.raidu.global.response.BaseFailureResponse;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,28 +22,17 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public RoomCreateResponse createRoom(RoomCreateRequest request) {
+    public Map<String, Object> createRoom(RoomCreateRequest request) {
         UserProfile userProfile = userProfileRepository.findByEmail(request.getHostEmail())
-            .orElseThrow(()-> new IllegalArgumentException("User not found"));
+            .orElseThrow(()-> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
 
-        Room room = Room.builder()
-            .title(request.getTitle())
-            .maxParticipants(request.getMaxParticipants())
-            .isPublic(request.getIsPublic())
-            .roundTime(request.getRoundTime())
-            .restTime(request.getRestTime())
-            .totalRounds(request.getTotalRounds())
-            .status("waiting")
-            .userProfile(userProfile)
-            .build();
-
+        Room room = request.toEntity(request, userProfile);
         Room savedRoom = roomRepository.save(room);
 
-        System.out.println(room.getCreatedAt());
+        Map<String, Object> map = new HashMap<>();
+        map.put("roomId", savedRoom.getId());
+        map.put("title", savedRoom.getTitle());
 
-        return RoomCreateResponse.builder()
-            .roomId(savedRoom.getId())
-            .title(savedRoom.getTitle())
-            .build();
+        return map;
     }
 }

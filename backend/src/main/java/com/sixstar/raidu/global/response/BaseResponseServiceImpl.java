@@ -5,13 +5,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BaseResponseServiceImpl implements BaseResponseService{
-  public <T> ResponseEntity<BaseResponse<?>> getSuccessResponse(T data) {
-    BaseResponse<?> baseResponse = new BaseResponse<>(data);
-    return ResponseEntity.ok(baseResponse);
+  public <T> ResponseEntity<BaseResponse<?>> getSuccessResponse(BaseSuccessResponse baseResponseStatus, T data) {
+    BaseResponse<?> baseResponse = BaseResponse.builder()
+        .status(baseResponseStatus.getStatus())
+        .message(baseResponseStatus.getMessage())
+        .data(data)
+        .build();
+    return new ResponseEntity<>(baseResponse, baseResponse.getStatus());
   }
 
-  public <T> ResponseEntity<BaseResponse<?>> getSuccessResponse() {
-    BaseResponse<?> baseResponse = new BaseResponse<>();
-    return ResponseEntity.ok(baseResponse);
+  public <T> ResponseEntity<BaseResponse<?>> getSuccessResponse(BaseSuccessResponse baseResponseStatus) {
+    BaseResponse<?> baseResponse = BaseResponse.builder()
+        .status(baseResponseStatus.getStatus())
+        .message(baseResponseStatus.getMessage())
+        .data(null)
+        .build();
+    return new ResponseEntity<>(baseResponse, baseResponse.getStatus());
   }
 }

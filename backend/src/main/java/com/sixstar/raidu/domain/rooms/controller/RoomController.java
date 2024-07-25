@@ -1,8 +1,12 @@
 package com.sixstar.raidu.domain.rooms.controller;
 
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
-import com.sixstar.raidu.domain.rooms.dto.RoomCreateResponse;
 import com.sixstar.raidu.domain.rooms.service.RoomService;
+import com.sixstar.raidu.global.response.BaseResponse;
+import com.sixstar.raidu.global.response.BaseResponseService;
+import com.sixstar.raidu.global.response.BaseSuccessResponse;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,14 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/raidu/rooms")
+@RequiredArgsConstructor
 public class RoomController {
 
-    @Autowired
-    private RoomService roomService;
+    private final RoomService roomService;
+    private final BaseResponseService baseResponseService;
 
     @PostMapping
-    public ResponseEntity<RoomCreateResponse> createRoom(@RequestBody RoomCreateRequest request){
-        RoomCreateResponse response = roomService.createRoom(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<BaseResponse<?>> createRoom(@RequestBody RoomCreateRequest request){
+        Map<String, Object> response = roomService.createRoom(request);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.ROOM_CREATE_SUCCESS, response);
     }
 }
