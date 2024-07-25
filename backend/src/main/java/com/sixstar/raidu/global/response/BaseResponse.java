@@ -3,6 +3,7 @@ package com.sixstar.raidu.global.response;
 import lombok.Builder;
 import org.springframework.http.HttpStatus;
 
+
 public class BaseResponse<T> {
   private HttpStatus status;
   private String message;
