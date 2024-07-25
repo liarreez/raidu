@@ -13,8 +13,11 @@ import monster from "../../Imgs/monster.gif";
 import flag from "../../Imgs/flag.gif";
 import test from "../../Imgs/test.png";
 import helmet from "../../Imgs/helmet.gif";
+import burgerking from "../../Imgs/burgerking.png"
+
 import SpringAnime from "../Component/SpringAnime";
 import Rerenderer from "../Component/Rerenderer";
+import FirstRenderer from "../Component/FirstRenderer"
 
 // 토벌 현황 서버에서 받아와서 100자리에 담아주면 됩니다.
 const raidPercentage = 100;
@@ -105,10 +108,14 @@ const Main = () => {
             <div className="home-slider">
               <HomeSlider />
             </div>
-
             <div className="home-num-container">
-              <AnimatedNumber targetNumber={12345} fontSize={50}></AnimatedNumber>
+              <FirstRenderer>
+                <FadeAnime>
+                  <AnimatedNumber targetNumber={12345} fontSize={50}></AnimatedNumber>
+                </FadeAnime>
+              </FirstRenderer>
             </div>
+
             {/* <- 레이드 / 훈련장 -> */}
 
             <div className="home-button-group">
@@ -130,38 +137,40 @@ const Main = () => {
             <hr></hr>
 
             {/* 현황판 */}
-            <Rerenderer>
-              <SpringAnime>
-                <div className="home-stat-container">
-                  <div className="home-season-title">Season1</div>
-                  <div className="home-season-content">
-                    <div className="content-chart-container">
-                      <div className="chart-title">시즌 기여도</div>
-                      <div className="chart-chart">
-                        <NivoBar></NivoBar>
+            <div style={{height:"700px", width: "950px"}}>
+              <Rerenderer>
+                <SpringAnime>
+                  <div className="home-stat-container">
+                    <div className="home-season-title">Season1</div>
+                    <div className="home-season-content">
+                      <div className="content-chart-container">
+                        <div className="chart-title">시즌 기여도</div>
+                        <div className="chart-chart">
+                          <NivoBar></NivoBar>
+                        </div>
+                        <div className="chart-symbol">
+                          <div className="symbol-container"></div>
+                        </div>
                       </div>
-                      <div className="chart-symbol">
-                        <div className="symbol-container"></div>
+                      <div className="season-boss-image">
+                        <div className="chart-title">시즌 보스</div>
+                        <img src={burgerking}></img>
+                      </div>
+                      <div className="season-boss-text">
+                        <div className="chart-title">배경</div>
+                        <div>도로위에 떨어진 블루베리를 주워먹고 배탈이 났음</div>
                       </div>
                     </div>
-                    <div className="season-boss-image">
-                      <div className="chart-title">시즌 보스</div>
-                      <img src={test}></img>
-                    </div>
-                    <div className="season-boss-text">
-                      <div className="chart-title">배경</div>
-                      <div>도로위에 떨어진 블루베리를 주워먹고 배탈이 났음</div>
+                    <div className="home-season-ratio">
+                      <div className="chart-title" style={{ marginBottom: "40px" }}>
+                        토벌 현황
+                      </div>
+                      <StepProgressBar></StepProgressBar>
                     </div>
                   </div>
-                  <div className="home-season-ratio">
-                    <div className="chart-title" style={{ marginBottom: "40px" }}>
-                      토벌 현황
-                    </div>
-                    <StepProgressBar></StepProgressBar>
-                  </div>
-                </div>
-              </SpringAnime>
-            </Rerenderer>
+                </SpringAnime>
+              </Rerenderer>
+            </div>
           </div>
         </div>
       </div>

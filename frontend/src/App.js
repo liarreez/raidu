@@ -9,19 +9,18 @@ function App() {
   return (
     <div className="app">
       <AnimatePresence>
-      <Router>
-        <Routes>
-          {/* 기본 경로를 /login으로 리다이렉트 */}
-          <Route path="/" element={<Navigate to="/login" />} />
-          {/* 로그인 페이지 경로 */}
-          <Route path="/login" element={<LoginPage />} />
-          {/* 다른 페이지 경로 */}
-          <Route path="/home" element={<HomePage />} />
-          {/* 여기에 추가적인 경로를 설정하세요 */}
-        </Routes>
-      </Router>
+        <Router>
+          <Routes>
+            {/* 기본 경로를 /login으로 리다이렉트 */}
+            <Route path="/" element={<Navigate to="/login" />} />
+            {/* 로그인 페이지 경로 */}
+            <Route path="/login" element={<LoginPage />} />
+            {/* 다른 페이지 경로 */}
+            <Route path="/home" element={<HomePage />} />
+            {/* 여기에 추가적인 경로를 설정하세요 */}
+          </Routes>
+        </Router>
       </AnimatePresence>
-
     </div>
   );
 }
