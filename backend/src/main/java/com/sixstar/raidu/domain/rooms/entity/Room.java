@@ -17,6 +17,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "room")
@@ -38,8 +40,10 @@ public class Room {
   private Integer restTime;
   @Column(nullable = false)
   private Integer totalRounds;
+  @CreatedDate
   @Column(nullable = false)
   private LocalDateTime createdAt;
+  @LastModifiedDate
   @Column(nullable = false)
   private LocalDateTime updatedAt;
   @Column(nullable = false)
@@ -55,15 +59,13 @@ public class Room {
   @PrePersist
   public void prePersist() {
     this.isPublic = this.isPublic == null ? true: this.isPublic;
-    this.createdAt = this.createdAt == null ? LocalDateTime.now() : this.createdAt;
-    this.updatedAt = this.updatedAt == null ? LocalDateTime.now() : this.updatedAt;
     this.status = this.status == null ? "wating" : this.status;
   }
 
   @Builder
 
   public Room(String title, Integer maxParticipants, Boolean isPublic, Integer roundTime,
-      Integer restTime, Integer totalRounds, LocalDateTime createdAt, LocalDateTime updatedAt,
+      Integer restTime, Integer totalRounds,
       String status, UserProfile userProfile, List<RoomUser> roomUsers,
       List<ExerciseRoomRecord> exerciseRoomRecords) {
     this.title = title;
@@ -72,8 +74,6 @@ public class Room {
     this.roundTime = roundTime;
     this.restTime = restTime;
     this.totalRounds = totalRounds;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
     this.status = status;
     this.userProfile = userProfile;
     this.roomUsers = roomUsers;

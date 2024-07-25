@@ -20,6 +20,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "user")
@@ -39,8 +41,10 @@ public class User {
   private String socialType;
   private String socialId;
   private String refreshToken;
+  @CreatedDate
   @Column(nullable = false)
   private LocalDateTime createdAt;
+  @LastModifiedDate
   @Column(nullable = false)
   private LocalDateTime updatedAt;
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
@@ -51,14 +55,11 @@ public class User {
   public void prePersist() {
     this.isActive = this.isActive == null ? true: this.isActive;
     this.role = this.role == null ? "user" : this.role;
-    this.createdAt = this.createdAt == null ? LocalDateTime.now() : this.createdAt;
-    this.updatedAt = this.updatedAt == null ? LocalDateTime.now() : this.updatedAt;
   }
 
   @Builder
   public User(String password, String email, boolean isActive, String role,
-      String socialType, String socialId, String refreshToken, LocalDateTime createdAt,
-      LocalDateTime updatedAt) {
+      String socialType, String socialId, String refreshToken) {
     this.password = password;
     this.email = email;
     this.isActive = isActive;
@@ -66,7 +67,5 @@ public class User {
     this.socialType = socialType;
     this.socialId = socialId;
     this.refreshToken = refreshToken;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
   }
 }

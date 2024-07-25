@@ -18,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "region")
@@ -31,6 +32,7 @@ public class Region {
   private String name;
   private String symbolImageUrl;
   private String description;
+  @LastModifiedDate
   @Column(nullable = false)
   private LocalDateTime updatedAt;
   @OneToMany(mappedBy = "region")
@@ -38,19 +40,13 @@ public class Region {
   @OneToOne(mappedBy = "region",  cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
   private UserProfile userProfile;
 
-  @PrePersist
-  public void prePersist() {
-    this.updatedAt = this.updatedAt == null ? LocalDateTime.now() : this.updatedAt;
-  }
-
   @Builder
 
-  public Region(String name, String symbolImageUrl, String description, LocalDateTime updatedAt,
+  public Region(String name, String symbolImageUrl, String description,
       List<SeasonRegionScore> seasonRegionScores, UserProfile userProfile) {
     this.name = name;
     this.symbolImageUrl = symbolImageUrl;
     this.description = description;
-    this.updatedAt = updatedAt;
     this.seasonRegionScores = seasonRegionScores;
     this.userProfile = userProfile;
   }
