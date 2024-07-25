@@ -11,16 +11,13 @@ import sign from "../../Imgs/sign.gif"
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import TransAnime from "../Component/FadeAnime";
+import FadeAnime from "../Component/FadeAnime";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-
-import SpringAnime from "../Component/SpringAnime";
 
 const modalStyle = {
   position: 'absolute',
@@ -117,7 +114,7 @@ const Login = () => {
   };
 
   return (
-    <TransAnime>
+    <FadeAnime>
       <div id="page-wrapper">
         <div id="background-img"></div>
         <div className="content">
@@ -164,7 +161,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </TransAnime>
+    </FadeAnime>
   );
 };
 
