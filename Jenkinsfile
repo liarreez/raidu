@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_REGISTRY = 'your_docker_registry'
-        DOCKER_IMAGE = 'your_app_image_name'
-        GIT_CREDENTIALS_ID = 'gitlab-access-token' // GitLab 자격 증명 ID
+        DOCKER_IMAGE = 'goldenkiwi971202/myapp'
+        GIT_CREDENTIALS_ID = 'JenkinsAccessToken' // GitLab 자격 증명 ID
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Docker Registry 자격 증명 ID
     }
 
