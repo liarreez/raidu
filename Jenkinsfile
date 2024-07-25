@@ -27,6 +27,17 @@ pipeline {
             }
         }
 
+        stage('Test Docker Image') {
+            steps {
+                script {
+                    docker.image("${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER}").inside {
+                        sh 'echo "Running tests inside Docker container"'
+                        // 여기서 필요한 테스트 명령어들을 실행
+                    }
+                }
+            }
+        }
+
         stage('Deploy Docker Image') {
             steps {
                 script {
