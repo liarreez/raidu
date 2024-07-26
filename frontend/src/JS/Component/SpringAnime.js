@@ -1,15 +1,33 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-const SpringAnime = ({ children, ...rest }) => {
+const SpringAnime = ({ children, from = "up", ...rest }) => {
+  let initial;
+  switch (from) {
+    case "down":
+      initial = { y: "-60%" };
+      break;
+    case "up":
+      initial = { y: "60%" };
+      break;
+    case "right":
+      initial = { x: "-60%" };
+      break;
+    case "left":
+      initial = { x: "60%" };
+      break;
+    default:
+      initial = { y: "60%" };
+  }
+
   return (
     <motion.div
-      initial={{ y: '60%' }} // 시작 위치를 오른쪽으로 설정
-      animate={{ y: 0 }} // 최종 위치를 왼쪽으로 설정
+      initial={initial}
+      animate={{ x: 0, y: 0 }}
       transition={{
         type: "spring",
-        stiffness: 50, // 스프링의 강도를 설정
-        damping: 5, // 스프링의 감쇠를 설정
+        stiffness: 50,
+        damping: 5,
       }}
       {...rest}
     >

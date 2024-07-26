@@ -185,7 +185,7 @@ body, html {
 }
 
 .login-button:hover {
-    background-color: #0ea80c;
+    background-color: var(--hard-color-green-selected);
 }
 
 .social-login {

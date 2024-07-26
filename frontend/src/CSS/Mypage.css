@@ -1,0 +1,247 @@
+@import url('./KeyColor.css');
+.mypage-page-wrapper {
+    width: 100%;
+    overflow-y: auto;
+    min-width: 1100px;
+    height: 100vh;
+    /* height 값은 이미지 에셋 추가후 생각하자 */
+    background-image: url("../../src/Imgs/back.jpg");
+    background-size: cover;
+    background-position: bottom;
+    box-sizing: border-box;
+}
+
+.mypage-content-wrapper {
+    display: flex;
+    justify-content: center;
+    /* position: absolute; */
+    width: inherit;
+    overflow: hidden;
+    /* margin-top: 140px; */
+}
+
+.mypage-content {
+    /* 사이징, 양식 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    width: 1100px;
+    box-sizing: border-box;
+    padding-bottom: 80px;
+    border-radius: 0px 0px 20px 20px;
+    overflow: hidden;
+    /* 그림자 */
+    box-shadow: 0px 18px 15px 5px rgba(0,0,0,0.1);
+    /* 위치 포지셔닝 */
+    position: relative;
+    top: -200px;
+}
+
+.profile-background-image {
+    width: 1100px;
+    height: 500px;
+    overflow: hidden;
+}
+
+.profile-background-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info {
+    width: 100%;
+    height: 300px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+}
+
+.profile-image-wrapper {
+    position: relative;
+    top: -90px;
+    left: 20px;
+    width: 250px;
+}
+
+.profile-image-group {
+    width: 250px;
+    height: 150px;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+
+}
+
+.profile-image-portrait {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+
+    
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
+}
+
+.profile-image-portrait img {
+    object-fit: cover;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    box-sizing: border-box;
+
+    border: 3px solid var(--hard-color-black);
+}
+
+.profile-image-badge {
+    position: relative;
+    left: -55px;
+    bottom: -15px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
+}
+
+.profile-image-badge img {
+    object-fit: cover;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    box-sizing: border-box;
+
+    border: 2px solid var(--hard-color-black);
+}
+
+.profile-text-wrapper {
+    width: 650px;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px 20px 10px 20px;
+}
+
+.profile-text-name {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--hard-color-black);
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.profile-button-wrapper {
+    width: 120px;
+    padding: 10px 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-button-wrapper button {
+    width: 130px;
+    height: 40px;
+
+    background-color: var(--hard-color-green);
+    color: var(--hard-color-white);
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 16px;
+}
+.profile-button-wrapper button:hover {
+    background-color: var(--hard-color-green-selected);
+}
+
+.ratio-icon {
+    width: 40px;
+    height: 40px;
+    background-color: var(--hard-color-white);
+    border-radius: 50%;
+    box-shadow: 0px 10px 16px 5px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-double-tab {
+    width: 900px;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.tab-group {
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+}
+
+
+.tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 10px 10px 0px 0px;
+    background-color: var(--hard-color-white);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tab.active {
+    background-color: var(--hard-color-black);
+    color: var(--hard-color-white);
+}
+
+.tab-content-wrapper {
+    box-sizing: border-box;
+    padding: 8px;
+    background-color: var(--hard-color-black);
+    border-radius: 0px 0px 8px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tab-content {
+    background-color: white;
+    border-radius: 0px 0px 8px 8px;
+    width: 100%;
+    height: 500px;
+    box-sizing: border-box;
+    padding: 5px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+
+}
+
+.tab-content::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  /* 스크롤바 트랙 */
+  .tab-content::-webkit-scrollbar-track {
+    background: var(--hard-color-white);
+    border-radius: 10px;
+  }
+  
+  /* 스크롤바 썸 (thumb) */
+  .tab-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+  }
+  
+  /* 스크롤바 썸이 호버될 때 */
+  .tab-content::-webkit-scrollbar-thumb:hover {
+    background: var(--hard-color-black);
+  }

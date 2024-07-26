@@ -2,7 +2,14 @@
 
 .nav-image {
     height: 80px;
-    background-color: aquamarine;
+    width: 100%;
+}
+
+.nav-image img {
+    height: 120px;
+    width: inherit;
+    object-fit: fill;
+    z-index: 5;
 }
 
 .nav-logo {

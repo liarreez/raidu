@@ -1,9 +1,4 @@
 @import url('./KeyColor.css');
-hr {
-    background-color: var(--hard-color-green);
-    height: 2px;
-    margin-bottom: 10px;
-}
 
 .home-page-wrapper {
     overflow-y: auto;
@@ -19,7 +14,6 @@ hr {
 
 .home-content-wrapper {
     display: flex;
-    align-items: center;
     justify-content: center;
     /* margin-top: 140px; */
 }
@@ -39,7 +33,6 @@ hr {
     /* 그림자 */
     box-shadow: 0px 18px 15px 5px rgba(0,0,0,0.1);
     /* 위치 포지셔닝 */
-    z-index: 10;
 }
 
 .home-slider {

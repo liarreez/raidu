@@ -72,7 +72,7 @@ class StepProgressBar extends React.Component {
             <div className="ratio-icon">
               <img
                 style={{ filter: `grayscale(${accomplished ? 0 : 80}%)` }}
-                width="60"
+                width="50"
                 src={flag}
               />
             </div>
@@ -133,8 +133,6 @@ const Main = () => {
             <div className="home-button-icon">
               <img src={helmet}></img>
             </div>
-
-            <hr></hr>
 
             {/* 현황판 */}
             <div style={{height:"700px", width: "950px"}}>
