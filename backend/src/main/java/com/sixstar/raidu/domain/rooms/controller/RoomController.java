@@ -9,6 +9,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,5 +27,11 @@ public class RoomController {
     public ResponseEntity<BaseResponse<?>> createRoom(@RequestBody RoomCreateRequest request){
         Map<String, Object> response = roomService.createRoom(request);
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.ROOM_CREATE_SUCCESS, response);
+    }
+
+    @PostMapping("/{roomId}/{email}")
+    public ResponseEntity<BaseResponse<?>> enterRoom(@PathVariable Long roomId, @PathVariable String email){
+        roomService.enterRoom(roomId, email);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.ROOM_ENTER_SUCCESS);
     }
 }
