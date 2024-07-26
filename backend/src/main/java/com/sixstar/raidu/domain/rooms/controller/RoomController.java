@@ -30,7 +30,7 @@ public class RoomController {
     }
 
     @PostMapping("/{roomId}/{email}")
-    public ResponseEntity<BaseResponse<?>> enterRoom(@PathVariable Long roomId, @PathVariable String email){
+    public ResponseEntity<BaseResponse<?>> enterRoom(@PathVariable("roomId") Long roomId, @PathVariable("email") String email){
         roomService.enterRoom(roomId, email);
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.ROOM_ENTER_SUCCESS);
     }
