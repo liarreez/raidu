@@ -25,6 +25,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "userprofile")
@@ -55,6 +56,7 @@ public class UserProfile {
   private String profileImageUrl;
   private String backGroundImageUrl;
   private String monsterBadgeURl;
+  @LastModifiedDate
   @Column(nullable = false)
   private LocalDateTime updatedAt;
   @OneToMany(mappedBy = "reportedUser")
@@ -80,13 +82,12 @@ public class UserProfile {
     this.exp = this.exp == null ? 0: this.exp;
     this.bestScore = this.bestScore == null ? 0: this.bestScore;
     this.bestScoreUpdatedAt = this.bestScoreUpdatedAt == null ? LocalDateTime.now() : this.bestScoreUpdatedAt;
-    this.updatedAt = this.updatedAt == null ? LocalDateTime.now() : this.updatedAt;
   }
 
   @Builder
   public UserProfile(User user, String email, String nickname, Region region, Integer level,
       Integer exp, Integer bestScore, LocalDateTime bestScoreUpdatedAt, String profileImageUrl,
-      String backGroundImageUrl, String monsterBadgeURl, LocalDateTime updatedAt,
+      String backGroundImageUrl, String monsterBadgeURl,
       List<Report> reportsReported, List<Report> reportsReporting,
       List<ExerciseRoomRecord> exerciseRoomRecords, List<Room> rooms, List<RoomUser> roomUsers,
       List<UserMonster> userMonsters, List<UserBossMonster> userBossMonsters,
@@ -102,7 +103,6 @@ public class UserProfile {
     this.profileImageUrl = profileImageUrl;
     this.backGroundImageUrl = backGroundImageUrl;
     this.monsterBadgeURl = monsterBadgeURl;
-    this.updatedAt = updatedAt;
     this.reportsReported = reportsReported;
     this.reportsReporting = reportsReporting;
     this.exerciseRoomRecords = exerciseRoomRecords;

@@ -17,6 +17,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "bossmonster")
@@ -29,8 +31,10 @@ public class BossMonster {
   @Column(nullable = false, unique = true)
   private String name;
   private String imageUrl;
+  @CreatedDate
   @Column(nullable = false)
   private LocalDateTime createdAt;
+  @LastModifiedDate
   @Column(nullable = false)
   private LocalDateTime updatedAt;
   @Column(nullable = false)
@@ -41,19 +45,11 @@ public class BossMonster {
   @OneToMany(mappedBy = "bossMonster")
   private List<UserBossMonster> userBossMonsters;
 
-  @PrePersist
-  public void prePersist() {
-    this.createdAt = this.createdAt == null ? LocalDateTime.now() : this.createdAt;
-    this.updatedAt = this.updatedAt == null ? LocalDateTime.now() : this.updatedAt;
-  }
-
   @Builder
-  public BossMonster(String name, String imageUrl, LocalDateTime createdAt, LocalDateTime updatedAt,
+  public BossMonster(String name, String imageUrl,
       Season season, List<UserBossMonster> userBossMonsters, Long hp) {
     this.name = name;
     this.imageUrl = imageUrl;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
     this.season = season;
     this.userBossMonsters = userBossMonsters;
     this.hp = hp;

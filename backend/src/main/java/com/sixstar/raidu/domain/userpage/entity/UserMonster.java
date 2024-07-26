@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "usermonster")
@@ -29,18 +30,14 @@ public class UserMonster {
   @ManyToOne
   @JoinColumn(name = "monster_id", nullable = false)
   private Monster monster;
+  @CreatedDate
   @Column(nullable = false)
   private LocalDateTime capturedAt;
 
-  @PrePersist
-  public void prePersist() {
-    this.capturedAt = this.capturedAt == null ? LocalDateTime.now() : this.capturedAt;
-  }
 
   @Builder
-  public UserMonster(UserProfile userProfile, Monster monster, LocalDateTime capturedAt) {
+  public UserMonster(UserProfile userProfile, Monster monster) {
     this.userProfile = userProfile;
     this.monster = monster;
-    this.capturedAt = capturedAt;
   }
 }

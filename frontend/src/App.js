@@ -5,6 +5,8 @@ import { AnimatePresence } from "framer-motion";
 import LoginPage from "./JS/Page/Login.js";
 import HomePage from "./JS/Page/Home.js";
 import MyPage from "./JS/Page/Mypage.js"
+import { ProgressBar, Step } from 'react-step-progress-bar';
+import 'react-step-progress-bar/styles.css';
 // 다른 페이지들을 import 하세요
 
 function App() {

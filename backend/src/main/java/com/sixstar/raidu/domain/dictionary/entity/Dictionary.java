@@ -16,6 +16,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Currency;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "dictionary")
@@ -30,8 +32,10 @@ public class Dictionary {
   private String description;
   private String imageUrl;
   private String videoUrl;
+  @CreatedDate
   @Column(nullable = false)
   private LocalDateTime createdAt;
+  @LastModifiedDate
   @Column(nullable = false)
   private LocalDateTime updatedAt;
   @Column(nullable = false)
@@ -41,20 +45,16 @@ public class Dictionary {
 
   @PrePersist
   public void prePersist() {
-    this.createdAt = this.createdAt == null ? LocalDateTime.now() : this.createdAt;
-    this.updatedAt = this.updatedAt == null ? LocalDateTime.now() : this.updatedAt;
     this.isPlayable = this.isPlayable == null ? false : this.isPlayable;
   }
 
   @Builder
   public Dictionary(String name, String description, String imageUrl, String videoUrl,
-      LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isPlayable) {
+       Boolean isPlayable) {
     this.name = name;
     this.description = description;
     this.imageUrl = imageUrl;
     this.videoUrl = videoUrl;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
     this.isPlayable = isPlayable;
   }
 }

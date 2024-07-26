@@ -15,8 +15,12 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(BaseException.class)
   protected ResponseEntity<BaseResponse<?>> handleBaseException(BaseException ex) {
-    BaseResponse<?> response = baseResponseService.getFailureResponse(ex.getBaseResponseStatus());
-    return new ResponseEntity<>(response, ex.getBaseResponseStatus().getStatus());
+    BaseResponse<?> baseResponse = BaseResponse.builder()
+        .status(ex.getBaseResponseStatus().getStatus())
+        .message(ex.getBaseResponseStatus().getMessage())
+        .data(null)
+        .build();
+    return new ResponseEntity<>(baseResponse, ex.getBaseResponseStatus().getStatus());
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)

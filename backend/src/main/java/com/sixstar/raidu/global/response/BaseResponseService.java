@@ -1,9 +1,9 @@
 package com.sixstar.raidu.global.response;
 
+import org.springframework.http.ResponseEntity;
+
 public interface BaseResponseService {
-  <T> BaseResponse<Object> getSuccessResponse(T data);
+  <T> ResponseEntity<BaseResponse<?>> getSuccessResponse(BaseSuccessResponse baseResponseStatus, T data);
 
-  <T> BaseResponse<Object> getSuccessResponse();
-
-  <T> BaseResponse<Object> getFailureResponse(BaseResponseStatus status);
+  <T> ResponseEntity<BaseResponse<?>> getSuccessResponse(BaseSuccessResponse baseResponseStatus);
 }
