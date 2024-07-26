@@ -22,7 +22,7 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "8080:8080"
+      - "8082:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/raidu
       SPRING_DATASOURCE_USERNAME: raidu
@@ -30,3 +30,18 @@ services:
       SPRING_PROFILES_ACTIVE: prod
     command: >
       sh -c "./wait-for-it.sh db:3306 -- java -jar /app/app.jar"
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    ports:
+      - "8081:8080"  # Jenkins 포트 설정
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+  frontend:
+      image: your-frontend-image
+      ports:
+        - "3000:3000"  # 프론트엔드 서버 포트 설정
+
+volumes:
+  jenkins_home:
