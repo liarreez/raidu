@@ -27,5 +27,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/raidu
       SPRING_DATASOURCE_USERNAME: raidu
       SPRING_DATASOURCE_PASSWORD: raidu1!
+      SPRING_PROFILES_ACTIVE: prod
     command: >
       sh -c "./wait-for-it.sh db:3306 -- java -jar /app/app.jar"
