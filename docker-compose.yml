@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0.32
+    environment:
+      MYSQL_DATABASE: raidu
+      MYSQL_USER: raidu
+      MYSQL_PASSWORD: raidu1!
+      MYSQL_ROOT_PASSWORD: raidu1!
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  app:
+    build: .
+    command: ["./wait-for-it.sh", "db:3306", "--", "java", "-jar", "/app/app.jar"]
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/raidu
+      SPRING_DATASOURCE_USERNAME: raidu
+      SPRING_DATASOURCE_PASSWORD: raidu1!
