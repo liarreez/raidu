@@ -13,12 +13,16 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
+import topgrass from "../../Imgs/topgrass.png"
+
 import "../../CSS/TopNav.css";
 
 const pages = [
   { name: "활동", subLevels: ["레이드", "훈련장"] },
   { name: "가이드", subLevels: ["튜토리얼", "컨셉 북", "운동 백과"] },
-  { name: "랭킹", subLevels: ["유저 랭킹"] }
+  { name: "랭킹", subLevels: ["유저 랭킹"] },
 ];
 const settings = ["마이페이지", "개인정보 수정", "로그아웃"];
 
@@ -38,6 +42,8 @@ const theme = createTheme({
 });
 
 function ResponsiveAppBar() {
+  const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [anchorElSubMenu, setAnchorElSubMenu] = React.useState(null);
@@ -55,9 +61,20 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const handleCloseUserMenu = useCallback(
+    (setting) => {
+      setAnchorElUser(null);
+      if (setting === "마이페이지") {
+        navigate("/mypage");
+      } else if (setting === "개인정보 수정") {
+        navigate("/edit-profile");
+      } else if (setting === "로그아웃") {
+        // 로그아웃 처리 로직 추가해야함
+        navigate("/login");
+      }
+    },
+    [navigate]
+  );
 
   const handleOpenSubMenu = (event, subLevels) => {
     setAnchorElSubMenu(event.currentTarget);
@@ -69,24 +86,16 @@ function ResponsiveAppBar() {
     setSubMenuItems([]);
   };
 
+  const handleLogoClick = () => {
+    navigate("/home");
+  };
+
   return (
     <div className="nav-wrapper">
       <ThemeProvider theme={theme}>
         <AppBar position="static" sx={{ bgcolor: "white" }}>
           <Container maxWidth="xl">
             <Toolbar disableGutters>
-              <Typography
-                variant="h6"
-                noWrap
-                component="a"
-                href="#app-bar-with-responsive-menu"
-                sx={{
-                  mr: 2,
-                  display: { xs: "none", md: "flex" },
-                  letterSpacing: ".3rem",
-                  textDecoration: "none",
-                }}
-              ></Typography>
 
               <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
                 <IconButton
@@ -100,7 +109,7 @@ function ResponsiveAppBar() {
                   <MenuIcon />
                 </IconButton>
 
-                <div className="nav-logo">로고자리</div>
+                <div className="nav-logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>로고자리</div>
                 <Menu
                   id="menu-appbar"
                   anchorEl={anchorElNav}
@@ -133,26 +142,15 @@ function ResponsiveAppBar() {
                 </Menu>
               </Box>
               <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-              <Typography
-                variant="h5"
-                noWrap
-                component="a"
-                href="#app-bar-with-responsive-menu"
-                sx={{
-                  mr: 2,
-                  display: { xs: "flex", md: "none" },
-                  flexGrow: 1,
-                  fontWeight: "bold",
-                  letterSpacing: ".3rem",
-                  textDecoration: "none",
-                }}
-              ></Typography>
+
               <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                <div className="nav-logo-large">로고자리</div>
+                <div className="nav-logo-large" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>로고자리</div>
                 {pages.map((page) => (
                   <Button
                     key={page.name}
-                    onClick={(event) => handleOpenSubMenu(event, page.subLevels)}
+                    onClick={(event) =>
+                      handleOpenSubMenu(event, page.subLevels)
+                    }
                     sx={{
                       my: "auto",
                       color: "black",
@@ -189,11 +187,14 @@ function ResponsiveAppBar() {
                     horizontal: "right",
                   }}
                   open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
+                  onClose={() => setAnchorElUser(null)}
                   disableScrollLock={true}
                 >
                   {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <MenuItem
+                      key={setting}
+                      onClick={() => handleCloseUserMenu(setting)}
+                    >
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
                   ))}
@@ -227,7 +228,9 @@ function ResponsiveAppBar() {
         </Menu>
       </ThemeProvider>
 
-      <div className="nav-image">풀밭 이미지 에셋 들어가요~</div>
+      <div className="nav-image">
+        <img src={topgrass}></img>
+      </div>
     </div>
   );
 }
