@@ -11,7 +11,9 @@ public enum BaseSuccessResponse {
   ROOM_CREATE_SUCCESS(HttpStatus.CREATED, "Room created successfully"),
   ROOM_ENTER_SUCCESS(HttpStatus.CREATED, "Entered successfully"),
   GET_WAITING_ROOMS_SUCCESS(HttpStatus.OK, "Get WaitingRooms successfully"),
-  NO_WAITING_ROOMS(HttpStatus.NO_CONTENT, "NO WaitingRooms");
+  NO_WAITING_ROOMS(HttpStatus.NO_CONTENT, "NO WaitingRooms"),
+  EXIT_HOST(HttpStatus.OK, "Exit host And Room deleted"),
+  EXIT_PARTICIPANT(HttpStatus.OK, "Exit Participant")
   ;
 
   private final HttpStatus status;

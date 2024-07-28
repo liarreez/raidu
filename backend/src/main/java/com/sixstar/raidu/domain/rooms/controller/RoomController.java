@@ -37,4 +37,11 @@ public class RoomController {
         return response.containsKey("message") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.NO_WAITING_ROOMS, response.get("message"))
                 : baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_WAITING_ROOMS_SUCCESS, response);
     }
+
+    @DeleteMapping("/{roomId}/{email}")
+    public ResponseEntity<BaseResponse<?>> exitRoom(@PathVariable("roomId") Long roomId, @PathVariable("email") String email){
+        Map<String, Object> response = roomService.exitRoom(roomId, email);
+        return response.containsKey("roomId") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.EXIT_HOST, response)
+                : baseResponseService.getSuccessResponse(BaseSuccessResponse.EXIT_PARTICIPANT, response);
+    }
 }
