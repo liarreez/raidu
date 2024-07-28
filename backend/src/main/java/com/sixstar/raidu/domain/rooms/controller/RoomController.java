@@ -27,8 +27,8 @@ public class RoomController {
 
     @PostMapping("/{roomId}/{email}")
     public ResponseEntity<BaseResponse<?>> enterRoom(@PathVariable("roomId") Long roomId, @PathVariable("email") String email){
-        roomService.enterRoom(roomId, email);
-        return baseResponseService.getSuccessResponse(BaseSuccessResponse.ROOM_ENTER_SUCCESS);
+        Map<String, Object> response = roomService.enterRoom(roomId, email);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.ROOM_ENTER_SUCCESS, response);
     }
 
     @GetMapping()
@@ -50,6 +50,5 @@ public class RoomController {
         Map<String, Object> response = roomService.updateRoomSettings(roomId, updateRoomSettingsRequest);
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.UPDATE_ROOM_SETTINGS_SUCCESS, response);
     }
-
 
 }

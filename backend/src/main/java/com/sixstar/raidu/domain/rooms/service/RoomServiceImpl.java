@@ -1,6 +1,7 @@
 package com.sixstar.raidu.domain.rooms.service;
 
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
+import com.sixstar.raidu.domain.rooms.dto.RoomEnterResponse;
 import com.sixstar.raidu.domain.rooms.dto.RoomResponse;
 import com.sixstar.raidu.domain.rooms.dto.UpdateRoomSettingsRequest;
 import com.sixstar.raidu.domain.rooms.entity.Room;
@@ -48,7 +49,7 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public void enterRoom(Long roomId, String email) {
+    public Map<String, Object> enterRoom(Long roomId, String email) {
         Room room = roomRepository.findById(roomId)
             .orElseThrow(()->new BaseException(BaseFailureResponse.ENTER_ROOM_FAIL));
         UserProfile userProfile = userProfileRepository.findByEmail(email)
@@ -66,6 +67,19 @@ public class RoomServiceImpl implements RoomService{
         }
 
         RoomUser savedRoomUser = roomUserRepository.save(roomUser);
+        RoomEnterResponse enteredUser = new RoomEnterResponse(
+                userProfile.getId(),
+                userProfile.getEmail(),
+                userProfile.getNickname(),
+                userProfile.getLevel(),
+                userProfile.getBestScore(),
+                userProfile.getProfileImageUrl(),
+                userProfile.getMonsterBadgeURl()
+        );
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("enteredUser", enteredUser);
+        return map;
     }
 
     @Override
