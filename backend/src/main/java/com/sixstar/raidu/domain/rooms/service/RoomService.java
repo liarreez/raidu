@@ -1,7 +1,8 @@
 package com.sixstar.raidu.domain.rooms.service;
 
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
-import com.sixstar.raidu.domain.rooms.dto.RoomEnterRequest;
+import com.sixstar.raidu.domain.rooms.dto.UpdateRoomSettingsRequest;
+
 import java.util.Map;
 
 public interface RoomService {
@@ -9,4 +10,5 @@ public interface RoomService {
     void enterRoom(Long roomId, String email);
     Map<String, Object> findAllWaitingRooms();
     Map<String, Object> exitRoom(Long roomId, String email);
+    Map<String, Object> updateRoomSettings(Long roomId, UpdateRoomSettingsRequest updateRoomSettingsRequest);
 }

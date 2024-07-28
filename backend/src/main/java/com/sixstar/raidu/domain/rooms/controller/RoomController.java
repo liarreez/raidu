@@ -1,13 +1,13 @@
 package com.sixstar.raidu.domain.rooms.controller;
 
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
+import com.sixstar.raidu.domain.rooms.dto.UpdateRoomSettingsRequest;
 import com.sixstar.raidu.domain.rooms.service.RoomService;
 import com.sixstar.raidu.global.response.BaseResponse;
 import com.sixstar.raidu.global.response.BaseResponseService;
 import com.sixstar.raidu.global.response.BaseSuccessResponse;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,4 +44,12 @@ public class RoomController {
         return response.containsKey("roomId") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.EXIT_HOST, response)
                 : baseResponseService.getSuccessResponse(BaseSuccessResponse.EXIT_PARTICIPANT, response);
     }
+
+    @PutMapping("/{roomId}/settings")
+    public ResponseEntity<BaseResponse<?>> updateRoomSettings(@PathVariable("roomId") Long roomId, @RequestBody UpdateRoomSettingsRequest updateRoomSettingsRequest){
+        Map<String, Object> response = roomService.updateRoomSettings(roomId, updateRoomSettingsRequest);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.UPDATE_ROOM_SETTINGS_SUCCESS, response);
+    }
+
+
 }

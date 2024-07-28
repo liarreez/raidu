@@ -1,8 +1,8 @@
 package com.sixstar.raidu.domain.rooms.service;
 
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
-import com.sixstar.raidu.domain.rooms.dto.RoomEnterRequest;
 import com.sixstar.raidu.domain.rooms.dto.RoomResponse;
+import com.sixstar.raidu.domain.rooms.dto.UpdateRoomSettingsRequest;
 import com.sixstar.raidu.domain.rooms.entity.Room;
 import com.sixstar.raidu.domain.rooms.entity.RoomUser;
 import com.sixstar.raidu.domain.rooms.repository.RoomRepository;
@@ -105,6 +105,20 @@ public class RoomServiceImpl implements RoomService{
             roomUserRepository.delete(roomUser);
         }
         map.put("email", email);
+        return map;
+    }
+
+    @Transactional
+    @Override
+    public Map<String, Object> updateRoomSettings(Long roomId, UpdateRoomSettingsRequest updateRoomSettingsRequest) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(()-> new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
+
+        room.update(updateRoomSettingsRequest.getRoundTime(), updateRoomSettingsRequest.getRestTime(), updateRoomSettingsRequest.getTotalRounds());
+        RoomResponse updatedRoom = new RoomResponse(room);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("updatedRoom", updatedRoom);
         return map;
     }
 }
