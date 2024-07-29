@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -65,4 +66,9 @@ public class User {
     this.socialId = socialId;
     this.refreshToken = refreshToken;
   }
+
+  public void updateRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+  }
+
 }

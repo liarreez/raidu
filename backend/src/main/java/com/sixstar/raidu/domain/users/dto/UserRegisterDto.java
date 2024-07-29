@@ -21,7 +21,7 @@ public class UserRegisterDto {
   private String password;;
 
   @Builder
-  public UserRegisterDto(String email, String password, String nickname) {
+  public UserRegisterDto(String email, String password) {
     this.email = email;
     this.password = password;
   }

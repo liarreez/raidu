@@ -6,4 +6,8 @@ import java.util.Map;
 public interface UsersService {
 
   Map<String,Object> register(UserRegisterDto userRegisterDto);
+
+  Map<String, Object> reissue(String authorization);
+
+  void logout(String authorization);
 }

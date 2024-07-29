@@ -8,6 +8,9 @@ public enum BaseSuccessResponse {
   //2XX : Success
   OK(HttpStatus.OK, "success"),
   REGISTER_SUCCESS(HttpStatus.CREATED, "User registered successfully"),
+  LOGIN_SUCCESS(HttpStatus.OK, "Login successful"),
+  LOGOUT_SUCCESS(HttpStatus.OK, "Logout successful"),
+  REFRESH_TOKEN_SUCCESS(HttpStatus.OK, "Token refreshed successfully"),
   ROOM_CREATE_SUCCESS(HttpStatus.CREATED, "Room created successfully"),
   ROOM_ENTER_SUCCESS(HttpStatus.CREATED, "Entered successfully"),
   GET_WAITING_ROOMS_SUCCESS(HttpStatus.OK, "Get WaitingRooms successfully"),
