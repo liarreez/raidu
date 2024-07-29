@@ -2,6 +2,7 @@ package com.sixstar.raidu.domain.rooms.service;
 
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
 import com.sixstar.raidu.domain.rooms.dto.RoomEnterRequest;
+import com.sixstar.raidu.domain.rooms.dto.RoomResponse;
 import com.sixstar.raidu.domain.rooms.entity.Room;
 import com.sixstar.raidu.domain.rooms.entity.RoomUser;
 import com.sixstar.raidu.domain.rooms.repository.RoomRepository;
@@ -11,6 +12,7 @@ import com.sixstar.raidu.domain.userpage.repository.UserProfileRepository;
 import com.sixstar.raidu.global.response.BaseException;
 import com.sixstar.raidu.global.response.BaseFailureResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
@@ -57,5 +59,20 @@ public class RoomServiceImpl implements RoomService{
             throw new BaseException(BaseFailureResponse.ENTER_ROOM_FAIL);
         }
         RoomUser savedRoomUser = roomUserRepository.save(roomUser);
+    }
+
+    @Override
+    public Map<String, Object> findAllWaitingRooms() {
+        List<RoomResponse> waitingRoomList = roomRepository.findByStatus("waiting")
+                .stream()
+                .map(RoomResponse::new)
+                .toList();
+        Map<String, Object> map = new HashMap<>();
+        if (waitingRoomList.isEmpty()) {
+            map.put("message", "No waiting rooms available.");
+        } else {
+            map.put("waitingRoomList", waitingRoomList);
+        }
+        return map;
     }
 }
