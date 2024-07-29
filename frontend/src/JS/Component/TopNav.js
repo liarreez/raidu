@@ -15,7 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
-import topgrass from "../../Imgs/topgrass.png"
+import topgrass from "../../Imgs/topgrass.png";
 
 import "../../CSS/TopNav.css";
 
@@ -81,9 +81,23 @@ function ResponsiveAppBar() {
     setSubMenuItems(subLevels);
   };
 
-  const handleCloseSubMenu = () => {
+  const handleCloseSubMenu = (dest) => {
     setAnchorElSubMenu(null);
     setSubMenuItems([]);
+    // 소메뉴 클릭시 이동하는 경로 모음
+    if (dest === "레이드") {
+      navigate("/raid");
+    } else if (dest === "훈련장") {
+      navigate("/training");
+    } else if (dest === "튜토리얼") {
+      navigate("/tutorial");
+    } else if (dest === "컨셉 북") {
+      navigate("/conceptbook");
+    } else if (dest === "운동 백과") {
+      navigate("/dictionary");
+    } else if (dest === "유저 랭킹") {
+      navigate("/ranking");
+    }
   };
 
   const handleLogoClick = () => {
@@ -96,7 +110,6 @@ function ResponsiveAppBar() {
         <AppBar position="static" sx={{ bgcolor: "white" }}>
           <Container maxWidth="xl">
             <Toolbar disableGutters>
-
               <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
                 <IconButton
                   size="large"
@@ -109,7 +122,9 @@ function ResponsiveAppBar() {
                   <MenuIcon />
                 </IconButton>
 
-                <div className="nav-logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>로고자리</div>
+                <div className="nav-logo" onClick={handleLogoClick} style={{ cursor: "pointer" }}>
+                  로고자리
+                </div>
                 <Menu
                   id="menu-appbar"
                   anchorEl={anchorElNav}
@@ -130,12 +145,7 @@ function ResponsiveAppBar() {
                   disableScrollLock={true}
                 >
                   {pages.map((page) => (
-                    <MenuItem
-                      key={page.name}
-                      onClick={(event) =>
-                        handleOpenSubMenu(event, page.subLevels)
-                      }
-                    >
+                    <MenuItem key={page.name} onClick={(event) => handleOpenSubMenu(event, page.subLevels)}>
                       <Typography textAlign="center">{page.name}</Typography>
                     </MenuItem>
                   ))}
@@ -144,13 +154,13 @@ function ResponsiveAppBar() {
               <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
 
               <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                <div className="nav-logo-large" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>로고자리</div>
+                <div className="nav-logo-large" onClick={handleLogoClick} style={{ cursor: "pointer" }}>
+                  로고자리
+                </div>
                 {pages.map((page) => (
                   <Button
                     key={page.name}
-                    onClick={(event) =>
-                      handleOpenSubMenu(event, page.subLevels)
-                    }
+                    onClick={(event) => handleOpenSubMenu(event, page.subLevels)}
                     sx={{
                       my: "auto",
                       color: "black",
@@ -191,10 +201,7 @@ function ResponsiveAppBar() {
                   disableScrollLock={true}
                 >
                   {settings.map((setting) => (
-                    <MenuItem
-                      key={setting}
-                      onClick={() => handleCloseUserMenu(setting)}
-                    >
+                    <MenuItem key={setting} onClick={() => handleCloseUserMenu(setting)}>
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
                   ))}
@@ -221,7 +228,7 @@ function ResponsiveAppBar() {
           disableScrollLock={true}
         >
           {subMenuItems.map((item) => (
-            <MenuItem key={item} onClick={handleCloseSubMenu}>
+            <MenuItem key={item} onClick={() => handleCloseSubMenu(item)}>
               <Typography textAlign="center">{item}</Typography>
             </MenuItem>
           ))}
@@ -229,7 +236,7 @@ function ResponsiveAppBar() {
       </ThemeProvider>
 
       <div className="nav-image">
-        <img src={topgrass}></img>
+        <img src={topgrass} alt="topgrass" />
       </div>
     </div>
   );
