@@ -2,7 +2,7 @@
 .mypage-page-wrapper {
     width: 100%;
     overflow-y: auto;
-    min-width: 1100px;
+    min-width: 1200px;
     height: 100vh;
     /* height 값은 이미지 에셋 추가후 생각하자 */
     background-image: url("../../src/Imgs/back.jpg");
