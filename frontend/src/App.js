@@ -5,8 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import LoginPage from "./JS/Page/Login.js";
 import HomePage from "./JS/Page/Home.js";
 import MyPage from "./JS/Page/Mypage.js"
-import { ProgressBar, Step } from 'react-step-progress-bar';
-import 'react-step-progress-bar/styles.css';
+import EditProfile from "./JS/Page/EditProfile.js";
 // 다른 페이지들을 import 하세요
 
 function App() {
@@ -23,6 +22,8 @@ function App() {
             <Route path="/home" element={<HomePage />} />
             {/* 마이페이지 경로 */}
             <Route path="/mypage" element={<MyPage />} />
+            {/* 마이페이지 경로 */}
+            <Route path="/editprofile" element={<EditProfile />} />
             {/* 여기에 추가적인 경로를 설정하세요 */}
             
           </Routes>

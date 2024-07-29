@@ -67,7 +67,7 @@ function ResponsiveAppBar() {
       if (setting === "마이페이지") {
         navigate("/mypage");
       } else if (setting === "개인정보 수정") {
-        navigate("/edit-profile");
+        navigate("/editprofile");
       } else if (setting === "로그아웃") {
         // 로그아웃 처리 로직 추가해야함
         navigate("/login");

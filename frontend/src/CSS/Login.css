@@ -166,8 +166,7 @@ body, html {
 }
 
 .title-login {
-    border-bottom: 2px dashed var(--hard-color-green);
-    width: 200px;
+    border-bottom: 3px dashed var(--hard-color-green);
     margin-bottom: 10px;
 }
 

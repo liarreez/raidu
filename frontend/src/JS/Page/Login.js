@@ -7,7 +7,7 @@ import InputField from "../Component/InputField";
 import "../../CSS/Login.css";
 import logo from "../../Imgs/logo.png";
 import login from "../../Imgs/login.gif";
-import sign from "../../Imgs/sign.gif"
+import sign from "../../Imgs/sign.gif";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -36,10 +36,48 @@ const modalStyle = {
 
 const SignUp = () => {
   const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
+  };
+
   const handleSignup = (event) => {
+    event.preventDefault();
+    // 회원가입 처리 로직 추가
+    if (password !== confirmPassword) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+    console.log("Email:", email);
+    console.log("Password:", password);
+    // 회원가입 API 호출 예시
+    // signUp({ email, password })
+    //   .then(response => {
+    //     alert("회원가입이 완료되었습니다.");
+    //     handleClose();
+    //   })
+    //   .catch(error => {
+    //     console.error(error);
+    //     alert("회원가입에 실패했습니다.");
+    //   });
+
+    // 회원가입 성공 시
+    alert("회원가입이 완료되었습니다.");
+    handleClose();
   };
 
   return (
@@ -56,9 +94,9 @@ const SignUp = () => {
       >
         <Box sx={modalStyle}>
           <div style={{display: "flex", alignItems: "center", justifyContent: "end", }}>
-          <IconButton onClick={handleClose} sx={{width: "50px", height: "50px"}}>
-            <CloseIcon/>
-          </IconButton>
+            <IconButton onClick={handleClose} sx={{width: "50px", height: "50px", border: "2px solid grey", zIndex: "10"}}>
+              <CloseIcon/>
+            </IconButton>
           </div>
           
           <div style={{display: "flex", width: "400px", height: "600px", position:"absolute",alignItems: "center", flexDirection: "column"}}>  
@@ -67,22 +105,28 @@ const SignUp = () => {
             </div>  
             <h2 className="title-login" style={{position: "relative", top: "-30px", textAlign: "center"}}>회원가입</h2>
             <form onSubmit={handleSignup}>
-                  <InputField
-                    // label="아이디"
-                    // type="text"
-                    // value={username}
-                    // onChange={handleUsernameChange}
-                  />
-                  <InputField
-                    // label="비밀번호"
-                    // type="password"
-                    // value={password}
-                    // onChange={handlePasswordChange}
-                  />
-                  <button type="submit" className="login-button">
-                    가입하기
-                  </button>
-                </form>
+              <InputField
+                label="이메일"
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+              />
+              <InputField
+                label="비밀번호"
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              <InputField
+                label="비밀번호 확인"
+                type="password"
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+              />
+              <button type="submit" className="login-button">
+                가입하기
+              </button>
+            </form>
           </div>
         </Box>
       </Modal>
@@ -155,7 +199,7 @@ const Login = () => {
                   <button className="social-login-button">소셜 뭐할지 정해지면</button>
                   <button className="social-login-button">추가할게요</button>
                 </div>
-                <SignUp></SignUp>
+                <SignUp />
               </div>
             </div>
           </div>

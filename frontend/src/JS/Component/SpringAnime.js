@@ -27,7 +27,7 @@ const SpringAnime = ({ children, from = "up", ...rest }) => {
       transition={{
         type: "spring",
         stiffness: 50,
-        damping: 5,
+        damping: 6,
       }}
       {...rest}
     >
