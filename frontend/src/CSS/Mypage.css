@@ -11,6 +11,11 @@
     box-sizing: border-box;
 }
 
+.top-nav {
+    position: relative;
+    z-index: 10;
+}
+
 .mypage-content-wrapper {
     display: flex;
     justify-content: center;

@@ -1,5 +1,9 @@
 @import url('./KeyColor.css');
 
+.home-topnav {
+    position: relative;
+}
+
 .home-page-wrapper {
     overflow-y: auto;
     width: 100%;
