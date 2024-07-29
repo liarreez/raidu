@@ -1,5 +1,13 @@
 package com.sixstar.raidu.global.config;
 
+import com.sixstar.raidu.domain.userpage.repository.UserProfileRepository;
+import com.sixstar.raidu.domain.users.repository.UserRepository;
+import com.sixstar.raidu.domain.users.security.JWTFilter;
+import com.sixstar.raidu.domain.users.security.JWTUtil;
+import com.sixstar.raidu.domain.users.security.LoginFilter;
+import com.sixstar.raidu.domain.users.security.RefreshTokenService;
+import com.sixstar.raidu.domain.users.service.UsersService;
+import com.sixstar.raidu.global.response.BaseResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +28,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
   private final AuthenticationConfiguration authenticationConfiguration;
+  private final JWTUtil jwtUtil;
+  private final RefreshTokenService refreshTokenService;
+  private final BaseResponseService baseResponseService;
 
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -42,10 +53,25 @@ public class WebSecurityConfig {
 
         .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable).disable())
 
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-//        .authorizeHttpRequests((auth) -> auth
-//            .anyRequest().authenticated());
+        .authorizeHttpRequests((auth) -> auth
+            .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs"
+                , "/api-docs/**", "/v3/api-docs/**")
+            .permitAll()
+            .requestMatchers("/", "api/raidu/users/register", "api/raidu/users/login"
+                , "api/raidu/users/social-register", "api/raidu/users/social-login"
+                , "api/raidu/users/refresh-token", "api/raidu/users/check-email", "api/raidu/users/recover")
+            .permitAll()
+            .anyRequest().authenticated());
+
+    http
+        .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+
+    http
+        .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenService, baseResponseService)
+            , UsernamePasswordAuthenticationFilter.class);
+
     return http.build();
   }
 }
