@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "exerciseroomrecord")
+@Table(name = "exercise_room_record")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ExerciseRoomRecord {

@@ -18,7 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "seasonuserscore")
+@Table(name = "season_user_score")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class SeasonUserScore {

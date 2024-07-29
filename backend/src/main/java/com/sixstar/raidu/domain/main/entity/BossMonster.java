@@ -21,7 +21,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Table(name = "bossmonster")
+@Table(name = "boss_monster")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class BossMonster {

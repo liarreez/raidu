@@ -1,0 +1,16 @@
+RENAME TABLE User TO user;
+RENAME TABLE Region TO region;
+RENAME TABLE UserProfile TO user_profile;
+RENAME TABLE Season TO season;
+RENAME TABLE SeasonRegionScore TO season_region_score;
+RENAME TABLE Dictionary TO dictionary;
+RENAME TABLE Room TO room;
+RENAME TABLE RoomUser TO room_user;
+RENAME TABLE ExerciseRoomRecord TO exercise_room_record;
+RENAME TABLE RoundRecord TO round_record;
+RENAME TABLE Monster TO monster;
+RENAME TABLE UserMonster TO user_monster;
+RENAME TABLE Report TO report;
+RENAME TABLE SeasonUserScore TO season_user_score;
+RENAME TABLE BossMonster TO boss_monster;
+RENAME TABLE UserBossMonster TO user_boss_monster;

@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "seasonregionscore")
+@Table(name = "season_region_score")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class SeasonRegionScore {

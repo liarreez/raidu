@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "roundrecord")
+@Table(name = "round_record")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class RoundRecord {

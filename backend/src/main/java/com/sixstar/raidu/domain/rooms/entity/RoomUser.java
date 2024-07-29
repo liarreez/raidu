@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "roomuser")
+@Table(name = "room_user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class RoomUser {

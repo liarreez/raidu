@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
-@Table(name = "userbossmonster")
+@Table(name = "user_boss_monster")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class UserBossMonster {

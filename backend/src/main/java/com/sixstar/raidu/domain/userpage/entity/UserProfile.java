@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Table(name = "userprofile")
+@Table(name = "user_profile")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class UserProfile {
