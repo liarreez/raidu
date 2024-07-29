@@ -17,7 +17,7 @@ services:
       retries: 5
 
   app:
-    build: .
+    image: goldenkiwi971202/myapp:latest
     depends_on:
       db:
         condition: service_healthy
@@ -37,11 +37,6 @@ services:
       - "8081:8080"  # Jenkins 포트 설정
     volumes:
       - jenkins_home:/var/jenkins_home
-
-  frontend:
-      image: your-frontend-image
-      ports:
-        - "3000:3000"  # 프론트엔드 서버 포트 설정
 
 volumes:
   jenkins_home:
