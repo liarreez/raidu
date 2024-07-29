@@ -4,8 +4,10 @@ import { AnimatePresence } from "framer-motion";
 
 import LoginPage from "./JS/Page/Login.js";
 import HomePage from "./JS/Page/Home.js";
-import MyPage from "./JS/Page/Mypage.js"
+import MyPage from "./JS/Page/Mypage.js";
 import EditProfile from "./JS/Page/EditProfile.js";
+import Ranking from "./JS/Page/Ranking.js";
+import NotFound from "./JS/Page/NotFound.js";
 // 다른 페이지들을 import 하세요
 
 function App() {
@@ -22,9 +24,17 @@ function App() {
             <Route path="/home" element={<HomePage />} />
             {/* 마이페이지 경로 */}
             <Route path="/mypage" element={<MyPage />} />
-            {/* 마이페이지 경로 */}
+            {/* 프로필 수정 경로 */}
             <Route path="/editprofile" element={<EditProfile />} />
-            {/* 여기에 추가적인 경로를 설정하세요 */}
+            {/* 랭킹 경로 */}
+            <Route path="/ranking" element={<Ranking />} />
+            
+            {/* 여기에 추가적인 경로를 설정할것ㄴ */}
+            
+            
+            
+            {/* 예외처리 경로 - 와일드 카드 */}
+            <Route path="*" element={<NotFound />} />
             
           </Routes>
         </Router>
