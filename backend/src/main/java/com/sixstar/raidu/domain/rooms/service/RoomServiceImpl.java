@@ -43,6 +43,7 @@ public class RoomServiceImpl implements RoomService{
         RoomUser savedRoomUser = roomUserRepository.save(roomUser);
 
         Map<String, Object> map = new HashMap<>();
+        map.put("hostEmail", request.getHostEmail());
         map.put("roomId", savedRoom.getId());
         map.put("title", savedRoom.getTitle());
         return map;
@@ -78,6 +79,7 @@ public class RoomServiceImpl implements RoomService{
         );
 
         Map<String, Object> map = new HashMap<>();
+
         map.put("enteredUser", enteredUser);
         return map;
     }
