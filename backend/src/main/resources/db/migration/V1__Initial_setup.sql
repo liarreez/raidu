@@ -11,6 +11,14 @@ CREATE TABLE `User` (
                         `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE `Region` (
+                          `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+                          `name` VARCHAR(50) UNIQUE NOT NULL,
+                          `symbol_image_url` VARCHAR(255) NULL,
+                          `description` VARCHAR(255) NULL,
+                          `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 CREATE TABLE `UserProfile` (
                                `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
                                `uuid` BIGINT NOT NULL,
@@ -29,14 +37,6 @@ CREATE TABLE `UserProfile` (
                                FOREIGN KEY (`region_id`) REFERENCES `Region`(`id`)
 );
 
-CREATE TABLE `Region` (
-                          `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                          `name` VARCHAR(50) UNIQUE NOT NULL,
-                          `symbol_image_url` VARCHAR(255) NULL,
-                          `description` VARCHAR(255) NULL,
-                          `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
 CREATE TABLE `Season` (
                           `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
                           `name` VARCHAR(50) UNIQUE NOT NULL,
@@ -51,6 +51,17 @@ CREATE TABLE `SeasonRegionScore` (
                                      `score` BIGINT NOT NULL DEFAULT 0,
                                      FOREIGN KEY (`season_id`) REFERENCES `Season`(`id`),
                                      FOREIGN KEY (`region_id`) REFERENCES `Region`(`id`)
+);
+
+CREATE TABLE `Dictionary` (
+                              `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+                              `name` VARCHAR(50) UNIQUE NOT NULL,
+                              `description` VARCHAR(50) NULL,
+                              `image_url` VARCHAR(255) NULL,
+                              `video_url` VARCHAR(255) NULL,
+                              `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                              `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                              `is_playable` TINYINT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE `Room` (
@@ -97,17 +108,6 @@ CREATE TABLE `RoundRecord` (
                                `exercise_count` INT NOT NULL,
                                FOREIGN KEY (`exercise_room_record_id`) REFERENCES `ExerciseRoomRecord`(`id`),
                                FOREIGN KEY (`dictionary_id`) REFERENCES `Dictionary`(`id`)
-);
-
-CREATE TABLE `Dictionary` (
-                              `id` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                              `name` VARCHAR(50) UNIQUE NOT NULL,
-                              `description` VARCHAR(50) NULL,
-                              `image_url` VARCHAR(255) NULL,
-                              `video_url` VARCHAR(255) NULL,
-                              `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                              `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                              `is_playable` TINYINT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE `Monster` (
