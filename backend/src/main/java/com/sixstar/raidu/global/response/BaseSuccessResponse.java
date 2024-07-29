@@ -9,7 +9,13 @@ public enum BaseSuccessResponse {
   OK(HttpStatus.OK, "success"),
   REGISTER_SUCCESS(HttpStatus.CREATED, "User registered successfully"),
   ROOM_CREATE_SUCCESS(HttpStatus.CREATED, "Room created successfully"),
-  ROOM_ENTER_SUCCESS(HttpStatus.OK, "Entered successfully")
+  ROOM_ENTER_SUCCESS(HttpStatus.CREATED, "Entered successfully"),
+  GET_WAITING_ROOMS_SUCCESS(HttpStatus.OK, "Get WaitingRooms successfully"),
+  NO_WAITING_ROOMS(HttpStatus.NO_CONTENT, "NO WaitingRooms"),
+  EXIT_HOST(HttpStatus.OK, "Exit host And Room deleted"),
+  EXIT_PARTICIPANT(HttpStatus.OK, "Exit Participant"),
+  UPDATE_ROOM_SETTINGS_SUCCESS(HttpStatus.OK, "Room settings updated successfully"),
+  UPDATE_ROOM_STATUS_SUCCESS(HttpStatus.OK, "Room status updated successfully"),
   ;
 
   private final HttpStatus status;

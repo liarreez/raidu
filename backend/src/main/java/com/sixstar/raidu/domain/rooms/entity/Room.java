@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.parameters.P;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
@@ -86,4 +87,9 @@ public class Room {
     this.exerciseRoomRecords = exerciseRoomRecords;
   }
 
+  public void update(int roundTime, int restTime, int totalRounds){
+    this.roundTime = roundTime;
+    this.restTime = restTime;
+    this.totalRounds = totalRounds;
+  }
 }
