@@ -92,4 +92,8 @@ public class Room {
     this.restTime = restTime;
     this.totalRounds = totalRounds;
   }
+
+  public void update(String status){
+    this.status = status;
+  }
 }

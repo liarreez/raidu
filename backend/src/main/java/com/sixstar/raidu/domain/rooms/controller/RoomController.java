@@ -51,4 +51,10 @@ public class RoomController {
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.UPDATE_ROOM_SETTINGS_SUCCESS, response);
     }
 
+    @PatchMapping("/{roomId}/status")
+    public ResponseEntity<BaseResponse<?>> updateRoomStatus(@PathVariable("roomId") Long roomId){
+        Map<String, Object> response = roomService.updateRoomStatus(roomId);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.UPDATE_ROOM_STATUS_SUCCESS, response);
+    }
+
 }

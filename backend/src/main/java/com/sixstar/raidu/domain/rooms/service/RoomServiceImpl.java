@@ -135,4 +135,22 @@ public class RoomServiceImpl implements RoomService{
         map.put("updatedRoom", updatedRoom);
         return map;
     }
+
+    @Transactional
+    @Override
+    public Map<String, Object> updateRoomStatus(Long roomId) {
+        Room room = roomRepository.findById(roomId)
+            .orElseThrow(()-> new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
+
+        String status = room.getStatus();
+        if(status.equals("waiting")){
+            room.update("exercise");
+        }else if(status.equals("exercise")){
+            room.update("completed");
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("updatedStatus", room.getStatus());
+        return map;
+    }
 }
