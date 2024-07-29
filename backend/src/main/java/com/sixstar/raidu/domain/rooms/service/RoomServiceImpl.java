@@ -14,6 +14,8 @@ import com.sixstar.raidu.global.response.BaseFailureResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -78,6 +80,31 @@ public class RoomServiceImpl implements RoomService{
         } else {
             map.put("waitingRoomList", waitingRoomList);
         }
+        return map;
+    }
+
+    @Transactional
+    @Override
+    public Map<String, Object> exitRoom(Long roomId, String email) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(()->new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
+        UserProfile requestUser = userProfileRepository.findByEmail(email)
+                .orElseThrow(()->new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+
+        String hostEmail = room.getUserProfile().getEmail();
+
+        Map<String, Object> map = new HashMap<>();
+        // 방장이라면 그 방의 roomUser 모두 삭제한 뒤 room도 삭제
+        if(hostEmail.equals(requestUser.getEmail())){
+            roomUserRepository.deleteByRoom(room);
+            roomRepository.delete(room);
+            map.put("roomId", roomId);
+        }else{
+            RoomUser roomUser = (RoomUser) roomUserRepository.findByRoomAndUserProfile(room, requestUser)
+                    .orElseThrow(() -> new BaseException(BaseFailureResponse.ROOM_USER_NOT_FOUND));
+            roomUserRepository.delete(roomUser);
+        }
+        map.put("email", email);
         return map;
     }
 }
