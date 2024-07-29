@@ -44,7 +44,8 @@ dependencies {
 	// OpenVidu
 	implementation 'io.openvidu:openvidu-java-client:2.30.0'
 	// flywaydb/flyway-core
-	implementation group: 'org.flywaydb', name: 'flyway-core', version: '10.16.0'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-mysql'
 
 }
 
