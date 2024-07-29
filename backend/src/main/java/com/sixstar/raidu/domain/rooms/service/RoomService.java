@@ -11,4 +11,5 @@ public interface RoomService {
     Map<String, Object> findAllWaitingRooms();
     Map<String, Object> exitRoom(Long roomId, String email);
     Map<String, Object> updateRoomSettings(Long roomId, UpdateRoomSettingsRequest updateRoomSettingsRequest);
+    Map<String, Object> updateRoomStatus(Long roomId);
 }
