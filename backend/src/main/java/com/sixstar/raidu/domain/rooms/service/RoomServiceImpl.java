@@ -53,11 +53,16 @@ public class RoomServiceImpl implements RoomService{
             .orElseThrow(()-> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
 
         RoomUser roomUser = new RoomUser(room, userProfile);
-
         Boolean isExist = roomUserRepository.existsByRoomIdAndUserProfileId(roomId, userProfile.getId());
         if(isExist){
             throw new BaseException(BaseFailureResponse.ENTER_ROOM_FAIL);
         }
+
+        int currentParticipantsCount = roomUserRepository.countByRoomId(roomId);
+        if(currentParticipantsCount>=room.getMaxParticipants()){
+            throw new BaseException(BaseFailureResponse.FULL_ROOM);
+        }
+
         RoomUser savedRoomUser = roomUserRepository.save(roomUser);
     }
 
