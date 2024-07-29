@@ -86,7 +86,7 @@ public class RoomServiceImpl implements RoomService{
 
     @Override
     public Map<String, Object> findAllWaitingRooms() {
-        List<RoomResponse> waitingRoomList = roomRepository.findByStatus("waiting")
+        List<RoomResponse> waitingRoomList = roomRepository.findByStatusAndIsPublic("waiting", true)
                 .stream()
                 .map(RoomResponse::new)
                 .toList();
