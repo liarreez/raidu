@@ -4,6 +4,7 @@ import com.sixstar.raidu.domain.main.entity.Season;
 import com.sixstar.raidu.domain.userpage.entity.UserProfile;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,7 +17,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "season_user_score")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

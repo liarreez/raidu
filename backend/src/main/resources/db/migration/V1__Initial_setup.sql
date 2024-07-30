@@ -1,7 +1,7 @@
 CREATE TABLE `User` (
                         `uuid` BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
                         `email` VARCHAR(50) UNIQUE NOT NULL,
-                        `password` VARCHAR(50) NULL,
+                        `password` VARCHAR(255) NULL,
                         `is_active` TINYINT NOT NULL DEFAULT TRUE,
                         `role` VARCHAR(50) NOT NULL DEFAULT 'user',
                         `social_type` VARCHAR(50) NULL,
@@ -30,7 +30,7 @@ CREATE TABLE `UserProfile` (
                                `best_score` INT NOT NULL DEFAULT 0,
                                `best_score_updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                `profile_image_url` VARCHAR(255) NULL,
-                               `backgroud_image_url` VARCHAR(255) NULL,
+                               `background_image_url` VARCHAR(255) NULL,
                                `monster_badge_url` VARCHAR(255) NULL,
                                `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                FOREIGN KEY (`uuid`) REFERENCES `User`(`uuid`),

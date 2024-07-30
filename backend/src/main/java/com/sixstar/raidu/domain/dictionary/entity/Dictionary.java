@@ -3,6 +3,7 @@ package com.sixstar.raidu.domain.dictionary.entity;
 import com.sixstar.raidu.domain.rooms.entity.RoundRecord;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,7 +19,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Currency;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "dictionary")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
