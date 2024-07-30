@@ -57,7 +57,7 @@ public class WebSecurityConfig {
 
         .authorizeHttpRequests((auth) -> auth
             .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs"
-                , "/api-docs/**", "/v3/api-docs/**")
+                , "/api-docs/**", "/v3/api-docs/**", "/login", "/login.html", "/css/**", "/js/**", "/images/**")
             .permitAll()
             .requestMatchers("/", "api/raidu/users/register", "api/raidu/users/login"
                 , "api/raidu/users/social-register", "api/raidu/users/social-login"
