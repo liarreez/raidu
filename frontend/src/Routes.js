@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 
 import Login from "./JS/Page/Login.js";
 import Home from "./JS/Page/Home.js";
@@ -8,21 +8,22 @@ import EditProfile from "./JS/Page/EditProfile.js";
 import NotFound from "./JS/Page/NotFound.js";
 import Ranking from "./JS/Page/Ranking.js";
 
-class AppRoutes extends React.Component {
+class Routes extends React.Component {
   render() {
     return (
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/mypage" element={<Mypage />} />
-            <Route path="/editprofile" element={<EditProfile />} />
-            <Route path="/ranking" element={<Ranking />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/login" component={Login} />
+            <Route path="/home" component={Home} />
+            <Route path="/mypage" component={Mypage} />
+            <Route path="/editprofile" component={EditProfile} />
+            <Route path="/ranking" component={Ranking}/>
+
+            <Route path="*" component={NotFound} />
           </Routes>
         </BrowserRouter>
     );
   }
 }
 
-export default AppRoutes;
+export default Routes;
