@@ -12,15 +12,35 @@ import com.sixstar.raidu.domain.userpage.entity.UserProfile;
 import com.sixstar.raidu.domain.userpage.repository.UserProfileRepository;
 import com.sixstar.raidu.global.response.BaseException;
 import com.sixstar.raidu.global.response.BaseFailureResponse;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
+import io.openvidu.java.client.Session;
+import io.openvidu.java.client.SessionProperties;
+import jakarta.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RoomServiceImpl implements RoomService{
+
+    @Value("${OPENVIDU_URL}")
+    private String OPENVIDU_URL;
+
+    @Value("${OPENVIDU_SECRET}")
+    private String OPENVIDU_SECRET;
+
+    private OpenVidu openvidu;
+
+    @PostConstruct
+    public void init() {
+        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+    }
     private final RoomRepository roomRepository;
     private final UserProfileRepository userProfileRepository;
     private final RoomUserRepository roomUserRepository;
@@ -153,6 +173,16 @@ public class RoomServiceImpl implements RoomService{
 
         Map<String, Object> map = new HashMap<>();
         map.put("updatedStatus", room.getStatus());
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> initializeSession(Map<String, Object> params)
+        throws OpenViduJavaClientException, OpenViduHttpException {
+        SessionProperties properties = SessionProperties.fromJson(params).build();
+        Session session = openvidu.createSession(properties);
+        Map<String, Object> map = new HashMap<>();
+        map.put("sessionId", session.getSessionId());
         return map;
     }
 }
