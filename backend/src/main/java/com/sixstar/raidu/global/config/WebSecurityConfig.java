@@ -58,12 +58,14 @@ public class WebSecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll()
-            .requestMatchers("/", "/login","/api/raidu/users/register", "/api/raidu/users/login", "/api/raidu/users/social-register", "/api/raidu/users/social-login", "/api/raidu/users/refresh-token", "/api/raidu/users/check-email", "/api/raidu/users/recover").permitAll()
+            .requestMatchers("/", "/index.html", "/error","/login","/api/raidu/users/register", "/api/raidu/users/login", "/api/raidu/users/social-register", "/api/raidu/users/social-login", "/api/raidu/users/refresh-token", "/api/raidu/users/check-email", "/api/raidu/users/recover").permitAll()
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
         .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenService, baseResponseService), UsernamePasswordAuthenticationFilter.class);
 
+
+        .requestMatchers("/error").permitAll(fasdf)
     return http.build();
   }
 
