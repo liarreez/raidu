@@ -13,12 +13,11 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/{spring:[a-zA-Z0-9-_]+}").setViewName("forward:/index.html");
         registry.addViewController("/**/{spring:[a-zA-Z0-9-_]+}").setViewName("forward:/index.html");
         registry.addViewController("/{spring:[a-zA-Z0-9-_]+}/**").setViewName("forward:/index.html");
-        registry.addViewController("/**").setViewName("forward:/index.html");
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**")
+        registry.addResourceHandler("/static/**")
             .addResourceLocations("classpath:/static/");
     }
 }
