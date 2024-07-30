@@ -26,6 +26,6 @@ RUN apt-get update && apt-get install -y default-mysql-client && rm -rf /var/lib
 
 # 백엔드와 프론트엔드 빌드 결과물 복사
 COPY --from=backend-build /app/build/libs/*.jar app.jar
-COPY --from=frontend-build /app/build /app/src/main/resources/static
+COPY --from=frontend-build /app/build /app/public
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
