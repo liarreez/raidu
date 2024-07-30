@@ -2,6 +2,7 @@ package com.sixstar.raidu.domain.userpage.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,7 +16,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "user_monster")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

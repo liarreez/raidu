@@ -97,7 +97,7 @@ public class RoomServiceImpl implements RoomService{
                 userProfile.getLevel(),
                 userProfile.getBestScore(),
                 userProfile.getProfileImageUrl(),
-                userProfile.getMonsterBadgeURl()
+                userProfile.getMonsterBadgeUrl()
         );
 
         Map<String, Object> map = new HashMap<>();
