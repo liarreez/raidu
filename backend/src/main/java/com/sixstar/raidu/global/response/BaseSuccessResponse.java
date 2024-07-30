@@ -19,7 +19,8 @@ public enum BaseSuccessResponse {
   EXIT_PARTICIPANT(HttpStatus.OK, "Exit Participant"),
   UPDATE_ROOM_SETTINGS_SUCCESS(HttpStatus.OK, "Room settings updated successfully"),
   UPDATE_ROOM_STATUS_SUCCESS(HttpStatus.OK, "Room status updated successfully"),
-  INIT_SESSION_SUCCESS(HttpStatus.OK, "Session initialized successfully")
+  INIT_SESSION_SUCCESS(HttpStatus.OK, "Session initialized successfully"),
+  CREATE_CONNECTION_SUCCESS(HttpStatus.OK, "Connection Created Successfully"),
   ;
 
   private final HttpStatus status;

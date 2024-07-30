@@ -71,6 +71,13 @@ public class RoomController {
             BaseSuccessResponse.INIT_SESSION_SUCCESS, response);
     }
 
+    @PostMapping("/sessions/{sessionId}/connections")
+    public ResponseEntity<BaseResponse<?>> createConnection(@PathVariable("sessionId") String sessionId,
+        @RequestBody(required = false) Map<String, Object> params)
+        throws OpenViduJavaClientException, OpenViduHttpException {
+        Map<String, Object> response = roomService.createConnection(sessionId, params);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.CREATE_CONNECTION_SUCCESS, response);
+    }
 
 
 }

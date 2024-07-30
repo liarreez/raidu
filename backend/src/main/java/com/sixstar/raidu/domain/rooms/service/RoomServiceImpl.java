@@ -25,6 +25,8 @@ import java.util.Map;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import io.openvidu.java.client.Connection;
+import io.openvidu.java.client.ConnectionProperties;
 
 @Service
 public class RoomServiceImpl implements RoomService{
@@ -183,6 +185,20 @@ public class RoomServiceImpl implements RoomService{
         Session session = openvidu.createSession(properties);
         Map<String, Object> map = new HashMap<>();
         map.put("sessionId", session.getSessionId());
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> createConnection(String sessionId, Map<String, Object> params)
+        throws OpenViduJavaClientException, OpenViduHttpException {
+        Session session = openvidu.getActiveSession(sessionId);
+        if (session == null) {
+            throw new BaseException(BaseFailureResponse.SESSION_NOT_FOUND);
+        }
+        ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
+        Connection connection = session.createConnection(properties);
+        Map<String, Object> map = new HashMap<>();
+        map.put("token", connection.getToken());
         return map;
     }
 }
