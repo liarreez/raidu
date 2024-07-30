@@ -56,21 +56,13 @@ public class WebSecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
         .authorizeHttpRequests((auth) -> auth
-            .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs"
-                , "/api-docs/**", "/v3/api-docs/**", "/login", "/login.html", "/css/**", "/js/**", "/images/**")
-            .permitAll()
-            .requestMatchers("/", "api/raidu/users/register", "api/raidu/users/login"
-                , "api/raidu/users/social-register", "api/raidu/users/social-login"
-                , "api/raidu/users/refresh-token", "api/raidu/users/check-email", "api/raidu/users/recover")
-            .permitAll()
+            .requestMatchers("/", "/index.html", "/swagger-ui.html", "/swagger-ui/**", "/api-docs/**", "/v3/api-docs/**", "/login", "/login.html", "/css/**", "/js/**", "/images/**").permitAll()
+            .requestMatchers("/api/raidu/users/register", "/api/raidu/users/login", "/api/raidu/users/social-register", "/api/raidu/users/social-login", "/api/raidu/users/refresh-token", "/api/raidu/users/check-email", "/api/raidu/users/recover").permitAll()
             .anyRequest().authenticated());
 
     http
-        .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-
-    http
-        .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenService, baseResponseService)
-            , UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+        .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshTokenService, baseResponseService), UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
