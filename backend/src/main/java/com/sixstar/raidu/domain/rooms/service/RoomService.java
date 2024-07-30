@@ -15,4 +15,6 @@ public interface RoomService {
     Map<String, Object> updateRoomSettings(Long roomId, UpdateRoomSettingsRequest updateRoomSettingsRequest);
     Map<String, Object> updateRoomStatus(Long roomId);
     Map<String, Object> initializeSession(Map<String, Object> params) throws OpenViduJavaClientException, OpenViduHttpException;
+    Map<String, Object> createConnection(String sessionId, Map<String, Object> params)
+        throws OpenViduJavaClientException, OpenViduHttpException;
 }
