@@ -11,7 +11,7 @@ import com.sixstar.raidu.global.response.BaseFailureResponse;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UsersServiceImpl implements UsersService {
 
     private final UserRepository userRepository;
-//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
 
     @Transactional
@@ -30,8 +30,8 @@ public class UsersServiceImpl implements UsersService {
         if (isExist) {
             throw new BaseException(BaseFailureResponse.EMAIL_IS_DUPLICATED);
         }
-//        String encrypt = bCryptPasswordEncoder.encode(userRegisterDto.getPassword());
-//        userRegisterDto.setPassword(encrypt);
+        String encrypt = bCryptPasswordEncoder.encode(userRegisterDto.getPassword());
+        userRegisterDto.setPassword(encrypt);
         User member = UserRegisterDto.toEntity(userRegisterDto);
         userRepository.save(member);
         Map<String, Object> data = new HashMap<>();
