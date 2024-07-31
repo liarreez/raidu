@@ -19,9 +19,13 @@ const Ranking = () => {
                 <div className="icon-circle">
                     <img alt="랭킹 아이콘" src={ranking}></img>
                 </div>
-                <h2>유저 랭킹</h2>
+                <h2>유저 검색</h2>
                 <div id="profile-card">
                     
+                </div>
+
+                <div className="title-bar">
+                  
                 </div>
             </div>
           </SpringAnime>

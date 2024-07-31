@@ -72,6 +72,21 @@
     border-bottom: 3px dashed var(--hard-color-green);
 }
 
-.profile-wrapper {
+#profile-card {
+    width: 600px;
+    height: 300px;
+    border-radius: 10px;
+
     border: 1px solid red;
+}
+
+.title-bar {
+    margin: 20px 0 20px 0;
+    height: 50px;
+    width: 800px;
+    background-color: var(--hard-color-black);
+    border-radius: 2px;
+    padding: 5px;
+    font-size: 32px;
+    color: var(--hard-color-white);
 }

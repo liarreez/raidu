@@ -155,8 +155,6 @@ body, html {
 }
 
 .login-content {
-    position: absolute;
-    top: 90px;
     width: 300px;
     display: flex;
     flex-direction: column;

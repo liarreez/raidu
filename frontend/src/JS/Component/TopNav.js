@@ -22,7 +22,7 @@ import "../../CSS/TopNav.css";
 const pages = [
   { name: "활동", subLevels: ["레이드", "훈련장"] },
   { name: "가이드", subLevels: ["튜토리얼", "컨셉 북", "운동 백과"] },
-  { name: "랭킹", subLevels: ["유저 랭킹"] },
+  { name: "정보", subLevels: ["유저 검색"] },
 ];
 const settings = ["마이페이지", "개인정보 수정", "로그아웃"];
 
@@ -95,8 +95,8 @@ function ResponsiveAppBar() {
       navigate("/conceptbook");
     } else if (dest === "운동 백과") {
       navigate("/dictionary");
-    } else if (dest === "유저 랭킹") {
-      navigate("/ranking");
+    } else if (dest === "유저 검색") {
+      navigate("/usersearch");
     }
   };
 
