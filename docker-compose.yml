@@ -33,7 +33,7 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       JWT_SECRET: klmqskdlnpqncoqkwmdklcksoandfmklmqfmwqkdfcxnjkspring.application.name=raidu
       OPENVIDU_URL: http://43.200.254.20:4443/
-      OPENVIDU_SECRET: z5F!hX2nQ#8rV$3sW^1dG@7bM&6tC
+      OPENVIDU_SECRET: z5F_hX2nQ-8rV3sW1dG7bM6tC
     command: >
       sh -c "./wait-for-it.sh db:3306 -- java -jar /app/app.jar"
 
