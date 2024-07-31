@@ -26,8 +26,9 @@ public enum BaseFailureResponse {
   FULL_ROOM(HttpStatus.CONFLICT, "대기방의 인원이 꽉 찼습니다!"),
   ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 방입니다!"),
   ROOM_USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 참여자입니다!"),
-  SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 세션입니다!")
-
+  SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 세션입니다!"),
+  SEASON_NOT_FOUND(HttpStatus.NOT_FOUND, "현재 날짜와 일치하는 시즌이 없습니다!"),
+  BOSSMONSTER_NOT_FOUND(HttpStatus.NOT_FOUND, "현재 시즌과 일치하는 보스몬스터가 없습니다!")
   ;
 
   private final HttpStatus status;

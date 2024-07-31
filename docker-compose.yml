@@ -45,6 +45,8 @@ services:
       - OPENVIDU_SECRET=z5F_hX2nQ-8rV3sW1dG7bM6tC
       - DOMAIN_OR_PUBLIC_IP=43.200.254.20
       - KMS_URIS=["ws://kms:8888/kurento"]
+      - CERTIFICATE_TYPE=selfsigned
+      - HTTPS_PORT=4443
     depends_on:
       - kms
 
