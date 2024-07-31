@@ -47,9 +47,6 @@ services:
       - KMS_URIS=["ws://kms:8888/kurento"]
       - CERTIFICATE_TYPE=selfsigned
       - HTTPS_PORT=4443
-      - OPENVIDU_RECORDING=true
-      - OPENVIDU_RECORDING_PATH=/opt/openvidu/recordings
-      - OPENVIDU_RECORDING_PUBLIC_ACCESS=true
     depends_on:
       - kms
 
