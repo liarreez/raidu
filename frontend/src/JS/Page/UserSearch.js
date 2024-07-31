@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import FadeAnime from "../Component/FadeAnime";
 import TopNav from "../Component/TopNav";
 import SpringAnime from "../Component/SpringAnime";
@@ -18,28 +17,13 @@ const Ranking = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [hasMore, setHasMore] = useState(true);
-  const [page, setPage] = useState(1);
-
-  const fetchUsers = () => {
-    const filteredUsers = testUsers.filter((user) =>
-      user.nickname.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    const paginatedUsers = filteredUsers.slice((page - 1) * 5, page * 5);
-    setUsers((prevUsers) => [...prevUsers, ...paginatedUsers]);
-    if (paginatedUsers.length === 0 || paginatedUsers.length < 5) setHasMore(false);
-  };
 
   const handleSearch = () => {
-    setUsers([]);
-    setPage(1);
-    setHasMore(true);
-    fetchUsers();
+    const filteredUsers = testUsers.filter(user =>
+      user.nickname.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setUsers(filteredUsers);
   };
-
-  useEffect(() => {
-    if (page > 1) fetchUsers();
-  }, [page]);
 
   return (
     <FadeAnime>
@@ -87,12 +71,6 @@ const Ranking = () => {
                 <div>누적 기여도</div>
                 <div>상세 정보</div>
               </div>
-
-              <InfiniteScroll
-                dataLength={users.length}
-                next={() => setPage((prevPage) => prevPage + 1)}
-                hasMore={hasMore}
-              >
                 <div className="search-result-container">
                   {users.length === 0 ? (
                     <div className="no-results">검색 결과가 없습니다. 유저를 검색해주세요.</div>
@@ -118,7 +96,6 @@ const Ranking = () => {
                     ))
                   )}
                 </div>
-              </InfiniteScroll>
             </div>
           </SpringAnime>
         </div>
