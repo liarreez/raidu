@@ -1,0 +1,236 @@
+@import url('./KeyColor.css');
+
+.ranking-page-wrapper {
+    width: 100%;
+    overflow-y: auto;
+    min-width: 1200px;
+    height: 100vh;
+    /* height 값은 이미지 에셋 추가후 생각하자 */
+    background-image: url("../../src/Imgs/back.jpg");
+    background-size: cover;
+    background-position: bottom;
+    box-sizing: border-box;
+
+}
+
+.top-nav {
+    position: relative;
+    z-index: 10;
+}
+
+.ranking-content-wrapper {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: inherit;
+    overflow: hidden;
+    /* margin-top: 140px; */
+}
+
+.ranking-content {
+    /* 사이징, 양식 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    width: 1000px;
+    min-height: 800px;
+    box-sizing: border-box;
+    padding-bottom: 80px;
+    border-radius: 0px 0px 20px 20px;
+    overflow: hidden;
+    /* 그림자 */
+    box-shadow: 0px 18px 15px 5px rgba(0,0,0,0.1);
+    /* 위치 포지셔닝 */
+    position: relative;
+    top: -200px;
+    padding-top: 300px;
+
+
+}
+
+.icon-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0px 5px 20px 3px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-circle img {
+    width: 80%;
+    height: 80%;
+    position: relative;
+    top: -2px;
+}
+
+.ranking-content h2 {
+    font-size: 34px;
+    border-bottom: 3px dashed var(--hard-color-green);
+}
+
+#profile-card-container {
+    width: 600px;
+    height: 300px;
+    border-radius: 10px;
+
+    box-shadow: inset 0px 0px 15px 5px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.title-bar {
+    margin: 20px 0 20px 0;
+    height: 100px;
+    width: 100%;
+    background-color: var(--hard-color-black);
+    border-radius: 2px;
+    padding: 5px 10px 5px 10px;
+
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--hard-color-white);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.title-bar div {
+    position: relative;
+    right: 25%;
+}
+
+.search-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 20%;
+    gap: 4px;
+}
+
+.search-option input {
+    width: 200px;
+    height: 30px;
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.search-option button {
+    width: 50px;
+    height: 32px;
+
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    font-family: inherit;
+    font-size: 14px;
+    background-color: var(--hard-color-green);
+}
+
+.search-option button:hover {
+    background-color: var(--hard-color-green-selected);
+}
+
+.search-result-container {
+    width: 900px;
+    height: 600px;
+    border-radius: 10px;
+    padding: 15px 15px 15px 15px;
+    box-sizing: border-box;
+
+    box-shadow: inset 0px 0px 15px 5px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+    overflow: auto;
+}
+
+.search-result-container::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  /* 스크롤바 트랙 */
+  .search-result-container:-webkit-scrollbar-track {
+    background: var(--hard-color-white);
+  }
+  
+  /* 스크롤바 썸 (thumb) */
+  .search-result-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border: 2px solid #f1f1f1;
+  }
+  
+  /* 스크롤바 썸이 호버될 때 */
+  .search-result-container::-webkit-scrollbar-thumb:hover {
+    background: var(--hard-color-black);
+  }
+
+.search-result-card {
+    width: 800px;
+    height: 100px;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+
+    box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.1);
+}
+
+.search-result-header {
+    display: flex;
+    align-items: center;
+
+    width: 800px;
+    height: 50px;
+}
+
+.search-result-header div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: inherit;
+}
+
+.search-result-card {
+
+}
+
+.search-result-card div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: inherit;
+}
+
+.search-result-card div:nth-child(2n) {
+    background-color: var(--hard-color-white);
+}
+
+.search-result-card button {
+    padding: 10px 15px 10px 15px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    font-family: inherit;
+    font-size: 14px;
+    background-color: var(--hard-color-green);
+}
+
+.search-result-card button:hover {
+    background-color: var(--hard-color-green-selected);
+}
