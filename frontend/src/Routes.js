@@ -19,9 +19,9 @@ class Routes extends React.Component {
           <Route path="/editprofile" component={EditProfile} />
           <Route path="/usersearch" component={UserSearch}/>
 
-          <Route path="*" component={NotFound} />
-        </Routes>
-      </BrowserRouter>
+            <Route path="*" component={NotFound} />
+          </Routes>
+        </BrowserRouter>
     );
   }
 }

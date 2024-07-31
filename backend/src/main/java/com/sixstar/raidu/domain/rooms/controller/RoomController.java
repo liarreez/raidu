@@ -6,6 +6,8 @@ import com.sixstar.raidu.domain.rooms.service.RoomService;
 import com.sixstar.raidu.global.response.BaseResponse;
 import com.sixstar.raidu.global.response.BaseResponseService;
 import com.sixstar.raidu.global.response.BaseSuccessResponse;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +52,32 @@ public class RoomController {
         Map<String, Object> response = roomService.updateRoomSettings(roomId, updateRoomSettingsRequest);
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.UPDATE_ROOM_SETTINGS_SUCCESS, response);
     }
+
+    @PatchMapping("/{roomId}/status")
+    public ResponseEntity<BaseResponse<?>> updateRoomStatus(@PathVariable("roomId") Long roomId){
+        Map<String, Object> response = roomService.updateRoomStatus(roomId);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.UPDATE_ROOM_STATUS_SUCCESS, response);
+    }
+
+    /**
+     * RequestBody의 "customSessionId"를 담아서 보내면
+     * sessionId를 설정할 수 있음
+     */
+    @PostMapping("/sessions")
+    public ResponseEntity<BaseResponse<?>> initializeSession(@RequestBody(required = false) Map<String, Object> params)
+        throws OpenViduJavaClientException, OpenViduHttpException {
+        Map<String, Object> response = roomService.initializeSession(params);
+        return baseResponseService.getSuccessResponse(
+            BaseSuccessResponse.INIT_SESSION_SUCCESS, response);
+    }
+
+    @PostMapping("/sessions/{sessionId}/connections")
+    public ResponseEntity<BaseResponse<?>> createConnection(@PathVariable("sessionId") String sessionId,
+        @RequestBody(required = false) Map<String, Object> params)
+        throws OpenViduJavaClientException, OpenViduHttpException {
+        Map<String, Object> response = roomService.createConnection(sessionId, params);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.CREATE_CONNECTION_SUCCESS, response);
+    }
+
 
 }

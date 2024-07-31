@@ -16,8 +16,14 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   jwt:
-    secret: klmqskdlnpqncoqkwmdklcksoandfmklmqfmwqkdfcxnjkspring.application.name=raidu
+    secret: ${JWT_SECRET}
+  web:
+    resources:
+      static-locations: classpath:/public/
 
 logging:
   level:

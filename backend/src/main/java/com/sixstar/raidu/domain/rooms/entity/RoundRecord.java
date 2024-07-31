@@ -3,6 +3,7 @@ package com.sixstar.raidu.domain.rooms.entity;
 import com.sixstar.raidu.domain.dictionary.entity.Dictionary;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,9 +14,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "roundrecord")
+@Table(name = "round_record")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class RoundRecord {

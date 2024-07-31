@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,5 +27,17 @@ public class UsersController {
   public ResponseEntity<BaseResponse<?>> register(@Valid @RequestBody UserRegisterDto userRegisterDto) {
     Map<String, Object> data = usersService.register(userRegisterDto);
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.REGISTER_SUCCESS, data);
+  }
+
+  @PostMapping("/refresh-token")
+  public ResponseEntity<BaseResponse<?>> refresh(@RequestHeader("Authorization") String authorization) {
+    Map<String, Object> data = usersService.reissue(authorization);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.REFRESH_TOKEN_SUCCESS,data);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<BaseResponse<?>> logout(@RequestHeader("Authorization") String authorization) {
+    usersService.logout(authorization);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.LOGOUT_SUCCESS);
   }
 }

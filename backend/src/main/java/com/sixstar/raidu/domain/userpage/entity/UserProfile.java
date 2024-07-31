@@ -10,6 +10,7 @@ import com.sixstar.raidu.domain.users.entity.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,9 +27,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "userprofile")
+@Table(name = "user_profile")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class UserProfile {
@@ -54,8 +57,8 @@ public class UserProfile {
   @Column(nullable = false)
   private LocalDateTime bestScoreUpdatedAt;
   private String profileImageUrl;
-  private String backGroundImageUrl;
-  private String monsterBadgeURl;
+  private String backgroundImageUrl;
+  private String monsterBadgeUrl;
   @LastModifiedDate
   @Column(nullable = false)
   private LocalDateTime updatedAt;
@@ -87,7 +90,7 @@ public class UserProfile {
   @Builder
   public UserProfile(User user, String email, String nickname, Region region, Integer level,
       Integer exp, Integer bestScore, LocalDateTime bestScoreUpdatedAt, String profileImageUrl,
-      String backGroundImageUrl, String monsterBadgeURl,
+      String backgroundImageUrl, String monsterBadgeUrl,
       List<Report> reportsReported, List<Report> reportsReporting,
       List<ExerciseRoomRecord> exerciseRoomRecords, List<Room> rooms, List<RoomUser> roomUsers,
       List<UserMonster> userMonsters, List<UserBossMonster> userBossMonsters,
@@ -101,8 +104,8 @@ public class UserProfile {
     this.bestScore = bestScore;
     this.bestScoreUpdatedAt = bestScoreUpdatedAt;
     this.profileImageUrl = profileImageUrl;
-    this.backGroundImageUrl = backGroundImageUrl;
-    this.monsterBadgeURl = monsterBadgeURl;
+    this.backgroundImageUrl = backgroundImageUrl;
+    this.monsterBadgeUrl = monsterBadgeUrl;
     this.reportsReported = reportsReported;
     this.reportsReporting = reportsReporting;
     this.exerciseRoomRecords = exerciseRoomRecords;

@@ -12,15 +12,37 @@ import com.sixstar.raidu.domain.userpage.entity.UserProfile;
 import com.sixstar.raidu.domain.userpage.repository.UserProfileRepository;
 import com.sixstar.raidu.global.response.BaseException;
 import com.sixstar.raidu.global.response.BaseFailureResponse;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
+import io.openvidu.java.client.Session;
+import io.openvidu.java.client.SessionProperties;
+import jakarta.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import io.openvidu.java.client.Connection;
+import io.openvidu.java.client.ConnectionProperties;
 
 @Service
 public class RoomServiceImpl implements RoomService{
+
+    @Value("${OPENVIDU_URL}")
+    private String OPENVIDU_URL;
+
+    @Value("${OPENVIDU_SECRET}")
+    private String OPENVIDU_SECRET;
+
+    private OpenVidu openvidu;
+
+    @PostConstruct
+    public void init() {
+        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+    }
     private final RoomRepository roomRepository;
     private final UserProfileRepository userProfileRepository;
     private final RoomUserRepository roomUserRepository;
@@ -43,6 +65,7 @@ public class RoomServiceImpl implements RoomService{
         RoomUser savedRoomUser = roomUserRepository.save(roomUser);
 
         Map<String, Object> map = new HashMap<>();
+        map.put("hostEmail", request.getHostEmail());
         map.put("roomId", savedRoom.getId());
         map.put("title", savedRoom.getTitle());
         return map;
@@ -74,17 +97,18 @@ public class RoomServiceImpl implements RoomService{
                 userProfile.getLevel(),
                 userProfile.getBestScore(),
                 userProfile.getProfileImageUrl(),
-                userProfile.getMonsterBadgeURl()
+                userProfile.getMonsterBadgeUrl()
         );
 
         Map<String, Object> map = new HashMap<>();
+
         map.put("enteredUser", enteredUser);
         return map;
     }
 
     @Override
     public Map<String, Object> findAllWaitingRooms() {
-        List<RoomResponse> waitingRoomList = roomRepository.findByStatus("waiting")
+        List<RoomResponse> waitingRoomList = roomRepository.findByStatusAndIsPublic("waiting", true)
                 .stream()
                 .map(RoomResponse::new)
                 .toList();
@@ -133,6 +157,48 @@ public class RoomServiceImpl implements RoomService{
 
         Map<String, Object> map = new HashMap<>();
         map.put("updatedRoom", updatedRoom);
+        return map;
+    }
+
+    @Transactional
+    @Override
+    public Map<String, Object> updateRoomStatus(Long roomId) {
+        Room room = roomRepository.findById(roomId)
+            .orElseThrow(()-> new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
+
+        String status = room.getStatus();
+        if(status.equals("waiting")){
+            room.update("exercise");
+        }else if(status.equals("exercise")){
+            room.update("completed");
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("updatedStatus", room.getStatus());
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> initializeSession(Map<String, Object> params)
+        throws OpenViduJavaClientException, OpenViduHttpException {
+        SessionProperties properties = SessionProperties.fromJson(params).build();
+        Session session = openvidu.createSession(properties);
+        Map<String, Object> map = new HashMap<>();
+        map.put("sessionId", session.getSessionId());
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> createConnection(String sessionId, Map<String, Object> params)
+        throws OpenViduJavaClientException, OpenViduHttpException {
+        Session session = openvidu.getActiveSession(sessionId);
+        if (session == null) {
+            throw new BaseException(BaseFailureResponse.SESSION_NOT_FOUND);
+        }
+        ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
+        Connection connection = session.createConnection(properties);
+        Map<String, Object> map = new HashMap<>();
+        map.put("token", connection.getToken());
         return map;
     }
 }

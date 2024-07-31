@@ -3,6 +3,7 @@ package com.sixstar.raidu.domain.main.entity;
 import com.sixstar.raidu.domain.userpage.entity.UserBossMonster;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,9 +20,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "bossmonster")
+@Table(name = "boss_monster")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class BossMonster {
