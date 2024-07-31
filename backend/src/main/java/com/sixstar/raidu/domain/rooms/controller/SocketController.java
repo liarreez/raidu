@@ -66,7 +66,7 @@ public class SocketController {
     public void setReady(Map<String, Object> params) {
     	String channelId = (String) params.get("channelId");
     	String userId = (String) params.get("sender");
-    	String 
+    //	String 
     	
     }
     
