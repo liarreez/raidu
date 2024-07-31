@@ -11,6 +11,8 @@ import com.sixstar.raidu.domain.users.security.AuthorizationHeaderParser;
 import com.sixstar.raidu.domain.users.security.JWTUtil;
 import com.sixstar.raidu.global.response.BaseException;
 import com.sixstar.raidu.global.response.BaseFailureResponse;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,5 +48,27 @@ public class UserpageServiceImpl implements UserpageService {
     } else {
       userProfileRepository.save(userProfile);
     }
+  }
+
+  @Override
+  public Map<String, Object> searchUserInfo(String authorization) {
+    String token = AuthorizationHeaderParser.parseTokenFromAuthorizationHeader(authorization);
+
+    String email = jwtUtil.getEmail(token);
+    UserProfile userProfile = userProfileRepository.findByEmail(email)
+        .orElseThrow(() -> new BaseException(BaseFailureResponse.USERPROFILE_NOT_FOUND));
+    Map<String, Object> data = new HashMap<>();
+    data.put("email", userProfile.getEmail());
+    data.put("nickname", userProfile.getNickname());
+    data.put("regionName", userProfile.getRegion().getName());
+    data.put("symbolImageUrl", userProfile.getRegion().getSymbolImageUrl());
+    data.put("level", userProfile.getLevel());
+    data.put("exp", userProfile.getExp());
+    data.put("bestScore", userProfile.getBestScore());
+    data.put("bestScoreUpdatedAt", userProfile.getBestScoreUpdatedAt());
+    data.put("profileImageUrl", userProfile.getProfileImageUrl());
+    data.put("backgroundImageUrl", userProfile.getBackgroundImageUrl());
+    data.put("monsterBadgeUrl", userProfile.getMonsterBadgeUrl());
+    return data;
   }
 }

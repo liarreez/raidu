@@ -6,8 +6,10 @@ import com.sixstar.raidu.global.response.BaseResponse;
 import com.sixstar.raidu.global.response.BaseResponseService;
 import com.sixstar.raidu.global.response.BaseSuccessResponse;
 import jakarta.validation.Valid;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -20,6 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserpageController {
   private final UserpageService userpageService;
   private final BaseResponseService baseResponseService;
+
+  @GetMapping("")
+  public ResponseEntity<BaseResponse<?>> searchUserInfo(@RequestHeader("Authorization") String authorization) {
+    Map<String, Object> data = userpageService.searchUserInfo(authorization);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_SEARCH_SUCCESS, data);
+  }
 
   @PostMapping("/register")
   public ResponseEntity<BaseResponse<?>> register(@RequestHeader("Authorization") String authorization, @Valid @RequestBody UserprofileRegisterDto userprofileRegisterDto) {
