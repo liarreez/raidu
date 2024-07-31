@@ -8,6 +8,7 @@ public enum BaseSuccessResponse {
   //2XX : Success
   OK(HttpStatus.OK, "success"),
   REGISTER_SUCCESS(HttpStatus.CREATED, "User registered successfully"),
+  USERPROFILE_REGISTER_SUCCESS(HttpStatus.CREATED, "Userprofile registered successfully"),
   LOGIN_SUCCESS(HttpStatus.OK, "Login successful"),
   LOGOUT_SUCCESS(HttpStatus.OK, "Logout successful"),
   REFRESH_TOKEN_SUCCESS(HttpStatus.OK, "Token refreshed successfully"),

@@ -26,6 +26,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -43,8 +44,10 @@ public class UserProfile {
   private User user;
   @Column(nullable = false, unique = true)
   private String email;
+  @Setter
   @Column(nullable = false, unique = true)
   private String nickname;
+  @Setter
   @OneToOne
   @JoinColumn(name = "region_id", nullable = false)
   private Region region;
