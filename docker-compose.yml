@@ -42,7 +42,7 @@ services:
     ports:
       - "4443:4443"
     environment:
-      - OPENVIDU_SECRET=z5F!hX2nQ#8rV$3sW^1dG@7bM&6tC
+      - OPENVIDU_SECRET=z5F_hX2nQ-8rV3sW1dG7bM6tC
       - DOMAIN_OR_PUBLIC_IP=43.200.254.20
     depends_on:
       - kms
