@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { Socketest } from './Socketest';
+import { Socketest } from '../Component/Socketest';
 import { useParams } from 'react-router-dom';
 
 function Home() {
