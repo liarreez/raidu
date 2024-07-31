@@ -42,11 +42,19 @@ public class BossMonster {
   private LocalDateTime updatedAt;
   @Column(nullable = false)
   private Long hp;
+  private String description;
+  @Column(nullable = false)
+  private Boolean isMainboss;
   @ManyToOne
   @JoinColumn(name = "season_id")
   private Season season;
   @OneToMany(mappedBy = "bossMonster")
   private List<UserBossMonster> userBossMonsters;
+
+  @PrePersist
+  public void prePersist() {
+    this.isMainboss = this.isMainboss == null ? false: this.isMainboss;
+  }
 
   @Builder
   public BossMonster(String name, String imageUrl,

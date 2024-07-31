@@ -38,6 +38,7 @@ public class Monster {
   @LastModifiedDate
   @Column(nullable = false)
   private LocalDateTime updatedAt;
+  private String description;
   @OneToMany(mappedBy = "monster")
   private List<UserMonster> userMonsters;
 
