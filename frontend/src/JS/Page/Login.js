@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import LoginSlider from "../Component/LoginSlider";
@@ -20,18 +20,18 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
   height: 600,
-  bgcolor: 'background.paper',
+  bgcolor: "background.paper",
   boxShadow: 24,
   p: 2,
-  display: 'flex',
-  flexDirection: 'column',
-  borderRadius: '10px'
+  display: "flex",
+  flexDirection: "column",
+  borderRadius: "10px",
 };
 
 const SignUp = () => {
@@ -39,6 +39,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -80,49 +81,76 @@ const SignUp = () => {
     handleClose();
   };
 
+  useEffect(() => {
+    const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z\d\s]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError(true);
+    } else {
+      setError(false);
+    }
+  }, [password]);
+
   return (
     <div>
-      <Button onClick={handleOpen}>회원가입</Button>
+      <button onClick={handleOpen} className="register-button">
+        회원가입
+      </button>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         BackdropProps={{
-          style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
+          style: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
         }}
       >
         <Box sx={modalStyle}>
-          <div style={{display: "flex", alignItems: "center", justifyContent: "end", }}>
-            <IconButton onClick={handleClose} sx={{width: "50px", height: "50px", border: "2px solid grey", zIndex: "10"}}>
-              <CloseIcon/>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "end" }}>
+            <IconButton
+              onClick={handleClose}
+              sx={{ width: "50px", height: "50px", border: "2px solid grey", zIndex: "10" }}
+            >
+              <CloseIcon />
             </IconButton>
           </div>
-          
-          <div style={{display: "flex", width: "400px", height: "600px", position:"absolute",alignItems: "center", flexDirection: "column"}}>  
-            <div className="icon-circle" style={{position: "relative", top: "-50px"}}>
+
+          <div
+            style={{
+              display: "flex",
+              width: "400px",
+              height: "600px",
+              position: "absolute",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <div className="icon-circle" style={{ position: "relative", top: "-50px" }}>
               <img src={sign} alt="?"></img>
-            </div>  
-            <h2 className="title-login" style={{position: "relative", top: "-30px", textAlign: "center"}}>회원가입</h2>
+            </div>
+            <h2
+              className="title-login"
+              style={{ position: "relative", top: "-30px", textAlign: "center" }}
+            >
+              회원가입
+            </h2>
             <form onSubmit={handleSignup}>
-              <InputField
-                label="이메일"
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-              />
+              {/* 이메일, 비밀번호, 비밀번호 확인 필드 */}
+              <InputField label="이메일" type="email" value={email} onChange={handleEmailChange} />
               <InputField
                 label="비밀번호"
                 type="password"
                 value={password}
                 onChange={handlePasswordChange}
               />
+              {/* 비밀번호 조건 만족 여부 메시지 */}
+              {error ? <p className="error-msg" style={{ color: "red" }}>비밀번호 조건을 만족하지 않습니다.</p> : null}
               <InputField
                 label="비밀번호 확인"
                 type="password"
                 value={confirmPassword}
                 onChange={handleConfirmPasswordChange}
               />
+
               <button type="submit" className="login-button">
                 가입하기
               </button>
@@ -170,7 +198,7 @@ const Login = () => {
               <LoginSlider />
             </div>
           </div>
-          
+
           <div className="content-right">
             <div className="login-form">
               <div className="icon-circle">
@@ -196,8 +224,8 @@ const Login = () => {
                   </button>
                 </form>
                 <div className="social-login">
-                  <button className="social-login-button">소셜 뭐할지 정해지면</button>
-                  <button className="social-login-button">추가할게요</button>
+                  <button className="social-login-button">소셜 로그인은</button>
+                  <button className="social-login-button">추가 예정입니다.</button>
                 </div>
                 <SignUp />
               </div>

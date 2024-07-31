@@ -185,6 +185,27 @@ body, html {
     background-color: var(--hard-color-green-selected);
 }
 
+.register-button {
+    width: 250px;
+    height: 38px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    font-family: inherit;
+    font-size: 14px;
+    background-color: var(--hard-color-grey);
+    margin-top: 50px;
+
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.register-button:hover {
+    background-color: var(--hard-color-black);
+    transform: scale(1.1);
+}
+
 .social-login {
     margin-top: 20px;
     display: flex;

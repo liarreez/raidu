@@ -7,10 +7,12 @@ function SimpleSlider() {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 500,
+    speed: 3000,
     slidesToShow: 1,
     slidesToScroll: 1,
-    draggable: true
+    draggable: true,
+    autoplay: true,
+    autoplaySpeed: 6000, // 6초마다 슬라이드 전환
   };
   return (
     <div className="loginslider-container">
