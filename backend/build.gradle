@@ -46,7 +46,14 @@ dependencies {
 	// flywaydb/flyway-core // flyway-mysql
 	implementation 'org.flywaydb:flyway-core:10.16.0'
 	implementation 'org.flywaydb:flyway-mysql:10.16.0'
+	
+	// websocket
+    // WebSocket 스타터
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    // Spring Messaging
+    implementation 'org.springframework:spring-messaging'
 }
+	
 
 tasks.named('test') {
 	useJUnitPlatform()

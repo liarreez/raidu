@@ -8,6 +8,8 @@ import MyPage from "./JS/Page/Mypage.js";
 import EditProfile from "./JS/Page/EditProfile.js";
 import UserSearch from "./JS/Page/UserSearch.js";
 import NotFound from "./JS/Page/NotFound.js";
+
+import WaitRoom from "./JS/Page/WaitRoom.js";
 // 다른 페이지들을 import 하세요
 
 function App() {
@@ -29,8 +31,11 @@ function App() {
             {/* 랭킹 경로 */}
             <Route path="/usersearch" element={<UserSearch />} />
             
-            {/* 여기에 추가적인 경로를 설정할것ㄴ */}
+            {/* 여기에 추가적인 경로를 설정할것 */}
             
+            <Route path="/enter">
+              <Route path=":roomNo" element ={<WaitRoom/>}/>
+            </Route>
             
             
             {/* 예외처리 경로 - 와일드 카드 */}
