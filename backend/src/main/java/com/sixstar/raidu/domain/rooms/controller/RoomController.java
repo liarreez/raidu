@@ -67,6 +67,8 @@ public class RoomController {
     public ResponseEntity<BaseResponse<?>> initializeSession(@RequestBody(required = false) Map<String, Object> params)
         throws OpenViduJavaClientException, OpenViduHttpException {
         Map<String, Object> response = roomService.initializeSession(params);
+        System.out.println(response);
+        System.out.println(response.get("sessionId"));
         return baseResponseService.getSuccessResponse(
             BaseSuccessResponse.INIT_SESSION_SUCCESS, response);
     }

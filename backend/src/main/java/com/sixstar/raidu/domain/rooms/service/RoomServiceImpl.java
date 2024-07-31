@@ -183,8 +183,11 @@ public class RoomServiceImpl implements RoomService{
         throws OpenViduJavaClientException, OpenViduHttpException {
         SessionProperties properties = SessionProperties.fromJson(params).build();
         Session session = openvidu.createSession(properties);
+
         Map<String, Object> map = new HashMap<>();
         map.put("sessionId", session.getSessionId());
+        System.out.println("sessionId           "+session.getSessionId());
+        System.out.println("MAMAMAM     "+map.get("sessionId"));
         return map;
     }
 
@@ -199,6 +202,8 @@ public class RoomServiceImpl implements RoomService{
         Connection connection = session.createConnection(properties);
         Map<String, Object> map = new HashMap<>();
         map.put("token", connection.getToken());
+        System.out.println("token           "+connection.getToken());
+
         return map;
     }
 }
