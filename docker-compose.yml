@@ -15,8 +15,11 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    volumes:
+      - db_data:/var/lib/mysql
 
   app:
+    build: .
     image: goldenkiwi971202/myapp:latest
     depends_on:
       db:
@@ -32,12 +35,40 @@ services:
     command: >
       sh -c "./wait-for-it.sh db:3306 -- java -jar /app/app.jar"
 
+  openvidu-server:
+    image: openvidu/openvidu-server:2.30.0
+    ports:
+      - "4443:4443"
+    environment:
+      - OPENVIDU_SECRET=z5F!hX2nQ#8rV$3sW^1dG@7bM&6tC
+      - DOMAIN_OR_PUBLIC_IP=43.200.254.20
+    depends_on:
+      - kms
+
+  kms:
+    image: kurento/kurento-media-server:latest
+    ports:
+      - "8888:8888"
+      - "5000-5050:5000-5050/udp"
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+      - openvidu-server
+
   jenkins:
     image: jenkins/jenkins:lts
     ports:
-      - "8081:8080"  # Jenkins 포트 설정
+      - "8081:8080" # Jenkins 포트 설정
     volumes:
       - jenkins_home:/var/jenkins_home
 
 volumes:
+  db_data:
   jenkins_home:
