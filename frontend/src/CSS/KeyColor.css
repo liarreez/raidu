@@ -18,3 +18,7 @@
     --region-color-three: #B758E3;
     --region-color-four: #2B78C0;
 }
+
+button {
+    transition: background-color 0.3s ease-in-out;
+}
