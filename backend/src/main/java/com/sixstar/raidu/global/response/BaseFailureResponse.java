@@ -12,6 +12,7 @@ public enum BaseFailureResponse {
   // 특정 상황
   EMAIL_IS_DUPLICATED(HttpStatus.CONFLICT, "중복된 이메일입니다!"),
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다!"),
+  USERPROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저 프로필입니다!"),
   LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "이메일 혹은 비밀번호가 틀렸습니다!"),
   ACCESS_TOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "액세스 토큰이 만료되었습니다!"),
   REFRESH_TOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "리프레시 토큰이 만료되었습니다!"),
