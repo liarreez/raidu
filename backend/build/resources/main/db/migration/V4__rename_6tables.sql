@@ -1,69 +1,16 @@
--- Dictionary 테이블 이름 변경
-DO
-$$
-BEGIN
-    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'Dictionary') THEN
+-- V4__rename_6tables.sql
+
+-- Try renaming 'Dictionary' table, ignore if it fails
 ALTER TABLE `Dictionary` RENAME TO `dictionary`;
-END IF;
-END
-$$;
-
--- Monster 테이블 이름 변경
-DO
-$$
-BEGIN
-    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'Monster') THEN
+-- Try renaming 'Monster' table, ignore if it fails
 ALTER TABLE `Monster` RENAME TO `monster`;
-END IF;
-END
-$$;
-
--- Region 테이블 이름 변경
-DO
-$$
-BEGIN
-    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'Region') THEN
+-- Try renaming 'Region' table, ignore if it fails
 ALTER TABLE `Region` RENAME TO `region`;
-END IF;
-END
-$$;
-
--- Report 테이블 이름 변경
-DO
-$$
-BEGIN
-    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'Report') THEN
+-- Try renaming 'Report' table, ignore if it fails
 ALTER TABLE `Report` RENAME TO `report`;
-END IF;
-END
-$$;
-
--- Room 테이블 이름 변경
-DO
-$$
-BEGIN
-    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'Room') THEN
+-- Try renaming 'Room' table, ignore if it fails
 ALTER TABLE `Room` RENAME TO `room`;
-END IF;
-END
-$$;
-
--- Season 테이블 이름 변경
-DO
-$$
-BEGIN
-    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'Season') THEN
+-- Try renaming 'Season' table, ignore if it fails
 ALTER TABLE `Season` RENAME TO `season`;
-END IF;
-END
-$$;
-
--- User 테이블 이름 변경
-DO
-$$
-BEGIN
-    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'User') THEN
+-- Try renaming 'User' table, ignore if it fails
 ALTER TABLE `User` RENAME TO `user`;
-END IF;
-END
-$$;
