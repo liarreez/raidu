@@ -45,11 +45,13 @@ services:
       - OPENVIDU_SECRET=z5F_hX2nQ-8rV3sW1dG7bM6tC
       - DOMAIN_OR_PUBLIC_IP=i11a108.p.ssafy.io
       - KMS_URIS=["ws://kms:8888/kurento"]
-      - CERTIFICATE_TYPE=letsencrypt
-      - LETSENCRYPT_EMAIL=goldenkiwi971202@gmail.com
+      - CERTIFICATE_TYPE=owncert
       - HTTPS_PORT=4443
+      - HTTPS_CERTIFICATE_TYPE=chain
+      - HTTPS_CERTIFICATE_CHAIN_FILE=/etc/letsencrypt/live/i11a108.p.ssafy.io/fullchain.pem
+      - HTTPS_CERTIFICATE_KEY_FILE=/etc/letsencrypt/live/i11a108.p.ssafy.io/privkey.pem
     volumes:
-      - ./nginx/certbot/conf:/etc/letsencrypt
+      - ./nginx/certbot/conf:/etc/letsencrypt:ro
     depends_on:
       - kms
 
