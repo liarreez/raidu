@@ -63,9 +63,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
 
         String role = auth.getAuthority();
-
-        // 토큰은 12시간 유지
-        String accessToken = jwtUtil.createJwt(TokenType.ACCESS.name(), email, role, 60*60*24L*7);
+        
+        String accessToken = jwtUtil.createJwt(TokenType.ACCESS.name(), email, role, 60*60*1L);
         String refreshToken = jwtUtil.createJwt(TokenType.REFRESH.name(), email, role, 60*60*24L);
 
         refreshTokenService.saveRefreshToken(email, refreshToken);
