@@ -32,7 +32,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: raidu1!
       SPRING_PROFILES_ACTIVE: prod
       JWT_SECRET: klmqskdlnpqncoqkwmdklcksoandfmklmqfmwqkdfcxnjkspring.application.name=raidu
-      OPENVIDU_URL: https://43.200.254.20:4443/
+      OPENVIDU_URL: https://i11a108.p.ssafy.io:4443/
       OPENVIDU_SECRET: z5F_hX2nQ-8rV3sW1dG7bM6tC
     command: >
       sh -c "./wait-for-it.sh db:3306 -- java -jar /app/app.jar"
@@ -43,7 +43,7 @@ services:
       - "4443:4443"
     environment:
       - OPENVIDU_SECRET=z5F_hX2nQ-8rV3sW1dG7bM6tC
-      - DOMAIN_OR_PUBLIC_IP=43.200.254.20
+      - DOMAIN_OR_PUBLIC_IP=i11a108.p.ssafy.io
       - KMS_URIS=["ws://kms:8888/kurento"]
       - CERTIFICATE_TYPE=selfsigned
       - HTTPS_PORT=4443
