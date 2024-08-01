@@ -32,7 +32,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: raidu1!
       SPRING_PROFILES_ACTIVE: prod
       JWT_SECRET: klmqskdlnpqncoqkwmdklcksoandfmklmqfmwqkdfcxnjkspring.application.name=raidu
-      OPENVIDU_URL: http://43.200.254.20:4443/
+      OPENVIDU_URL: https://43.200.254.20:4443/
       OPENVIDU_SECRET: z5F_hX2nQ-8rV3sW1dG7bM6tC
     command: >
       sh -c "./wait-for-it.sh db:3306 -- java -jar /app/app.jar"
@@ -63,9 +63,18 @@ services:
       - "443:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
+      - certs:/etc/letsencrypt
+      - certs-data:/data/letsencrypt
     depends_on:
       - app
       - openvidu-server
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certs:/etc/letsencrypt
+      - certs-data:/data/letsencrypt
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h; done'"
 
   jenkins:
     image: jenkins/jenkins:lts
@@ -76,4 +85,6 @@ services:
 
 volumes:
   db_data:
+  certs:
+  certs-data:
   jenkins_home:
