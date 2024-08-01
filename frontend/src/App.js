@@ -9,6 +9,9 @@ import EditProfile from "./JS/Page/EditProfile.js";
 import UserSearch from "./JS/Page/UserSearch.js";
 import NotFound from "./JS/Page/NotFound.js";
 import FirstVisit from "./JS/Page/FirstVisit.js";
+
+import WaitRoom from "./JS/Page/WaitRoom.js";
+import RaidLobby from "./JS/Page/RaidLobby.js";
 // 다른 페이지들을 import 하세요
 
 function App() {
@@ -31,8 +34,13 @@ function App() {
             <Route path="/usersearch" element={<UserSearch />} />
             {/* 첫방문 -> 지역 / 닉네임 선택 */}
             <Route path="/firstvisit" element={<FirstVisit />} />
-            {/* 여기에 추가적인 경로를 설정할것ㄴ */}
             
+            {/* 여기에 추가적인 경로를 설정할것 */}
+            <Route path="/raid" element={<RaidLobby/>} />
+            
+            <Route path="/enter">
+              <Route path=":roomNo" element ={<WaitRoom/>}/>
+            </Route>
             {/* 예외처리 경로 - 와일드 카드 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
