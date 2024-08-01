@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import FadeAnime from "../Component/FadeAnime";
 import "../../CSS/FirstVisit.css";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 
 import region1 from "../../Imgs/flag.gif";
 import region2 from "../../Imgs/flag.gif";
@@ -33,6 +38,48 @@ const FirstVisit = () => {
     name: "없음",
     desc: "지역을 선택해주세요.",
   });
+
+  const [isFirstModalOpen, setIsFirstModalOpen] = useState(true);
+  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
+  const [nickname, setNickname] = useState("");
+  const [isNicknameValid, setIsNicknameValid] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // 페이지 입장 시 첫 번째 모달을 자동으로 열기
+    setIsFirstModalOpen(true);
+  }, []);
+
+  const closeFirstModal = () => {
+    setIsFirstModalOpen(false);
+  };
+
+  const openSecondModal = () => {
+    setIsSecondModalOpen(true);
+  };
+
+  const closeSecondModal = () => {
+    setIsSecondModalOpen(false);
+  };
+
+  const handleNicknameChange = (e) => {
+    setNickname(e.target.value);
+  };
+
+  const checkNickname = () => {
+    // 닉네임 중복 확인 로직을 여기에 추가하세요
+    // 예: 서버에 요청하여 닉네임 중복 확인
+    setIsNicknameValid(true); // 임시로 닉네임을 유효한 것으로 설정
+  };
+
+  const completeAccountSetup = () => {
+    if (isNicknameValid) {
+      // 계정 설정 완료 로직을 여기에 추가하세요
+      // 예: 서버에 사용자 정보 저장
+      navigate("/home");
+    }
+  };
 
   return (
     <FadeAnime>
@@ -70,18 +117,52 @@ const FirstVisit = () => {
               </SpringAnime>
             </div>
             <div className="first-region-confirm">
-                <button>소속 확정</button>
+              <Button variant="contained" onClick={openSecondModal}>
+                소속 확정
+              </Button>
             </div>
           </div>
           <div className="first-region-img">
-                <SpringAnime key={selectedRegion.id} from="right">
-                  <div>
-                    <img src={selectedRegion.bg} alt={`지역 ${selectedRegion.id}에 대한 이미지 자리...`}></img>
-                  </div>
-                </SpringAnime>
+            <SpringAnime key={selectedRegion.id} from="right">
+              <div>
+                <img src={selectedRegion.bg} alt={`지역 ${selectedRegion.id}에 대한 이미지 자리...`}></img>
+              </div>
+            </SpringAnime>
           </div>
         </div>
       </div>
+
+      <Modal open={isFirstModalOpen} onClose={closeFirstModal}>
+        <Box className="modal-box">
+          <p className="modal-small-text">처음 방문하셨군요!</p>
+          <p className="modal-large-text" style={{marginTop: "10px", marginBottom:"50px"}}>지역과 닉네임을 설정해보세요</p>
+          <button className="modal-button button-green" onClick={closeFirstModal}>초기 설정 하러 가기</button>
+        </Box>
+      </Modal>
+
+      <Modal open={isSecondModalOpen} onClose={closeSecondModal}>
+        <Box className="modal-box">
+          <p>닉네임을 입력하세요:</p>
+          <TextField
+            label="닉네임"
+            variant="outlined"
+            value={nickname}
+            onChange={handleNicknameChange}
+            fullWidth
+          />
+          <button className="modal-button button-gray" onClick={checkNickname}>중복 확인</button>
+          <button className="modal-button button-green" onClick={completeAccountSetup}>계정 설정 완료</button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={completeAccountSetup}
+            disabled={!isNicknameValid}
+            className="modal-button button-green"
+          >
+            계정 설정 완료
+          </Button>
+        </Box>
+      </Modal>
     </FadeAnime>
   );
 };

@@ -203,3 +203,53 @@ body, html {
 .selecter-icon img {
     width: 80%;
 }
+
+/* 모달 CSS */
+.modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .modal-box * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .modal-small-text {
+    color: var(--hard-color-grey);
+    font-size: 14px;
+  }
+
+  .modal-large-text {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .modal-button {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .button-green {
+    background-color: var(--hard-color-green);
+    color: var(--hard-color-white);  
+}
+
+.button-gray {
+    background-color: var(--hard-color-grey);
+    color: var(--hard-color-white);  
+}
