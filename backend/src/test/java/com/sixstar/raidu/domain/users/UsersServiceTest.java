@@ -77,7 +77,7 @@ public class UsersServiceTest {
       userService.register(userRegisterDto);
     });
 
-    assertEquals(BaseFailureResponse.DuplicateEmailException, exception.getBaseResponseStatus());
+    assertEquals(BaseFailureResponse.EMAIL_IS_DUPLICATED, exception.getBaseResponseStatus());
     verify(userRepository).existsByEmail(userRegisterDto.getEmail());
     verifyNoMoreInteractions(userRepository);
     verifyNoMoreInteractions(bCryptPasswordEncoder);
