@@ -44,7 +44,7 @@ const FirstVisit = () => {
             <div className="first-region-top">
               <div className="first-region-icon">
                 <SpringAnime key={selectedRegion.id} from="right">
-                  <div>
+                  <div style={{width: "300px", display: "flex", justifyContent: "center"}}>
                     <img src={selectedRegion.icon || ""} alt="선택된 지역 아이콘 확대"></img>
                   </div>
                 </SpringAnime>
