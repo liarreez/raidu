@@ -19,6 +19,11 @@ import Modal from "@mui/material/Modal";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
+// 통신부
+import axios from "axios";
+
+const SERVERURL = "http://localhost:8080";
+
 const modalStyle = {
   position: "absolute",
   top: "50%",
@@ -65,19 +70,18 @@ const SignUp = () => {
     }
     console.log("Email:", email);
     console.log("Password:", password);
-    // 회원가입 API 호출 예시
-    // signUp({ email, password })
-    //   .then(response => {
-    //     alert("회원가입이 완료되었습니다.");
-    //     handleClose();
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //     alert("회원가입에 실패했습니다.");
-    //   });
+    // 회원가입 API 호출
+    signUp({ email, password })
+      .then(response => {
+        handleClose();
+      })
+      .catch(error => {
+        console.error(error);
+        alert("회원가입에 실패했습니다.");
+      });
 
     // 회원가입 성공 시
-    alert("회원가입이 완료되었습니다.");
+    console.log("회원가입이 완료되었습니다.");
     handleClose();
   };
 
@@ -89,6 +93,17 @@ const SignUp = () => {
       setError(false);
     }
   }, [password]);
+
+  const signUp = async ({ email, password }) => {
+    try {
+      console.log(SERVERURL + "/api/raidu/users/register" + "통신 시도...")
+      console.log(`보내는값 : 이메일은 ${email}  / 비밀번호는 ${password}`)
+      const response = await axios.post(SERVERURL + "/api/raidu/users/register", { email: `${email}`, password: `${password}`});
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
 
   return (
     <div>
