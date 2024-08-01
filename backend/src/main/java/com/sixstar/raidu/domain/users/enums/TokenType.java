@@ -1,10 +1,10 @@
 package com.sixstar.raidu.domain.users.enums;
 
-public enum Tokens {
+public enum TokenType {
   ACCESS("access"),
   REFRESH("refresh")
   ;
 
-  Tokens(String name) {
+  TokenType(String name) {
   }
 }
