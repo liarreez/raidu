@@ -48,6 +48,8 @@ services:
       - CERTIFICATE_TYPE=letsencrypt
       - LETSENCRYPT_EMAIL=goldenkiwi971202@gmail.com
       - HTTPS_PORT=4443
+    volumes:
+      - ./nginx/certbot/conf:/etc/letsencrypt
     depends_on:
       - kms
 
