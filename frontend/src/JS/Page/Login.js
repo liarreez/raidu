@@ -63,22 +63,22 @@ const SignUp = () => {
 
   const handleSignup = (event) => {
     event.preventDefault();
-    // // 회원가입 처리 로직 추가
-    // if (password !== confirmPassword) {
-    //   alert("비밀번호가 일치하지 않습니다.");
-    //   return;
-    // }
-    // console.log("Email:", email);
-    // console.log("Password:", password);
-    // // 회원가입 API 호출
-    // signUp({ email, password })
-    //   .then(response => {
-    //     handleClose();
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //     alert("회원가입에 실패했습니다.");
-    //   });
+    // 회원가입 처리 로직 추가
+    if (password !== confirmPassword) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+    console.log("Email:", email);
+    console.log("Password:", password);
+    // 회원가입 API 호출
+    signUp({ email, password })
+      .then(response => {
+        handleClose();
+      })
+      .catch(error => {
+        console.error(error);
+        alert("회원가입에 실패했습니다.");
+      });
 
     // 회원가입 성공 시
     console.log("회원가입이 완료되었습니다.");

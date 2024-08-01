@@ -1,7 +1,7 @@
 package com.sixstar.raidu.domain.users.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sixstar.raidu.domain.users.enums.Tokens;
+import com.sixstar.raidu.domain.users.enums.TokenType;
 import com.sixstar.raidu.global.response.BaseException;
 import com.sixstar.raidu.global.response.BaseFailureResponse;
 import com.sixstar.raidu.global.response.BaseResponse;
@@ -65,8 +65,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         // 토큰은 12시간 유지
-        String accessToken = jwtUtil.createJwt(Tokens.ACCESS.name(), email, role, 60*60*1L);
-        String refreshToken = jwtUtil.createJwt(Tokens.REFRESH.name(), email, role, 60*60*24L);
+        String accessToken = jwtUtil.createJwt(TokenType.ACCESS.name(), email, role, 60*60*24L*7);
+        String refreshToken = jwtUtil.createJwt(TokenType.REFRESH.name(), email, role, 60*60*24L);
 
         refreshTokenService.saveRefreshToken(email, refreshToken);
 
