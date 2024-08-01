@@ -14,9 +14,9 @@
 
     /* 지역 색입니다. */
     --region-color-one: #FF5C5C;
-    --region-color-two: #FFDA55;
-    --region-color-three: #B758E3;
-    --region-color-four: #2B78C0;
+    --region-color-two: #ffd438;
+    --region-color-three: #a628e0;
+    --region-color-four: #0084ff;
 }
 
 button {
