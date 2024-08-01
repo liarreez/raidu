@@ -52,6 +52,7 @@ services:
       - HTTPS_CERTIFICATE_KEY_FILE=/etc/letsencrypt/live/i11a108.p.ssafy.io/privkey.pem
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt:ro
+      - ./nginx/certbot/conf/.env:/opt/openvidu/.env
     depends_on:
       - kms
 
