@@ -10,6 +10,7 @@
     "@mui/material": "^5.16.4",
     "@nivo/bar": "^0.87.0",
     "@nivo/core": "^0.87.0",
+    "@stomp/stompjs": "^7.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -21,7 +22,9 @@
     "react-slick": "^0.30.2",
     "react-step-progress-bar": "^1.0.3",
     "slick-carousel": "^1.8.1",
-    "web-vitals": "^2.1.4"
+    "sockjs-client": "^1.6.1",
+    "web-vitals": "^2.1.4",
+    "ws": "^8.18.0"
   },
   "scripts": {
     "start": "react-scripts start",

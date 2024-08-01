@@ -1,11 +1,11 @@
 OPENVIDU_URL: http://localhost:4443/
-OPENVIDU_SECRET: MY_SECRET
+OPENVIDU_SECRET: z5F_hX2nQ-8rV3sW1dG7bM6tC
 
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/raidu
     username: raidu
-    password: raidu1! # 여기에 실제 비밀번호를 입력하세요
+    password: raidu1!
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -14,8 +14,17 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
   jwt:
     secret: klmqskdlnpqncoqkwmdklcksoandfmklmqfmwqkdfcxnjkspring.application.name=raidu
+
+  web:
+    resources:
+      static-locations: classpath:/public/
 
 logging:
   level:

@@ -1,5 +1,5 @@
-OPENVIDU_URL: http://localhost:4443/
-OPENVIDU_SECRET: z5F_hX2nQ-8rV3sW1dG7bM6tC
+OPENVIDU_URL: http://localhost:4443
+OPENVIDU_SECRET: MY_SECRET
 
 spring:
   datasource:
@@ -10,10 +10,12 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  flyway:
+    enabled: false
 
   mvc:
     pathmatch:
