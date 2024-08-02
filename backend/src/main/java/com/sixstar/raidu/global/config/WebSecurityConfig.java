@@ -27,7 +27,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -59,7 +59,7 @@ public class WebSecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll()
             .requestMatchers("/", "/index.html", "/error","/login","/api/raidu/users/register", "/api/raidu/users/login", "/api/raidu/users/social-register", "/api/raidu/users/social-login", "/api/raidu/users/refresh-token", "/api/raidu/users/check-email", "/api/raidu/users/recover"
-            , "/public/**", "/static/**", "/resources/**", "/webjars/**", "/ws/**", "/enter/**").permitAll()
+            , "/public/**", "/static/**", "/resources/**", "/webjars/**", "/enter/**", "/api/ws/**").permitAll()
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
@@ -70,7 +70,7 @@ public class WebSecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173","https://i11a108.p.ssafy.io:4443" ,"https://i11a108.p.ssafy.io:3000"));
+    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173","https://i11a108.p.ssafy.io:4443" ,"https://i11a108.p.ssafy.io:3000", "https://i11a108.p.ssafy.io"));
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowCredentials(true);
     configuration.setAllowedHeaders(Collections.singletonList("*"));
