@@ -152,13 +152,13 @@ const SignUp = () => {
               {/* 이메일, 비밀번호, 비밀번호 확인 필드 */}
               <InputField label="이메일" type="email" value={email} onChange={handleEmailChange} />
               <InputField
-                label="비밀번호"
+                label="비밀번호 (영문, 숫자, 특수기호 최소 1개 이상)"
                 type="password"
                 value={password}
                 onChange={handlePasswordChange}
               />
               {/* 비밀번호 조건 만족 여부 메시지 */}
-              {error ? <p className="error-msg" style={{ color: "red" }}>비밀번호 조건을 만족하지 않습니다.</p> : null}
+              <p className={`error-msg ${error ? "visible" : "hidden"}`}>비밀번호 조건을 만족하지 않습니다.</p>
               <InputField
                 label="비밀번호 확인"
                 type="password"
