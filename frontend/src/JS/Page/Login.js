@@ -152,7 +152,7 @@ const SignUp = () => {
               {/* 이메일, 비밀번호, 비밀번호 확인 필드 */}
               <InputField label="이메일" type="email" value={email} onChange={handleEmailChange} />
               <InputField
-                label="비밀번호 (영문, 숫자, 특수기호 최소 1개 이상)"
+                label="비밀번호 (영문, 숫자, 특수기호 포함 8글자 이상)"
                 type="password"
                 value={password}
                 onChange={handlePasswordChange}
