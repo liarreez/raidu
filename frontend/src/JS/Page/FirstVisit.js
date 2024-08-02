@@ -171,7 +171,41 @@ const FirstVisit = () => {
               중복 확인
             </button>
           </div>
-          <p className="modal-small-text" style={{color:"red", fontSize:"8px"}}>사용할 수 없는 닉네임입니다!</p>
+          {/* 1. 중복확인을 누르지 않았을때 2. 중복확인을 눌렀으나 중복일때 3. 중복확인을 눌렀고 중복이 아닐때*/}
+          <div style={{ position: "relative", height: "20px", width: "100%", display:"flex", justifyContent: "center", alignItems: "center", marginBottom: "10px" }}>
+            <p
+              className={`modal-small-text ${nicknameChecked ? "hidden" : ""}`}
+              style={{
+                color: "red",
+                fontSize: "10px",
+                position: "absolute",
+
+              }}
+            >
+              닉네임 중복 확인을 진행해주세요!
+            </p>
+            <p
+              className={`modal-small-text ${nicknameChecked && !isNicknameValid ? "" : "hidden"}`}
+              style={{
+                color: "red",
+                fontSize: "10px",
+                position: "absolute",
+              }}
+            >
+              이미 존재하는 닉네임입니다!
+            </p>
+            <p
+              className={`modal-small-text ${nicknameChecked && isNicknameValid ? "" : "hidden"}`}
+              style={{
+                color: "green",
+                fontSize: "10px",
+                position: "absolute",
+              }}
+            >
+              사용 가능한 닉네임입니다!
+            </p>
+          </div>
+
           <button
             className={`modal-button button-green ${nicknameChecked ? "" : "hidden"}`}
             onClick={completeAccountSetup}
