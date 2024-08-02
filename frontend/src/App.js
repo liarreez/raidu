@@ -8,6 +8,8 @@ import MyPage from "./JS/Page/Mypage.js";
 import EditProfile from "./JS/Page/EditProfile.js";
 import UserSearch from "./JS/Page/UserSearch.js";
 import NotFound from "./JS/Page/NotFound.js";
+import RaidLobby from "./JS/Page/RaidLobby.js";
+import RaidWaitRoom from "./JS/Page/RaidWaitRoom.js";
 
 import WaitRoom from "./JS/Page/WaitRoom.js";
 // 다른 페이지들을 import 하세요
@@ -30,7 +32,11 @@ function App() {
             <Route path="/editprofile" element={<EditProfile />} />
             {/* 랭킹 경로 */}
             <Route path="/usersearch" element={<UserSearch />} />
-            
+            {/* 대기방 경로 */}
+            <Route path="/raid" element={<RaidLobby />}/>
+            <Route path="/raid/:roomName" element={<RaidWaitRoom />}/>
+
+
             {/* 여기에 추가적인 경로를 설정할것 */}
             
             <Route path="/enter">
