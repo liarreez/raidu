@@ -239,8 +239,8 @@ const Login = () => {
                   </button>
                 </form>
                 <div className="social-login">
-                  <button className="social-login-button">소셜 로그인은</button>
-                  <button className="social-login-button">추가 예정입니다.</button>
+                  <button className="social-login-button">소셜 로그인은 추가예정</button>
+                  <button className="social-login-button" onClick={()=>{navigate("/firstvisit")}}>첫방문 CSS는 여기서 살펴보세요 (임시)</button>
                 </div>
                 <SignUp />
               </div>
