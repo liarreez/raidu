@@ -8,7 +8,7 @@ public enum BaseFailureResponse {
   //4XX : Client Error
 
   //5XX : Server Error
-
+  INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 서버에러입니다!"),
   // 특정 상황
   EMAIL_IS_DUPLICATED(HttpStatus.CONFLICT, "중복된 이메일입니다!"),
   USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다!"),
