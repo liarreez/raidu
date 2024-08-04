@@ -37,13 +37,14 @@ public class RoomController {
 
     @GetMapping()
     public ResponseEntity<BaseResponse<?>> findAllWaitingRooms(
-        @RequestParam(required = false) Integer roundTime,
-        @RequestParam(required = false) Integer restTime,
-        @RequestParam(required = false) Integer totalRounds,
-        @RequestParam(required = false) String title
+        @RequestParam(name="round-time", required = false) Integer roundTime,
+        @RequestParam(name="rest-time",required = false) Integer restTime,
+        @RequestParam(name="total-rounds",required = false) Integer totalRounds,
+        @RequestParam(name="title",required = false) String title
     ){
         Map<String, Object> response = roomService.findAllWaitingRooms(roundTime, restTime, totalRounds, title);
-        return response.containsKey("message") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.NO_WAITING_ROOMS, response.get("message"))
+        System.out.println(response.get("message"));
+        return response.containsKey("message") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.NO_WAITING_ROOMS, response)
                 : baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_WAITING_ROOMS_SUCCESS, response);
     }
 
