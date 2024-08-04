@@ -1,7 +1,7 @@
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
- const SOCKET_URL = 'https://i11a108.p.ssafy.io:8082/ws'; // 백서버 포트 넣기
+ const SOCKET_URL = 'http://i11a108.p.ssafy.io/api/ws'; // 백서버 포트 넣기
 
 export class Socketest {
   constructor(UserIdVal) {

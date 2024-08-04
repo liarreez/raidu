@@ -18,9 +18,11 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
-  app:
-    build: .
-    image: goldenkiwi971202/myapp:latest
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: goldenkiwi971202/backend:latest
     depends_on:
       db:
         condition: service_healthy
@@ -36,6 +38,16 @@ services:
       OPENVIDU_SECRET: z5F_hX2nQ-8rV3sW1dG7bM6tC
     command: >
       sh -c "./wait-for-it.sh db:3306 -- java -jar /app/app.jar"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: goldenkiwi971202/frontend:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
 
   openvidu-server:
     image: openvidu/openvidu-server:2.30.0
@@ -72,7 +84,8 @@ services:
       - ./nginx/certbot/www:/var/www/certbot
       - ./nginx/certbot/conf:/etc/letsencrypt
     depends_on:
-      - app
+      - frontend
+      - backend
       - openvidu-server
 
   certbot:
@@ -84,7 +97,7 @@ services:
   jenkins:
     image: jenkins/jenkins:lts
     ports:
-      - "8081:8080" # Jenkins 포트 설정
+      - "8081:8081" # Jenkins 포트 설정
     volumes:
       - jenkins_home:/var/jenkins_home
 

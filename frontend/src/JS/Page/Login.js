@@ -62,18 +62,20 @@ const SignUp = () => {
 
   const handleSignup = (event) => {
     event.preventDefault();
+
     if (password !== confirmPassword) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
     console.log("Email:", email);
     console.log("Password:", password);
+
+    // 회원가입 API 호출
     signUp({ email, password })
-      .then((response) => {
-        console.log(response)
+      .then(response => {
         handleClose();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
         alert("회원가입에 실패했습니다.");
       });
@@ -127,9 +129,21 @@ const SignUp = () => {
             </h2>
             <form onSubmit={handleSignup}>
               <InputField label="이메일" type="email" value={email} onChange={handleEmailChange} />
-              <InputField label="비밀번호" type="password" value={password} onChange={handlePasswordChange} />
-              {error ? <p className="error-msg" style={{ color: "red" }}>비밀번호 조건을 만족하지 않습니다.</p> : null}
-              <InputField label="비밀번호 확인" type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} />
+              <InputField
+                label="비밀번호 (영문, 숫자, 특수기호 포함 8글자 이상)"
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              {/* 비밀번호 조건 만족 여부 메시지 */}
+              <p className={`error-msg ${error ? "visible" : "hidden"}`}>비밀번호 조건을 만족하지 않습니다.</p>
+              <InputField
+                label="비밀번호 확인"
+                type="password"
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+              />
+
               <button type="submit" className="login-button">
                 가입하기
               </button>
@@ -201,8 +215,8 @@ const Login = () => {
                   </button>
                 </form>
                 <div className="social-login">
-                  <button className="social-login-button">소셜 로그인은</button>
-                  <button className="social-login-button">추가 예정입니다.</button>
+                  <button className="social-login-button">소셜 로그인은 추가예정</button>
+                  <button className="social-login-button" onClick={()=>{navigate("/firstvisit")}}>첫방문 CSS는 여기서 살펴보세요 (임시)</button>
                 </div>
                 <SignUp />
               </div>

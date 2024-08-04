@@ -107,7 +107,7 @@ body, html {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 80px;
+    width: 200px;
     border-radius: 4px;
     box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.2);
     overflow: hidden;
@@ -203,3 +203,92 @@ body, html {
 .selecter-icon img {
     width: 80%;
 }
+
+/* 모달 CSS */
+.modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+.modal-box * {
+margin: 0;
+padding: 0;
+}
+
+.modal-small-text {
+color: var(--hard-color-grey);
+font-size: 14px;
+}
+
+.modal-large-text {
+font-size: 24px;
+font-weight: bold;
+}
+
+.modal-button {
+border: none;
+padding: 10px 20px;
+border-radius: 8px;
+font-size: 16px;
+font-weight: bold;
+transition: 0.3s ease-in-out;
+font-family: inherit;
+}
+
+.modal-button:hover {
+    transform: scale(1.1);
+}
+
+.modal-name-input {
+    display: flex;   
+    gap: 8px;
+    margin: 40px 10px 20px 10px;
+    padding: 10px;
+}
+
+.underline {
+    border-bottom: 3px dashed var(--hard-color-green);
+}
+
+
+
+.button-green {
+    background-color: var(--hard-color-green);
+    color: var(--hard-color-white);  
+}
+
+.button-green:hover {
+    background-color: var(--hard-color-green-selected);
+}
+
+.button-gray {
+    background-color: var(--hard-color-grey);
+    color: var(--hard-color-white);  
+}
+
+.button-gray:hover {
+    background-color: var(--hard-color-black);
+}
+
+.hidden {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    pointer-events: none; /* 보이지 않을 때 클릭 불가 */
+  }
+  
+  .visible {
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
+  }
+  
