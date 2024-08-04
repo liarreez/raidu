@@ -3,6 +3,7 @@ import logo from '../../Imgs/logo.png';
 
 const RaidWaitRoom_participants = ({ user }) => {
 
+    // STYLE
     const compoStyle = {
         height: "23%",
         width: "100%",
@@ -10,7 +11,8 @@ const RaidWaitRoom_participants = ({ user }) => {
         borderRadius: "35px",
         display: "flex",
         flex: 2.5,
-        margin: "1%"
+        margin: "1%",
+        alignItems: "center"
 
     }
 
@@ -19,22 +21,24 @@ const RaidWaitRoom_participants = ({ user }) => {
         height: "auto",
         maxWidth: "100%",
         paddingLeft: "30%",
-        paddingTop: "18%"
 
-    }
+    } 
 
     const readyStateStyle = {
-        backgroundColor: "#96ef95",
+        backgroundColor: user.readyState ? "#96ef95" : "#ef9393",
         float: "right",
-        padding: "5% 10%",
+        padding: "5% 0",
+        width: "85px",
         borderRadius: "35px",
-        marginTop: "8%",
-        marginRight: "8%",
+        display: "flex",
+        justifyContent: "center"
     }
 
-    const readyStateContentStyle = { 
-        fontWeight: "bold"
-
+    const thirdGridStyle = {
+        display: "flex",
+        alignItems: "center",
+        fontWeight: "bold",
+        justifyContent: "space-around"
 
     }
 
@@ -44,14 +48,14 @@ const RaidWaitRoom_participants = ({ user }) => {
                 <Grid item xs={3}>
                     <span><img src={logo} style={profileImageStyle}/></span>             
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={4} style={thirdGridStyle}>
                     <span>{user.nickname}</span>
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={5} style={thirdGridStyle}>
                     <span>Lv.{user.level}</span>
                     <span>{user.highestScore}점</span>
                     <span style={readyStateStyle}>
-                        <span style={readyStateContentStyle}>Ready</span>    
+                        <span>{user.readyState ? "Ready" : "Wait"}</span>    
                     </span>
                 </Grid>
             </Grid>

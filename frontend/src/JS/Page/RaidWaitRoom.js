@@ -12,52 +12,78 @@ import out from '../../Imgs/roomouticon.png';
 
 //=========== import components
 import Participants from '../Component/RaidWaitRoom_participants.js';
+import RoomInfoForm from '../Component/RaidWaitRoom_roominfoform.js';
 
+class User {
+    constructor(nickname, badge, profileImage, level, highestScore, readyState, isCaptain) {
+        this.nickname = nickname; // 닉네임
+        this.badge = badge; // 배지 PK
+        this.profileImage = profileImage; // 프로필 이미지 src
+        this.level = level; // 레벨
+        this.highestScore = highestScore; // 최고기록
+        this.readyState = readyState; // 레디 상태
+        this.isCaptain = isCaptain; // 방장인가 아닌가
+    }
+}
+// 이하 웹소켓으로 세팅(지금은 dummy val)
+
+class Room {
+    constructor(roundTime, restTime, roundCount) {
+        this.roundTime = roundTime;
+        this.restTime = restTime;
+        this.roundCount = roundCount;
+    }
+}
 
 const RaidWaitRoom = () => {
     // ========= roomName은 pathVariable로 줄 거고
     // ========= roomSet은 props로 넘기고
     // ========= isRoomLocked는 대기실에서 입장할 수 있는 모든 방이 false입니다
     // 
-    const { roomName } = useParams();
-    const [roomSet, setRoomSet] = useState([]);
-    const [roomNamed, setRoomNamed] = useState('');
+    const { roomName } = useParams(); // 꼭 방의 제목일 필요 없다. PK 받아서 숫자로 지정할 것임
+    const [roomSet, setRoomSet] = useState(new Room(0, 0, 0)); // roomSet은 객체임.
+    // const [roomSet, setRoomSet] = useState()로 두게 되면 undefined 오류가 나므로
+    // 초깃값을 임의의 어떤 값으로 채워주는 것이 좋다. DOM 로드 후 -> useEffect 실행되기 때문
+    const [roomNamed, setRoomNamed] = useState(''); 
     const [isRoomLocked, setIsRoomLocked] = useState(false);
     
-    class User {
-        constructor(nickname, badge, profileImage, level, highestScore, readyState) {
-            this.nickname = nickname; // 닉네임
-            this.badge = badge; // 배지 PK
-            this.profileImage = profileImage; // 프로필 이미지 src
-            this.level = level; // 레벨
-            this.highestScore = highestScore; // 최고기록
-        }
-    }
-    // 이하 웹소켓으로 세팅(지금은 dummy val)
-    // const [participantsList, setParticipantsList] = useState([{
-    //     "nickname" : "", // 닉네임
-    //     "badge" : 0, // 배지 PK
-    //     "profileImage" : "", // 플필 이미지 src
-    //     "level" : 0, // 레벨 
-    //     "highestScore" : 0 // 최고기록
-    // }]);
+   
+    // room setting은 방장만 바꿀 수 있으므로 유의하여 컴포에 props 넘길 것 ㅜ 
+    // room setting과 me.isCaptain을 컴포에 넘겨야 할 것 같음
 
     const [participantsList, setParticipantsList] = useState([])
     
+    // 방 제목 수정하는 방법
+    // 상단 흰색 제목이 있는 영역을 클릭하면 수정할 수 있다.
+    // 모달로 띄울지 아니면 동적으로 입력하도록 만들지(제목 지우고 input 넣고 버튼 띄우기)는 생각 중임
+    // 아마 후자 될 것
 
+    const me = new User("김아무거나길고이상한거", 1, "profile1.png", 572, 15600, false, true);
+    // 얘 redux로 넘겨 버릴까
 
     useEffect(() => {
-        setRoomSet([30, 3, 15]);
-        setRoomNamed(roomName);
+        setRoomSet(
+            new Room(40, 15, 3)
+        );
+        setRoomNamed(roomName); // 방 이름 변경 가능하게 하려면 이 부분 수정해야 함. 지금은 pathVal에서 가져온다
         setIsRoomLocked(false);
         setParticipantsList([
-            new User("김싸피", 1, "profile1.png", 3, 320),
-            new User("이싸피", 2, "profile2.png", 4, 420),
-            new User("최싸피", 3, "profile3.png", 5, 520),
-            new User("박싸피", 4, "profile4.png", 6, 620)
+            me,
+            new User("이싸피", 2, "profile2.png", 4, 420, true, false),
+            new User("최싸피", 3, "profile3.png", 5, 520, false, false),
+            new User("박싸피", 4, "profile4.png", 6, 620, true, false)
         ]);
+        console.log(roomSet)
 
-    },[])
+    },[]) // onMount 
+
+    useEffect(() => {
+        console.log(roomSet)
+    },[roomSet])
+
+    // 운동 set은 하위 컴포넌트에서 넘어와야 하는 값임 
+    // 레디를 눌렀을 때 disabled되며, 게임이 시작하면 서버로 넘어간다
+
 
 
     return(
@@ -68,7 +94,11 @@ const RaidWaitRoom = () => {
                 <span className="headerContent"> 
                     <img src = {isRoomLocked ? locked : unlocked} className="lock" alt={isRoomLocked ? "locked" : "unlocked"}/>
                     <span className="roomName">{roomNamed}</span>
-                    <span className="roomSetting">⏱ {roomSet[0]} / 💪 {roomSet[1]} / 💤 {roomSet[2]} </span>
+                    <span className="roomSetting">⏱ {roomSet.roundTime} / 💪 {roomSet.roundCount} / 💤 {roomSet.restTime} </span>
+                    {
+                        console.log(`DOM load : ${roomSet.roundTime} / ${roomSet.roundCount} / ${roomSet.restTime}`)
+                        
+                    }
                 </span>
             </header>
           {/* 컨테이너 박스 */}
@@ -80,20 +110,9 @@ const RaidWaitRoom = () => {
                         <Grid item xs={8} className='subGridItems'>
                             <div className='subGridItemsDiv' id="participantsList">
                                 {
-                                    // participantsList.map((each) => {
-                                    //     <Participants user={each}/>
-                                    // })
-
-                                    // map 하다가 퇴근함. map 할때는 왜 props가 전달이 안 되는 거지?    
-                                }
-
-                                {
                                     participantsList.map((each, index) => (
                                     <Participants key={index} user={each} />
                                     ))
-
-                                    // HTML을 리턴하도록 map을 쓰려면 함수 파트를 {}로 쓰지 말고
-                                    // ()로 감싸야 작동함! 
                                 }
                             </div>
                         </Grid>
@@ -110,7 +129,7 @@ const RaidWaitRoom = () => {
                     <Grid container direction="column" spacing={1} className="subGridContainer" style={{ height: '100%' }}>
                         <Grid item xs={10} className='subGridItems'>
                             <div className='subGridItemsDiv'>
-                            오른쪽 상단 컴포넌트
+                                <RoomInfoForm roomSet={roomSet} isCaptain={me.isCaptain} />
                             </div>
                         </Grid>
                         <Grid item xs={2} className='subGridItems'>
