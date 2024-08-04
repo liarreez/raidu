@@ -27,6 +27,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -117,5 +118,25 @@ public class UserProfile {
     this.userMonsters = userMonsters;
     this.userBossMonsters = userBossMonsters;
     this.seasonUserScore = seasonUserScore;
+  }
+
+  public void updateExp(int gainedExp){
+    this.exp = gainedExp;
+    updateLevel();
+  }
+
+  public void updateLevel(){
+    if(this.exp>=750){
+      int gainedLevel = this.exp / 750;
+      this.level += gainedLevel;
+      this.exp = this.exp%750;
+    }
+  }
+
+  public void updateBestScore(int personalCombatPower, LocalDateTime endTime){
+    if(this.bestScore<personalCombatPower){
+      this.bestScore = personalCombatPower;
+      this.bestScoreUpdatedAt = endTime;
+    }
   }
 }
