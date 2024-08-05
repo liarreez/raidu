@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface SeasonRepository extends JpaRepository<Season, Long> {
     @Query("SELECT s FROM Season s WHERE :endTime BETWEEN s.startDate and s.endDate")
     Optional<Season> findSeason(@Param("endTime")LocalDateTime endTime);
+
+
 }

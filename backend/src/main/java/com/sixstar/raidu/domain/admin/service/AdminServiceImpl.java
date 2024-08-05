@@ -43,6 +43,11 @@ public class AdminServiceImpl implements AdminService{
         this.userProfileRepository = userProfileRepository;
     }
 
+    public Season findSeasonByIdOrThrow(Long seasonId){
+        return seasonRepository.findById(seasonId)
+                .orElseThrow(()-> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND));
+    }
+
     public LocalDateTime stringToLocalDateTime(String date){
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, dateFormatter);
@@ -50,8 +55,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     public void initializeSeasonRegionScore(Long seasonId){
-        Season season = seasonRepository.findById(seasonId)
-            .orElseThrow(()-> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND));
+        Season season = findSeasonByIdOrThrow(seasonId);
 
         List<Region> regionList = regionRepository.findAll();
         for(Region region: regionList){
@@ -61,8 +65,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     public void initializeSeasonUserScore(Long seasonId){
-        Season season = seasonRepository.findById(seasonId)
-            .orElseThrow(()-> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND));
+        Season season = findSeasonByIdOrThrow(seasonId);
 
         List<UserProfile> userProfileList = userProfileRepository.findAll();
         for(UserProfile userProfile: userProfileList){
