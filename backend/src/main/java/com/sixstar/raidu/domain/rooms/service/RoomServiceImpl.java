@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.openvidu.java.client.Connection;
@@ -53,6 +54,11 @@ public class RoomServiceImpl implements RoomService{
         this.roomUserRepository = roomUserRepository;
     }
 
+    public Room findRoomByIdOrThrow(Long roomId) {
+        return roomRepository.findById(roomId)
+            .orElseThrow(() -> new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
+    }
+
     @Override
     public Map<String, Object> createRoom(RoomCreateRequest request) {
         UserProfile userProfile = userProfileRepository.findByEmail(request.getHostEmail())
@@ -73,8 +79,7 @@ public class RoomServiceImpl implements RoomService{
 
     @Override
     public Map<String, Object> enterRoom(Long roomId, String email) {
-        Room room = roomRepository.findById(roomId)
-            .orElseThrow(()->new BaseException(BaseFailureResponse.ENTER_ROOM_FAIL));
+        Room room = findRoomByIdOrThrow(roomId);
         UserProfile userProfile = userProfileRepository.findByEmail(email)
             .orElseThrow(()-> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
 
@@ -115,8 +120,7 @@ public class RoomServiceImpl implements RoomService{
     @Transactional
     @Override
     public Map<String, Object> exitRoom(Long roomId, String email) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(()->new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
+        Room room = findRoomByIdOrThrow(roomId);
         UserProfile requestUser = userProfileRepository.findByEmail(email)
                 .orElseThrow(()->new BaseException(BaseFailureResponse.USER_NOT_FOUND));
 
@@ -140,8 +144,7 @@ public class RoomServiceImpl implements RoomService{
     @Transactional
     @Override
     public Map<String, Object> updateRoomSettings(Long roomId, UpdateRoomSettingsRequest updateRoomSettingsRequest) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(()-> new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
+        Room room = findRoomByIdOrThrow(roomId);
 
         room.update(updateRoomSettingsRequest.getRoundTime(), updateRoomSettingsRequest.getRestTime(), updateRoomSettingsRequest.getTotalRounds());
         RoomResponse updatedRoom = new RoomResponse(room);
