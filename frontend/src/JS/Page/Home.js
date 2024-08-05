@@ -16,6 +16,8 @@ import flag from "../../Imgs/flag.gif";
 import test from "../../Imgs/test.png";
 import helmet from "../../Imgs/helmet.gif";
 import burgerking from "../../Imgs/burgerking.png";
+import training from "../../Imgs/button-training.png";
+import raidu from "../../Imgs/button-raidu.png"
 
 import SpringAnime from "../Component/SpringAnime";
 import Rerenderer from "../Component/Rerenderer";
@@ -148,12 +150,12 @@ const Main = () => {
             <div className="home-button-group">
               <div className="home-button-left">
                 <h3>레이드</h3>
-                <img src={test} alt="레이드" />
+                <img src={raidu} alt="레이드" />
               </div>
 
               <div className="home-button-right">
                 <h3>훈련장</h3>
-                <img src={test} alt="훈련장" />
+                <img src={training} alt="훈련장" />
               </div>
             </div>
 
