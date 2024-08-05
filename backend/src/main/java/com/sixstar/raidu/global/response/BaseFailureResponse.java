@@ -31,7 +31,9 @@ public enum BaseFailureResponse {
   BOSSMONSTER_NOT_FOUND(HttpStatus.NOT_FOUND, "현재 시즌과 일치하는 보스몬스터가 없습니다!"),
   ROUNDRECORD_NOT_FOUND(HttpStatus.BAD_REQUEST, "저장할 라운드 기록이 없습니다!"),
   DICTIONARY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 운동입니다!"),
-  NOT_JSON_TYPE(HttpStatus.BAD_REQUEST, "JSON 형태의 타입이 아닙니다!")
+  NOT_JSON_TYPE(HttpStatus.BAD_REQUEST, "JSON 형태의 타입이 아닙니다!"),
+  WITHDRAW_USER(HttpStatus.BAD_REQUEST, "회원 탈퇴한 유저입니다!"),
+  REPORTED_USER(HttpStatus.BAD_REQUEST, "신고 당한 유저입니다!")
   ;
 
   private final HttpStatus status;

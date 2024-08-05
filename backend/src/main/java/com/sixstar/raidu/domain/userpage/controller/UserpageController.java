@@ -34,4 +34,10 @@ public class UserpageController {
     userpageService.register(authorization, userprofileRegisterDto);
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_REGISTER_SUCCESS);
   }
+
+  @PostMapping("/withdraw")
+  public ResponseEntity<BaseResponse<?>> withdraw(@RequestHeader("Authorization") String authorization) {
+    userpageService.withdraw(authorization);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.USER_WITHDRAW_SUCCESS);
+  }
 }

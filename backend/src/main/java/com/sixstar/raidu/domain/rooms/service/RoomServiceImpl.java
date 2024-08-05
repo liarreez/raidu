@@ -276,7 +276,7 @@ public class RoomServiceImpl implements RoomService{
         List<RoundRecord> roundRecordList = request.getRoundRecordList().stream()
                 .map(roundRecordSaveRequest -> {
                     Dictionary dictionary = dictionaryRepository.findById(roundRecordSaveRequest.getDictionaryId())
-                            .orElseThrow(()-> new BaseException(BaseFailureResponse.EXERCISE_NOT_FOUND));
+                            .orElseThrow(()-> new BaseException(BaseFailureResponse.DICTIONARY_NOT_FOUND));
                     return RoundRecordSaveRequest.toEntity(exerciseRoomRecord, dictionary, roundRecordSaveRequest);
                 }).collect(Collectors.toList());
         roundRecordRepository.saveAll(roundRecordList);
