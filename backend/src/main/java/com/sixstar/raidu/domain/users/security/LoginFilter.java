@@ -2,7 +2,9 @@ package com.sixstar.raidu.domain.users.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sixstar.raidu.domain.users.dto.LoginRequestDto;
+import com.sixstar.raidu.domain.users.entity.User;
 import com.sixstar.raidu.domain.users.enums.TokenType;
+import com.sixstar.raidu.domain.users.service.UsersService;
 import com.sixstar.raidu.global.response.BaseException;
 import com.sixstar.raidu.global.response.BaseFailureResponse;
 import com.sixstar.raidu.global.response.BaseResponse;
@@ -24,21 +26,23 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-    private final RefreshTokenService refreshTokenService;
+    private final SecurityService securityService;
     private final ObjectMapper objectMapper;
     private final BaseResponseService baseResponseService;
 
     public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil
-        , RefreshTokenService refreshTokenService, ObjectMapper objectMapper, BaseResponseService baseResponseService) {
+        , SecurityService securityService, ObjectMapper objectMapper, BaseResponseService baseResponseService
+    ) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.refreshTokenService = refreshTokenService;
+        this.securityService = securityService;
         this.objectMapper = objectMapper;
         this.baseResponseService = baseResponseService;
         setUsernameParameter("email");
@@ -62,6 +66,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         String email = customUserDetails.getUsername();
+        User user = securityService.getUserByEmail(email);
+        if (!user.getIsActive()) {
+            throw new BaseException(BaseFailureResponse.WITHDRAW_USER);
+        }
+        if (user.getIsReported()) {
+            throw new BaseException(BaseFailureResponse.REPORTED_USER);
+        }
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
@@ -71,7 +83,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken = jwtUtil.createJwt(TokenType.ACCESS.name(), email, role, 60*60*1L);
         String refreshToken = jwtUtil.createJwt(TokenType.REFRESH.name(), email, role, 60*60*24L);
 
-        refreshTokenService.saveRefreshToken(email, refreshToken);
+        securityService.saveRefreshToken(email, refreshToken);
 
         Map<String, Object> data = new HashMap<>();
         data.put("accessToken", accessToken);

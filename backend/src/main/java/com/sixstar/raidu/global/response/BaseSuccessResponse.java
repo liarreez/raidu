@@ -26,6 +26,7 @@ public enum BaseSuccessResponse {
   MAINPAGE_DATA_RETRIEVE_SUCCESS(HttpStatus.OK, "Main page data retrieved successfully"),
   DICTIONARY_SEARCH_SUCCESS(HttpStatus.OK, "Exercise dictionary retrieved successfully"),
   COMPLETE_ROOM_SUCCESS(HttpStatus.CREATED, "Room completed and save data successfully"),
+  USER_WITHDRAW_SUCCESS(HttpStatus.OK, "User withdraw success"),
   SEASON_CREATED_SUCCESS(HttpStatus.CREATED, "Season created successfully"),
   ;
 

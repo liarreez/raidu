@@ -43,7 +43,6 @@ public class JWTFilter extends OncePerRequestFilter {
         //userEntity를 생성하여 값 set
         User user = User.builder()
             .email(email)
-            .isActive(true)
             .role(role)
             .build();
 
