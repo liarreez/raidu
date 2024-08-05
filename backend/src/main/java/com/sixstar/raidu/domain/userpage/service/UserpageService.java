@@ -9,5 +9,7 @@ public interface UserpageService {
 
   Map<String, Object> searchUserInfo(String authorization);
 
+  Map<String, Object> searchUserData(long id);
+
   void withdraw(String authorization);
 }

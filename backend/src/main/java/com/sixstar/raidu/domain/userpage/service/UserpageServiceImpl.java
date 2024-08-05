@@ -2,6 +2,8 @@ package com.sixstar.raidu.domain.userpage.service;
 
 import com.sixstar.raidu.domain.main.entity.Region;
 import com.sixstar.raidu.domain.main.repository.RegionRepository;
+import com.sixstar.raidu.domain.rooms.dto.ExerciseRoomRecordResponseDto;
+import com.sixstar.raidu.domain.userpage.dto.UserMonstersResponseDto;
 import com.sixstar.raidu.domain.userpage.dto.UserProfileResponseDto;
 import com.sixstar.raidu.domain.userpage.dto.UserprofileRegisterDto;
 import com.sixstar.raidu.domain.userpage.entity.UserProfile;
@@ -14,6 +16,7 @@ import com.sixstar.raidu.global.response.BaseException;
 import com.sixstar.raidu.global.response.BaseFailureResponse;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +60,21 @@ public class UserpageServiceImpl implements UserpageService {
         .orElseThrow(() -> new BaseException(BaseFailureResponse.USERPROFILE_NOT_FOUND));
     Map<String, Object> data = new HashMap<>();
     data.put("userProfile", UserProfileResponseDto.fromEntity(userProfile));
+    return data;
+  }
+
+  @Override
+  public Map<String, Object> searchUserData(long id) {
+    UserProfile userProfile = userProfileRepository.findById(id)
+        .orElseThrow(() -> new BaseException(BaseFailureResponse.USERPROFILE_NOT_FOUND));
+
+    Map<String, Object> data = new HashMap<>();
+    data.put("userProfile", UserProfileResponseDto.fromEntity(userProfile));
+    data.put("exerciseRoomRecord", userProfile.getExerciseRoomRecords().stream()
+        .map(ExerciseRoomRecordResponseDto::fromEntity)
+        .collect(Collectors.toList()));
+    data.put("userMonsters", UserMonstersResponseDto.fromEntity(userProfile));
+
     return data;
   }
 
