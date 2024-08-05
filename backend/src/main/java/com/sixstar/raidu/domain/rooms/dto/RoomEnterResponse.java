@@ -18,12 +18,14 @@ public class RoomEnterResponse {
     String monsterBadgeURl;
 
     public RoomEnterResponse fromEntity(UserProfile userProfile){
-        this.uuid = userProfile.getId();;
-        this.email = userProfile.getEmail();
-        this.nickname = userProfile.getNickname();
-        this.level = userProfile.getLevel();
-        this.bestScore = userProfile.getBestScore();
-        this.profileImageUrl = userProfile.getProfileImageUrl();
-        this.monsterBadgeURl = userProfile.getMonsterBadgeUrl();
+        return new RoomEnterResponse(
+            userProfile.getId(),
+            userProfile.getEmail(),
+            userProfile.getNickname(),
+            userProfile.getLevel(),
+            userProfile.getBestScore(),
+            userProfile.getProfileImageUrl(),
+            userProfile.getMonsterBadgeUrl()
+        );
     }
 }

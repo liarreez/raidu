@@ -182,7 +182,6 @@ public class RoomServiceImpl implements RoomService{
         Map<String, Object> map = new HashMap<>();
         map.put("sessionId", session.getSessionId());
         System.out.println("sessionId           "+session.getSessionId());
-        System.out.println("MAMAMAM     "+map.get("sessionId"));
         return map;
     }
 
