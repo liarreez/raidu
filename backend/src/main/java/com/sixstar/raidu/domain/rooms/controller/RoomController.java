@@ -2,6 +2,7 @@ package com.sixstar.raidu.domain.rooms.controller;
 
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
 import com.sixstar.raidu.domain.rooms.dto.UpdateRoomSettingsRequest;
+import com.sixstar.raidu.domain.rooms.entity.Room;
 import com.sixstar.raidu.domain.rooms.service.RoomService;
 import com.sixstar.raidu.global.response.BaseResponse;
 import com.sixstar.raidu.global.response.BaseResponseService;
@@ -10,6 +11,7 @@ import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +36,15 @@ public class RoomController {
     }
 
     @GetMapping()
-    public ResponseEntity<BaseResponse<?>> findAllWaitingRooms(){
-        Map<String, Object> response = roomService.findAllWaitingRooms();
-        return response.containsKey("message") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.NO_WAITING_ROOMS, response.get("message"))
+    public ResponseEntity<BaseResponse<?>> findAllWaitingRooms(
+        @RequestParam(name="round-time", required = false) Integer roundTime,
+        @RequestParam(name="rest-time",required = false) Integer restTime,
+        @RequestParam(name="total-rounds",required = false) Integer totalRounds,
+        @RequestParam(name="title",required = false) String title
+    ){
+        Map<String, Object> response = roomService.findAllWaitingRooms(roundTime, restTime, totalRounds, title);
+        System.out.println(response.get("message"));
+        return response.containsKey("message") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.NO_WAITING_ROOMS, response)
                 : baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_WAITING_ROOMS_SUCCESS, response);
     }
 
