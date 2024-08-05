@@ -1,5 +1,6 @@
 package com.sixstar.raidu.global.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sixstar.raidu.domain.users.security.JWTFilter;
 import com.sixstar.raidu.domain.users.security.JWTUtil;
 import com.sixstar.raidu.domain.users.security.LoginFilter;
@@ -29,7 +30,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -37,6 +38,7 @@ public class WebSecurityConfig {
     private final JWTUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
     private final BaseResponseService baseResponseService;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -72,7 +74,7 @@ public class WebSecurityConfig {
                 .addFilterBefore(new SecurityExceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,
-                        refreshTokenService, baseResponseService), UsernamePasswordAuthenticationFilter.class);
+                        refreshTokenService, objectMapper, baseResponseService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

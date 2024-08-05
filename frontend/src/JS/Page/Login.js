@@ -174,6 +174,8 @@ const Login = () => {
 
     try {
       const response = await axios.post(`${SERVERURL}/api/raidu/users/login`, { email: `${email}`, password: `${password}` });
+      console.log(`${email}`)
+      console.log(`${password}`)
       console.log(response)
       const { accessToken, refreshToken } = response.data;
 

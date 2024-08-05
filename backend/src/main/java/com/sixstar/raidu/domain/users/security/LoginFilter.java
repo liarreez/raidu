@@ -1,6 +1,7 @@
 package com.sixstar.raidu.domain.users.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sixstar.raidu.domain.users.dto.LoginRequestDto;
 import com.sixstar.raidu.domain.users.enums.TokenType;
 import com.sixstar.raidu.global.response.BaseException;
 import com.sixstar.raidu.global.response.BaseFailureResponse;
@@ -30,13 +31,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
+    private final ObjectMapper objectMapper;
     private final BaseResponseService baseResponseService;
 
     public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil
-    , RefreshTokenService refreshTokenService, BaseResponseService baseResponseService) {
+        , RefreshTokenService refreshTokenService, ObjectMapper objectMapper, BaseResponseService baseResponseService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.refreshTokenService = refreshTokenService;
+        this.objectMapper = objectMapper;
         this.baseResponseService = baseResponseService;
         setUsernameParameter("email");
         setFilterProcessesUrl("/api/raidu/users/login");
@@ -44,13 +47,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        String email = obtainUsername(request);
-        String password = obtainPassword(request);
-
-        UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(email, password, null);
-
-        return authenticationManager.authenticate(authToken);
+        try {
+            LoginRequestDto loginRequest = objectMapper.readValue(request.getInputStream(), LoginRequestDto.class);
+            UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword(), null);
+            return authenticationManager.authenticate(authToken);
+        } catch (IOException e) {
+            throw new BaseException(BaseFailureResponse.NOT_JSON_TYPE);
+        }
     }
 
     @Override

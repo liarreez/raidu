@@ -22,6 +22,8 @@ import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 import jakarta.annotation.PostConstruct;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,9 @@ import io.openvidu.java.client.ConnectionProperties;
 
 @Service
 public class RoomServiceImpl implements RoomService{
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Value("${OPENVIDU_URL}")
     private String OPENVIDU_URL;
@@ -187,6 +192,8 @@ public class RoomServiceImpl implements RoomService{
         Room room = findRoomByIdOrThrow(roomId);
 
         room.update(updateRoomSettingsRequest.getRoundTime(), updateRoomSettingsRequest.getRestTime(), updateRoomSettingsRequest.getTotalRounds());
+        entityManager.flush();
+
         RoomResponse updatedRoom = new RoomResponse(room);
 
         Map<String, Object> map = new HashMap<>();
@@ -243,13 +250,11 @@ public class RoomServiceImpl implements RoomService{
     @Override
     public Map<String, Object> completeRoom(Long roomId, RoomCompleteRequest request) {
         // 방 상태 업데이트
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(()-> new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
+        Room room = findRoomByIdOrThrow(roomId);
         room.update("completed");
 
         // 경험치, 레벨, 최고기록 업데이트
-        UserProfile userProfile = userProfileRepository.findByEmail(request.getEmail())
-                .orElseThrow(()-> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+        UserProfile userProfile = findUserProfileByEmailOrThrow(request.getEmail());
         int gainedExp = (room.getRoundTime()/60)*50;
         userProfile.updateExp(gainedExp);
         userProfile.updateBestScore(request.getPersonalCombatPower(), request.getEndTime());

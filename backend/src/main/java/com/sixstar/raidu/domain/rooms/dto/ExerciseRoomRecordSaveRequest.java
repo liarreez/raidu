@@ -7,7 +7,13 @@ import com.sixstar.raidu.domain.userpage.entity.UserProfile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class ExerciseRoomRecordSaveRequest {
     private Long id;
     private UserProfile userProfile;
