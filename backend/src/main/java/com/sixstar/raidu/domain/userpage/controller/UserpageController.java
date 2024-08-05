@@ -1,5 +1,6 @@
 package com.sixstar.raidu.domain.userpage.controller;
 
+import com.sixstar.raidu.domain.userpage.dto.UserInfoModifyDto;
 import com.sixstar.raidu.domain.userpage.dto.UserprofileRegisterDto;
 import com.sixstar.raidu.domain.userpage.service.UserpageService;
 import com.sixstar.raidu.global.response.BaseResponse;
@@ -10,6 +11,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -33,6 +35,12 @@ public class UserpageController {
   public ResponseEntity<BaseResponse<?>> register(@RequestHeader("Authorization") String authorization, @Valid @RequestBody UserprofileRegisterDto userprofileRegisterDto) {
     userpageService.register(authorization, userprofileRegisterDto);
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_REGISTER_SUCCESS);
+  }
+
+  @GetMapping("/profile/{id}")
+  public ResponseEntity<BaseResponse<?>> searchUserData(@PathVariable("id") long id) {
+    Map<String, Object> data = userpageService.searchUserData(id);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_SEARCH_SUCCESS, data);
   }
 
   @PostMapping("/withdraw")
