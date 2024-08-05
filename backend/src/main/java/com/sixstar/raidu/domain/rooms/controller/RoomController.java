@@ -1,5 +1,6 @@
 package com.sixstar.raidu.domain.rooms.controller;
 
+import com.sixstar.raidu.domain.rooms.dto.RoomCompleteRequest;
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
 import com.sixstar.raidu.domain.rooms.dto.UpdateRoomSettingsRequest;
 import com.sixstar.raidu.domain.rooms.entity.Room;
@@ -89,5 +90,10 @@ public class RoomController {
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.CREATE_CONNECTION_SUCCESS, response);
     }
 
+    @PostMapping("/{roomId}/end")
+    public ResponseEntity<BaseResponse<?>> completeRoom(@PathVariable("roomId") Long roomId, @RequestBody RoomCompleteRequest roomCompleteRequest){
+        Map<String, Object> response = roomService.completeRoom(roomId, roomCompleteRequest);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.COMPLETE_ROOM_SUCCESS);
+    }
 
 }

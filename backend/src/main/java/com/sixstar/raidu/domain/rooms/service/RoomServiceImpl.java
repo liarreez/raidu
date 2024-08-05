@@ -1,13 +1,15 @@
 package com.sixstar.raidu.domain.rooms.service;
 
-import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
-import com.sixstar.raidu.domain.rooms.dto.RoomEnterResponse;
-import com.sixstar.raidu.domain.rooms.dto.RoomResponse;
-import com.sixstar.raidu.domain.rooms.dto.UpdateRoomSettingsRequest;
-import com.sixstar.raidu.domain.rooms.entity.Room;
-import com.sixstar.raidu.domain.rooms.entity.RoomUser;
-import com.sixstar.raidu.domain.rooms.repository.RoomRepository;
-import com.sixstar.raidu.domain.rooms.repository.RoomUserRepository;
+import com.sixstar.raidu.domain.dictionary.entity.Dictionary;
+import com.sixstar.raidu.domain.dictionary.repository.DictionaryRepository;
+import com.sixstar.raidu.domain.main.entity.Region;
+import com.sixstar.raidu.domain.main.entity.Season;
+import com.sixstar.raidu.domain.main.entity.SeasonRegionScore;
+import com.sixstar.raidu.domain.main.repository.SeasonRegionScoreRepository;
+import com.sixstar.raidu.domain.main.repository.SeasonRepository;
+import com.sixstar.raidu.domain.rooms.dto.*;
+import com.sixstar.raidu.domain.rooms.entity.*;
+import com.sixstar.raidu.domain.rooms.repository.*;
 import com.sixstar.raidu.domain.rooms.repository.specification.RoomSpecification;
 import com.sixstar.raidu.domain.userpage.entity.UserProfile;
 import com.sixstar.raidu.domain.userpage.repository.UserProfileRepository;
@@ -19,9 +21,11 @@ import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 import jakarta.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 import java.util.Optional;
@@ -33,6 +37,9 @@ import io.openvidu.java.client.ConnectionProperties;
 
 @Service
 public class RoomServiceImpl implements RoomService{
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Value("${OPENVIDU_URL}")
     private String OPENVIDU_URL;
@@ -49,11 +56,23 @@ public class RoomServiceImpl implements RoomService{
     private final RoomRepository roomRepository;
     private final UserProfileRepository userProfileRepository;
     private final RoomUserRepository roomUserRepository;
+    private final SeasonRepository seasonRepository;
+    private final SeasonRegionScoreRepository seasonRegionScoreRepository;
+    private final SeasonUserScoreRepository seasonUserScoreRepository;
+    private final ExerciseRoomRecordRepository exerciseRoomRecordRepository;
+    private final RoundRecordRepository roundRecordRepository;
+    private final DictionaryRepository dictionaryRepository;
 
-    public RoomServiceImpl(RoomRepository roomRepository, UserProfileRepository userProfileRepository, RoomUserRepository roomUserRepository){
+    public RoomServiceImpl(RoomRepository roomRepository, UserProfileRepository userProfileRepository, RoomUserRepository roomUserRepository, SeasonRepository seasonRepository, SeasonRegionScoreRepository seasonRegionScoreRepository, SeasonUserScoreRepository seasonUserScoreRepository, ExerciseRoomRecordRepository exerciseRoomRecordRepository, RoundRecordRepository roundRecordRepository, DictionaryRepository dictionaryRepository){
         this.roomRepository = roomRepository;
         this.userProfileRepository = userProfileRepository;
         this.roomUserRepository = roomUserRepository;
+        this.seasonRepository = seasonRepository;
+        this.seasonRegionScoreRepository = seasonRegionScoreRepository;
+        this.seasonUserScoreRepository = seasonUserScoreRepository;
+        this.exerciseRoomRecordRepository = exerciseRoomRecordRepository;
+        this.roundRecordRepository = roundRecordRepository;
+        this.dictionaryRepository = dictionaryRepository;
     }
 
     public Room findRoomByIdOrThrow(Long roomId) {
@@ -103,6 +122,7 @@ public class RoomServiceImpl implements RoomService{
         RoomEnterResponse enteredUser = new RoomEnterResponse().fromEntity(userProfile);
 
         Map<String, Object> map = new HashMap<>();
+
         map.put("enteredUser", enteredUser);
         return map;
     }
@@ -172,6 +192,8 @@ public class RoomServiceImpl implements RoomService{
         Room room = findRoomByIdOrThrow(roomId);
 
         room.update(updateRoomSettingsRequest.getRoundTime(), updateRoomSettingsRequest.getRestTime(), updateRoomSettingsRequest.getTotalRounds());
+        entityManager.flush();
+
         RoomResponse updatedRoom = new RoomResponse(room);
 
         Map<String, Object> map = new HashMap<>();
@@ -223,4 +245,64 @@ public class RoomServiceImpl implements RoomService{
 
         return map;
     }
+
+    @Transactional
+    @Override
+    public Map<String, Object> completeRoom(Long roomId, RoomCompleteRequest request) {
+        // 방 상태 업데이트
+        Room room = findRoomByIdOrThrow(roomId);
+        room.update("completed");
+
+        // 경험치, 레벨, 최고기록 업데이트
+        UserProfile userProfile = findUserProfileByEmailOrThrow(request.getEmail());
+        int gainedExp = (room.getRoundTime()/60)*50;
+        userProfile.updateExp(gainedExp);
+        userProfile.updateBestScore(request.getPersonalCombatPower(), request.getEndTime());
+
+        // 시즌지역점수, 시즌사용자점수 누적
+        Optional<Season> season = Optional.ofNullable(seasonRepository.findSeason(request.getEndTime())
+                .orElseThrow(() -> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND)));
+        season.ifPresent(currentSeason->{
+            updateSeasonRegionScoreAndSeasonUserScore(currentSeason, userProfile.getRegion(), userProfile, request.getPersonalCombatPower());
+        });
+
+        // exerciseRoom. roundRecord 저장 -  미완
+        if(request.getRoundRecordList() == null){
+            throw new BaseException(BaseFailureResponse.ROUNDRECORD_NOT_FOUND);
+        }
+        ExerciseRoomRecord exerciseRoomRecord = ExerciseRoomRecordSaveRequest.toEntity(userProfile, room, request);
+        exerciseRoomRecordRepository.save(exerciseRoomRecord);
+
+        List<RoundRecord> roundRecordList = request.getRoundRecordList().stream()
+                .map(roundRecordSaveRequest -> {
+                    Dictionary dictionary = dictionaryRepository.findById(roundRecordSaveRequest.getDictionaryId())
+                            .orElseThrow(()-> new BaseException(BaseFailureResponse.EXERCISE_NOT_FOUND));
+                    return RoundRecordSaveRequest.toEntity(exerciseRoomRecord, dictionary, roundRecordSaveRequest);
+                }).collect(Collectors.toList());
+        roundRecordRepository.saveAll(roundRecordList);
+
+        // 업데이트된 레벨, 경험치 반환
+        Map<String, Object> map = new HashMap<>();
+        map.put("updatedLevel", userProfile.getLevel());
+        map.put("updatedExp", userProfile.getExp());
+        return map;
+    }
+
+    @Transactional
+    private void updateSeasonRegionScoreAndSeasonUserScore(Season currentSeason, Region region, UserProfile userProfile, int personalCombatPower) {
+        SeasonUserScore seasonUserScore = seasonUserScoreRepository.findBySeasonAndUserProfile(currentSeason, userProfile);
+        if (seasonUserScore == null) {
+            seasonUserScore = new SeasonUserScore(currentSeason, userProfile, 0);
+        }
+        seasonUserScore.updateSeasonUserScore(personalCombatPower);
+        seasonUserScoreRepository.save(seasonUserScore);
+
+        SeasonRegionScore seasonRegionScore = seasonRegionScoreRepository.findBySeasonAndRegion(currentSeason, region);
+        if(seasonRegionScore == null){
+            seasonRegionScore = new SeasonRegionScore(region, currentSeason, 0L);
+        }
+        seasonRegionScore.updateSeasonRegionScore(personalCombatPower);
+        seasonRegionScoreRepository.save(seasonRegionScore);
+    }
+
 }

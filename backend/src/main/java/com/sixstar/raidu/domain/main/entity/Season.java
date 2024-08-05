@@ -45,4 +45,5 @@ public class Season {
     this.startDate = startDate;
     this.endDate = endDate;
   }
+
 }
