@@ -23,6 +23,12 @@ public class UsersServiceImpl implements UsersService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
 
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+            () -> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+    }
+
     @Transactional
     @Override
     public Map<String, Object> register(UserRegisterDto userRegisterDto) {
@@ -52,8 +58,7 @@ public class UsersServiceImpl implements UsersService {
             throw new BaseException(BaseFailureResponse.REFRESH_TOKEN_IS_EXPIRED);
         }
 
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+        User user = getUserByEmail(email);
 
         if (!TokenType.REFRESH.name().equals(jwtUtil.getCategory(token)) || user.getRefreshToken() == null
                 || !user.getRefreshToken().equals(token)) {
@@ -77,8 +82,7 @@ public class UsersServiceImpl implements UsersService {
         String token = AuthorizationHeaderParser.parseTokenFromAuthorizationHeader(authorization);
 
         String email = jwtUtil.getEmail(token);
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+        User user = getUserByEmail(email);
 
         user.updateRefreshToken(null);
     }

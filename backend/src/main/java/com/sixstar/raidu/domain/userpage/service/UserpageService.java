@@ -8,4 +8,6 @@ public interface UserpageService {
   void register(String authorization, UserprofileRegisterDto userprofileRegisterDto);
 
   Map<String, Object> searchUserInfo(String authorization);
+
+  void withdraw(String authorization);
 }
