@@ -48,7 +48,7 @@ public class AdminServiceImpl implements AdminService{
                 .orElseThrow(()-> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND));
     }
 
-    public LocalDateTime stringToLocalDateTime(String date){
+    public LocalDateTime stringToLocalDate(String date){
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, dateFormatter);
         return localDate.atStartOfDay();
@@ -76,8 +76,15 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public Map<String, Object> createSeason(SeasonRequest request) {
-        LocalDateTime startDateTime = stringToLocalDateTime(request.getStartDate());
-        LocalDateTime endDateTime = stringToLocalDateTime(request.getEndDate());
+        LocalDateTime startDateTime = stringToLocalDate(request.getStartDate());
+        LocalDateTime endDateTime = stringToLocalDate(request.getEndDate());
+
+        boolean existsOverlappingSeason
+                = seasonRepository.existsOverlappingSeason(startDateTime, endDateTime);
+        if(existsOverlappingSeason){
+            throw new BaseException(BaseFailureResponse.OVERLAPPING_SEASON_EXISTS);
+        }
+
         Season season = new Season(request.getName(), startDateTime, endDateTime);
         Season createdSeason = seasonRepository.save(season);
         initializeSeasonRegionScore(createdSeason.getId());

@@ -33,7 +33,8 @@ public enum BaseFailureResponse {
   DICTIONARY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 운동입니다!"),
   NOT_JSON_TYPE(HttpStatus.BAD_REQUEST, "JSON 형태의 타입이 아닙니다!"),
   WITHDRAW_USER(HttpStatus.BAD_REQUEST, "회원 탈퇴한 유저입니다!"),
-  REPORTED_USER(HttpStatus.BAD_REQUEST, "신고 당한 유저입니다!")
+  REPORTED_USER(HttpStatus.BAD_REQUEST, "신고 당한 유저입니다!"),
+  OVERLAPPING_SEASON_EXISTS(HttpStatus.BAD_REQUEST, "입력된 기간과 겹치는 시즌이 존재합니다!")
   ;
 
   private final HttpStatus status;
