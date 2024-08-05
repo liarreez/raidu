@@ -23,6 +23,9 @@ import SpringAnime from "../Component/SpringAnime";
 import Rerenderer from "../Component/Rerenderer";
 import FirstRenderer from "../Component/FirstRenderer";
 
+
+const SERVERURL = "http://localhost:8080";
+
 // 토벌 현황 서버에서 받아와서 100자리에 담아주면 됩니다.
 const raidPercentage = 100;
 
@@ -108,16 +111,19 @@ const Main = () => {
     }
     const fetchUserData = async () => {
       try {
-        // const response = await axios.get(""); // 여기에 API 주소 넣을 것
-        // const data = response.data;
+        const accessToken = localStorage.getItem("accessToken");
+        console.log("사용한 토큰 : " + accessToken);
+        const response = await axios.get(SERVERURL + "/api/raidu/userpage", {headers: {"Authorization": `Bearer ${accessToken}`}}); // 여기에 API 주소 넣을 것
+        console.log(response);
         // setUser(data);
-        if (data.region === null) {
-          console.log("region값 비어있음...첫방문 페이지로 전환");
-          // navigate("/firstvisit");
-        }
+
       } catch (error) {
         console.error("유저 정보 불러오기 실패...");
         console.log(error);
+        if(error.response.data.status === 'NOT_FOUND') {
+          console.log("첫 방문임...");
+          navigate("/firstvisit");
+        }
       }
     };
 
