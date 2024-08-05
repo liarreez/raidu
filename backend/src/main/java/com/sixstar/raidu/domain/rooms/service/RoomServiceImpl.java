@@ -62,7 +62,7 @@ public class RoomServiceImpl implements RoomService{
         Room savedRoom = roomRepository.save(room);
 
         RoomUser roomUser = new RoomUser(room, userProfile);
-        RoomUser savedRoomUser = roomUserRepository.save(roomUser);
+        roomUserRepository.save(roomUser);
 
         Map<String, Object> map = new HashMap<>();
         map.put("hostEmail", request.getHostEmail());
@@ -89,19 +89,10 @@ public class RoomServiceImpl implements RoomService{
             throw new BaseException(BaseFailureResponse.FULL_ROOM);
         }
 
-        RoomUser savedRoomUser = roomUserRepository.save(roomUser);
-        RoomEnterResponse enteredUser = new RoomEnterResponse(
-                userProfile.getId(),
-                userProfile.getEmail(),
-                userProfile.getNickname(),
-                userProfile.getLevel(),
-                userProfile.getBestScore(),
-                userProfile.getProfileImageUrl(),
-                userProfile.getMonsterBadgeUrl()
-        );
+        roomUserRepository.save(roomUser);
+        RoomEnterResponse enteredUser = new RoomEnterResponse().fromEntity(userProfile);
 
         Map<String, Object> map = new HashMap<>();
-
         map.put("enteredUser", enteredUser);
         return map;
     }
