@@ -26,89 +26,84 @@ import FirstRenderer from "../Component/FirstRenderer";
 
 const SERVERURL = "http://localhost:8080";
 
-// 토벌 현황 서버에서 받아와서 100자리에 담아주면 됩니다.
-const raidPercentage = 100;
+const StepProgressBar = ({ raidPercentage }) => {
+  const [percent, setPercent] = useState(0);
 
-class StepProgressBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      percent: 0,
-    };
-  }
-
-  componentDidMount() {
-    this.interval = setInterval(() => {
-      this.setState((prevState) => {
-        if (prevState.percent < raidPercentage) {
-          return { percent: prevState.percent + 1 };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPercent((prevPercent) => {
+        if (prevPercent < raidPercentage) {
+          return prevPercent + 1;
         } else {
-          clearInterval(this.interval);
-          return null;
+          clearInterval(interval);
+          return raidPercentage;
         }
       });
     }, 50); // 3초 동안 20% 증가 => 3000ms / 20 = 150ms마다 1% 증가
-  }
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
+    return () => clearInterval(interval);
+  }, [raidPercentage]);
 
-  render() {
-    return (
-      <ProgressBar
-        percent={this.state.percent}
-        filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
-        unfilledBackground="linear-gradient(to left, #55108e, #edcfff)"
-        width="800px"
-        height="20px"
-      >
-        <Step transition="scale">
-          {({ accomplished }) => (
-            <div className="ratio-icon">
-              <img
-                style={{ filter: `grayscale(${accomplished ? 0 : 80}%)` }}
-                width="60"
-                src={monster}
-              />
-            </div>
-          )}
-        </Step>
-        <Step transition="scale">
-          {({ accomplished }) => (
-            <div className="ratio-icon">
-              <img
-                style={{ filter: `grayscale(${accomplished ? 0 : 80}%)` }}
-                width="50"
-                src={flag}
-              />
-            </div>
-          )}
-        </Step>
-        <Step transition="scale">
-          {({ accomplished }) => (
-            <div className="ratio-icon">
-              <img
-                style={{ filter: `grayscale(${accomplished ? 0 : 80}%)` }}
-                width="60"
-                src={monster}
-              />
-            </div>
-          )}
-        </Step>
-      </ProgressBar>
-    );
-  }
-}
+  return (
+    <ProgressBar
+      percent={percent}
+      filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
+      unfilledBackground="linear-gradient(to left, #55108e, #edcfff)"
+      width="800px"
+      height="20px"
+    >
+      <Step transition="scale">
+        {({ accomplished }) => (
+          <div className="ratio-icon">
+            <img
+              style={{ filter: `grayscale(${accomplished ? 0 : 80}%)` }}
+              width="60"
+              src={monster}
+            />
+          </div>
+        )}
+      </Step>
+      <Step transition="scale">
+        {({ accomplished }) => (
+          <div className="ratio-icon">
+            <img
+              style={{ filter: `grayscale(${accomplished ? 0 : 80}%)` }}
+              width="50"
+              src={flag}
+            />
+          </div>
+        )}
+      </Step>
+      <Step transition="scale">
+        {({ accomplished }) => (
+          <div className="ratio-icon">
+            <img
+              style={{ filter: `grayscale(${accomplished ? 0 : 80}%)` }}
+              width="60"
+              src={monster}
+            />
+          </div>
+        )}
+      </Step>
+    </ProgressBar>
+  );
+};
 
 const Main = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
+  // 메인페이지 관련 변수들
+  const [bossMonsterDescription, setBossMonsterDescription] = useState(null);
+  const [bossMonsterHp, setBossMonsterHp] = useState(null);
+  const [bossMonsterImg, setBossMonsterImg] = useState(null);
+  const [bossMonsterName, setBossMonsterName] = useState(null);
+  const [regionScores, setRegionScores] = useState(null);
+  const [totalContribute, setTotalContribute] = useState(null);
+  const [userCount, setUserCount] = useState(null);
+  console.log(totalContribute/bossMonsterHp)
+
   useEffect(() => {
-    const data = {
-      "region" : null
-    }
     const fetchUserData = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
@@ -127,7 +122,40 @@ const Main = () => {
       }
     };
 
+    const fetchPageData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        console.log("사용한 토큰 : " + accessToken);
+        const response = await axios.get(SERVERURL + "/api/raidu/mainpage", {headers: {"Authorization": `Bearer ${accessToken}`}}); // 여기에 API 주소 넣을 것
+        console.log(response);
+        
+        console.log("보스몬스터 설명 : " + response.data.data.bossMonsterDescription);
+        setBossMonsterDescription(response.data.data.bossMonsterDescription);        
+        console.log("보스몬스터 HP : " + response.data.data.bossMonsterHp);
+        setBossMonsterHp(response.data.data.bossMonsterHp);
+        console.log("보스몬스터 이미지 : " + response.data.data.bossMonsterImg);
+        setBossMonsterImg(response.data.data.bossMonsterImg);
+        console.log("보스몬스터 이름 : " + response.data.data.bossMonsterName);
+        setBossMonsterName(response.data.data.bossMonsterName);
+        console.log("지역 점수 : " + response.data.data.regionScores);
+        setRegionScores(response.data.data.regionScores);
+        console.log("총 기여도 : " + response.data.data.totalContribute);
+        setTotalContribute(response.data.data.totalContribute);
+        console.log("유저 수 : " + response.data.data.userCount);
+        setUserCount(response.data.data.userCount);
+
+
+
+
+
+      } catch (error) {
+        console.error("페이지 정보 불러오기 실패...");
+        console.log(error);
+      }
+    };
+
     fetchUserData();
+    fetchPageData();
   }, [navigate]);
 
   return (
@@ -146,7 +174,7 @@ const Main = () => {
             <div className="home-num-container">
               <FirstRenderer>
                 <FadeAnime>
-                  <AnimatedNumber targetNumber={12345} fontSize={50} />
+                  <AnimatedNumber targetNumber={userCount} fontSize={50} />
                 </FadeAnime>
               </FirstRenderer>
             </div>
@@ -191,14 +219,14 @@ const Main = () => {
                       </div>
                       <div className="season-boss-text">
                         <div className="chart-title">배경</div>
-                        <div>도로위에 떨어진 블루베리를 주워먹고 배탈이 났음</div>
+                        <div>{bossMonsterDescription}</div>
                       </div>
                     </div>
                     <div className="home-season-ratio">
                       <div className="chart-title" style={{ marginBottom: "40px" }}>
                         토벌 현황
                       </div>
-                      <StepProgressBar />
+                      <StepProgressBar raidPercentage={(totalContribute/bossMonsterHp)}/>
                     </div>
                   </div>
                 </SpringAnime>
