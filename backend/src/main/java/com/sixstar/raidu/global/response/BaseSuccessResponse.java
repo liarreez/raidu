@@ -25,7 +25,8 @@ public enum BaseSuccessResponse {
   CREATE_CONNECTION_SUCCESS(HttpStatus.OK, "Connection Created Successfully"),
   MAINPAGE_DATA_RETRIEVE_SUCCESS(HttpStatus.OK, "Main page data retrieved successfully"),
   DICTIONARY_SEARCH_SUCCESS(HttpStatus.OK, "Exercise dictionary retrieved successfully"),
-  COMPLETE_ROOM_SUCCESS(HttpStatus.CREATED, "Room completed and save data successfully")
+  COMPLETE_ROOM_SUCCESS(HttpStatus.CREATED, "Room completed and save data successfully"),
+  SEASON_CREATED_SUCCESS(HttpStatus.CREATED, "Season created successfully"),
   ;
 
   private final HttpStatus status;
