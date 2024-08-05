@@ -8,6 +8,7 @@ import com.sixstar.raidu.domain.rooms.entity.Room;
 import com.sixstar.raidu.domain.rooms.entity.RoomUser;
 import com.sixstar.raidu.domain.rooms.repository.RoomRepository;
 import com.sixstar.raidu.domain.rooms.repository.RoomUserRepository;
+import com.sixstar.raidu.domain.rooms.repository.specification.RoomSpecification;
 import com.sixstar.raidu.domain.userpage.entity.UserProfile;
 import com.sixstar.raidu.domain.userpage.repository.UserProfileRepository;
 import com.sixstar.raidu.global.response.BaseException;
@@ -25,6 +26,7 @@ import java.util.Map;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import io.openvidu.java.client.Connection;
 import io.openvidu.java.client.ConnectionProperties;
@@ -106,11 +108,32 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public Map<String, Object> findAllWaitingRooms() {
-        List<RoomResponse> waitingRoomList = roomRepository.findByStatusAndIsPublic("waiting", true)
+    public Map<String, Object> findAllWaitingRooms(
+        Integer roundTime,
+        Integer restTime,
+        Integer totalRounds,
+        String title) {
+
+        Specification<Room> spec = RoomSpecification.baseWaitingRoomSpec();
+
+        if(roundTime != null){
+            spec = spec.and(RoomSpecification.findByRoundTime(roundTime));
+        }
+        if(restTime != null){
+            spec = spec.and(RoomSpecification.findByRestTime(restTime));
+        }
+        if(totalRounds != null){
+            spec = spec.and(RoomSpecification.findByTotalRounds(totalRounds));
+        }
+        if(title != null){
+            spec = spec.and(RoomSpecification.likeTitle(title));
+        }
+
+        List<RoomResponse> waitingRoomList = roomRepository.findAll(spec)
                 .stream()
                 .map(RoomResponse::new)
                 .toList();
+
         Map<String, Object> map = new HashMap<>();
         if (waitingRoomList.isEmpty()) {
             map.put("message", "No waiting rooms available.");
