@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -55,18 +56,25 @@ public class RoomServiceImpl implements RoomService{
         this.roomUserRepository = roomUserRepository;
     }
 
+    public Room findRoomByIdOrThrow(Long roomId) {
+        return roomRepository.findById(roomId)
+            .orElseThrow(() -> new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
+    }
+
+    public UserProfile findUserProfileByEmailOrThrow(String email){
+        return userProfileRepository.findByEmail(email)
+            .orElseThrow(()->new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+    }
+
     @Override
     public Map<String, Object> createRoom(RoomCreateRequest request) {
-        System.out.println(request.getHostEmail());
-        System.out.println(userProfileRepository.findByEmail(request.getHostEmail()));
-        UserProfile userProfile = userProfileRepository.findByEmail(request.getHostEmail())
-            .orElseThrow(()-> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+        UserProfile userProfile = findUserProfileByEmailOrThrow(request.getHostEmail());
 
         Room room = request.toEntity(request, userProfile);
         Room savedRoom = roomRepository.save(room);
 
         RoomUser roomUser = new RoomUser(room, userProfile);
-        RoomUser savedRoomUser = roomUserRepository.save(roomUser);
+        roomUserRepository.save(roomUser);
 
         Map<String, Object> map = new HashMap<>();
         map.put("hostEmail", request.getHostEmail());
@@ -77,10 +85,8 @@ public class RoomServiceImpl implements RoomService{
 
     @Override
     public Map<String, Object> enterRoom(Long roomId, String email) {
-        Room room = roomRepository.findById(roomId)
-            .orElseThrow(()->new BaseException(BaseFailureResponse.ENTER_ROOM_FAIL));
-        UserProfile userProfile = userProfileRepository.findByEmail(email)
-            .orElseThrow(()-> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+        Room room = findRoomByIdOrThrow(roomId);
+        UserProfile userProfile = findUserProfileByEmailOrThrow(email);
 
         RoomUser roomUser = new RoomUser(room, userProfile);
         Boolean isExist = roomUserRepository.existsByRoomIdAndUserProfileId(roomId, userProfile.getId());
@@ -93,19 +99,10 @@ public class RoomServiceImpl implements RoomService{
             throw new BaseException(BaseFailureResponse.FULL_ROOM);
         }
 
-        RoomUser savedRoomUser = roomUserRepository.save(roomUser);
-        RoomEnterResponse enteredUser = new RoomEnterResponse(
-                userProfile.getId(),
-                userProfile.getEmail(),
-                userProfile.getNickname(),
-                userProfile.getLevel(),
-                userProfile.getBestScore(),
-                userProfile.getProfileImageUrl(),
-                userProfile.getMonsterBadgeUrl()
-        );
+        roomUserRepository.save(roomUser);
+        RoomEnterResponse enteredUser = new RoomEnterResponse().fromEntity(userProfile);
 
         Map<String, Object> map = new HashMap<>();
-
         map.put("enteredUser", enteredUser);
         return map;
     }
@@ -149,10 +146,8 @@ public class RoomServiceImpl implements RoomService{
     @Transactional
     @Override
     public Map<String, Object> exitRoom(Long roomId, String email) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(()->new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
-        UserProfile requestUser = userProfileRepository.findByEmail(email)
-                .orElseThrow(()->new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+        Room room = findRoomByIdOrThrow(roomId);
+        UserProfile requestUser = findUserProfileByEmailOrThrow(email);
 
         String hostEmail = room.getUserProfile().getEmail();
 
@@ -174,8 +169,7 @@ public class RoomServiceImpl implements RoomService{
     @Transactional
     @Override
     public Map<String, Object> updateRoomSettings(Long roomId, UpdateRoomSettingsRequest updateRoomSettingsRequest) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(()-> new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
+        Room room = findRoomByIdOrThrow(roomId);
 
         room.update(updateRoomSettingsRequest.getRoundTime(), updateRoomSettingsRequest.getRestTime(), updateRoomSettingsRequest.getTotalRounds());
         RoomResponse updatedRoom = new RoomResponse(room);
@@ -188,8 +182,7 @@ public class RoomServiceImpl implements RoomService{
     @Transactional
     @Override
     public Map<String, Object> updateRoomStatus(Long roomId) {
-        Room room = roomRepository.findById(roomId)
-            .orElseThrow(()-> new BaseException(BaseFailureResponse.ROOM_NOT_FOUND));
+        Room room = findRoomByIdOrThrow(roomId);
 
         String status = room.getStatus();
         if(status.equals("waiting")){
@@ -212,7 +205,6 @@ public class RoomServiceImpl implements RoomService{
         Map<String, Object> map = new HashMap<>();
         map.put("sessionId", session.getSessionId());
         System.out.println("sessionId           "+session.getSessionId());
-        System.out.println("MAMAMAM     "+map.get("sessionId"));
         return map;
     }
 
