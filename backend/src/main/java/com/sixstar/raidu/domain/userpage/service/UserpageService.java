@@ -12,4 +12,6 @@ public interface UserpageService {
   Map<String, Object> searchUserData(long id);
 
   void withdraw(String authorization);
+
+  Map<String, Object> findUsers(String nickname);
 }

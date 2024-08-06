@@ -260,11 +260,9 @@ public class RoomServiceImpl implements RoomService{
         userProfile.updateBestScore(request.getPersonalCombatPower(), request.getEndTime());
 
         // 시즌지역점수, 시즌사용자점수 누적
-        Optional<Season> season = Optional.ofNullable(seasonRepository.findSeason(request.getEndTime())
-                .orElseThrow(() -> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND)));
-        season.ifPresent(currentSeason->{
-            updateSeasonRegionScoreAndSeasonUserScore(currentSeason, userProfile.getRegion(), userProfile, request.getPersonalCombatPower());
-        });
+        Season season = seasonRepository.findSeason(request.getEndTime())
+                .orElseThrow(() -> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND));
+        updateSeasonRegionScoreAndSeasonUserScore(season, userProfile.getRegion(), userProfile, request.getPersonalCombatPower());
 
         // exerciseRoom. roundRecord 저장 -  미완
         if(request.getRoundRecordList() == null){

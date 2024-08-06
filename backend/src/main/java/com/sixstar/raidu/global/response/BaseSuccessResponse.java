@@ -28,6 +28,8 @@ public enum BaseSuccessResponse {
   COMPLETE_ROOM_SUCCESS(HttpStatus.CREATED, "Room completed and save data successfully"),
   USER_WITHDRAW_SUCCESS(HttpStatus.OK, "User withdraw success"),
   SEASON_CREATED_SUCCESS(HttpStatus.CREATED, "Season created successfully"),
+  GET_USERS_SUCCESS(HttpStatus.OK, "Get users successfully"),
+  GET_USERS_SUCCESS_BUT_NO_CONTENT(HttpStatus.NO_CONTENT, "Get users successfully But No Content")
   ;
 
   private final HttpStatus status;
