@@ -35,7 +35,8 @@ public enum BaseFailureResponse {
   DICTIONARY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 운동입니다!"),
   NOT_JSON_TYPE(HttpStatus.BAD_REQUEST, "JSON 형태의 타입이 아닙니다!"),
   WITHDRAW_USER(HttpStatus.BAD_REQUEST, "회원 탈퇴한 유저입니다!"),
-  REPORTED_USER(HttpStatus.BAD_REQUEST, "신고 당한 유저입니다!")
+  REPORTED_USER(HttpStatus.BAD_REQUEST, "신고 당한 유저입니다!"),
+  IS_NOT_ADMIN(HttpStatus.UNAUTHORIZED, "관리자 권한이 필요합니다!")
   ;
 
   private final HttpStatus status;
