@@ -62,7 +62,7 @@
 
     /* 포지셔닝 */
     margin-top: 30px;
-    box-shadow: 0px 10px 16px 5px rgba(0,0,0,0.1);
+    box-shadow: 0px 6px 10px 5px rgba(0,0,0,0.2);
 }
 
 .home-button-left {
@@ -168,7 +168,8 @@
     background-color: white;
     position: relative;
     top: -50px;
-    box-shadow: 0px 5px 15px 7px #d0ffd0;    
+    /* box-shadow: 0px 5px 15px 7px #d0ffd0;     */
+    box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.2);
 }
 
 .home-stat-container * {

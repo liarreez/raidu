@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import TopNav from "../Component/TopNav";
 import FadeAnime from "../Component/FadeAnime";
 import SpringAnime from "../Component/SpringAnime";
 import "react-step-progress-bar/styles.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
+
+
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
@@ -15,51 +18,38 @@ import "../../CSS/Mypage.css";
 import test from "../../Imgs/test.png";
 import burgerking from "../../Imgs/burgerking.png";
 
-// 경험치 퍼센티지
 const expPercentage = 60;
 
-class StepProgressBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      percent: 0,
-    };
-  }
+function StepProgressBar() {
+  const [percent, setPercent] = useState(0);
 
-  componentDidMount() {
-    this.interval = setInterval(() => {
-      this.setState((prevState) => {
-        if (prevState.percent < expPercentage) {
-          return { percent: prevState.percent + 1 };
-        } else {
-          clearInterval(this.interval);
-          return null;
-        }
-      });
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (percent < expPercentage) {
+        setPercent(prevPercent => prevPercent + 1);
+      } else {
+        clearInterval(interval);
+      }
     }, 40);
-  }
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [percent]);
 
-  render() {
-    return (
-      <ProgressBar
-        percent={this.state.percent}
-        filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
-        unfilledBackground="#3E3A3A"
-        width="500px"
-        height="10px"
-      >
-        <Step transition="scale">{({ accomplished }) => <div />}</Step>
-        <Step transition="scale">{({ accomplished }) => <div />}</Step>
-      </ProgressBar>
-    );
-  }
+  return (
+    <ProgressBar
+      percent={percent}
+      filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
+      unfilledBackground="#3E3A3A"
+      width="500px"
+      height="10px"
+    >
+      <Step transition="scale">{({ accomplished }) => <div />}</Step>
+      <Step transition="scale">{({ accomplished }) => <div />}</Step>
+    </ProgressBar>
+  );
 }
 
-const Mypage = () => {
+function Mypage() {
   const [activeTab, setActiveTab] = useState("history");
 
   const renderMonsterCards = () => {
@@ -70,7 +60,6 @@ const Mypage = () => {
       { name: "이름 4", image: burgerking },
       { name: "이름 5", image: burgerking },
       { name: "이름 6", image: burgerking },
-      // 추가 몬스터 데이터는 이후 API로 받으면 됩니다.
     ];
 
     return (
@@ -116,12 +105,8 @@ const Mypage = () => {
     );
   };
 
-  // 히스토리 페이지
   const renderHistory = () => {
-    const records = [
-      // 추가 기록 데이터는 이후 API로 받으면 됩니다.
-    ];
-
+    const records = [];
     return (
       <div style={{display: "flex", backgroundColor: "blue", width: "100%", height: "490px"}}>
         <div style={{display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "green", flex: 3, padding: "10px"}}>
@@ -213,6 +198,6 @@ const Mypage = () => {
       </div>
     </FadeAnime>
   );
-};
+}
 
 export default Mypage;
