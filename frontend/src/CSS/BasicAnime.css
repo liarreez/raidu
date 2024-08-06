@@ -1,0 +1,64 @@
+/* 
+1. ".focus-in-contract"
+클래스 적용 효과 : 중앙으로 모이며 Fade-in
+사용법 : ex) ".focus-in-contract .delay-01s"
+0.1s 0.3s 0.5s 0.7s 출현 배리에이션 존재합니다. 기본값은 0.7s 후 출현  
+*/
+
+
+ @-webkit-keyframes focus-in-contract {
+    0% {
+      letter-spacing: 1em;
+      -webkit-filter: blur(12px);
+              filter: blur(12px);
+      opacity: 0;
+    }
+    100% {
+      -webkit-filter: blur(0px);
+              filter: blur(0px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes focus-in-contract {
+    0% {
+      letter-spacing: 1em;
+      -webkit-filter: blur(12px);
+              filter: blur(12px);
+      opacity: 0;
+    }
+    100% {
+      -webkit-filter: blur(0px);
+              filter: blur(0px);
+      opacity: 1;
+    }
+  }
+  
+  :root {
+    --animation-delay: 0.7s; /* 기본 애니메이션 지연 시간 */
+  }
+  
+  .focus-in-contract {
+    animation-name: focus-in-contract;
+    animation-duration: 0.7s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: both;
+  
+    /* 애니메이션 지연 시간 변경 */
+    &.delay-07s {
+      --animation-delay: 0.7s;
+    }
+    &.delay-05s {
+      --animation-delay: 0.5s;
+    }
+    &.delay-03s {
+      --animation-delay: 0.3s;
+    }
+    &.delay-01s {
+      --animation-delay: 0.1s;
+    }
+  
+    /* 애니메이션 지연 시간을 CSS 변수로 설정 */
+    animation-delay: var(--animation-delay);
+  }
+  
