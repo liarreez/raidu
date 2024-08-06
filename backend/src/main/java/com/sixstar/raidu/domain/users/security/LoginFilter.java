@@ -74,11 +74,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             throw new BaseException(BaseFailureResponse.REPORTED_USER);
         }
 
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-
-        String role = auth.getAuthority();
+        String role = user.getRole();
 
         String accessToken = jwtUtil.createJwt(TokenType.ACCESS.name(), email, role, 60*60*1L);
         String refreshToken = jwtUtil.createJwt(TokenType.REFRESH.name(), email, role, 60*60*24L);
@@ -88,6 +84,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Map<String, Object> data = new HashMap<>();
         data.put("accessToken", accessToken);
         data.put("refreshToken", refreshToken);
+        data.put("role", role);
 
         ResponseEntity<BaseResponse<?>> responseEntity = baseResponseService.getSuccessResponse(BaseSuccessResponse.LOGIN_SUCCESS, data);
 
