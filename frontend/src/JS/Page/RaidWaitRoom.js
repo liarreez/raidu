@@ -43,7 +43,6 @@ const RaidWaitRoom = () => {
     // ========= roomName은 pathVariable로 줄 거고
     // ========= roomSet은 props로 넘기고
     // ========= isRoomLocked는 대기실에서 입장할 수 있는 모든 방이 false입니다
-    // 
 
     const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -56,7 +55,9 @@ const RaidWaitRoom = () => {
     
     // room setting은 방장만 바꿀 수 있으므로 유의하여 컴포에 props 넘길 것 ㅜ 
     // room setting과 me.isCaptain을 컴포에 넘겨야 할 것 같음
-
+    const [me, setMe] = useState(new User("김싸피", 1, "profile1.png", 572, 15600, false, false))
+    // 세션으로 받게 되면 세션 값으로 세팅해 주세요
+    
     const [participantsList, setParticipantsList] = useState([])
     
     // 방 제목 수정하는 방법
@@ -64,8 +65,6 @@ const RaidWaitRoom = () => {
     // 모달로 띄울지 아니면 동적으로 입력하도록 만들지(제목 지우고 input 넣고 버튼 띄우기)는 생각 중임
     // 아마 후자 될 것
 
-    const me = new User("김싸피", 1, "profile1.png", 572, 15600, false, true);
-    // 세션으로 받게 되면 세션 값으로 세팅해 주세요
     
     useEffect(() => {
         setRoomSet(
@@ -90,6 +89,7 @@ const RaidWaitRoom = () => {
 
     const [websocketClient, setWebsocketClient] = useState(null);
     const [messages, setMessages] = useState([]);
+    const [chatMessages, setChatMessages] = useState([]);
 
     useEffect(() => { 
         // 페이지 진입 시 room PK를 가지고 소켓 클라이언트 객체를 생성합니다.
@@ -110,6 +110,14 @@ const RaidWaitRoom = () => {
                 await websocketClient.connect();
                 const subscription = websocketClient.subscribe('/sub/message/' + roomName, (message) => {
                     const parsedMessage = JSON.parse(message.body);
+                    switch(parsedMessage.type){
+                        case '1': console.log('unhandled message'); break;
+                        // case '2': parsedMessage.readyType ? participantsList.filter((each) => each.) 
+                        // 0806 여기부터
+
+
+                    }
+                    parsedMessage.type === '3' && setChatMessages((prevMessages) => [...prevMessages, parsedMessage]);
                     setMessages((prevMessages) => [...prevMessages, parsedMessage]);
                 });
                 return () => {
@@ -129,8 +137,85 @@ const RaidWaitRoom = () => {
     }, [websocketClient, roomName])
 
     useEffect(() => {
-        console.log(messages)
-    },[messages])
+        console.log(chatMessages)
+    },[chatMessages])
+
+    
+    // WEBSOCKET 동작 테스트 ===========================
+
+    // making timestamp
+    const getTime = () => {
+        const now = new Date();
+        const pad = (n) => n.toString().padStart(2, '0');
+    // const year = now.getFullYear();
+        const month = pad(now.getMonth() + 1); 
+        const day = pad(now.getDate());
+        const hours = pad(now.getHours());
+        const minutes = pad(now.getMinutes());
+        const seconds = pad(now.getSeconds());
+    //   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        return `${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+    const DESTINATION = '/pub/message';
+    const COMMONFORM = { // 메시지 타입 관계없이 공통적으로 쓰이는 내용입니다.
+        user: me.nickname,
+        channel: roomName,
+        timestamp: getTime()
+    }
+
+    const sendTest1 = (enterType) => { // 사용자 입/퇴장 관련 웹소켓 메서드
+        enterType=true;
+        if (websocketClient) {
+            const message = JSON.stringify({
+                ...COMMONFORM,
+                type: "1",
+                enterType
+            })
+            websocketClient.send(DESTINATION, message);
+        }
+    }
+    const sendTest2 = () => { // 사용자 준비 상태 관련 웹소켓 메서드
+        const readyType = !me.readyState;
+        if (websocketClient) {
+            const message = JSON.stringify({
+                ...COMMONFORM,
+                type:"2",
+                readyType
+            })
+            websocketClient.send(DESTINATION, message);
+        }
+    }
+
+    useEffect(() => {
+        console.log(me)
+    },[me])
+
+    /*
+         const readyType = !me.readyState
+        setMe({...me, readyState: !me.readyState})
+
+        if (websocketClient) {
+            const message = JSON.stringify({
+                ...COMMONFORM,
+                type:"2",
+                readyType
+            })
+            websocketClient.send(DESTINATION, message);
+        }
+    */
+
+    const sendTest3 = (content) => { // 사용자 채팅 전송 관련 웹소켓 메서드
+        content = "lala";
+        if (websocketClient) {
+            const message = JSON.stringify({
+                ...COMMONFORM,
+                type: "3",
+                body: content
+            })
+            websocketClient.send(DESTINATION, message);
+        }
+    }
 
     return(
         <div className="container"> 
@@ -158,7 +243,7 @@ const RaidWaitRoom = () => {
                         </Grid>
                         <Grid item xs={4} style={{ height: '100%' }}>
                             <div style={{ height: '100%' }}>
-                                <Chatting me={me} roomName={roomName} />
+                                <Chatting me={me} roomName={roomName} messages={chatMessages} sendTest3={sendTest3}/>
                             </div>
                         </Grid>
                     </Grid>
@@ -174,11 +259,29 @@ const RaidWaitRoom = () => {
                         </Grid>
                         <Grid item xs={2}>
                             <Grid container spacing={1} style={{ height: '100%' }}>
-                                <Grid item xs={5}>
-                                    <div className='startButton'>
-                                        <span className='buttonText'>시작하기</span>
-                                    </div>
-                                </Grid>
+
+                                {   // true 부분 onClick 구현 완료 시 수정 필요 !!
+                                    me.isCaptain ? (
+                                        <Grid item xs={5}>
+                                            <div className='startButton' onClick={sendTest1}>
+                                                <span className='buttonText'>시작하기</span>
+                                            </div>
+                                        </Grid>
+                                    ) : me.isReady ? (
+                                        <Grid item xs={5}>
+                                            <div className='startButton' onClick={sendTest2}>
+                                                <span className='buttonText'>준비 취소</span>
+                                            </div>
+                                        </Grid>
+
+                                    ) : (
+                                        <Grid item xs={5}>
+                                            <div className='startButton' onClick={sendTest2}>
+                                                <span className='buttonText'>준비하기</span>
+                                            </div>
+                                        </Grid>
+                                    )
+                                }
 
                                 {/* 방장인지 아닌지에 따라 다른 컴포 출력 
                                 
@@ -189,15 +292,15 @@ const RaidWaitRoom = () => {
                                     준비하기 버튼 눌리고 나면 setReady(true)가 되는데, 이 상태인 동안에는 button color가 hover 시와 똑같도록 설정
                                 */}
                                 <Grid item xs={5}>
-                                    <div className='shareButton'>
+                                    <div className='shareButton' onClick={sendTest2}>
                                         <span className='buttonText'>링크 공유</span>
                                     </div>
                                 </Grid>
                                 <Grid item xs={2}>
-                                    <div className="outarea"> 
-                                        <a href='/'>
+                                    <div className="outarea" onClick={sendTest3}> 
+                                        {/* <a href='/'>  // 잠깐 동작 막음 */}
                                             <img src={out} alt="way out" className="out"/>
-                                        </a>
+                                        {/* </a> */}
                                     </div>
                                 </Grid>
                             </Grid>
