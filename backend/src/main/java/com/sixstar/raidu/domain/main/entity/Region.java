@@ -40,17 +40,17 @@ public class Region {
   private LocalDateTime updatedAt;
   @OneToMany(mappedBy = "region")
   private List<SeasonRegionScore> seasonRegionScores;
-  @OneToOne(mappedBy = "region",  cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-  private UserProfile userProfile;
+  @OneToMany(mappedBy = "region")
+  private List<UserProfile> userProfiles;
 
   @Builder
 
   public Region(String name, String symbolImageUrl, String description,
-      List<SeasonRegionScore> seasonRegionScores, UserProfile userProfile) {
+      List<SeasonRegionScore> seasonRegionScores, List<UserProfile> userProfiles) {
     this.name = name;
     this.symbolImageUrl = symbolImageUrl;
     this.description = description;
     this.seasonRegionScores = seasonRegionScores;
-    this.userProfile = userProfile;
+    this.userProfiles = userProfiles;
   }
 }

@@ -37,7 +37,8 @@ public enum BaseFailureResponse {
   WITHDRAW_USER(HttpStatus.BAD_REQUEST, "회원 탈퇴한 유저입니다!"),
   REPORTED_USER(HttpStatus.BAD_REQUEST, "신고 당한 유저입니다!"),
   OVERLAPPING_SEASON_EXISTS(HttpStatus.BAD_REQUEST, "입력된 기간과 겹치는 시즌이 존재합니다!"),
-  IS_NOT_ADMIN(HttpStatus.UNAUTHORIZED, "관리자 권한이 필요합니다!")
+  IS_NOT_ADMIN(HttpStatus.UNAUTHORIZED, "관리자 권한이 필요합니다!"),
+  SAME_NAME_SEASON_EXISTS(HttpStatus.BAD_REQUEST, "동일한 이름의 시즌이 존재합니다!")
   ;
 
   private final HttpStatus status;

@@ -15,6 +15,7 @@ import com.sixstar.raidu.domain.userpage.entity.UserProfile;
 import com.sixstar.raidu.domain.userpage.repository.UserProfileRepository;
 import com.sixstar.raidu.global.response.BaseException;
 import com.sixstar.raidu.global.response.BaseFailureResponse;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -54,6 +55,7 @@ public class AdminServiceImpl implements AdminService{
         return localDate.atStartOfDay();
     }
 
+    @Transactional
     public void initializeSeasonRegionScore(Long seasonId){
         Season season = findSeasonByIdOrThrow(seasonId);
 
@@ -64,26 +66,38 @@ public class AdminServiceImpl implements AdminService{
         }
     }
 
+    @Transactional
     public void initializeSeasonUserScore(Long seasonId){
         Season season = findSeasonByIdOrThrow(seasonId);
 
-        List<UserProfile> userProfileList = userProfileRepository.findAll();
+        List<UserProfile> userProfileList = userProfileRepository.findDistinctUserProfiles();
         for(UserProfile userProfile: userProfileList){
+            System.out.println(userProfile);
             SeasonUserScore seasonUserScore = SeasonUserScoreCreateRequest.toEntity(season, userProfile, 0);
             seasonUserScoreRepository.save(seasonUserScore);
         }
     }
 
+    public void validateSeasonData(LocalDateTime startDateTime, LocalDateTime endDateTime, String name){
+        boolean existsOverlappingSeason
+            = seasonRepository.existsSeasonsBetweenDates(startDateTime, endDateTime);
+        if(existsOverlappingSeason){
+            throw new BaseException(BaseFailureResponse.OVERLAPPING_SEASON_EXISTS);
+        }
+        boolean existsSameName = seasonRepository.existsByName(name);
+        if(existsSameName){
+            throw new BaseException(BaseFailureResponse.SAME_NAME_SEASON_EXISTS);
+        }
+    }
+
+
+    @Transactional
     @Override
     public Map<String, Object> createSeason(SeasonRequest request) {
         LocalDateTime startDateTime = stringToLocalDate(request.getStartDate());
         LocalDateTime endDateTime = stringToLocalDate(request.getEndDate());
 
-        boolean existsOverlappingSeason
-                = seasonRepository.existsSeasonsBetweenDates(startDateTime, endDateTime);
-        if(existsOverlappingSeason){
-            throw new BaseException(BaseFailureResponse.OVERLAPPING_SEASON_EXISTS);
-        }
+        validateSeasonData(startDateTime, endDateTime, request.getName());
 
         Season season = new Season(request.getName(), startDateTime, endDateTime);
         Season createdSeason = seasonRepository.save(season);

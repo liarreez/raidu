@@ -18,4 +18,5 @@ public interface SeasonRepository extends JpaRepository<Season, Long> {
     boolean existsSeasonsBetweenDates(@Param("startDate") LocalDateTime startDate,
         @Param("endDate") LocalDateTime endDate);
 
+    boolean existsByName(String name);
 }

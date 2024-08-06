@@ -27,5 +27,4 @@ public class AdminController {
         Map<String, Object> response = adminService.createSeason(request);
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.SEASON_CREATED_SUCCESS, response);
     }
-
 }
