@@ -45,4 +45,8 @@ public class SeasonRegionScore {
     this.season = season;
     this.score = score;
   }
+
+  public void updateSeasonRegionScore(int personalCombatPower){
+    this.score += personalCombatPower;
+  }
 }

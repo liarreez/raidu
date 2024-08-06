@@ -14,7 +14,7 @@ public class UpdateRoomSettingsRequest {
     int restTime;
     int totalRounds;
 
-    public Room toEntity(UpdateRoomSettingsRequest request, Room room){
+    public Room toEntity(UpdateRoomSettingsRequest request){
         return Room.builder()
                 .roundTime(request.getRoundTime())
                 .restTime(request.getRestTime())

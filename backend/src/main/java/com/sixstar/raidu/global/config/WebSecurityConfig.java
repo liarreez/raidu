@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sixstar.raidu.domain.users.security.JWTFilter;
 import com.sixstar.raidu.domain.users.security.JWTUtil;
 import com.sixstar.raidu.domain.users.security.LoginFilter;
-import com.sixstar.raidu.domain.users.security.RefreshTokenService;
 import com.sixstar.raidu.domain.users.security.SecurityExceptionHandlerFilter;
+import com.sixstar.raidu.domain.users.security.SecurityService;
+import com.sixstar.raidu.domain.users.service.UsersService;
 import com.sixstar.raidu.global.response.BaseResponseService;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,12 +20,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -36,7 +37,7 @@ public class WebSecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-    private final RefreshTokenService refreshTokenService;
+    private final SecurityService securityService;
     private final BaseResponseService baseResponseService;
     private final ObjectMapper objectMapper;
 
@@ -53,6 +54,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(new SecurityExceptionHandlerFilter(), SecurityContextHolderFilter.class)
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -71,10 +73,9 @@ public class WebSecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(new SecurityExceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,
-                        refreshTokenService, objectMapper, baseResponseService), UsernamePasswordAuthenticationFilter.class);
+                    securityService, objectMapper, baseResponseService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

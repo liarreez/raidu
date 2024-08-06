@@ -1,5 +1,6 @@
 package com.sixstar.raidu.domain.rooms.service;
 
+import com.sixstar.raidu.domain.rooms.dto.RoomCompleteRequest;
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
 import com.sixstar.raidu.domain.rooms.dto.UpdateRoomSettingsRequest;
 
@@ -17,4 +18,5 @@ public interface RoomService {
     Map<String, Object> initializeSession(Map<String, Object> params) throws OpenViduJavaClientException, OpenViduHttpException;
     Map<String, Object> createConnection(String sessionId, Map<String, Object> params)
         throws OpenViduJavaClientException, OpenViduHttpException;
+    Map<String, Object> completeRoom(Long roomId, RoomCompleteRequest request);
 }
