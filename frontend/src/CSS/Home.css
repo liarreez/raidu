@@ -248,7 +248,7 @@
 .season-boss-image img {
     width: 280px;
     padding: 10px;
-    margin: auto;
+    margin-top: 20px;
     filter: drop-shadow(0px 8px 8px rgba(0,0,0,0.2));
 }
 

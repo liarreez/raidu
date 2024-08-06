@@ -98,9 +98,13 @@ const Main = () => {
   const [bossMonsterHp, setBossMonsterHp] = useState(null);
   const [bossMonsterImg, setBossMonsterImg] = useState(null);
   const [bossMonsterName, setBossMonsterName] = useState(null);
-  const [regionScores, setRegionScores] = useState(null);
+  const [regionScores, setRegionScores] = useState([]);
   const [totalContribute, setTotalContribute] = useState(null);
   const [userCount, setUserCount] = useState(null);
+
+  console.log(regionScores);
+
+
   console.log(totalContribute/bossMonsterHp)
 
   useEffect(() => {
@@ -143,10 +147,6 @@ const Main = () => {
         setTotalContribute(response.data.data.totalContribute);
         console.log("유저 수 : " + response.data.data.userCount);
         setUserCount(response.data.data.userCount);
-
-
-
-
 
       } catch (error) {
         console.error("페이지 정보 불러오기 실패...");
@@ -207,7 +207,7 @@ const Main = () => {
                       <div className="content-chart-container">
                         <div className="chart-title">시즌 기여도</div>
                         <div className="chart-chart">
-                          <NivoBar />
+                          <NivoBar regionScores={regionScores}/>
                         </div>
                         <div className="chart-symbol">
                           <div className="symbol-container"></div>
@@ -215,6 +215,7 @@ const Main = () => {
                       </div>
                       <div className="season-boss-image">
                         <div className="chart-title">시즌 보스</div>
+                        <h2 style={{fontSize: "24px", marginTop: "10px", color: "#948B8B"}}>{bossMonsterName}</h2>
                         <img src={burgerking} alt="시즌 보스" />
                       </div>
                       <div className="season-boss-text">
@@ -226,7 +227,7 @@ const Main = () => {
                       <div className="chart-title" style={{ marginBottom: "40px" }}>
                         토벌 현황
                       </div>
-                      <StepProgressBar raidPercentage={(totalContribute/bossMonsterHp)}/>
+                      <StepProgressBar raidPercentage={(totalContribute/bossMonsterHp * 100)}/>
                     </div>
                   </div>
                 </SpringAnime>
