@@ -11,14 +11,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class SeasonRequest {
     private String name;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-
-    public static Season toEntity(SeasonRequest request){
-        return Season.builder()
-            .name(request.name)
-            .startDate(request.startDate)
-            .endDate(request.endDate)
-            .build();
-    }
+    private String startDate;
+    private String endDate;
 }
