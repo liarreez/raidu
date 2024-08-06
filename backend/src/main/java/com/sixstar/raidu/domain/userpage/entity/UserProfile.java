@@ -80,8 +80,8 @@ public class UserProfile {
   private List<UserMonster> userMonsters;
   @OneToMany(mappedBy = "userProfile")
   private List<UserBossMonster> userBossMonsters;
-  @OneToOne(mappedBy = "userProfile", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-  private SeasonUserScore seasonUserScore;
+  @OneToMany(mappedBy = "userProfile")
+  private List<SeasonUserScore> seasonUserScores;
 
   @PrePersist
   public void prePersist() {
@@ -98,7 +98,7 @@ public class UserProfile {
       List<Report> reportsReported, List<Report> reportsReporting,
       List<ExerciseRoomRecord> exerciseRoomRecords, List<Room> rooms, List<RoomUser> roomUsers,
       List<UserMonster> userMonsters, List<UserBossMonster> userBossMonsters,
-      SeasonUserScore seasonUserScore) {
+      List<SeasonUserScore> seasonUserScores) {
     this.user = user;
     this.email = email;
     this.nickname = nickname;
@@ -117,7 +117,7 @@ public class UserProfile {
     this.roomUsers = roomUsers;
     this.userMonsters = userMonsters;
     this.userBossMonsters = userBossMonsters;
-    this.seasonUserScore = seasonUserScore;
+    this.seasonUserScores = seasonUserScores;
   }
 
   public void updateExp(int gainedExp){

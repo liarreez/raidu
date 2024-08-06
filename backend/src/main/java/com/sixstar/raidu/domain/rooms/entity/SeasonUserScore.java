@@ -33,7 +33,7 @@ public class SeasonUserScore {
   @ManyToOne
   @JoinColumn(name = "season_id", nullable = false)
   private Season season;
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   private UserProfile userProfile;
   @Column(nullable = false)
