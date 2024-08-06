@@ -15,6 +15,8 @@ public enum BaseFailureResponse {
   USERPROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 유저 프로필입니다!"),
   LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "이메일 혹은 비밀번호가 틀렸습니다!"),
   ACCESS_TOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "액세스 토큰이 만료되었습니다!"),
+  INVALID_ACCESS_TOKEN_SIGNATURE(HttpStatus.UNAUTHORIZED, "액세스 토큰의 서명이 유효하지 않습니다."),
+  INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 액세스 토큰입니다."),
   REFRESH_TOKEN_IS_EXPIRED(HttpStatus.UNAUTHORIZED, "리프레시 토큰이 만료되었습니다!"),
   INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "유효하지 않은 리프레시 토큰입니다!"),
   INVALID_AUTHORIZED_HEADER(HttpStatus.BAD_REQUEST, "유효하지 않은 인증 해더 입니다!"),
