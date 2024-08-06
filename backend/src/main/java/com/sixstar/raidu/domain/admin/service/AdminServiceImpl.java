@@ -80,7 +80,7 @@ public class AdminServiceImpl implements AdminService{
         LocalDateTime endDateTime = stringToLocalDate(request.getEndDate());
 
         boolean existsOverlappingSeason
-                = seasonRepository.existsOverlappingSeason(startDateTime, endDateTime);
+                = seasonRepository.existsSeasonsBetweenDates(startDateTime, endDateTime);
         if(existsOverlappingSeason){
             throw new BaseException(BaseFailureResponse.OVERLAPPING_SEASON_EXISTS);
         }
