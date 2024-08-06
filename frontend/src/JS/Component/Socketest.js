@@ -14,10 +14,9 @@ export class Socketest {
       debug: function (str) {
         console.log('STOMP: ' + str);
       },
-      onConnect: (destination, body) => {
+      onConnect: () => {
         console.log('Connected to WebSocket');
         this.isConnected = true; // Set connected status to true
-        this.client.publish({ destination, body });
       },
       onDisconnect: () => {
         console.log('Disconnected from WebSocket');

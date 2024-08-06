@@ -10,17 +10,12 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain}) => {
     const [localRestTime, setLocalRestTime] = useState(restTime);
 
     const [secondOption, setSecondOption] = useState([]); // 선택할 수 있는 초(seconds) 목록
-    const [exerciseOption, setExerciseOption] = useState(['lunge', 'jumpingJack']); // 선택할 수 있는 운동들 목록
+    
+    const [exerciseOption, setExerciseOption] = useState([]); // 이용자가 선택한 운동 목록
 
     // 240804 TO-DOs
     // 1. 방장 여부(isCaptain ? )에 따라 select disabled 주가 
-    // 2. 하단부 form 셀렉-옵션 작업
-
-    const [age, setAge] = useState(null);
-    const handleChange = (e) => {
-        setAge(e.target.value);
-    }
-
+    // 2. 하단부 form 셀렉-옵션 작업 (완료)
 
     // EVENT HANDLERS =========================================
     const handleLocalRestTimeChange = (e) => {
@@ -35,12 +30,18 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain}) => {
         setLocalRoundTime(e.target.value);
     }
 
+    const handleExcerciseOptionChange = (e, num) => {
+        let nowList = [...exerciseOption];
+        nowList[num] = e.target.value;
+        setExerciseOption(nowList);
+    }
+
     // CALC PART - option values =========================================
     useEffect(() => { 
         
         // 15~180초 선택지 설정
         const newOptions = [];
-        for (let i = 15; i <= 180; i += 15) { // 15
+        for (let i = 15; i <= 180; i += 15) { // 15초 간격의 옵션 설정
             newOptions.push(i);
         }
         setSecondOption(newOptions);
@@ -57,195 +58,152 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain}) => {
     }, [roundCount, restTime, roundTime])
 
     // STYLE =========================================
+
     const formStyle = {
         backgroundColor: 'white',
-        margin: '3%',
         borderRadius: '15px',
         display: 'flex',
-        justifyContent: 'space-around',
-        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+     //   margin: '4% 0',
+     //  padding: '1.5% 0',
+        border: '3px solid #c0c0c0'
     }
 
     const interFormStyle = {
         display: 'flex',
-        justifyContent: 'space-around', 
-        alignItems: 'center', 
+        justifyContent: 'space-around',
+        alignItems: 'center',
         fontWeight: 'bold',
         fontSize: '1.2rem',
-        width: '100%' ,
+        width: '100%',
+        marginTop: '2%'
     }
 
     const interFormCalcStyle = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center', 
-        fontWeight: 'bold',
-        fontSize: '1.2rem',
-        width: '100%' ,
-        marginBottom: '5%'
+        ...interFormStyle, 
+        justifyContent: 'center'
     }
 
     const spanStyle = {
-        minWidth: '20%'
-    }
-
-    const firstEleStyle = {
-        marginTop: '1.5%'
-
-    }
-
-    const lastEleStyle = {
-        marginBottom: '1%'
-    }
-
-    const formCtrlStyle = {
-        marginLeft: '5%'
+        minWidth: '30%',
+        textAlign: 'center'
     }
 
     return(
         <div>
-            <Grid container direction="column" spacing={1} className="subGridContainer" style={{ height: '100%' }}>
-                <Grid item xs={7} style={formStyle}>
-                    <Grid container direction="column" spacing={1.5} style={{height: '100%'}}>
-                        <Grid item xs={3}>
-                            <div style={interFormStyle}>
-                                <span style={spanStyle}>라운드별 시간 </span>
-                                <FormControl variant="filled" sx={{ minWidth: '50%' }} style={{...formCtrlStyle, ...firstEleStyle}}>
-                                    <InputLabel id="demo-simple-select-filled-label">15 ~ 180초 선택 가능</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-filled-label"
-                                        id="demo-simple-select-filled"
-                                        value={localRoundTime}
-                                        onChange={handleLocalRoundTimeChange}
-                                    >
-                                        <MenuItem value={localRoundTime}>{localRoundTime}초</MenuItem>
-                                        {/* 직접입력으로 받을 수도 있기 때문에 위 라인을 살려둠 - 유저가 입력한 값이 option에 살아있어야 해서 */}
-                                        {
-                                           secondOption.map((each) => (
-                                            <MenuItem value={each}>{each}초</MenuItem>
-                                           ))                                     
-                                        }
-                                    </Select>
-                                </FormControl>   
-                            </div>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <div style={interFormStyle}>
-                                <span style={spanStyle}>휴식 시간 </span>
-                                <FormControl variant="filled" sx={{ minWidth: '50%' }} style={{...formCtrlStyle, ...firstEleStyle}}>
-                                    <InputLabel id="demo-simple-select-filled-label">15 ~ 180초 선택 가능</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-filled-label"
-                                        id="demo-simple-select-filled"
-                                        value={localRestTime}
-                                        onChange={handleLocalRestTimeChange}
-                                    >
-                                        <MenuItem value={localRestTime}>{localRestTime}초</MenuItem>
-                                        {
-                                           secondOption.map((each) => (
-                                            <MenuItem value={each}>{each}초</MenuItem>
-                                           ))                                     
-                                        }
-                                    </Select>
-                                </FormControl>     
-                            </div>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <div style={interFormStyle}>
-                                <span style={spanStyle}>라운드 수 </span>
-                                <FormControl variant="filled" sx={{ minWidth: '50%' }} style={formCtrlStyle}>
-                                    <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-filled-label"
-                                        id="demo-simple-select-filled"
-                                        value={localRoundCount}
-                                        onChange={handleLocalRoundCountChange}
-                                    >
-                                        <MenuItem value={localRoundCount}>{localRoundCount}회</MenuItem>
-                                        <MenuItem value={1}>1회</MenuItem>
-                                        <MenuItem value={2}>2회</MenuItem>
-                                        <MenuItem value={3}>3회</MenuItem>
-                                    </Select>
-                                </FormControl>   
-                            </div>
-                        </Grid>
-                        <Grid item xs={3}>
-                            {/* <div style={interFormStyle}> */}
-                            <div style={interFormCalcStyle}>
-                                <span style={spanStyle}>총 소요 시간 </span>
-                                <span > {localRoundTime*localRoundCount+localRestTime*(localRoundCount-1)}초</span>   
-                            </div>
-                        </Grid>
-                    </Grid>
+            <Grid container direction="column" spacing={7} >
+                <Grid item xs={7} >
+                    <div style={formStyle}>
+                        <div style={interFormStyle}>
+                            <span style={spanStyle}>라운드별 시간</span>
+                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
+                                <InputLabel id="round-time-label">15 ~ 180초 선택 가능</InputLabel>
+                                <Select
+                                    labelId="round-time-label"
+                                    id="round-time-select"
+                                    value={localRoundTime}
+                                    onChange={handleLocalRoundTimeChange}
+                                >
+                                    <MenuItem value={localRoundTime}>{localRoundTime}초</MenuItem>
+                                    {secondOption.map((each) => (
+                                        <MenuItem key={each} value={each}>{each}초</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div style={interFormStyle}>
+                            <span style={spanStyle}>휴식 시간</span>
+                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
+                                <InputLabel id="rest-time-label">15 ~ 180초 선택 가능</InputLabel>
+                                <Select
+                                    labelId="rest-time-label"
+                                    id="rest-time-select"
+                                    value={localRestTime}
+                                    onChange={handleLocalRestTimeChange}
+                                >
+                                    <MenuItem value={localRestTime}>{localRestTime}초</MenuItem>
+                                    {secondOption.map((each) => (
+                                        <MenuItem key={each} value={each}>{each}초</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div style={interFormStyle}>
+                            <span style={spanStyle}>라운드 수</span>
+                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
+                                <InputLabel id="round-count-label">1 ~ 3회 선택 가능</InputLabel>
+                                <Select
+                                    labelId="round-count-label"
+                                    id="round-count-select"
+                                    value={localRoundCount}
+                                    onChange={handleLocalRoundCountChange}
+                                >
+                                    <MenuItem value={localRoundCount}>{localRoundCount}회</MenuItem>
+                                    <MenuItem value={1}>1회</MenuItem>
+                                    <MenuItem value={2}>2회</MenuItem>
+                                    <MenuItem value={3}>3회</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div style={interFormCalcStyle}>
+                            <span style={spanStyle}>예상 플레이 시간</span>
+                            <span>{localRoundTime * localRoundCount + localRestTime * (localRoundCount - 1)}초</span>
+                        </div>
+                    </div>
                 </Grid>
 
                 {/* 하단부 form */}
-                <Grid item xs={5} style={formStyle}>
-                <Grid container direction="column" spacing={1.5} style={{height: '100%'}}>
-                        <Grid item xs={4}>
-                            <div style={interFormStyle}>
-                                <span style={spanStyle}>1라운드 </span>
-                                <FormControl variant="filled" sx={{ minWidth: '50%' }} style={{...formCtrlStyle, ...firstEleStyle}}>
-                                    <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-filled-label"
-                                        id="demo-simple-select-filled"
-                                        value={age}
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
-                                    </Select>
-                                </FormControl>   
-                            </div>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <div style={interFormStyle}>
-                                <span style={spanStyle}>2라운드 </span>
-                                <FormControl variant="filled" sx={{ minWidth: '50%' }} style={formCtrlStyle}>
-                                    <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-filled-label"
-                                        id="demo-simple-select-filled"
-                                        value={age}
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
-                                    </Select>
-                                </FormControl>   
-                            </div>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <div style={interFormStyle}>
-                                <span style={spanStyle}>3라운드 </span>
-                                <FormControl variant="filled" sx={{ minWidth: '50%' }} style={formCtrlStyle}>
-                                    <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-filled-label"
-                                        id="demo-simple-select-filled"
-                                        value={age}
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
-                                        <MenuItem value={10}>Ten</MenuItem>
-                                        <MenuItem value={20}>Twenty</MenuItem>
-                                        <MenuItem value={30}>Thirty</MenuItem>
-                                    </Select>
-                                </FormControl>   
-                            </div>
-                        </Grid>
-                    </Grid>
+                <Grid item xs={5}>
+                    <div style={formStyle}>
+                        <div style={interFormStyle}>
+                            <span style={spanStyle}>1라운드 </span>
+                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
+                                <InputLabel id="demo-simple-select-filled-label">1라운드 운동 선택</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-filled-label"
+                                    id="demo-simple-select-filled"
+                                    value={exerciseOption[0] === 'undefined' ? "" : exerciseOption[0] }
+                                    onChange={(e) => handleExcerciseOptionChange(e, 0)}
+                                >
+                                    
+                                    <MenuItem value={'lunge'}>런지</MenuItem>
+                                    <MenuItem value={'jumpingJack'}>팔벌려뛰기</MenuItem>
+                                </Select>
+                            </FormControl>   
+                        </div>
+                        <div style={interFormStyle}>
+                            <span style={spanStyle}>2라운드 </span>
+                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
+                                <InputLabel id="demo-simple-select-filled-label">2라운드 운동 선택</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-filled-label"
+                                    id="demo-simple-select-filled"
+                                    value={exerciseOption[1] === 'undefined' ? "" : exerciseOption[1] }
+                                    onChange={(e) => handleExcerciseOptionChange(e, 1)}
+                                >
+                                    
+                                    <MenuItem value={'lunge'}>런지</MenuItem>
+                                    <MenuItem value={'jumpingJack'}>팔벌려뛰기</MenuItem>
+                                </Select>
+                            </FormControl>    
+                        </div>
+                        <div style={interFormStyle}>
+                            <span style={spanStyle}>3라운드 </span>
+                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
+                                <InputLabel id="demo-simple-select-filled-label">3라운드 운동 선택</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-filled-label"
+                                    id="demo-simple-select-filled"
+                                    value={exerciseOption[2] === 'undefined' ? "" : exerciseOption[2] }
+                                    onChange={(e) => handleExcerciseOptionChange(e, 2)}
+                                >
+                                    <MenuItem value={'lunge'}>런지</MenuItem>
+                                    <MenuItem value={'jumpingJack'}>팔벌려뛰기</MenuItem>
+                                </Select>
+                            </FormControl>    
+                        </div>
+                    </div>
                 </Grid>
             </Grid>
         </div>

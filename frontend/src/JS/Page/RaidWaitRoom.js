@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Grid } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
+//=========== import webSocket
+import { Socketest } from '../Component/Socketest.js'
+
 //=========== import essets
 import '../../CSS/RaidWaitRoom.css';
 import logo from '../../Imgs/logo.png';
@@ -13,6 +16,7 @@ import out from '../../Imgs/roomouticon.png';
 //=========== import components
 import Participants from '../Component/RaidWaitRoom_participants.js';
 import RoomInfoForm from '../Component/RaidWaitRoom_roominfoform.js';
+import Chatting from '../Component/RaidWaitRoom_chatting.js';
 
 class User {
     constructor(nickname, badge, profileImage, level, highestScore, readyState, isCaptain) {
@@ -33,13 +37,16 @@ class Room {
         this.restTime = restTime;
         this.roundCount = roundCount;
     }
-}
+}   
 
 const RaidWaitRoom = () => {
     // ========= roomName은 pathVariable로 줄 거고
     // ========= roomSet은 props로 넘기고
     // ========= isRoomLocked는 대기실에서 입장할 수 있는 모든 방이 false입니다
     // 
+
+    const [isFullScreen, setIsFullScreen] = useState(false);
+
     const { roomName } = useParams(); // 꼭 방의 제목일 필요 없다. PK 받아서 숫자로 지정할 것임
     const [roomSet, setRoomSet] = useState(new Room(0, 0, 0)); // roomSet은 객체임.
     // const [roomSet, setRoomSet] = useState()로 두게 되면 undefined 오류가 나므로
@@ -47,7 +54,6 @@ const RaidWaitRoom = () => {
     const [roomNamed, setRoomNamed] = useState(''); 
     const [isRoomLocked, setIsRoomLocked] = useState(false);
     
-   
     // room setting은 방장만 바꿀 수 있으므로 유의하여 컴포에 props 넘길 것 ㅜ 
     // room setting과 me.isCaptain을 컴포에 넘겨야 할 것 같음
 
@@ -58,9 +64,9 @@ const RaidWaitRoom = () => {
     // 모달로 띄울지 아니면 동적으로 입력하도록 만들지(제목 지우고 input 넣고 버튼 띄우기)는 생각 중임
     // 아마 후자 될 것
 
-    const me = new User("김아무거나길고이상한거", 1, "profile1.png", 572, 15600, false, true);
-    // 얘 redux로 넘겨 버릴까
-
+    const me = new User("김싸피", 1, "profile1.png", 572, 15600, false, true);
+    // 세션으로 받게 되면 세션 값으로 세팅해 주세요
+    
     useEffect(() => {
         setRoomSet(
             new Room(40, 15, 3)
@@ -73,21 +79,61 @@ const RaidWaitRoom = () => {
             new User("최싸피", 3, "profile3.png", 5, 520, false, false),
             new User("박싸피", 4, "profile4.png", 6, 620, true, false)
         ]);
-        console.log(roomSet)
-
     },[]) // onMount 
-
-    useEffect(() => {
-        console.log(roomSet)
-    },[roomSet])
 
     // 운동 set은 하위 컴포넌트에서 넘어와야 하는 값임 
     // 레디를 눌렀을 때 disabled되며, 게임이 시작하면 서버로 넘어간다
 
 
 
+    // WEBSOCKET SETTING ========================================
+
+    const [websocketClient, setWebsocketClient] = useState(null);
+    const [messages, setMessages] = useState([]);
+
+    useEffect(() => { 
+        // 페이지 진입 시 room PK를 가지고 소켓 클라이언트 객체를 생성합니다.
+        const client = new Socketest(roomName);
+        setWebsocketClient(client);
+        return() => {
+            if(client) {
+                client.disconnect();
+            }
+        };
+    }, [roomName]);
+
+    useEffect(() => { 
+        // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
+        if(!websocketClient) return;
+        const connectWebSocket = async () => {
+            try {
+                await websocketClient.connect();
+                const subscription = websocketClient.subscribe('/sub/message/' + roomName, (message) => {
+                    const parsedMessage = JSON.parse(message.body);
+                    setMessages((prevMessages) => [...prevMessages, parsedMessage]);
+                });
+                return () => {
+                    if(subscription) subscription.unsubscribe();
+                    websocketClient.disconnect();
+                };
+            } catch (error) {
+                console.error('Error caused by websocket connecting process : ', error);
+            }
+        };
+        connectWebSocket();
+        return () => {
+            if(websocketClient) {
+                websocketClient.disconnect()
+            }
+        };
+    }, [websocketClient, roomName])
+
+    useEffect(() => {
+        console.log(messages)
+    },[messages])
+
     return(
-        <div className="container">
+        <div className="container"> 
           {/* header */}
             <header>
                 <a href='/' className="logoArea"><img src = {logo} className="logo" alt="logoImg"/></a>
@@ -95,30 +141,24 @@ const RaidWaitRoom = () => {
                     <img src = {isRoomLocked ? locked : unlocked} className="lock" alt={isRoomLocked ? "locked" : "unlocked"}/>
                     <span className="roomName">{roomNamed}</span>
                     <span className="roomSetting">⏱ {roomSet.roundTime} / 💪 {roomSet.roundCount} / 💤 {roomSet.restTime} </span>
-                    {
-                        console.log(`DOM load : ${roomSet.roundTime} / ${roomSet.roundCount} / ${roomSet.restTime}`)
-                        
-                    }
                 </span>
             </header>
+
           {/* 컨테이너 박스 */}
-            <Grid container spacing={0} style={{ flexGrow: 1 }}>
-                
+            <Grid container spacing={0} style={{ height: 'calc(100vh - 64px)', flexGrow: 1 }}>
                 {/* 왼쪽 컨테이너 */}
                 <Grid item xs={5} md={5} className='gridItems'>
-                    <Grid container direction="column" spacing={1} className="subGridContainer" style={{ height: '100%' }}>
-                        <Grid item xs={8} className='subGridItems'>
-                            <div className='subGridItemsDiv' id="participantsList">
-                                {
-                                    participantsList.map((each, index) => (
+                    <Grid container direction="column" spacing={1} style={{ height: '100%' }}>
+                        <Grid item xs={8} style={{ height: '100%' }}>
+                            <div style={{ height: '100%'}}>
+                                {participantsList.map((each, index) => (
                                     <Participants key={index} user={each} />
-                                    ))
-                                }
+                                ))}
                             </div>
                         </Grid>
-                        <Grid item xs={4} className='subGridItems'>
-                            <div className='subGridItemsDiv'>
-                                왼쪽 하단 컴포넌트
+                        <Grid item xs={4} style={{ height: '100%' }}>
+                            <div style={{ height: '100%' }}>
+                                <Chatting me={me} roomName={roomName} />
                             </div>
                         </Grid>
                     </Grid>
@@ -126,13 +166,13 @@ const RaidWaitRoom = () => {
 
                 {/* 오른쪽 컨테이너 */}
                 <Grid item xs={7} md={7} className='gridItems'>
-                    <Grid container direction="column" spacing={1} className="subGridContainer" style={{ height: '100%' }}>
-                        <Grid item xs={10} className='subGridItems'>
-                            <div className='subGridItemsDiv'>
+                    <Grid container direction="column" spacing={1} style={{ height: '100%' }}>
+                        <Grid item xs={10} style={{ height: '100%' }}>
+                            <div style={{ height: '100%' }} className='rightTopCompo'>
                                 <RoomInfoForm roomSet={roomSet} isCaptain={me.isCaptain} />
                             </div>
                         </Grid>
-                        <Grid item xs={2} className='subGridItems'>
+                        <Grid item xs={2}>
                             <Grid container spacing={1} style={{ height: '100%' }}>
                                 <Grid item xs={5}>
                                     <div className='startButton'>

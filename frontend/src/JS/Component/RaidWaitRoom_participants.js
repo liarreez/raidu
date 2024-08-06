@@ -13,7 +13,6 @@ const RaidWaitRoom_participants = ({ user }) => {
         flex: 2.5,
         margin: "1%",
         alignItems: "center"
-
     }
 
     const profileImageStyle = {
@@ -21,7 +20,6 @@ const RaidWaitRoom_participants = ({ user }) => {
         height: "auto",
         maxWidth: "100%",
         paddingLeft: "30%",
-
     } 
 
     const readyStateStyle = {
@@ -39,19 +37,18 @@ const RaidWaitRoom_participants = ({ user }) => {
         alignItems: "center",
         fontWeight: "bold",
         justifyContent: "space-around"
-
     }
 
     return(
         <div style={compoStyle}>
             <Grid container spacing={0} style={{ flexGrow: 1 }}>
                 <Grid item xs={3}>
-                    <span><img src={logo} style={profileImageStyle}/></span>             
+                    <span><img src={logo} style={profileImageStyle} alt="logoImg"/></span>             
                 </Grid>
-                <Grid item xs={4} style={thirdGridStyle}>
+                <Grid item xs={3} style={thirdGridStyle}>
                     <span>{user.nickname}</span>
                 </Grid>
-                <Grid item xs={5} style={thirdGridStyle}>
+                <Grid item xs={6} style={thirdGridStyle}>
                     <span>Lv.{user.level}</span>
                     <span>{user.highestScore}점</span>
                     <span style={readyStateStyle}>
@@ -59,10 +56,7 @@ const RaidWaitRoom_participants = ({ user }) => {
                     </span>
                 </Grid>
             </Grid>
-
-            
         </div>
-
     );
 
 
