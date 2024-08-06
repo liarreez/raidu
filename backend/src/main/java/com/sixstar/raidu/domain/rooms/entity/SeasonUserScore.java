@@ -39,9 +39,6 @@ public class SeasonUserScore {
   @Column(nullable = false)
   private Integer score;
 
-  public SeasonUserScore(Optional<Season> currentSeason, UserProfile userProfile, int score) {
-  }
-
   @PrePersist
   public void prePersist() {
     this.score = this.score == null ? 0 : this.score;

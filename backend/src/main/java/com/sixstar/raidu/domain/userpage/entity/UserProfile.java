@@ -16,6 +16,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
@@ -49,7 +50,7 @@ public class UserProfile {
   @Column(nullable = false, unique = true)
   private String nickname;
   @Setter
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "region_id", nullable = false)
   private Region region;
   @Column(nullable = false)
@@ -68,18 +69,25 @@ public class UserProfile {
   private LocalDateTime updatedAt;
   @OneToMany(mappedBy = "reportedUser")
   private List<Report> reportsReported;
+
   @OneToMany(mappedBy = "reportingUser")
   private List<Report> reportsReporting;
+
   @OneToMany(mappedBy = "userProfile")
   private List<ExerciseRoomRecord> exerciseRoomRecords;
+
   @OneToMany(mappedBy = "userProfile")
   private List<Room> rooms;
+
   @OneToMany(mappedBy = "userProfile")
   private List<RoomUser> roomUsers;
+
   @OneToMany(mappedBy = "userProfile")
   private List<UserMonster> userMonsters;
+
   @OneToMany(mappedBy = "userProfile")
   private List<UserBossMonster> userBossMonsters;
+
   @OneToMany(mappedBy = "userProfile")
   private List<SeasonUserScore> seasonUserScores;
 

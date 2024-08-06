@@ -9,6 +9,7 @@ import EditProfile from "./JS/Page/EditProfile.js";
 import UserSearch from "./JS/Page/UserSearch.js";
 import NotFound from "./JS/Page/NotFound.js";
 import FirstVisit from "./JS/Page/FirstVisit.js";
+import ConceptBook from "./JS/Page/ConceptBook.js";
 
 import WaitRoom from "./JS/Page/WaitRoom.js";
 import RaidLobby from "./JS/Page/RaidLobby.js";
@@ -35,6 +36,9 @@ function App() {
             <Route path="/usersearch" element={<UserSearch />} />
             {/* 첫방문 -> 지역 / 닉네임 선택 */}
             <Route path="/firstvisit" element={<FirstVisit />} />
+            {/* 첫방문 -> 지역 / 닉네임 선택 */}
+            <Route path="/conceptbook" element={<ConceptBook />} />
+            
             
             {/* 여기에 추가적인 경로를 설정할것 */}
             <Route path="/raid" element={<RaidLobby/>} />

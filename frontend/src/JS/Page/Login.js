@@ -173,14 +173,16 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(`${SERVERURL}/api/raidu/users/login`, { email: `${email}`, password: `${password}` });
-      console.log(`${email}`)
-      console.log(`${password}`)
-      console.log(response)
-      const { accessToken, refreshToken } = response.data;
-
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+      console.log("로그인시도: 이메일", email);
+      console.log("로그인시도: 비밀번호", password);
+      const response = await axios.post(`${SERVERURL}/api/raidu/users/login`, 
+        { "email": email, "password": password });
+      console.log(response);
+      localStorage.setItem("accessToken", response.data.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.data.refreshToken);
+      
+      console.log("저장된 access토큰 : " + localStorage.getItem("accessToken"));
+      console.log("저장된 refresh토큰 : " + localStorage.getItem("refreshToken"));
 
       navigate("/home");
     } catch (error) {

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ResponsiveBar } from '@nivo/bar';
-import "../../CSS/KeyColor.css"
+import "../../CSS/KeyColor.css";
 
-const NivoBar = () => {
+const NivoBar = ({ regionScores }) => {
     const handle = {
         barClick: (data) => {
             console.log(data);
@@ -13,23 +13,29 @@ const NivoBar = () => {
         },
     };
 
+    // Define region names and colors
+    const regionNames = regionScores.map((_, index) => `${index + 1}지역`);
+    const regionColors = ['#FF5C5C', '#FFDA55', '#B758E3', '#2B78C0'];
+
+    // Map regionScores to data for the chart
+    const data = regionScores.map((region, index) => ({
+        faction: `${index + 1}지역`,
+        기여도: region.score,
+        color: regionColors[index % regionColors.length] // Use modulo to cycle through colors if there are more than 4 regions
+    }));
+
     return (
         // chart height이 100%이기 때문이 chart를 덮는 마크업 요소에 height 설정
-        <div style={{width: "400px", height:"400px"}}>
+        <div style={{ width: "400px", height: "400px" }}>
             <ResponsiveBar
                 /**
                  * chart에 사용될 데이터
                  */
-                data={[
-                    { faction: '1지역', A기여도: 11400 },
-                    { faction: '2지역', B기여도: 23001 },
-                    { faction: '3지역', C기여도: 22300 },
-                    { faction: '4지역', D기여도: 11100 },
-                ]}
+                data={data}
                 /**
                  * chart에 보여질 데이터 key (측정되는 값)
                  */
-                keys={['A기여도', 'B기여도', 'C기여도', 'D기여도']}
+                keys={['기여도']} 
                 /**
                  * keys들을 그룹화하는 index key (분류하는 값)
                  */
@@ -45,13 +51,11 @@ const NivoBar = () => {
                 /**
                  * chart 색상
                  */
-                colors={['#FF5C5C', '#FFDA55', '#B758E3', '#2B78C0']} // 커스터하여 사용할 때
-                // colors={{ scheme: 'nivo' }} // nivo에서 제공해주는 색상 조합 사용할 때
+                colors={({ data }) => data.color}
                 /**
                  * color 적용 방식
                  */
-                colorBy="id" // 색상을 keys 요소들에 각각 적용
-                // colorBy="indexValue" // indexBy로 묵인 인덱스별로 각각 적용
+                colorBy="indexValue"
                 theme={{
                     /**
                      * label style (bar에 표현되는 글씨)
@@ -110,32 +114,39 @@ const NivoBar = () => {
                  */
                 onClick={handle.barClick}
                 /**
-                 * legend 설정 (default로 우측 하단에 있는 색상별 key 표시)
+                 * legend 설정
                  */
                 legends={[
                     {
-                        dataFrom: 'keys', // 보일 데이터 형태
-                        anchor: 'bottom-right', // 위치
-                        direction: 'column', // item 그려지는 방향
-                        justify: false, // 글씨, 색상간 간격 justify 적용 여부
-                        translateX: 120, // chart와 X 간격
-                        translateY: 0, // chart와 Y 간격
-                        itemsSpacing: 4, // item간 간격
-                        itemWidth: 100, // item width
-                        itemHeight: 20, // item height
-                        itemDirection: 'left-to-right', // item 내부에 그려지는 방향
-                        itemOpacity: 0.85, // item opacity
-                        symbolSize: 20, // symbol (색상 표기) 크기
+                        dataFrom: 'keys',
+                        anchor: 'bottom-right',
+                        direction: 'column',
+                        justify: false,
+                        translateX: 120,
+                        translateY: 0,
+                        itemsSpacing: 4,
+                        itemWidth: 100,
+                        itemHeight: 20,
+                        itemDirection: 'left-to-right',
+                        itemOpacity: 0.85,
+                        symbolSize: 20,
                         effects: [
                             {
-                                // 추가 효과 설정 (hover하면 item opacity 1로 변경)
                                 on: 'hover',
                                 style: {
                                     itemOpacity: 1,
                                 },
                             },
                         ],
-                        onClick: handle.legendClick, // legend 클릭 이벤트
+                        data: regionNames.map((name, index) => ({
+                            id: name,
+                            color: regionColors[index % regionColors.length]
+                        })),
+                        data: regionScores.map((region, index) => ({
+                            label: region.regionName,
+                            color: regionColors[index % regionColors.length]
+                        })),
+                        onClick: handle.legendClick, 
                     },
                 ]}
             />

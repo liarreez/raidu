@@ -46,4 +46,8 @@ public class Season {
     this.endDate = endDate;
   }
 
+  @Override
+  public String toString() {
+    return super.toString();
+  }
 }

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 import FadeAnime from "../Component/FadeAnime";
 import "../../CSS/FirstVisit.css";
 import Modal from "@mui/material/Modal";
@@ -13,6 +15,8 @@ import region2 from "../../Imgs/flag.gif";
 import region3 from "../../Imgs/flag.gif";
 import region4 from "../../Imgs/flag.gif";
 import SpringAnime from "../Component/SpringAnime";
+
+const SERVERURL = "http://localhost:8080"
 
 const RegionSelecter = ({ setSelectedRegion }) => {
   const regions = [
@@ -77,10 +81,27 @@ const FirstVisit = () => {
     setNicknameChecked(true); // 중복 확인 완료 상태로 변경
   };
 
-  const completeAccountSetup = () => {
+  const completeAccountSetup = async () => {
     if (isNicknameValid && nicknameChecked) {
       // 계정 설정 완료 로직을 여기에 추가하세요
       // 예: 서버에 사용자 정보 저장
+      console.log("등록 시도 닉네임 : " + nickname);
+      console.log("등록 시도 지역 : " + selectedRegion.name);
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        console.log("첫방문 페이지 - 사용한 토큰 : " + accessToken);
+        const response = await axios.post(SERVERURL + "/api/raidu/userpage/register", {"nickname" : nickname, "region": selectedRegion.name},{headers: {"Authorization": `Bearer ${accessToken}`}}); // 여기에 API 주소 넣을 것
+        console.log(response);
+        // setUser(data);
+
+      } catch (error) {
+        console.error("유저 정보 불러오기 실패...");
+        console.log(error);
+        if(error.response.data.status === 'NOT_FOUND') {
+          console.log("첫 방문임...");
+          navigate("/firstvisit");
+        }
+      }
       navigate("/home");
     }
   };
