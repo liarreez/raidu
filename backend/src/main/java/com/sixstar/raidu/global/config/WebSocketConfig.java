@@ -13,19 +13,20 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketConfig.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketConfig.class);
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*")
-                .withSockJS() // not allows wildcard(*) on AllowedOriginPatterns, apic 테스트 시 주석 처리
-                ;
-    }
+  @Override
+  public void registerStompEndpoints(StompEndpointRegistry registry) {
+    registry.addEndpoint("/api/ws")
+        .setAllowedOrigins("http://localhost:3000", "http://localhost:5173", "https://i11a108.p.ssafy.io:4443"
+            ,"https://i11a108.p.ssafy.io:3000","https://i11a108.p.ssafy.io","https://i11a108.p.ssafy.io:8080","https://i11a108.p.ssafy.io:8082")
+        .withSockJS() // not allows wildcard(*) on AllowedOriginPatterns, apic 테스트 시 주석 처리
+    ;
+  }
 
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/sub");
-        registry.setApplicationDestinationPrefixes("/pub");
-    }
+  @Override
+  public void configureMessageBroker(MessageBrokerRegistry registry) {
+    registry.enableSimpleBroker("/sub");
+    registry.setApplicationDestinationPrefixes("/pub");
+  }
 }

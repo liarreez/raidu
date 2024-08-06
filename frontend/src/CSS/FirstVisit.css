@@ -1,0 +1,294 @@
+@import url('./KeyColor.css');
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: auto;
+}
+
+#first-page-wrapper {
+    height: 100vh;
+    margin: auto;
+    background-color: white;
+    display: flex;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    padding: 20px;
+    min-width: 1300px;
+}
+
+#first-background-img {
+    background-image: url('../Imgs/back.jpg');
+    width: calc(100% - 40px); /* 좌우 20px 여백 */
+    height: calc(100% - 40px); /* 상하 20px 여백 */
+    background-color: rgb(112, 112, 112);
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    background-position: center;
+    background-size: cover;
+    z-index: 1;
+}
+
+.first-content {
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.first-region-info {
+    width: 400px;
+    height: 100%;
+    background-color: white;
+
+}
+
+.first-region-top {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 150px;
+    box-sizing: border-box;
+    padding: 10px;
+    gap: 20px;
+}
+
+.first-region-icon {
+    width: 130px;
+    height: 130px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.first-region-icon img {
+    object-fit: cover;
+    filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.5));
+}
+
+
+.first-region-selecter {
+    flex-grow: 1;
+}
+
+.first-region-selecter-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.first-region-selecter-text * {
+    margin: 0;
+    padding: 0;
+}
+.first-region-selecter-text p:nth-child(1){
+    font-size: 14px;
+    color: var(--hard-color-grey);
+}
+.first-region-selecter-text p:nth-child(2){
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    border-radius: 4px;
+    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.region-0 {color: var(--hard-color-black);}
+.region-1 {color: var(--region-color-one);}
+.region-2 {color: var(--region-color-two);}
+.region-3 {color: var(--region-color-three);}
+.region-4 {color: var(--region-color-four);}
+
+.first-region-icon img{
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+}
+
+.first-region-img {
+    flex-grow: 1;
+    background-color: gray;
+    overflow: hidden;
+}
+
+.first-region-bottom {
+    height: 400px;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: inset 0px 0px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+
+    overflow: hidden;
+}
+
+.first-region-confirm {
+    height: 60px;
+    margin: 10px;
+    box-sizing: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.first-region-confirm button {
+    background-color: var(--hard-color-grey);
+    width: 80%;
+    height: 80%;
+    border-radius: 8px;
+    border: none;
+    transition: 0.3s ease-in-out;
+    color: var(--hard-color-white);
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.first-region-confirm button:hover {
+    transform: scale(1.1);
+    background-color: var(--hard-color-black);
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Region Selecter 관련 CSS */
+.selecter-icon-container {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 35px;
+    gap: 8px;
+    box-sizing: border-box;
+
+    border: 2px solid var(--hard-color-grey);
+}
+
+.selecter-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: white;
+    transition: 0.3s ease-in-out;
+}
+
+.selecter-icon:hover {
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    transform: scale(1.2);
+}
+
+
+.selecter-icon img {
+    width: 80%;
+}
+
+/* 모달 CSS */
+.modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+.modal-box * {
+margin: 0;
+padding: 0;
+}
+
+.modal-small-text {
+color: var(--hard-color-grey);
+font-size: 14px;
+}
+
+.modal-large-text {
+font-size: 24px;
+font-weight: bold;
+}
+
+.modal-button {
+border: none;
+padding: 10px 20px;
+border-radius: 8px;
+font-size: 16px;
+font-weight: bold;
+transition: 0.3s ease-in-out;
+font-family: inherit;
+}
+
+.modal-button:hover {
+    transform: scale(1.1);
+}
+
+.modal-name-input {
+    display: flex;   
+    gap: 8px;
+    margin: 40px 10px 20px 10px;
+    padding: 10px;
+}
+
+.underline {
+    border-bottom: 3px dashed var(--hard-color-green);
+}
+
+
+
+.button-green {
+    background-color: var(--hard-color-green);
+    color: var(--hard-color-white);  
+}
+
+.button-green:hover {
+    background-color: var(--hard-color-green-selected);
+}
+
+.button-gray {
+    background-color: var(--hard-color-grey);
+    color: var(--hard-color-white);  
+}
+
+.button-gray:hover {
+    background-color: var(--hard-color-black);
+}
+
+.hidden {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    pointer-events: none; /* 보이지 않을 때 클릭 불가 */
+  }
+  
+  .visible {
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
+  }
+  

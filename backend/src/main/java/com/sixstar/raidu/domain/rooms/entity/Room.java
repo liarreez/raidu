@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -66,6 +67,11 @@ public class Room {
   public void prePersist() {
     this.isPublic = this.isPublic == null ? true: this.isPublic;
     this.status = this.status == null ? "wating" : this.status;
+  }
+
+  @PreUpdate
+  public void preUpdate() {
+    this.updatedAt = LocalDateTime.now();
   }
 
   @Builder

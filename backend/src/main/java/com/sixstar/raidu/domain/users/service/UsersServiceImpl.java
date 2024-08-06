@@ -2,7 +2,7 @@ package com.sixstar.raidu.domain.users.service;
 
 import com.sixstar.raidu.domain.users.dto.UserRegisterDto;
 import com.sixstar.raidu.domain.users.entity.User;
-import com.sixstar.raidu.domain.users.enums.Tokens;
+import com.sixstar.raidu.domain.users.enums.TokenType;
 import com.sixstar.raidu.domain.users.repository.UserRepository;
 import com.sixstar.raidu.domain.users.security.AuthorizationHeaderParser;
 import com.sixstar.raidu.domain.users.security.JWTUtil;
@@ -22,6 +22,12 @@ public class UsersServiceImpl implements UsersService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+            () -> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+    }
 
     @Transactional
     @Override
@@ -52,16 +58,15 @@ public class UsersServiceImpl implements UsersService {
             throw new BaseException(BaseFailureResponse.REFRESH_TOKEN_IS_EXPIRED);
         }
 
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+        User user = getUserByEmail(email);
 
-        if (!Tokens.REFRESH.name().equals(jwtUtil.getCategory(token)) || user.getRefreshToken() == null
+        if (!TokenType.REFRESH.name().equals(jwtUtil.getCategory(token)) || user.getRefreshToken() == null
                 || !user.getRefreshToken().equals(token)) {
             throw new BaseException(BaseFailureResponse.INVALID_REFRESH_TOKEN);
         }
 
-        String newAccessToken = jwtUtil.createJwt(Tokens.ACCESS.name(), email, role, 60 * 60 * 1L);
-        String newRefreshToken = jwtUtil.createJwt(Tokens.REFRESH.name(), email, role, 60 * 60 * 24L);
+        String newAccessToken = jwtUtil.createJwt(TokenType.ACCESS.name(), email, role, 60 * 60 * 1L);
+        String newRefreshToken = jwtUtil.createJwt(TokenType.REFRESH.name(), email, role, 60 * 60 * 24L);
         user.updateRefreshToken(newRefreshToken);
 
         Map<String, Object> data = new HashMap<>();
@@ -77,8 +82,7 @@ public class UsersServiceImpl implements UsersService {
         String token = AuthorizationHeaderParser.parseTokenFromAuthorizationHeader(authorization);
 
         String email = jwtUtil.getEmail(token);
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+        User user = getUserByEmail(email);
 
         user.updateRefreshToken(null);
     }

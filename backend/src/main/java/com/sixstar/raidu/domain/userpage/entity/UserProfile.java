@@ -27,6 +27,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -79,8 +80,8 @@ public class UserProfile {
   private List<UserMonster> userMonsters;
   @OneToMany(mappedBy = "userProfile")
   private List<UserBossMonster> userBossMonsters;
-  @OneToOne(mappedBy = "userProfile", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-  private SeasonUserScore seasonUserScore;
+  @OneToMany(mappedBy = "userProfile")
+  private List<SeasonUserScore> seasonUserScores;
 
   @PrePersist
   public void prePersist() {
@@ -97,7 +98,7 @@ public class UserProfile {
       List<Report> reportsReported, List<Report> reportsReporting,
       List<ExerciseRoomRecord> exerciseRoomRecords, List<Room> rooms, List<RoomUser> roomUsers,
       List<UserMonster> userMonsters, List<UserBossMonster> userBossMonsters,
-      SeasonUserScore seasonUserScore) {
+      List<SeasonUserScore> seasonUserScores) {
     this.user = user;
     this.email = email;
     this.nickname = nickname;
@@ -116,6 +117,26 @@ public class UserProfile {
     this.roomUsers = roomUsers;
     this.userMonsters = userMonsters;
     this.userBossMonsters = userBossMonsters;
-    this.seasonUserScore = seasonUserScore;
+    this.seasonUserScores = seasonUserScores;
+  }
+
+  public void updateExp(int gainedExp){
+    this.exp = gainedExp;
+    updateLevel();
+  }
+
+  public void updateLevel(){
+    if(this.exp>=750){
+      int gainedLevel = this.exp / 750;
+      this.level += gainedLevel;
+      this.exp = this.exp%750;
+    }
+  }
+
+  public void updateBestScore(int personalCombatPower, LocalDateTime endTime){
+    if(this.bestScore<personalCombatPower){
+      this.bestScore = personalCombatPower;
+      this.bestScoreUpdatedAt = endTime;
+    }
   }
 }

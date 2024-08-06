@@ -35,8 +35,11 @@ public class User {
   private String password;
   @Column(nullable = false, unique = true)
   private String email;
+  @Setter
   @Column(nullable = false)
   private Boolean isActive;
+  @Column(nullable = false)
+  private Boolean isReported;
   @Column(nullable = false)
   private String role;
   private String socialType;
@@ -54,16 +57,18 @@ public class User {
 
   @PrePersist
   public void prePersist() {
+    System.out.println("Before PrePersist called: isActive = " + this.isActive + ", isReported = " + this.isReported);
     this.isActive = this.isActive == null ? true: this.isActive;
+    this.isReported = this.isReported == null ? false: this.isReported;
     this.role = this.role == null ? Roles.USER.name() : this.role;
+    System.out.println("After PrePersist called: isActive = " + this.isActive + ", isReported = " + this.isReported);
   }
 
   @Builder
-  public User(String password, String email, boolean isActive, String role,
+  public User(String password, String email, String role,
       String socialType, String socialId, String refreshToken) {
     this.password = password;
     this.email = email;
-    this.isActive = isActive;
     this.role = role;
     this.socialType = socialType;
     this.socialId = socialId;

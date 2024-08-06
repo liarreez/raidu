@@ -19,6 +19,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.Optional;
+
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "season_user_score")
@@ -31,11 +33,14 @@ public class SeasonUserScore {
   @ManyToOne
   @JoinColumn(name = "season_id", nullable = false)
   private Season season;
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   private UserProfile userProfile;
   @Column(nullable = false)
   private Integer score;
+
+  public SeasonUserScore(Optional<Season> currentSeason, UserProfile userProfile, int score) {
+  }
 
   @PrePersist
   public void prePersist() {
@@ -47,5 +52,9 @@ public class SeasonUserScore {
     this.season = season;
     this.userProfile = userProfile;
     this.score = score;
+  }
+
+  public void updateSeasonUserScore(int personalCombatPower){
+    this.score += personalCombatPower;
   }
 }

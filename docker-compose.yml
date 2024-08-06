@@ -18,9 +18,11 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
-  app:
-    build: .
-    image: goldenkiwi971202/myapp:latest
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: goldenkiwi971202/backend:latest
     depends_on:
       db:
         condition: service_healthy
@@ -32,10 +34,20 @@ services:
       SPRING_DATASOURCE_PASSWORD: raidu1!
       SPRING_PROFILES_ACTIVE: prod
       JWT_SECRET: klmqskdlnpqncoqkwmdklcksoandfmklmqfmwqkdfcxnjkspring.application.name=raidu
-      OPENVIDU_URL: http://43.200.254.20:4443/
+      OPENVIDU_URL: https://i11a108.p.ssafy.io:4443/
       OPENVIDU_SECRET: z5F_hX2nQ-8rV3sW1dG7bM6tC
     command: >
       sh -c "./wait-for-it.sh db:3306 -- java -jar /app/app.jar"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: goldenkiwi971202/frontend:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
 
   openvidu-server:
     image: openvidu/openvidu-server:2.30.0
@@ -43,10 +55,16 @@ services:
       - "4443:4443"
     environment:
       - OPENVIDU_SECRET=z5F_hX2nQ-8rV3sW1dG7bM6tC
-      - DOMAIN_OR_PUBLIC_IP=43.200.254.20
+      - DOMAIN_OR_PUBLIC_IP=i11a108.p.ssafy.io
       - KMS_URIS=["ws://kms:8888/kurento"]
-      - CERTIFICATE_TYPE=selfsigned
+      - CERTIFICATE_TYPE=owncert
       - HTTPS_PORT=4443
+      - HTTPS_CERTIFICATE_TYPE=chain
+      - HTTPS_CERTIFICATE_CHAIN_FILE=/etc/letsencrypt/live/i11a108.p.ssafy.io/fullchain.pem
+      - HTTPS_CERTIFICATE_KEY_FILE=/etc/letsencrypt/live/i11a108.p.ssafy.io/privkey.pem
+    volumes:
+      - ./nginx/certbot/conf:/etc/letsencrypt:ro
+      - ./nginx/certbot/conf/.env:/opt/openvidu/.env
     depends_on:
       - kms
 
@@ -63,14 +81,23 @@ services:
       - "443:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certbot/www:/var/www/certbot
+      - ./nginx/certbot/conf:/etc/letsencrypt
     depends_on:
-      - app
+      - frontend
+      - backend
       - openvidu-server
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./nginx/certbot/www:/var/www/certbot
+      - ./nginx/certbot/conf:/etc/letsencrypt
 
   jenkins:
     image: jenkins/jenkins:lts
     ports:
-      - "8081:8080" # Jenkins 포트 설정
+      - "8081:8081" # Jenkins 포트 설정
     volumes:
       - jenkins_home:/var/jenkins_home
 

@@ -23,7 +23,10 @@ public enum BaseSuccessResponse {
   UPDATE_ROOM_STATUS_SUCCESS(HttpStatus.OK, "Room status updated successfully"),
   INIT_SESSION_SUCCESS(HttpStatus.OK, "Session initialized successfully"),
   CREATE_CONNECTION_SUCCESS(HttpStatus.OK, "Connection Created Successfully"),
-  MAINPAGE_DATA_RETRIEVE_SUCCESS(HttpStatus.OK, "Main page data retrieved successfully")
+  MAINPAGE_DATA_RETRIEVE_SUCCESS(HttpStatus.OK, "Main page data retrieved successfully"),
+  DICTIONARY_SEARCH_SUCCESS(HttpStatus.OK, "Exercise dictionary retrieved successfully"),
+  COMPLETE_ROOM_SUCCESS(HttpStatus.CREATED, "Room completed and save data successfully"),
+  USER_WITHDRAW_SUCCESS(HttpStatus.OK, "User withdraw success"),
   ;
 
   private final HttpStatus status;

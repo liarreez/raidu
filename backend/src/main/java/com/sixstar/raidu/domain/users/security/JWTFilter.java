@@ -34,7 +34,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //토큰 소멸 시간 검증
         if (jwtUtil.isExpired(token)) {
-            throw new BaseException(BaseFailureResponse.ACCESS_TOKEN_IS_EXPIRED);
+            return;
         }
 
         String email = jwtUtil.getEmail(token);
@@ -43,7 +43,6 @@ public class JWTFilter extends OncePerRequestFilter {
         //userEntity를 생성하여 값 set
         User user = User.builder()
             .email(email)
-            .isActive(true)
             .role(role)
             .build();
 

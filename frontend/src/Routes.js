@@ -7,6 +7,7 @@ import Mypage from "./JS/Page/Mypage.js";
 import EditProfile from "./JS/Page/EditProfile.js";
 import NotFound from "./JS/Page/NotFound.js";
 import UserSearch from "./JS/Page/UserSearch.js";
+import FirstVisit from "./JS/Page/FirstVisit.js"
 
 class Routes extends React.Component {
   render() {
@@ -17,11 +18,12 @@ class Routes extends React.Component {
           <Route path="/home" component={Home} />
           <Route path="/mypage" component={Mypage} />
           <Route path="/editprofile" component={EditProfile} />
-          <Route path="/usersearch" component={UserSearch}/>
+          <Route path="/usersearch" component={UserSearch} />
+          <Route path="/firstvisit" component={FirstVisit} />
 
-            <Route path="*" component={NotFound} />
-          </Routes>
-        </BrowserRouter>
+          <Route path="*" component={NotFound} />
+        </Routes>
+      </BrowserRouter>
     );
   }
 }
