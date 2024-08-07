@@ -47,7 +47,7 @@ public class UserpageController {
   @PostMapping("/info")
   public ResponseEntity<BaseResponse<?>> modifyInfo(@RequestHeader("Authorization") String authorization, @Valid @RequestBody UserInfoModifyDto userInfoModifyDto) {
     userpageService.modifyInfo(authorization, userInfoModifyDto);
-    return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_REGISTER_SUCCESS);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_MODIFY_SUCCESS);
   }
 
   @PostMapping("/withdraw")
@@ -61,5 +61,11 @@ public class UserpageController {
     Map<String, Object> data = userpageService.findUsers(nickname);
     return data.containsKey("message") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_USERS_SUCCESS_BUT_NO_CONTENT)
     : baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_USERS_SUCCESS, data);
+  }
+
+  @GetMapping("/check-nickname")
+  public ResponseEntity<BaseResponse<?>> checkNickname(@RequestParam(name="nickname") String nickname) {
+    userpageService.checkNickname(nickname);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.NICKNAME_CHECK_SUCCESS);
   }
 }

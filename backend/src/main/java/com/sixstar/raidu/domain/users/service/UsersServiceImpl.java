@@ -23,21 +23,11 @@ public class UsersServiceImpl implements UsersService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
 
-    @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(
-            () -> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
-    }
-
     @Transactional
     @Override
     public Map<String, Object> register(UserRegisterDto userRegisterDto) {
-        boolean isExist = userRepository.existsByEmail(userRegisterDto.getEmail());
-        if (isExist) {
-            throw new BaseException(BaseFailureResponse.EMAIL_IS_DUPLICATED);
-        }
-        String encrypt = bCryptPasswordEncoder.encode(userRegisterDto.getPassword());
-        userRegisterDto.setPassword(encrypt);
+        checkEmail(userRegisterDto.getEmail());
+        userRegisterDto.setPassword(bCryptPasswordEncoder.encode(userRegisterDto.getPassword()));
         User member = UserRegisterDto.toEntity(userRegisterDto);
         userRepository.save(member);
         Map<String, Object> data = new HashMap<>();
@@ -50,16 +40,13 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Map<String, Object> reissue(String authorization) {
         String token = AuthorizationHeaderParser.parseTokenFromAuthorizationHeader(authorization);
-
         String email = jwtUtil.getEmail(token);
         String role = jwtUtil.getRole(token);
+        User user = getUserByEmail(email);
 
         if (jwtUtil.isExpired(token)) {
             throw new BaseException(BaseFailureResponse.REFRESH_TOKEN_IS_EXPIRED);
         }
-
-        User user = getUserByEmail(email);
-
         if (!TokenType.REFRESH.name().equals(jwtUtil.getCategory(token)) || user.getRefreshToken() == null
                 || !user.getRefreshToken().equals(token)) {
             throw new BaseException(BaseFailureResponse.INVALID_REFRESH_TOKEN);
@@ -68,22 +55,39 @@ public class UsersServiceImpl implements UsersService {
         String newAccessToken = jwtUtil.createJwt(TokenType.ACCESS.name(), email, role, 60 * 60 * 1L);
         String newRefreshToken = jwtUtil.createJwt(TokenType.REFRESH.name(), email, role, 60 * 60 * 24L);
         user.updateRefreshToken(newRefreshToken);
-
         Map<String, Object> data = new HashMap<>();
         data.put("accessToken", newAccessToken);
         data.put("refreshToken", newRefreshToken);
-
         return data;
     }
 
     @Transactional
     @Override
     public void logout(String authorization) {
-        String token = AuthorizationHeaderParser.parseTokenFromAuthorizationHeader(authorization);
-
-        String email = jwtUtil.getEmail(token);
+        String email = getEmailFromAuth(authorization);
         User user = getUserByEmail(email);
 
         user.updateRefreshToken(null);
+    }
+
+    @Override
+    public void checkEmail(String email) {
+        if(isDuplicatedEmail(email)) {
+            throw new BaseException(BaseFailureResponse.EMAIL_IS_DUPLICATED);
+        }
+    }
+
+    private String getEmailFromAuth(String authorization) {
+        String token = AuthorizationHeaderParser.parseTokenFromAuthorizationHeader(authorization);
+        return jwtUtil.getEmail(token);
+    }
+
+    private User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+            () -> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+    }
+
+    private boolean isDuplicatedEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

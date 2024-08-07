@@ -10,6 +10,7 @@ public enum BaseSuccessResponse {
   REGISTER_SUCCESS(HttpStatus.CREATED, "User registered successfully"),
   USERPROFILE_SEARCH_SUCCESS(HttpStatus.OK, "Userprofile searched successfully"),
   USERPROFILE_REGISTER_SUCCESS(HttpStatus.CREATED, "Userprofile registered successfully"),
+  USERPROFILE_MODIFY_SUCCESS(HttpStatus.OK, "Userprofile modified successfully"),
   LOGIN_SUCCESS(HttpStatus.OK, "Login successful"),
   LOGOUT_SUCCESS(HttpStatus.OK, "Logout successful"),
   REFRESH_TOKEN_SUCCESS(HttpStatus.OK, "Token refreshed successfully"),
@@ -29,7 +30,9 @@ public enum BaseSuccessResponse {
   USER_WITHDRAW_SUCCESS(HttpStatus.OK, "User withdraw success"),
   SEASON_CREATED_SUCCESS(HttpStatus.CREATED, "Season created successfully"),
   GET_USERS_SUCCESS(HttpStatus.OK, "Get users successfully"),
-  GET_USERS_SUCCESS_BUT_NO_CONTENT(HttpStatus.NO_CONTENT, "Get users successfully But No Content")
+  GET_USERS_SUCCESS_BUT_NO_CONTENT(HttpStatus.NO_CONTENT, "Get users successfully But No Content"),
+  EMAIL_CHECK_SUCCESS(HttpStatus.OK, "Email check successful"),
+  NICKNAME_CHECK_SUCCESS(HttpStatus.OK, "Nickname check successful"),
   ;
 
   private final HttpStatus status;

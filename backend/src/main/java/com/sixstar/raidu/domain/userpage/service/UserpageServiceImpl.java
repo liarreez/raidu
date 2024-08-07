@@ -53,10 +53,7 @@ public class UserpageServiceImpl implements UserpageService {
     Region region = regionRepository.findByName(userprofileRegisterDto.getRegion())
         .orElseThrow(() -> new BaseException(BaseFailureResponse.REGION_NOT_FOUND));
 
-    if (isDuplicatedNickName(nickname)) {
-      throw new BaseException(BaseFailureResponse.NICKNAME_IS_DUPLICATED);
-    }
-
+    checkNickname(nickname);
     if (userProfileRepository.existsByEmail(email)) {
       throw new BaseException(BaseFailureResponse.SETTING_IS_REGISTERED);
     }
@@ -104,7 +101,8 @@ public class UserpageServiceImpl implements UserpageService {
     List<SeasonUserScore> seasonUserScores = seasonUserScoreRepository.findBySeason(season);
 
     List<UserResponseDto> userResponseDtos = seasonUserScores.stream()
-        .map(seasonUserScore -> UserResponseDto.fromEntity(seasonUserScore, seasonUserScore.getScore()))
+        .map(seasonUserScore -> UserResponseDto.fromEntity(seasonUserScore,
+            seasonUserScore.getScore()))
         .toList();
 
     if (nickname != null && !nickname.trim().isEmpty()) {
@@ -114,7 +112,7 @@ public class UserpageServiceImpl implements UserpageService {
     }
 
     Map<String, Object> data = new HashMap<>();
-    if(userResponseDtos.isEmpty()){
+    if (userResponseDtos.isEmpty()) {
       data.put("message", "조건에 맞는 사용자가 없습니당");
     }
     data.put("data", userResponseDtos);
@@ -129,11 +127,17 @@ public class UserpageServiceImpl implements UserpageService {
     UserProfile userProfile = getUserProfileByEmail(email);
     String nickname = userInfoModifyDto.getNickname();
 
-    if (isDuplicatedNickName(nickname)) {
-      throw new BaseException(BaseFailureResponse.NICKNAME_IS_DUPLICATED);
-    }
+    checkNickname(nickname);
     userProfile.setNickname(nickname);
     user.setPassword(bCryptPasswordEncoder.encode(userInfoModifyDto.getPassword()));
+  }
+
+  @Override
+  public void checkNickname(String nickname) {
+    System.out.println(nickname);
+    if (userProfileRepository.existsByNickname(nickname)) {
+      throw new BaseException(BaseFailureResponse.NICKNAME_IS_DUPLICATED);
+    }
   }
 
   private String getEmailFromAuth(String authorization) {
@@ -149,9 +153,5 @@ public class UserpageServiceImpl implements UserpageService {
   private UserProfile getUserProfileByEmail(String email) {
     return userProfileRepository.findByEmail(email)
         .orElseThrow(() -> new BaseException(BaseFailureResponse.USERPROFILE_NOT_FOUND));
-  }
-
-  private boolean isDuplicatedNickName(String nickname) {
-    return userProfileRepository.existsByNickname(nickname);
   }
 }
