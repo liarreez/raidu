@@ -31,9 +31,11 @@ public enum BaseSuccessResponse {
   SEASON_CREATED_SUCCESS(HttpStatus.CREATED, "Season created successfully"),
   GET_USERS_SUCCESS(HttpStatus.OK, "Get users successfully"),
   GET_USERS_SUCCESS_BUT_NO_CONTENT(HttpStatus.NO_CONTENT, "Get users successfully But No Content"),
-  EMAIL_CHECK_SUCCESS(HttpStatus.OK, "Email check successful"),
-  NICKNAME_CHECK_SUCCESS(HttpStatus.OK, "Nickname check successful"),
-  PASSWORD_CHECK_SUCCESS(HttpStatus.OK, "Password check successful"),
+  EMAIL_CHECK_SUCCESS(HttpStatus.OK, "Email check successfully"),
+  NICKNAME_CHECK_SUCCESS(HttpStatus.OK, "Nickname check successfully"),
+  PASSWORD_CHECK_SUCCESS(HttpStatus.OK, "Password check successfully"),
+  GET_CAPTURED_MONSTER_SUCCESS(HttpStatus.OK, "Get captured monster successfully"),
+
   ;
 
   private final HttpStatus status;

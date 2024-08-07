@@ -52,6 +52,7 @@ dependencies {
 	// Spring Messaging
 	implementation 'org.springframework:spring-messaging:6.1.10'
 }
+	
 
 tasks.named('test') {
 	useJUnitPlatform()

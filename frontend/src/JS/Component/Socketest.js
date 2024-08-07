@@ -1,7 +1,8 @@
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
- const SOCKET_URL = 'http://i11a108.p.ssafy.io/api/ws'; // 백서버 포트 넣기
+ // const SOCKET_URL = 'http://i11a108.p.ssafy.io/api/ws'; // 백서버 포트 넣기
+ const SOCKET_URL = 'http://localhost:8080/api/ws'; // 로컬 테스트 시 사용
 
 export class Socketest {
   constructor(UserIdVal) {
@@ -13,10 +14,9 @@ export class Socketest {
       debug: function (str) {
         console.log('STOMP: ' + str);
       },
-      onConnect: (destination, body) => {
+      onConnect: () => {
         console.log('Connected to WebSocket');
         this.isConnected = true; // Set connected status to true
-        this.client.publish({ destination, body });
       },
       onDisconnect: () => {
         console.log('Disconnected from WebSocket');
