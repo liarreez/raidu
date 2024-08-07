@@ -68,4 +68,10 @@ public class UserpageController {
     userpageService.checkNickname(nickname);
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.NICKNAME_CHECK_SUCCESS);
   }
+
+  @GetMapping("/check-password")
+  public ResponseEntity<BaseResponse<?>> checkPassword(@RequestHeader("Authorization") String authorization, @RequestParam(name="password") String password) {
+    userpageService.checkPassword(authorization, password);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.PASSWORD_CHECK_SUCCESS);
+  }
 }

@@ -19,4 +19,6 @@ public interface UserpageService {
   Map<String, Object> findUsers(String nickname);
 
   void checkNickname(String nickname);
+
+  void checkPassword(String authorization, String password);
 }
