@@ -298,7 +298,7 @@ const TrainingRoomManager = ({ roomInfo }) => {
   
 
   return (
-    <div className="container">
+    <div className="">
       {!session ? (
         <div id="join">
           <h1>운동방 참여</h1>
@@ -495,6 +495,8 @@ const TrainingRoomManager = ({ roomInfo }) => {
                 </div>
                 {/* 운동 선택 div */}
                 <div style={{
+                  width: '50%',
+                  height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
                   border: '2px solid blue'
