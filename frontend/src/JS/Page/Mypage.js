@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import TopNav from "../Component/TopNav";
 import FadeAnime from "../Component/FadeAnime";
 import SpringAnime from "../Component/SpringAnime";
 import "react-step-progress-bar/styles.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
-
+import axios from "axios";
 
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -52,14 +51,21 @@ function StepProgressBar() {
 }
 
 function Mypage() {
-  const uuid = useParams();
+  const id = useParams();
   const [activeTab, setActiveTab] = useState("history");
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(SERVERURL + `api/raidu/userpage/profile/${uuid}`);
-        const jsonData = await response.json();
+        console.log("fetchData 함수 실행 중... id값은 : " + id.id)
+        const accessToken = localStorage.getItem("accessToken")
+        console.log(accessToken)
+        const response = await axios.get(SERVERURL + `/api/raidu/userpage/profile/${id.id}`, {headers: {"Authorization": `Bearer ${accessToken}`}});
+        console.log("데이터 수신...");
+        console.log(response);
+        setUserData(response.data.data.userProfile);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -142,7 +148,7 @@ function Mypage() {
       return <SpringAnime from="left"><div>{renderMonsterCards()}</div></SpringAnime>;
     }
   };
-
+  
   return (
     <FadeAnime>
       <div className="mypage-page-wrapper">
@@ -169,10 +175,10 @@ function Mypage() {
                     </div>
                   </div>
                   <div className="profile-text-wrapper">
-                    <div className="profile-text-name">test_username</div>
+                    <div className="profile-text-name">{userData.nickname}</div>
                     <div className="profile-text-level">
                       <div>
-                        <h2>LV.123</h2>
+                        <h2>LV &nbsp; {`${userData.level}`}</h2>
                       </div>
                       <StepProgressBar />
                       <div>
