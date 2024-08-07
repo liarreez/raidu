@@ -43,6 +43,12 @@ public class UserpageController {
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_SEARCH_SUCCESS, data);
   }
 
+  @PostMapping("/info")
+  public ResponseEntity<BaseResponse<?>> modifyInfo(@RequestHeader("Authorization") String authorization, @Valid @RequestBody UserInfoModifyDto userInfoModifyDto) {
+    userpageService.modifyInfo(authorization, userInfoModifyDto);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_REGISTER_SUCCESS);
+  }
+
   @PostMapping("/withdraw")
   public ResponseEntity<BaseResponse<?>> withdraw(@RequestHeader("Authorization") String authorization) {
     userpageService.withdraw(authorization);
