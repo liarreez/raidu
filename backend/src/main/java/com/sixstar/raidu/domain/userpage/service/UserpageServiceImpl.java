@@ -140,6 +140,16 @@ public class UserpageServiceImpl implements UserpageService {
     }
   }
 
+  @Override
+  public void checkPassword(String authorization, String password) {
+    String email = getEmailFromAuth(authorization);
+    User user = getUserByEmail(email);
+
+    if(!bCryptPasswordEncoder.matches(password, user.getPassword())) {
+      throw new BaseException(BaseFailureResponse.PASSWORD_IS_NOT_CORRECT);
+    }
+  }
+
   private String getEmailFromAuth(String authorization) {
     String token = AuthorizationHeaderParser.parseTokenFromAuthorizationHeader(authorization);
     return jwtUtil.getEmail(token);

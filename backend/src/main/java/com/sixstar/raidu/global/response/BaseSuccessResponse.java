@@ -33,6 +33,7 @@ public enum BaseSuccessResponse {
   GET_USERS_SUCCESS_BUT_NO_CONTENT(HttpStatus.NO_CONTENT, "Get users successfully But No Content"),
   EMAIL_CHECK_SUCCESS(HttpStatus.OK, "Email check successful"),
   NICKNAME_CHECK_SUCCESS(HttpStatus.OK, "Nickname check successful"),
+  PASSWORD_CHECK_SUCCESS(HttpStatus.OK, "Password check successful"),
   ;
 
   private final HttpStatus status;
