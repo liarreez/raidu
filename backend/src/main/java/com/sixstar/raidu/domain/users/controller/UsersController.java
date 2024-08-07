@@ -1,5 +1,6 @@
 package com.sixstar.raidu.domain.users.controller;
 
+import com.sixstar.raidu.domain.users.dto.CheckEmailRequestDto;
 import com.sixstar.raidu.domain.users.dto.UserRegisterDto;
 import com.sixstar.raidu.domain.users.service.UsersService;
 import com.sixstar.raidu.global.response.BaseResponse;
@@ -44,8 +45,8 @@ public class UsersController {
   }
 
   @GetMapping("/check-email")
-  public ResponseEntity<BaseResponse<?>> checkEmail(@RequestParam(name="email") String email) {
-    usersService.checkEmail(email);
+  public ResponseEntity<BaseResponse<?>> checkEmail(@RequestBody CheckEmailRequestDto checkEmailRequestDto) {
+    usersService.checkEmail(checkEmailRequestDto.getEmail());
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.EMAIL_CHECK_SUCCESS);
   }
 }
