@@ -20,7 +20,7 @@ import topgrass from "../../Imgs/topgrass.png";
 import "../../CSS/TopNav.css";
 
 const pages = [
-  { name: "활동", subLevels: ["레이드", "훈련장"] },
+  { name: "활동", subLevels: ["레이두"] },
   { name: "가이드", subLevels: ["튜토리얼", "컨셉 북", "운동 백과"] },
   { name: "정보", subLevels: ["유저 검색"] },
 ];
@@ -87,8 +87,6 @@ function ResponsiveAppBar() {
     // 소메뉴 클릭시 이동하는 경로 모음
     if (dest === "레이드") {
       navigate("/raid");
-    } else if (dest === "훈련장") {
-      navigate("/training");
     } else if (dest === "튜토리얼") {
       navigate("/tutorial");
     } else if (dest === "컨셉 북") {

@@ -172,24 +172,32 @@ const Main = () => {
               <HomeSlider />
             </div>
             <div className="home-num-container">
-              <FirstRenderer>
+              <Rerenderer>
                 <FadeAnime>
-                  <AnimatedNumber targetNumber={userCount} fontSize={50} />
+                  <div style={{display: "flex", flexDirection: "row"}}>
+                  <div style={{color: "#66CD79"}}>
+                  <AnimatedNumber targetNumber={userCount}/>
+                  </div>
+                  <div>
+                  &nbsp; 명의 유저와 함께 하세요!
+                  </div>
+                  </div>
+
                 </FadeAnime>
-              </FirstRenderer>
+              </Rerenderer>
             </div>
 
-            {/* <- 레이드 / 훈련장 -> */}
+            {/* <- 레이드 / 운동백과 -> */}
 
             <div className="home-button-group">
-              <div className="home-button-left">
+              <div className="home-button-left" onClick={()=>navigate("/raid")}>
                 <h3>레이드</h3>
                 <img src={raidu} alt="레이드" />
               </div>
 
-              <div className="home-button-right">
-                <h3>훈련장</h3>
-                <img src={training} alt="훈련장" />
+              <div className="home-button-right" onClick={()=>navigate("/notfound")}>
+                <h3>운동백과</h3>
+                <img src={training} alt="운동백과" />
               </div>
             </div>
 
@@ -228,6 +236,10 @@ const Main = () => {
                         토벌 현황
                       </div>
                       <StepProgressBar raidPercentage={(totalContribute/bossMonsterHp * 100)}/>
+                      <div style={{fontWeight: "bold", paddingTop: "10px", width:"85%", textAlign: "end", fontSize: "14px"}}>
+                      <AnimatedNumber targetNumber={totalContribute}/> &nbsp; / &nbsp; {bossMonsterHp}  
+                      </div>
+                      
                     </div>
                   </div>
                 </SpringAnime>
