@@ -99,7 +99,7 @@ public class UserpageServiceImpl implements UserpageService {
 
   @Override
   public Map<String, Object> findUsers(String nickname) {
-    Season season = seasonRepository.findSeason(now())
+    Season season = seasonRepository.findSeasonByEndTime(now())
         .orElseThrow(() -> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND));
     List<SeasonUserScore> seasonUserScores = seasonUserScoreRepository.findBySeason(season);
 

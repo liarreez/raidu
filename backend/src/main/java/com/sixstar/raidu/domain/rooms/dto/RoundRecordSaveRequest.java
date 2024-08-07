@@ -13,7 +13,7 @@ import org.springframework.jdbc.object.RdbmsOperation;
 @Getter
 public class RoundRecordSaveRequest {
     private Integer roundNumber;
-    private Long dictionaryId;
+    private String dictionaryName;
     private Integer exerciseCount;
 
     public static RoundRecord toEntity(ExerciseRoomRecord exerciseRoomRecord, Dictionary dictionary, RoundRecordSaveRequest request){

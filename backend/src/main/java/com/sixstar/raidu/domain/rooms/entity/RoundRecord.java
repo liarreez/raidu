@@ -1,6 +1,7 @@
 package com.sixstar.raidu.domain.rooms.entity;
 
 import com.sixstar.raidu.domain.dictionary.entity.Dictionary;
+import com.sixstar.raidu.domain.rooms.dto.RoundRecordSaveRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -43,5 +44,14 @@ public class RoundRecord {
     this.roundNumber = roundNumber;
     this.dictionary = dictionary;
     this.exerciseCount = exerciseCount;
+  }
+
+  public RoundRecord toEntity(ExerciseRoomRecord exerciseRoomRecord, Dictionary dictionary, RoundRecordSaveRequest request){
+    return RoundRecord.builder()
+        .exerciseRoomRecord(exerciseRoomRecord)
+        .roundNumber(request.getRoundNumber())
+        .dictionary(dictionary)
+        .exerciseCount(request.getExerciseCount())
+        .build();
   }
 }
