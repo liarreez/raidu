@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 import axios from 'axios';
-
+ 
 //=========== import essets
 import '../../CSS/RaidLobby.css';
 
@@ -43,17 +43,19 @@ const RaidLobby = () => {
             */}
 
             <Grid container direction='column' spacing={1} style={{ height: 'calc(100vh - 64px)', flexGrow: 1 }}>
-                <Grid item xs={6} style={{height: '100vh', backgroundColor: 'black'}}>
-
+                <Grid item xs={1} style={{height: '100vh', backgroundColor: 'red'}}>
+                    
                 </Grid>
-
-                <Grid item xs={6} style={{height: '100vh', backgroundColor: 'red'}}>
+                <Grid item xs={1} style={{height: '100vh', backgroundColor: 'orange'}}>
+                    
+                </Grid>
+                <Grid item xs={6} style={{height: '100vh', backgroundColor: 'yellow'}}>
 
                 </Grid> 
+                <Grid item xs={5} style={{height: '100vh', backgroundColor: 'skyblue'}}>
 
+                </Grid> 
             </Grid>
-            <h1>here is lobby</h1>
-            <button>임시 방으로 이동하기</button>
         </div>
     );
 
