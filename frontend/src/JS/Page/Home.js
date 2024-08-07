@@ -91,7 +91,6 @@ const StepProgressBar = ({ raidPercentage }) => {
 
 const Main = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
 
   // 메인페이지 관련 변수들
   const [bossMonsterDescription, setBossMonsterDescription] = useState(null);
@@ -108,23 +107,23 @@ const Main = () => {
   console.log(totalContribute/bossMonsterHp)
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const accessToken = localStorage.getItem("accessToken");
-        console.log("사용한 토큰 : " + accessToken);
-        const response = await axios.get(SERVERURL + "/api/raidu/userpage", {headers: {"Authorization": `Bearer ${accessToken}`}}); // 여기에 API 주소 넣을 것
-        console.log(response);
-        // setUser(data);
+    // const fetchUserData = async () => {
+    //   try {
+    //     const accessToken = localStorage.getItem("accessToken");
+    //     console.log("사용한 토큰 : " + accessToken);
+    //     const response = await axios.get(SERVERURL + "/api/raidu/userpage", {headers: {"Authorization": `Bearer ${accessToken}`}}); // 여기에 API 주소 넣을 것
+    //     console.log(response);
+    //     // setUser(data);
 
-      } catch (error) {
-        console.error("유저 정보 불러오기 실패...");
-        console.log(error);
-        if(error.response.data.status === 'NOT_FOUND') {
-          console.log("첫 방문임...");
-          navigate("/firstvisit");
-        }
-      }
-    };
+    //   } catch (error) {
+    //     console.error("유저 정보 불러오기 실패...");
+    //     console.log(error);
+    //     if(error.response.data.status === 'NOT_FOUND') {
+    //       console.log("첫 방문임...");
+    //       navigate("/firstvisit");
+    //     }
+    //   }
+    // };
 
     const fetchPageData = async () => {
       try {
@@ -154,9 +153,9 @@ const Main = () => {
       }
     };
 
-    fetchUserData();
+    // fetchUserData();
     fetchPageData();
-  }, [navigate]);
+  }, []);
 
   return (
     <FadeAnime>
