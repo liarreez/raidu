@@ -1,0 +1,2 @@
+ALTER TABLE user
+ALTER role DROP DEFAULT;
