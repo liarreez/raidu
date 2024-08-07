@@ -1,5 +1,7 @@
 package com.sixstar.raidu.domain.userpage.controller;
 
+import com.sixstar.raidu.domain.userpage.dto.CheckNicknameDto;
+import com.sixstar.raidu.domain.userpage.dto.CheckPasswordDto;
 import com.sixstar.raidu.domain.userpage.dto.UserInfoModifyDto;
 import com.sixstar.raidu.domain.userpage.dto.UserprofileRegisterDto;
 import com.sixstar.raidu.domain.userpage.service.UserpageService;
@@ -47,7 +49,7 @@ public class UserpageController {
   @PostMapping("/info")
   public ResponseEntity<BaseResponse<?>> modifyInfo(@RequestHeader("Authorization") String authorization, @Valid @RequestBody UserInfoModifyDto userInfoModifyDto) {
     userpageService.modifyInfo(authorization, userInfoModifyDto);
-    return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_REGISTER_SUCCESS);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_MODIFY_SUCCESS);
   }
 
   @PostMapping("/withdraw")
@@ -61,5 +63,17 @@ public class UserpageController {
     Map<String, Object> data = userpageService.findUsers(nickname);
     return data.containsKey("message") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_USERS_SUCCESS_BUT_NO_CONTENT)
     : baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_USERS_SUCCESS, data);
+  }
+
+  @GetMapping("/check-nickname")
+  public ResponseEntity<BaseResponse<?>> checkNickname(@RequestBody CheckNicknameDto checkNicknameDto) {
+    userpageService.checkNickname(checkNicknameDto.getNickname());
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.NICKNAME_CHECK_SUCCESS);
+  }
+
+  @GetMapping("/check-password")
+  public ResponseEntity<BaseResponse<?>> checkPassword(@RequestHeader("Authorization") String authorization, @RequestBody CheckPasswordDto checkPasswordDto) {
+    userpageService.checkPassword(authorization, checkPasswordDto.getPassword());
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.PASSWORD_CHECK_SUCCESS);
   }
 }

@@ -1,4 +1,6 @@
 import * as React from "react";
+import { useEffect, useCallback } from "react";
+import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -14,13 +16,11 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
-import { useCallback } from "react";
 import topgrass from "../../Imgs/topgrass.png";
-
 import "../../CSS/TopNav.css";
 
 const pages = [
-  { name: "활동", subLevels: ["레이드", "훈련장"] },
+  { name: "활동", subLevels: ["레이두"] },
   { name: "가이드", subLevels: ["튜토리얼", "컨셉 북", "운동 백과"] },
   { name: "정보", subLevels: ["유저 검색"] },
 ];
@@ -42,12 +42,36 @@ const theme = createTheme({
 });
 
 function ResponsiveAppBar() {
+  const SERVERURL = "http://localhost:8080";
   const navigate = useNavigate();
-
+  const [userData, setUserData] = React.useState(null);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [anchorElSubMenu, setAnchorElSubMenu] = React.useState(null);
   const [subMenuItems, setSubMenuItems] = React.useState([]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        console.log("사용한 토큰 : " + accessToken);
+        const response = await axios.get(SERVERURL + "/api/raidu/userpage", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        console.log(response);
+        setUserData(response.data.userProfile);
+      } catch (error) {
+        console.error("유저 정보 불러오기 실패...");
+        console.log(error);
+        if (error.response.data.status === "NOT_FOUND") {
+          console.log("첫 방문임...");
+          navigate("/firstvisit");
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -65,7 +89,7 @@ function ResponsiveAppBar() {
     (setting) => {
       setAnchorElUser(null);
       if (setting === "마이페이지") {
-        navigate("/mypage");
+        navigate(`/mypage/${userData.uuid}`);
       } else if (setting === "개인정보 수정") {
         navigate("/editprofile");
       } else if (setting === "로그아웃") {
@@ -87,8 +111,6 @@ function ResponsiveAppBar() {
     // 소메뉴 클릭시 이동하는 경로 모음
     if (dest === "레이드") {
       navigate("/raid");
-    } else if (dest === "훈련장") {
-      navigate("/training");
     } else if (dest === "튜토리얼") {
       navigate("/tutorial");
     } else if (dest === "컨셉 북") {
@@ -177,10 +199,15 @@ function ResponsiveAppBar() {
                 ))}
               </Box>
 
-              <Box sx={{ flexGrow: 0 }}>
+              <Box sx={{ flexGrow: 0, display: "flex", alignItems: "center" }}>
+                {userData && (
+                  <Typography variant="h6" sx={{ mr: 2 }}>
+                    {userData.nickName} 님 환영합니다!
+                  </Typography>
+                )}
                 <Tooltip title="계정 관리">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="프사" src="Imgs/test.png" />
+                    <Avatar alt="프사"/>
                   </IconButton>
                 </Tooltip>
                 <Menu

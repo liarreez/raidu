@@ -17,7 +17,9 @@ import "../../CSS/Mypage.css";
 
 import test from "../../Imgs/test.png";
 import burgerking from "../../Imgs/burgerking.png";
+import { useParams } from "react-router-dom";
 
+const SERVERURL = "http://localhost:8080";
 const expPercentage = 60;
 
 function StepProgressBar() {
@@ -50,7 +52,21 @@ function StepProgressBar() {
 }
 
 function Mypage() {
+  const uuid = useParams();
   const [activeTab, setActiveTab] = useState("history");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(SERVERURL + `api/raidu/userpage/profile/${uuid}`);
+        const jsonData = await response.json();
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const renderMonsterCards = () => {
     const monsters = [

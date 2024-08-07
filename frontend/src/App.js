@@ -29,7 +29,7 @@ function App() {
             {/* 홈 페이지 경로 */}
             <Route path="/home" element={<HomePage />} />
             {/* 마이페이지 경로 */}
-            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/:uuid" element={<MyPage />} />
             {/* 프로필 수정 경로 */}
             <Route path="/editprofile" element={<EditProfile />} />
             {/* 랭킹 경로 */}

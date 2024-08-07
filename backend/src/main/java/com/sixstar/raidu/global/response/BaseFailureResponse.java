@@ -31,14 +31,15 @@ public enum BaseFailureResponse {
   SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 세션입니다!"),
   SEASON_NOT_FOUND(HttpStatus.NOT_FOUND, "현재 날짜와 일치하는 시즌이 없습니다!"),
   BOSSMONSTER_NOT_FOUND(HttpStatus.NOT_FOUND, "현재 시즌과 일치하는 보스몬스터가 없습니다!"),
-  ROUNDRECORD_NOT_FOUND(HttpStatus.BAD_REQUEST, "저장할 라운드 기록이 없습니다!"),
+  ROUND_RECORD_NOT_FOUND(HttpStatus.BAD_REQUEST, "저장할 라운드 기록이 없습니다!"),
   DICTIONARY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 운동입니다!"),
   NOT_JSON_TYPE(HttpStatus.BAD_REQUEST, "JSON 형태의 타입이 아닙니다!"),
   WITHDRAW_USER(HttpStatus.BAD_REQUEST, "회원 탈퇴한 유저입니다!"),
   REPORTED_USER(HttpStatus.BAD_REQUEST, "신고 당한 유저입니다!"),
   OVERLAPPING_SEASON_EXISTS(HttpStatus.BAD_REQUEST, "입력된 기간과 겹치는 시즌이 존재합니다!"),
   IS_NOT_ADMIN(HttpStatus.UNAUTHORIZED, "관리자 권한이 필요합니다!"),
-  SAME_NAME_SEASON_EXISTS(HttpStatus.BAD_REQUEST, "동일한 이름의 시즌이 존재합니다!")
+  SAME_NAME_SEASON_EXISTS(HttpStatus.BAD_REQUEST, "동일한 이름의 시즌이 존재합니다!"),
+  PASSWORD_IS_NOT_CORRECT(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다!")
   ;
 
   private final HttpStatus status;

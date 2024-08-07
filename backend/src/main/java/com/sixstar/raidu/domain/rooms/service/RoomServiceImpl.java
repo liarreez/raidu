@@ -260,23 +260,24 @@ public class RoomServiceImpl implements RoomService{
         userProfile.updateBestScore(request.getPersonalCombatPower(), request.getEndTime());
 
         // 시즌지역점수, 시즌사용자점수 누적
-        Season season = seasonRepository.findSeason(request.getEndTime())
+        Season season = seasonRepository.findSeasonByEndTime(request.getEndTime())
                 .orElseThrow(() -> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND));
-        updateSeasonRegionScoreAndSeasonUserScore(season, userProfile.getRegion(), userProfile, request.getPersonalCombatPower());
+        updateSeasonScores(season, userProfile.getRegion(), userProfile, request.getPersonalCombatPower());
 
-        // exerciseRoom. roundRecord 저장 -  미완
-        if(request.getRoundRecordList() == null){
-            throw new BaseException(BaseFailureResponse.ROUNDRECORD_NOT_FOUND);
-        }
+        // exerciseRoom 저장
         ExerciseRoomRecord exerciseRoomRecord = ExerciseRoomRecordSaveRequest.toEntity(userProfile, room, request);
-        exerciseRoomRecordRepository.save(exerciseRoomRecord);
+        ExerciseRoomRecord savedExerciseRoomRecord = exerciseRoomRecordRepository.save(exerciseRoomRecord);
+
+        // roundRecord 저장
+        if(request.getRoundRecordList() == null){
+            throw new BaseException(BaseFailureResponse.ROUND_RECORD_NOT_FOUND);
+        }
 
         List<RoundRecord> roundRecordList = request.getRoundRecordList().stream()
                 .map(roundRecordSaveRequest -> {
-                    Dictionary dictionary = dictionaryRepository.findById(roundRecordSaveRequest.getDictionaryId())
-                            .orElseThrow(()-> new BaseException(BaseFailureResponse.DICTIONARY_NOT_FOUND));
-                    return RoundRecordSaveRequest.toEntity(exerciseRoomRecord, dictionary, roundRecordSaveRequest);
-                }).collect(Collectors.toList());
+                    Dictionary dictionary = dictionaryRepository.findByName(roundRecordSaveRequest.getDictionaryName());
+                    return RoundRecordSaveRequest.toEntity(savedExerciseRoomRecord, dictionary, roundRecordSaveRequest);
+                }).toList();
         roundRecordRepository.saveAll(roundRecordList);
 
         // 업데이트된 레벨, 경험치 반환
@@ -287,20 +288,12 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Transactional
-    private void updateSeasonRegionScoreAndSeasonUserScore(Season currentSeason, Region region, UserProfile userProfile, int personalCombatPower) {
+    private void updateSeasonScores(Season currentSeason, Region region, UserProfile userProfile, int personalCombatPower) {
         SeasonUserScore seasonUserScore = seasonUserScoreRepository.findBySeasonAndUserProfile(currentSeason, userProfile);
-        if (seasonUserScore == null) {
-            seasonUserScore = new SeasonUserScore(currentSeason, userProfile, 0);
-        }
         seasonUserScore.updateSeasonUserScore(personalCombatPower);
-        seasonUserScoreRepository.save(seasonUserScore);
 
         SeasonRegionScore seasonRegionScore = seasonRegionScoreRepository.findBySeasonAndRegion(currentSeason, region);
-        if(seasonRegionScore == null){
-            seasonRegionScore = new SeasonRegionScore(region, currentSeason, 0L);
-        }
         seasonRegionScore.updateSeasonRegionScore(personalCombatPower);
-        seasonRegionScoreRepository.save(seasonRegionScore);
     }
 
 }

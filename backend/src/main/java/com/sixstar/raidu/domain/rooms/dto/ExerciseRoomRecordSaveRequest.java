@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class ExerciseRoomRecordSaveRequest {
-    private Long id;
     private UserProfile userProfile;
     private Room room;
     private LocalDateTime endTime;
@@ -23,7 +22,6 @@ public class ExerciseRoomRecordSaveRequest {
     private Integer totalCombatPower;
     private Integer participantsCount;
     private Integer stage;
-    private List<RoundRecord> roundRecords;
 
     public static ExerciseRoomRecord toEntity(UserProfile userProfile, Room room, RoomCompleteRequest request){
         return ExerciseRoomRecord.builder()
