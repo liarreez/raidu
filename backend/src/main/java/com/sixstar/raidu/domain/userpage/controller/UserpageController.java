@@ -54,6 +54,6 @@ public class UserpageController {
   public ResponseEntity<BaseResponse<?>> findUsers(@RequestParam(name="nickname", required = false) String nickname){
     Map<String, Object> data = userpageService.findUsers(nickname);
     return data.containsKey("message") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_USERS_SUCCESS_BUT_NO_CONTENT)
-    : baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_USERS_SUCCESS);
+    : baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_USERS_SUCCESS, data);
   }
 }

@@ -101,19 +101,19 @@ public class UserpageServiceImpl implements UserpageService {
 
   @Override
   public Map<String, Object> findUsers(String nickname) {
-    Specification<UserProfile> spec = null;
-    if (nickname != null && !nickname.trim().isEmpty()) {
-      spec = UserProfileSpecification.findByNickname(nickname);
-    }
-
-    List<UserProfile> userProfiles = userRepository.findAll(spec);
     Season season = seasonRepository.findSeason(now())
         .orElseThrow(() -> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND));
-
     List<SeasonUserScore> seasonUserScores = seasonUserScoreRepository.findBySeason(season);
+
     List<UserResponseDto> userResponseDtos = seasonUserScores.stream()
         .map(seasonUserScore -> UserResponseDto.fromEntity(seasonUserScore, seasonUserScore.getScore()))
         .toList();
+
+    if (nickname != null && !nickname.trim().isEmpty()) {
+      userResponseDtos = userResponseDtos.stream()
+          .filter(userResponseDto -> userResponseDto.getNickname().contains(nickname))
+          .toList();
+    }
 
     Map<String, Object> data = new HashMap<>();
     if(userResponseDtos.isEmpty()){
