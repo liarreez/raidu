@@ -32,6 +32,7 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long uuid;
+  @Setter
   private String password;
   @Column(nullable = false, unique = true)
   private String email;
@@ -57,11 +58,9 @@ public class User {
 
   @PrePersist
   public void prePersist() {
-    System.out.println("Before PrePersist called: isActive = " + this.isActive + ", isReported = " + this.isReported);
     this.isActive = this.isActive == null ? true: this.isActive;
     this.isReported = this.isReported == null ? false: this.isReported;
-    this.role = this.role == null ? Roles.USER.name() : this.role;
-    System.out.println("After PrePersist called: isActive = " + this.isActive + ", isReported = " + this.isReported);
+    this.role = this.role == null ? Roles.ROLE_USER.name() : this.role;
   }
 
   @Builder

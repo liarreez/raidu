@@ -9,13 +9,13 @@ import com.sixstar.raidu.domain.main.repository.SeasonRepository;
 import com.sixstar.raidu.domain.rooms.dto.ExerciseRoomRecordResponseDto;
 import com.sixstar.raidu.domain.rooms.entity.SeasonUserScore;
 import com.sixstar.raidu.domain.rooms.repository.SeasonUserScoreRepository;
+import com.sixstar.raidu.domain.userpage.dto.UserInfoModifyDto;
 import com.sixstar.raidu.domain.userpage.dto.UserMonstersResponseDto;
 import com.sixstar.raidu.domain.userpage.dto.UserProfileResponseDto;
 import com.sixstar.raidu.domain.userpage.dto.UserResponseDto;
 import com.sixstar.raidu.domain.userpage.dto.UserprofileRegisterDto;
 import com.sixstar.raidu.domain.userpage.entity.UserProfile;
 import com.sixstar.raidu.domain.userpage.repository.UserProfileRepository;
-import com.sixstar.raidu.domain.userpage.repository.specification.UserProfileSpecification;
 import com.sixstar.raidu.domain.users.entity.User;
 import com.sixstar.raidu.domain.users.repository.UserRepository;
 import com.sixstar.raidu.domain.users.security.AuthorizationHeaderParser;
@@ -25,10 +25,9 @@ import com.sixstar.raidu.global.response.BaseFailureResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +41,7 @@ public class UserpageServiceImpl implements UserpageService {
   private final SeasonRepository seasonRepository;
   private final SeasonUserScoreRepository seasonUserScoreRepository;
   private final JWTUtil jwtUtil;
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @Transactional
   @Override
@@ -52,25 +52,23 @@ public class UserpageServiceImpl implements UserpageService {
     User user = getUserByEmail(email);
     Region region = regionRepository.findByName(userprofileRegisterDto.getRegion())
         .orElseThrow(() -> new BaseException(BaseFailureResponse.REGION_NOT_FOUND));
-    if (userProfileRepository.existsByNickname(nickname)) {
+
+    if (isDuplicatedNickName(nickname)) {
       throw new BaseException(BaseFailureResponse.NICKNAME_IS_DUPLICATED);
     }
 
-    UserProfile userProfile = UserprofileRegisterDto.toEntity(userprofileRegisterDto, user, region);
     if (userProfileRepository.existsByEmail(email)) {
       throw new BaseException(BaseFailureResponse.SETTING_IS_REGISTERED);
-    } else {
-      userProfileRepository.save(userProfile);
     }
+    UserProfile userProfile = UserprofileRegisterDto.toEntity(userprofileRegisterDto, user, region);
+    userProfileRepository.save(userProfile);
   }
 
   @Override
   public Map<String, Object> searchUserInfo(String authorization) {
-    String token = AuthorizationHeaderParser.parseTokenFromAuthorizationHeader(authorization);
+    String email = getEmailFromAuth(authorization);
+    UserProfile userProfile = getUserProfileByEmail(email);
 
-    String email = jwtUtil.getEmail(token);
-    UserProfile userProfile = userProfileRepository.findByEmail(email)
-        .orElseThrow(() -> new BaseException(BaseFailureResponse.USERPROFILE_NOT_FOUND));
     Map<String, Object> data = new HashMap<>();
     data.put("userProfile", UserProfileResponseDto.fromEntity(userProfile));
     return data;
@@ -123,6 +121,21 @@ public class UserpageServiceImpl implements UserpageService {
     return data;
   }
 
+  @Transactional
+  @Override
+  public void modifyInfo(String authorization, UserInfoModifyDto userInfoModifyDto) {
+    String email = getEmailFromAuth(authorization);
+    User user = getUserByEmail(email);
+    UserProfile userProfile = getUserProfileByEmail(email);
+    String nickname = userInfoModifyDto.getNickname();
+
+    if (isDuplicatedNickName(nickname)) {
+      throw new BaseException(BaseFailureResponse.NICKNAME_IS_DUPLICATED);
+    }
+    userProfile.setNickname(nickname);
+    user.setPassword(bCryptPasswordEncoder.encode(userInfoModifyDto.getPassword()));
+  }
+
   private String getEmailFromAuth(String authorization) {
     String token = AuthorizationHeaderParser.parseTokenFromAuthorizationHeader(authorization);
     return jwtUtil.getEmail(token);
@@ -131,5 +144,14 @@ public class UserpageServiceImpl implements UserpageService {
   private User getUserByEmail(String email) {
     return userRepository.findByEmail(email)
         .orElseThrow(() -> new BaseException(BaseFailureResponse.USER_NOT_FOUND));
+  }
+
+  private UserProfile getUserProfileByEmail(String email) {
+    return userProfileRepository.findByEmail(email)
+        .orElseThrow(() -> new BaseException(BaseFailureResponse.USERPROFILE_NOT_FOUND));
+  }
+
+  private boolean isDuplicatedNickName(String nickname) {
+    return userProfileRepository.existsByNickname(nickname);
   }
 }
