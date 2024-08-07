@@ -15,4 +15,6 @@ public interface UserpageService {
   void modifyInfo(String authorization, UserInfoModifyDto userInfoModifyDto);
 
   void withdraw(String authorization);
+
+  Map<String, Object> findUsers(String nickname);
 }
