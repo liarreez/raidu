@@ -51,19 +51,12 @@ public class SocketController {
   }
 
   @MessageMapping("/message")
-  public void sendMessage(Map<String, Object> params) {
-    String channelId = (String) params.get("channelId");
-    String userId = (String) params.get("sender");
-    printLog("message", userId);
-    simpleMessageSendingOperations.convertAndSend("/sub/message/" + params.get("channelId"), params);
-    System.out.printf("receiver : %s // message : %s\n", channelId, params.get("body"));
-
-  }
-
-  @MessageMapping("/ready")
-  public void setReady(Map<String, Object> params) {
-    String channelId = (String) params.get("channelId");
-    String userId = (String) params.get("sender");
+  public void messageRouter(Map<String, Object> params) { // 사용자가 publish하는 모든 메시지를 받습니다. 메시지의 종류에 따라 아래 메서드로 분류합니다.
+    String channel = (String) params.get("channel");
+    String user = (String) params.get("user");
+    printLog("messagerouter", user);
+    simpleMessageSendingOperations.convertAndSend("/sub/message/" +channel, params);
+    System.out.printf("receiver : %s // type : %s\n", channel, params.get("type"));
   }
 
   // 콘솔에 요청 시각, 메서드 출력

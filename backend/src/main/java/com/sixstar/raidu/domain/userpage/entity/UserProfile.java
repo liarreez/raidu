@@ -87,7 +87,6 @@ public class UserProfile {
 
   @OneToMany(mappedBy = "userProfile")
   private List<UserBossMonster> userBossMonsters;
-
   @OneToMany(mappedBy = "userProfile")
   private List<SeasonUserScore> seasonUserScores;
 

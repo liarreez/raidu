@@ -1,0 +1,141 @@
+/* 전체 페이지를 뷰포트의 크기에 맞추기 위한 스타일 */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* 스크롤바가 생기지 않도록 설정 */
+}
+
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* 뷰포트의 전체 높이 */
+}
+
+header {
+    width: 100%;
+    background-color: #12D20E;
+    padding: 1rem;
+    box-sizing: border-box;
+    margin: 0.5% 0;
+    display: flex;
+}
+
+.logoArea {
+    flex: 3;
+}
+
+/* Grid 아이템의 높이와 패딩 설정 */
+.gridItems {
+    padding: 0 2%;
+    box-sizing: border-box;
+    height: 100%; /* 각 아이템이 Grid 컨테이너의 높이 전체를 차지하도록 설정 */
+}
+
+.gridItemsDiv {
+    background-color: #c0c0c0;
+    height: 100%;
+}
+
+.logo {
+    width: 15%;   /* 부모 요소의 너비의 6% */
+    height: auto; /* 비율을 유지하면서 높이 자동 조정 */
+    max-width: 100%; /* 부모 요소의 최대 너비를 초과하지 않도록 설정 */
+}
+
+.lock {
+    width: 3%;
+    height: auto;
+    max-width: 100%;
+}
+
+.roomName {
+    padding: 0 3%;
+    font-size: 1.75rem;
+    vertical-align: middle;
+}
+
+.roomSetting {
+    font-size: 1.5rem;
+}
+
+.headerContent {
+    background-color: #ffffff;
+    padding: 1.5% 1.5%;
+    border-radius: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 7;
+}
+
+.roomName, .lock, .roomSetting {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.subGridContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* 부모 컨테이너의 높이를 채우도록 설정 */
+}
+
+.subGridItemsDiv {
+    background-color: #f2f2f2;
+    height: 100%;
+    border-radius: 35px;
+}
+
+#participantsList {
+    background-color: #ffffff;
+}
+
+.out { /* 나가기 이미지 */
+    width: 50%;
+    height: auto;
+    max-width: 100%;
+    padding-left: 35%;
+    padding-top: 10%; /*
+    padding-top: 10px;
+    padding-left: 20px;
+    width: 50%;
+    height: auto;
+    */
+}
+
+.outarea { /* 나가기 이미지, a 태그 포함하는 div 태그 */
+    border-radius: 35px;
+}
+
+.startButton, .shareButton {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: center; /* 수평 가운데 정렬 */
+    height: 100%;
+    border-radius: 35px;
+    cursor: pointer;
+}
+
+.startButton {
+    background-color: mistyrose;
+}
+
+.shareButton {
+    background-color: lightcyan;
+}
+
+.startButton:hover, .shareButton:hover, .outarea:hover {
+    background-color: #12D20E;
+    cursor: pointer;
+}
+
+.buttonText {
+    font-size: 2rem; /* 버튼 텍스트 크기 조정 */
+    color: #000; /* 버튼 텍스트 색상 */
+}
