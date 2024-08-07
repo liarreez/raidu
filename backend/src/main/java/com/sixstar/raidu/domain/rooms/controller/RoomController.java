@@ -90,9 +90,9 @@ public class RoomController {
     }
 
     @PostMapping("/{roomId}/end")
-    public ResponseEntity<BaseResponse<?>> completeRoom(@PathVariable("roomId") Long roomId, @RequestBody RoomCompleteRequest roomCompleteRequest){
+    public ResponseEntity<BaseResponse<?>> completeRoom(@PathVariable(name="roomId", required=true) Long roomId, @RequestBody RoomCompleteRequest roomCompleteRequest){
         Map<String, Object> response = roomService.completeRoom(roomId, roomCompleteRequest);
-        return baseResponseService.getSuccessResponse(BaseSuccessResponse.COMPLETE_ROOM_SUCCESS);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.COMPLETE_ROOM_SUCCESS, response);
     }
 
 }
