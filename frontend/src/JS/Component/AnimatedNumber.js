@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import '../../CSS/AnimatedNumber.css';
 
 // Helper function to format numbers with commas
 function formatNumber(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-const AnimatedNumber = ({ targetNumber, fontSize }) => {
+const AnimatedNumber = ({ targetNumber }) => {
   const [currentNumber, setCurrentNumber] = useState(0);
   const intervalRef = useRef(null);
 
@@ -37,14 +36,9 @@ const AnimatedNumber = ({ targetNumber, fontSize }) => {
   }, [targetNumber]);
 
   return (
-    <div className="dynamic-wrapper">
-      <div style={{ fontSize: `${fontSize}px` }} className="dynamic-number">
+      <div style={{display: "inline"}}>
         {formatNumber(Math.round(currentNumber))}
       </div>
-      <div className="dynamic-text">
-        명의 유저들이 함께하고 있어요!
-      </div>
-    </div>
   );
 };
 

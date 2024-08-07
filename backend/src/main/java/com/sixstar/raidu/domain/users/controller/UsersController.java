@@ -9,10 +9,12 @@ import jakarta.validation.Valid;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,5 +41,11 @@ public class UsersController {
   public ResponseEntity<BaseResponse<?>> logout(@RequestHeader("Authorization") String authorization) {
     usersService.logout(authorization);
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.LOGOUT_SUCCESS);
+  }
+
+  @GetMapping("/check-email")
+  public ResponseEntity<BaseResponse<?>> checkEmail(@RequestParam(name="email") String email) {
+    usersService.checkEmail(email);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.EMAIL_CHECK_SUCCESS);
   }
 }

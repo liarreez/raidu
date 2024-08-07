@@ -17,4 +17,8 @@ public interface UserpageService {
   void withdraw(String authorization);
 
   Map<String, Object> findUsers(String nickname);
+
+  void checkNickname(String nickname);
+
+  void checkPassword(String authorization, String password);
 }

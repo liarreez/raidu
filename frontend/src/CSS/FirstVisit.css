@@ -141,6 +141,10 @@ body, html {
     overflow: hidden;
 }
 
+.first-region-desc {
+    white-space: pre-line;
+}
+
 .first-region-confirm {
     height: 60px;
     margin: 10px;
