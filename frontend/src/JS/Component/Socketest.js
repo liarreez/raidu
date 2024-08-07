@@ -2,7 +2,7 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
  // const SOCKET_URL = 'http://i11a108.p.ssafy.io/api/ws'; // 백서버 포트 넣기
- const SOCKET_URL = 'http://localhost:8080/ws'; // 로컬 테스트 시 사용
+ const SOCKET_URL = 'http://localhost:8080/api/ws'; // 로컬 테스트 시 사용
 
 export class Socketest {
   constructor(UserIdVal) {
