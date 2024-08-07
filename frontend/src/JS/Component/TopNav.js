@@ -59,7 +59,8 @@ function ResponsiveAppBar() {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         console.log(response);
-        setUserData(response.data.userProfile);
+        console.log(response.data.data.userProfile.id)
+        setUserData(response.data.data.userProfile);
       } catch (error) {
         console.error("유저 정보 불러오기 실패...");
         console.log(error);
@@ -71,7 +72,7 @@ function ResponsiveAppBar() {
     };
 
     fetchUserData();
-  }, []);
+  }, [navigate]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -89,7 +90,8 @@ function ResponsiveAppBar() {
     (setting) => {
       setAnchorElUser(null);
       if (setting === "마이페이지") {
-        navigate(`/mypage/${userData.uuid}`);
+        console.log("받은 id값 : " + userData.id)
+        navigate(`/mypage/${userData.id}`);
       } else if (setting === "개인정보 수정") {
         navigate("/editprofile");
       } else if (setting === "로그아웃") {
@@ -97,7 +99,7 @@ function ResponsiveAppBar() {
         navigate("/login");
       }
     },
-    [navigate]
+    [navigate, userData]
   );
 
   const handleOpenSubMenu = (event, subLevels) => {
@@ -201,8 +203,8 @@ function ResponsiveAppBar() {
 
               <Box sx={{ flexGrow: 0, display: "flex", alignItems: "center" }}>
                 {userData && (
-                  <Typography variant="h6" sx={{ mr: 2 }}>
-                    {userData.nickName} 님 환영합니다!
+                  <Typography variant="h6" sx={{ fontSize:"12px", marginRight:"20px"}}>
+                    {userData.nickname} 님 환영합니다!
                   </Typography>
                 )}
                 <Tooltip title="계정 관리">

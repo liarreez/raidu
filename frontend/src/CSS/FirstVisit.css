@@ -127,8 +127,13 @@ body, html {
 
 .first-region-img {
     flex-grow: 1;
-    background-color: gray;
+    background-color: white;
     overflow: hidden;
+}
+
+.first-region-img img{
+    width: 100%;
+    object-fit: cover;
 }
 
 .first-region-bottom {
