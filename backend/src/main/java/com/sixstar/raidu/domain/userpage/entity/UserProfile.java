@@ -87,7 +87,10 @@ public class UserProfile {
 
   @OneToMany(mappedBy = "userProfile")
   private List<UserBossMonster> userBossMonsters;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
   @OneToMany(mappedBy = "userProfile")
   private List<SeasonUserScore> seasonUserScores;
 
