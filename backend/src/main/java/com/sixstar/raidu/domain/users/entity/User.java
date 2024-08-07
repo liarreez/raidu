@@ -32,6 +32,7 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long uuid;
+  @Setter
   private String password;
   @Column(nullable = false, unique = true)
   private String email;

@@ -27,7 +27,7 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "8082:8080"
+      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/raidu
       SPRING_DATASOURCE_USERNAME: raidu
@@ -38,16 +38,6 @@ services:
       OPENVIDU_SECRET: z5F_hX2nQ-8rV3sW1dG7bM6tC
     command: >
       sh -c "./wait-for-it.sh db:3306 -- java -jar /app/app.jar"
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: goldenkiwi971202/frontend:latest
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
 
   openvidu-server:
     image: openvidu/openvidu-server:2.30.0
@@ -73,20 +63,6 @@ services:
     ports:
       - "8888:8888"
       - "5000-5050:5000-5050/udp"
-
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/certbot/www:/var/www/certbot
-      - ./nginx/certbot/conf:/etc/letsencrypt
-    depends_on:
-      - frontend
-      - backend
-      - openvidu-server
 
   certbot:
     image: certbot/certbot

@@ -44,7 +44,6 @@ public class RoomController {
         @RequestParam(name="title",required = false) String title
     ){
         Map<String, Object> response = roomService.findAllWaitingRooms(roundTime, restTime, totalRounds, title);
-        System.out.println(response.get("message"));
         return response.containsKey("message") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.NO_WAITING_ROOMS, response)
                 : baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_WAITING_ROOMS_SUCCESS, response);
     }

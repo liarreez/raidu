@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,9 +44,22 @@ public class UserpageController {
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_SEARCH_SUCCESS, data);
   }
 
+  @PostMapping("/info")
+  public ResponseEntity<BaseResponse<?>> modifyInfo(@RequestHeader("Authorization") String authorization, @Valid @RequestBody UserInfoModifyDto userInfoModifyDto) {
+    userpageService.modifyInfo(authorization, userInfoModifyDto);
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.USERPROFILE_REGISTER_SUCCESS);
+  }
+
   @PostMapping("/withdraw")
   public ResponseEntity<BaseResponse<?>> withdraw(@RequestHeader("Authorization") String authorization) {
     userpageService.withdraw(authorization);
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.USER_WITHDRAW_SUCCESS);
+  }
+
+  @GetMapping("/list")
+  public ResponseEntity<BaseResponse<?>> findUsers(@RequestParam(name="nickname", required = false) String nickname){
+    Map<String, Object> data = userpageService.findUsers(nickname);
+    return data.containsKey("message") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_USERS_SUCCESS_BUT_NO_CONTENT)
+    : baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_USERS_SUCCESS, data);
   }
 }
