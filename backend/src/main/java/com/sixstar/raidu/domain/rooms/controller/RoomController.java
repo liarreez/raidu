@@ -1,5 +1,6 @@
 package com.sixstar.raidu.domain.rooms.controller;
 
+import com.sixstar.raidu.domain.rooms.dto.MonsterCaptureRequest;
 import com.sixstar.raidu.domain.rooms.dto.RoomCompleteRequest;
 import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
 import com.sixstar.raidu.domain.rooms.dto.UpdateRoomSettingsRequest;
@@ -56,8 +57,8 @@ public class RoomController {
     }
 
     @PutMapping("/{roomId}/settings")
-    public ResponseEntity<BaseResponse<?>> updateRoomSettings(@PathVariable("roomId") Long roomId, @RequestBody UpdateRoomSettingsRequest updateRoomSettingsRequest){
-        Map<String, Object> response = roomService.updateRoomSettings(roomId, updateRoomSettingsRequest);
+    public ResponseEntity<BaseResponse<?>> updateRoomSettings(@PathVariable("roomId") Long roomId, @RequestBody UpdateRoomSettingsRequest request){
+        Map<String, Object> response = roomService.updateRoomSettings(roomId, request);
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.UPDATE_ROOM_SETTINGS_SUCCESS, response);
     }
 
@@ -75,8 +76,6 @@ public class RoomController {
     public ResponseEntity<BaseResponse<?>> initializeSession(@RequestBody(required = false) Map<String, Object> params)
         throws OpenViduJavaClientException, OpenViduHttpException {
         Map<String, Object> response = roomService.initializeSession(params);
-        System.out.println(response);
-        System.out.println(response.get("sessionId"));
         return baseResponseService.getSuccessResponse(
             BaseSuccessResponse.INIT_SESSION_SUCCESS, response);
     }
@@ -93,6 +92,12 @@ public class RoomController {
     public ResponseEntity<BaseResponse<?>> completeRoom(@PathVariable(name="roomId", required=true) Long roomId, @RequestBody RoomCompleteRequest roomCompleteRequest){
         Map<String, Object> response = roomService.completeRoom(roomId, roomCompleteRequest);
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.COMPLETE_ROOM_SUCCESS, response);
+    }
+
+    @GetMapping("/monster")
+    public ResponseEntity<BaseResponse<?>> getCapturedMonster(@RequestBody MonsterCaptureRequest request){
+        Map<String, Object> response = roomService.getCapturedMonster(request);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_CAPTURED_MONSTER_SUCCESS, response);
     }
 
 }
