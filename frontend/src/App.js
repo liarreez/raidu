@@ -14,6 +14,9 @@ import ConceptBook from "./JS/Page/ConceptBook.js";
 import WaitRoom from "./JS/Page/WaitRoom.js";
 import RaidLobby from "./JS/Page/RaidLobby.js";
 import RaidWaitRoom from "./JS/Page/RaidWaitRoom.js";
+
+import TrainingRoom from './JS/Page/TrainingRoom.js';
+import BeforeTraining from './JS/Page/BeforeTraining.js';
 // 다른 페이지들을 import 하세요
 
 function App() {
@@ -47,6 +50,11 @@ function App() {
             <Route path="/enter">
               <Route path=":roomNo" element ={<WaitRoom/>}/>
             </Route>
+
+            {/* 테스트용 운동방 추가 */}
+            <Route path="/trainingTest" element={<TrainingRoom />} />
+            <Route path="/beforeTraining" element={<BeforeTraining/>} />
+
             {/* 예외처리 경로 - 와일드 카드 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
