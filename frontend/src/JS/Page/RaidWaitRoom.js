@@ -243,21 +243,21 @@ const RaidWaitRoom = () => {
 
 
     return(
-        <div className="container"> 
+        <div className="raidWaitRoom-container raidWaitRoom-html raidWaitRoom-body"> 
           {/* header */}
-            <header>
-                <a href='/' className="logoArea"><img src = {logo} className="logo" alt="logoImg"/></a>
-                <span className="headerContent"> 
-                    <img src = {isRoomLocked ? locked : unlocked} className="lock" alt={isRoomLocked ? "locked" : "unlocked"}/>
-                    <span className="roomName">{roomNamed}</span>
-                    <span className="roomSetting">⏱ {roomSet.roundTime} / 💪 {roomSet.roundCount} / 💤 {roomSet.restTime} </span>
+            <header className="raidWaitRoom-header">
+                <a href='/' className="raidWaitRoom-logoArea"><img src = {logo} className="raidWaitRoom-logo" alt="logoImg"/></a>
+                <span className="raidWaitRoom-headerContent"> 
+                    <img src = {isRoomLocked ? locked : unlocked} className="raidWaitRoom-lock" alt={isRoomLocked ? "locked" : "unlocked"}/>
+                    <span className="raidWaitRoom-roomName">{roomNamed}</span>
+                    <span className="raidWaitRoom-roomSetting">⏱ {roomSet.roundTime} / 💪 {roomSet.roundCount} / 💤 {roomSet.restTime} </span>
                 </span>
             </header>
 
           {/* 컨테이너 박스 */}
             <Grid container spacing={0} style={{ height: 'calc(100vh - 64px)', flexGrow: 1 }}>
                 {/* 왼쪽 컨테이너 */}
-                <Grid item xs={5} md={5} className='gridItems'>
+                <Grid item xs={5} md={5} className='raidWaitRoom-gridItems'>
                     <Grid container direction="column" spacing={1} style={{ height: '100%' }}>
                         <Grid item xs={8} style={{ height: '100%' }}>
                             <div style={{ height: '100%'}}>
@@ -275,10 +275,10 @@ const RaidWaitRoom = () => {
                 </Grid>
 
                 {/* 오른쪽 컨테이너 */}
-                <Grid item xs={7} md={7} className='gridItems'>
+                <Grid item xs={7} md={7} className='raidWaitRoom-gridItems'>
                     <Grid container direction="column" spacing={1} style={{ height: '100%' }}>
                         <Grid item xs={10} style={{ height: '100%' }}>
-                            <div style={{ height: '100%' }} className='rightTopCompo'>
+                            <div style={{ height: '100%' }} className='raidWaitRoom-rightTopCompo'>
                                 <RoomInfoForm roomSet={roomSet} isCaptain={me.isCaptain} />
                             </div>
                         </Grid>
@@ -288,21 +288,21 @@ const RaidWaitRoom = () => {
                                 {   // true 부분 onClick 구현 완료 시 수정 필요 !!
                                     me.isCaptain ? (
                                         <Grid item xs={5}>
-                                            <div className='startButton' onClick={tryGameStart}>
-                                                <span className='buttonText'>시작하기</span>
+                                            <div className='raidWaitRoom-startButton' onClick={tryGameStart}>
+                                                <span className='raidWaitRoom-buttonText'>시작하기</span>
                                             </div>
                                         </Grid>
                                     ) : me.readyState ? (
                                         <Grid item xs={5}>
-                                            <div className='startButton' onClick={sendTest2}>
-                                                <span className='buttonText'>준비 취소</span>
+                                            <div className='raidWaitRoom-startButton' onClick={sendTest2}>
+                                                <span className='raidWaitRoom-buttonText'>준비 취소</span>
                                             </div>
                                         </Grid>
 
                                     ) : (
                                         <Grid item xs={5}>
-                                            <div className='startButton' onClick={sendTest2}>
-                                                <span className='buttonText'>준비하기</span>
+                                            <div className='raidWaitRoom-startButton' onClick={sendTest2}>
+                                                <span className='raidWaitRoom-buttonText'>준비하기</span>
                                             </div>
                                         </Grid>
                                     )
@@ -317,14 +317,14 @@ const RaidWaitRoom = () => {
                                     준비하기 버튼 눌리고 나면 setReady(true)가 되는데, 이 상태인 동안에는 button color가 hover 시와 똑같도록 설정
                                 */}
                                 <Grid item xs={5}>
-                                    <div className='shareButton' onClick={sendTest2}>
-                                        <span className='buttonText'>링크 공유</span>
+                                    <div className='raidWaitRoom-shareButton' onClick={sendTest2}>
+                                        <span className='raidWaitRoom-buttonText'>링크 공유</span>
                                     </div>
                                 </Grid>
                                 <Grid item xs={2}>
-                                    <div className="outarea" onClick={sendTest3}> 
+                                    <div className="raidWaitRoom-outarea" onClick={sendTest3}> 
                                         {/* <a href='/'>  // 잠깐 동작 막음 */}
-                                            <img src={out} alt="way out" className="out"/>
+                                            <img src={out} alt="way out" className="raidWaitRoom-out"/>
                                         {/* </a> */}
                                     </div>
                                 </Grid>

@@ -109,7 +109,7 @@ function ResponsiveAppBar() {
     setAnchorElSubMenu(null);
     setSubMenuItems([]);
     // 소메뉴 클릭시 이동하는 경로 모음
-    if (dest === "레이드") {
+    if (dest === "레이두") {
       navigate("/raid");
     } else if (dest === "튜토리얼") {
       navigate("/tutorial");
