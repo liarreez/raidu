@@ -4,7 +4,11 @@
     padding: 0;
     height: 100%;
     width: 100%;
+<<<<<<< HEAD
     overflow: hidden;
+=======
+    /* overflow: hidden; 스크롤바가 생기지 않도록 설정 */
+>>>>>>> 4fba772b6c636557bb69f077879fd3e517ad523a
 }
 
 #raidWaitRoom-root {

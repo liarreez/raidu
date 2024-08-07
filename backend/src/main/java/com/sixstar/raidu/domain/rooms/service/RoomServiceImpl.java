@@ -11,7 +11,11 @@ import com.sixstar.raidu.domain.rooms.dto.*;
 import com.sixstar.raidu.domain.rooms.entity.*;
 import com.sixstar.raidu.domain.rooms.repository.*;
 import com.sixstar.raidu.domain.rooms.repository.specification.RoomSpecification;
+import com.sixstar.raidu.domain.userpage.entity.Monster;
+import com.sixstar.raidu.domain.userpage.entity.UserMonster;
 import com.sixstar.raidu.domain.userpage.entity.UserProfile;
+import com.sixstar.raidu.domain.userpage.repository.MonsterRepository;
+import com.sixstar.raidu.domain.userpage.repository.UserMonsterRepository;
 import com.sixstar.raidu.domain.userpage.repository.UserProfileRepository;
 import com.sixstar.raidu.global.response.BaseException;
 import com.sixstar.raidu.global.response.BaseFailureResponse;
@@ -24,11 +28,13 @@ import jakarta.annotation.PostConstruct;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -49,6 +55,26 @@ public class RoomServiceImpl implements RoomService{
 
     private OpenVidu openvidu;
 
+    public RoomServiceImpl(RoomRepository roomRepository,
+        UserProfileRepository userProfileRepository, RoomUserRepository roomUserRepository,
+        SeasonRepository seasonRepository, SeasonRegionScoreRepository seasonRegionScoreRepository,
+        SeasonUserScoreRepository seasonUserScoreRepository,
+        ExerciseRoomRecordRepository exerciseRoomRecordRepository,
+        RoundRecordRepository roundRecordRepository, DictionaryRepository dictionaryRepository,
+        MonsterRepository monsterRepository, UserMonsterRepository userMonsterRepository) {
+        this.roomRepository = roomRepository;
+        this.userProfileRepository = userProfileRepository;
+        this.roomUserRepository = roomUserRepository;
+        this.seasonRepository = seasonRepository;
+        this.seasonRegionScoreRepository = seasonRegionScoreRepository;
+        this.seasonUserScoreRepository = seasonUserScoreRepository;
+        this.exerciseRoomRecordRepository = exerciseRoomRecordRepository;
+        this.roundRecordRepository = roundRecordRepository;
+        this.dictionaryRepository = dictionaryRepository;
+        this.monsterRepository = monsterRepository;
+        this.userMonsterRepository = userMonsterRepository;
+    }
+
     @PostConstruct
     public void init() {
         this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
@@ -62,18 +88,8 @@ public class RoomServiceImpl implements RoomService{
     private final ExerciseRoomRecordRepository exerciseRoomRecordRepository;
     private final RoundRecordRepository roundRecordRepository;
     private final DictionaryRepository dictionaryRepository;
-
-    public RoomServiceImpl(RoomRepository roomRepository, UserProfileRepository userProfileRepository, RoomUserRepository roomUserRepository, SeasonRepository seasonRepository, SeasonRegionScoreRepository seasonRegionScoreRepository, SeasonUserScoreRepository seasonUserScoreRepository, ExerciseRoomRecordRepository exerciseRoomRecordRepository, RoundRecordRepository roundRecordRepository, DictionaryRepository dictionaryRepository){
-        this.roomRepository = roomRepository;
-        this.userProfileRepository = userProfileRepository;
-        this.roomUserRepository = roomUserRepository;
-        this.seasonRepository = seasonRepository;
-        this.seasonRegionScoreRepository = seasonRegionScoreRepository;
-        this.seasonUserScoreRepository = seasonUserScoreRepository;
-        this.exerciseRoomRecordRepository = exerciseRoomRecordRepository;
-        this.roundRecordRepository = roundRecordRepository;
-        this.dictionaryRepository = dictionaryRepository;
-    }
+    private final MonsterRepository monsterRepository;
+    private final UserMonsterRepository userMonsterRepository;
 
     public Room findRoomByIdOrThrow(Long roomId) {
         return roomRepository.findById(roomId)
@@ -188,10 +204,10 @@ public class RoomServiceImpl implements RoomService{
 
     @Transactional
     @Override
-    public Map<String, Object> updateRoomSettings(Long roomId, UpdateRoomSettingsRequest updateRoomSettingsRequest) {
+    public Map<String, Object> updateRoomSettings(Long roomId, UpdateRoomSettingsRequest request) {
         Room room = findRoomByIdOrThrow(roomId);
 
-        room.update(updateRoomSettingsRequest.getRoundTime(), updateRoomSettingsRequest.getRestTime(), updateRoomSettingsRequest.getTotalRounds());
+        room.update(request.getRoundTime(), request.getRestTime(), request.getTotalRounds());
         entityManager.flush();
 
         RoomResponse updatedRoom = new RoomResponse(room);
@@ -284,6 +300,32 @@ public class RoomServiceImpl implements RoomService{
         Map<String, Object> map = new HashMap<>();
         map.put("updatedLevel", userProfile.getLevel());
         map.put("updatedExp", userProfile.getExp());
+        return map;
+    }
+
+    public Monster getRandomMonster(List<Monster> monsterList) {
+        if (monsterList == null || monsterList.isEmpty()) {
+            return null; // 또는 적절한 예외 처리
+        }
+        Random random = new Random();
+        int randomIndex = random.nextInt(monsterList.size());
+        return monsterList.get(randomIndex);
+    }
+
+    @Override
+    public Map<String, Object> getCapturedMonster(MonsterCaptureRequest request) {
+        List<Monster> monsterList = monsterRepository.findByStageLessThan(request.getStage());
+        Monster capturedMonster = getRandomMonster(monsterList);
+        UserProfile userProfile = findUserProfileByEmailOrThrow(request.getEmail());
+
+        boolean isNew = !userMonsterRepository.existsByUserProfileAndMonster(userProfile, capturedMonster);
+        if(isNew){
+            userMonsterRepository.save(new UserMonster(userProfile, capturedMonster));
+        }
+
+        MonsterCaptureResponse monsterCaptureResponse = MonsterCaptureResponse.fromEntity(capturedMonster, isNew);
+        Map<String, Object> map = new HashMap<>();
+        map.put("capturedMonster", monsterCaptureResponse);
         return map;
     }
 

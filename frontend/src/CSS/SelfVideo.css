@@ -1,0 +1,68 @@
+/* video {
+    width: auto;
+    height: 100%;
+    float: left;
+    cursor: pointer;
+} */
+
+.streamcomponent-self {
+    /* border: 5px solid green; */
+    position: relative;
+    /* width: 800px; */
+    width: auto;
+    height: auto;
+    border: 5px solid greenyellow;
+}
+
+.streamcomponent-self > div {
+    /* background: #f8f8f8; */
+    position: absolute;
+    padding-left: 5px;
+    padding-right: 5px;
+    /* color: #777777; */
+    font-weight: bold;
+    font-size: 40px;
+    border-radius: 4px;
+
+    /* border: 1px solid red; */
+}
+
+.streamcomponent-self video {
+    /* position: relative; */
+    width: 100%;
+}
+
+p{
+    margin: 0;
+}
+
+.self-name {
+    top: 0;
+    background-color: #f8f8f8;
+}
+
+.count-box {
+    /* position: absolute; */
+    right: 0;
+    top: 0;
+    color: black;
+    font-weight: bold;
+    /* border: 1px solid blue; */
+    background-color: #f8f8f8;
+}
+
+/* .count-box p {
+    font-size:60px;
+    color: black;
+    font-weight: bold;
+} */
+
+.warning {
+    /* position: absolute; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: red;
+    background-color: #f8f8f8;
+}
