@@ -3,16 +3,6 @@ import { TextField, Button, Paper, Typography} from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 // STRUCTURE ======================================
-class Message {
-    // 메시지 구성 요소
-    // 보낸 사람, 채널명(방 이름), 메시지 내용, 보낸 시각
-    constructor(sender, channel, body){
-        this.sender = sender;
-        this.channel = channel;
-        this.body = body;
-        this.timestamp = getTime();
-    }
-}
 
   // making timestamp
 const getTime = () => {
@@ -119,8 +109,8 @@ const typographyStyle = (TF) => {
     return ({textAlign: val})
 }
 
-const RaidWaitRoom_chatting = ({me, roomName}) => {
-    const [messages, setMessages] = useState([]);
+const RaidWaitRoom_chatting = ({me, chatMessages, sendTest3}) => {
+    // const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const chatEndRef = useRef(null);
 
@@ -135,7 +125,7 @@ const RaidWaitRoom_chatting = ({me, roomName}) => {
     // 메시지 보내기
     const handleSendMessage = () => {
         if (input.trim()) {
-        setMessages([...messages, new Message(me.nickname, roomName, input)]);
+        sendTest3(input)
         setInput('');
         }
     };
@@ -154,17 +144,17 @@ const RaidWaitRoom_chatting = ({me, roomName}) => {
     // messages가 업데이트될 때마다 스크롤을 맨 아래로 이동
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [chatMessages]);
 
     return (
         <div style={contItemStyle}>
             <div style={chatAreaStyle}>
-                {messages.map((msg, index) => (
+                {chatMessages.map((msg, index) => (
                 <Paper
                     key={index}
-                    style={msg.sender === me.nickname ? myMessageStyle : otherMessageStyle}
+                    style={msg.user === me.nickname ? myMessageStyle : otherMessageStyle}
                 >
-                    <Typography style={msg.sender === me.nickname ? typographyStyle(true) : typographyStyle(false)}><b>{msg.sender}</b>  <span style={timestampStyle}>{msg.timestamp}</span>
+                    <Typography style={msg.user === me.nickname ? typographyStyle(true) : typographyStyle(false)}><b>{msg.user}</b>  <span style={timestampStyle}>{msg.timestamp}</span>
                         <br/>
                         {msg.body}
                     </Typography>

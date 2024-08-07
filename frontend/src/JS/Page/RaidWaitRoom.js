@@ -55,7 +55,7 @@ const RaidWaitRoom = () => {
     
     // room setting은 방장만 바꿀 수 있으므로 유의하여 컴포에 props 넘길 것 ㅜ 
     // room setting과 me.isCaptain을 컴포에 넘겨야 할 것 같음
-    const [me, setMe] = useState(new User("김싸피", 1, "profile1.png", 572, 15600, false, false))
+    const [me, setMe] = useState(new User("김싸피", 1, "profile1.png", 572, 15600, false, true))
     // 세션으로 받게 되면 세션 값으로 세팅해 주세요
     
     const [participantsList, setParticipantsList] = useState([])
@@ -75,15 +75,13 @@ const RaidWaitRoom = () => {
         setParticipantsList([
             me,
             new User("이싸피", 2, "profile2.png", 4, 420, true, false),
-            new User("최싸피", 3, "profile3.png", 5, 520, false, false),
+            new User("최싸피", 3, "profile3.png", 5, 520, true, false),
             new User("박싸피", 4, "profile4.png", 6, 620, true, false)
         ]);
-    },[]) // onMount 
+    },[]); // onMount 
 
     // 운동 set은 하위 컴포넌트에서 넘어와야 하는 값임 
     // 레디를 눌렀을 때 disabled되며, 게임이 시작하면 서버로 넘어간다
-
-
 
     // WEBSOCKET SETTING ========================================
 
@@ -112,12 +110,11 @@ const RaidWaitRoom = () => {
                     const parsedMessage = JSON.parse(message.body);
                     switch(parsedMessage.type){
                         case '1': console.log('unhandled message'); break;
-                        // case '2': parsedMessage.readyType ? participantsList.filter((each) => each.) 
-                        // 0806 여기부터
-
-
+                        case '2': updateUserReadyState(parsedMessage.user, parsedMessage.readyType); break;
+                        case '3': setChatMessages((prevMessages) => [...prevMessages, parsedMessage]); break;
+                        case '4': console.log('game start'); break;
+                        default: console.log('?')
                     }
-                    parsedMessage.type === '3' && setChatMessages((prevMessages) => [...prevMessages, parsedMessage]);
                     setMessages((prevMessages) => [...prevMessages, parsedMessage]);
                 });
                 return () => {
@@ -134,11 +131,15 @@ const RaidWaitRoom = () => {
                 websocketClient.disconnect()
             }
         };
-    }, [websocketClient, roomName])
+    }, [websocketClient, roomName]);
+
+
+
+    // WATCHING USESTATES
 
     useEffect(() => {
-        console.log(chatMessages)
-    },[chatMessages])
+        console.log(participantsList)
+    },[participantsList]);
 
     
     // WEBSOCKET 동작 테스트 ===========================
@@ -155,14 +156,14 @@ const RaidWaitRoom = () => {
         const seconds = pad(now.getSeconds());
     //   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         return `${month}-${day} ${hours}:${minutes}:${seconds}`;
-    }
+    };
 
     const DESTINATION = '/pub/message';
     const COMMONFORM = { // 메시지 타입 관계없이 공통적으로 쓰이는 내용입니다.
         user: me.nickname,
         channel: roomName,
         timestamp: getTime()
-    }
+    };
 
     const sendTest1 = (enterType) => { // 사용자 입/퇴장 관련 웹소켓 메서드
         enterType=true;
@@ -174,7 +175,8 @@ const RaidWaitRoom = () => {
             })
             websocketClient.send(DESTINATION, message);
         }
-    }
+    };
+
     const sendTest2 = () => { // 사용자 준비 상태 관련 웹소켓 메서드
         const readyType = !me.readyState;
         if (websocketClient) {
@@ -185,28 +187,9 @@ const RaidWaitRoom = () => {
             })
             websocketClient.send(DESTINATION, message);
         }
-    }
-
-    useEffect(() => {
-        console.log(me)
-    },[me])
-
-    /*
-         const readyType = !me.readyState
-        setMe({...me, readyState: !me.readyState})
-
-        if (websocketClient) {
-            const message = JSON.stringify({
-                ...COMMONFORM,
-                type:"2",
-                readyType
-            })
-            websocketClient.send(DESTINATION, message);
-        }
-    */
+    };
 
     const sendTest3 = (content) => { // 사용자 채팅 전송 관련 웹소켓 메서드
-        content = "lala";
         if (websocketClient) {
             const message = JSON.stringify({
                 ...COMMONFORM,
@@ -215,7 +198,49 @@ const RaidWaitRoom = () => {
             })
             websocketClient.send(DESTINATION, message);
         }
-    }
+    };
+
+    const sendTest4 = () => { // 방장이 게임 시작을 누르면 메시지 발송
+        if (websocketClient) {
+            const message = JSON.stringify({
+                ...COMMONFORM,
+                type: "4",
+                startType: true
+            })
+            websocketClient.send(DESTINATION, message);
+        }
+    };
+
+    const updateUserReadyState = (name, readyType) => {
+        const updatedParticipants = participantsList.map(user => {
+            if (user.nickname === name) {
+                return new User(user.nickname, user.badge, user.profileImage, user.level, user.highestScore, readyType, user.isCaptain);
+            }
+            return user;
+        });
+    
+        setParticipantsList(updatedParticipants);
+
+        if (name === me.nickname) {
+            setMe(prevMe => new User(prevMe.nickname, prevMe.badge, prevMe.profileImage, prevMe.level, prevMe.highestScore, readyType, prevMe.isCaptain));
+        }
+    };
+
+    const checkReadyState = () => {
+        // 모든 사용자가 준비 상태인지 확인
+        const isAllReady = participantsList.every(user => user.readyState);
+        return isAllReady;
+    };
+
+    const tryGameStart = () => {
+        if (checkReadyState()) {
+            sendTest4();
+            // 로딩스피너 보였으면 좋겠어용 ~ 
+        } else {
+            console.log('아직 준비되지 않은 사용자가 있어요.')
+        }
+    };
+
 
     return(
         <div className="container"> 
@@ -243,7 +268,7 @@ const RaidWaitRoom = () => {
                         </Grid>
                         <Grid item xs={4} style={{ height: '100%' }}>
                             <div style={{ height: '100%' }}>
-                                <Chatting me={me} roomName={roomName} messages={chatMessages} sendTest3={sendTest3}/>
+                                <Chatting me={me} roomName={roomName} chatMessages={chatMessages} sendTest3={sendTest3}/>
                             </div>
                         </Grid>
                     </Grid>
@@ -263,11 +288,11 @@ const RaidWaitRoom = () => {
                                 {   // true 부분 onClick 구현 완료 시 수정 필요 !!
                                     me.isCaptain ? (
                                         <Grid item xs={5}>
-                                            <div className='startButton' onClick={sendTest1}>
+                                            <div className='startButton' onClick={tryGameStart}>
                                                 <span className='buttonText'>시작하기</span>
                                             </div>
                                         </Grid>
-                                    ) : me.isReady ? (
+                                    ) : me.readyState ? (
                                         <Grid item xs={5}>
                                             <div className='startButton' onClick={sendTest2}>
                                                 <span className='buttonText'>준비 취소</span>
