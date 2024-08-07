@@ -6,11 +6,11 @@ import java.util.Map;
 
 public interface UsersService {
 
-  User getUserByEmail(String email);
-
   Map<String,Object> register(UserRegisterDto userRegisterDto);
 
   Map<String, Object> reissue(String authorization);
 
   void logout(String authorization);
+
+  void checkEmail(String email);
 }
