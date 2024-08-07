@@ -1,0 +1,95 @@
+/* 운동방 전체 틀 */
+.training {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    /* background-color: aquamarine; */
+    border: 5px solid black;
+    min-width: 1200px;
+    /* min-height: 1200px; */
+}
+
+/* 위쪽 배치(타이머 있을 예정) */
+.training-header {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    /* background-color: azure; */
+}
+
+/* 비디오, 전체 전투력, 용사 gif */
+.training-frame {
+    box-sizing: border-box;
+    display: flex;
+    /* flex-direction: column; */
+    width: 100%;
+    height: 80%;
+    border: 10px solid green;
+
+}
+
+/* 휴식시간, 정산시간 때 사용할  */
+.background {
+
+}
+
+/* 비디오 프레임 */
+.video-frame {
+    display: flex;
+    flex-direction: column;
+    /* gap: 10px; */
+    width: 60%;
+    height: 100%;
+    border: 10px solid red;
+}
+
+.other-video {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 2px;
+    height: 30%;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 2px solid salmon;
+    /* background-color: salmon; */
+}
+
+.other-video > div {
+    border: 5px blue solid;
+    /* width: 200px; */
+}
+
+.my-video {
+    justify-content: center;
+    align-items: center;
+    height: 70%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 2px solid sandybrown;
+    /* background-color: sandybrown; */
+}
+
+.progress-box {
+    width: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* background-color: lightslategray; */
+}
+
+.soldier-box {
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: goldenrod; */
+}
+
+.soldier-gif {
+    width: 100%;
+}
