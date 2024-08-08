@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import topgrass from "../../Imgs/topgrass.png";
+import logo from "../../Imgs/logo.png";
 import "../../CSS/TopNav.css";
 
 const pages = [
@@ -147,7 +148,7 @@ function ResponsiveAppBar() {
                 </IconButton>
 
                 <div className="nav-logo" onClick={handleLogoClick} style={{ cursor: "pointer" }}>
-                  로고자리
+                  <img alt="로고 자리" src={logo}></img>
                 </div>
                 <Menu
                   id="menu-appbar"
@@ -179,7 +180,7 @@ function ResponsiveAppBar() {
 
               <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
                 <div className="nav-logo-large" onClick={handleLogoClick} style={{ cursor: "pointer" }}>
-                  로고자리
+                  <img alt="큰 로고" src={logo}></img>
                 </div>
                 {pages.map((page) => (
                   <Button

@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 import SpringAnime from "../Component/SpringAnime";
 import FadeAnime from "../Component/FadeAnime";
 import TopNav from "../Component/TopNav";
@@ -11,11 +13,14 @@ import InputField from "../Component/InputField";
 
 import "../../CSS/EditProfile.css";
 
+const SERVERURL = "http://localhost:8080";
+const accessToken = localStorage.getItem("accessToken");
+
 const EditProfile = () => {
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
-  const [nickname, setNickname] = useState("기존 닉네임");
-  const [email, setEmail] = useState("기존 이메일");
+  const [nickname, setNickname] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
@@ -28,10 +33,6 @@ const EditProfile = () => {
     setNickname(e.target.value);
   };
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
   const handleNewPasswordChange = (e) => {
     setNewPassword(e.target.value);
   };
@@ -40,14 +41,15 @@ const EditProfile = () => {
     setConfirmPassword(e.target.value);
   };
 
-  const handleAuthenticate = () => {
-    // 여기에 현재 비밀번호 인증 로직을 추가해야함
-    // API 호출 후 인증성공하면 setIsAuthenticated(true)
-    if (currentPassword === "1234") {
-      // 이 부분을 실제 인증 로직으로 대체하세요
+  const handleAuthenticate = async() => {
+    try {
+      console.log(accessToken)
+      console.log("인증 실시... 입력 비번 : " + currentPassword)
+      const response = await axios.post(SERVERURL + "/api/raidu/userpage/check-password", {"password": currentPassword}, {headers: {"Authorization": `Bearer ${accessToken}`}});
+      console.log(response)
       setIsAuthenticated(true);
-    } else {
-      alert("비밀번호가 올바르지 않습니다.");
+    } catch (error) {
+      console.log(error)
     }
   };
 
@@ -118,16 +120,8 @@ const EditProfile = () => {
                       <InputField
                         label="닉네임"
                         type="text"
-                        placeholder="닉네임"
                         value={nickname}
                         onChange={handleNicknameChange}
-                      />
-                      <InputField
-                        label="이메일"
-                        type="email"
-                        placeholder="이메일"
-                        value={email}
-                        onChange={handleEmailChange}
                       />
                       <InputField
                         label="새 비밀번호"
