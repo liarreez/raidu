@@ -19,6 +19,11 @@ import TrainingRoom from './JS/Page/TrainingRoom.js';
 import BeforeTraining from './JS/Page/BeforeTraining.js';
 // 다른 페이지들을 import 하세요
 
+function PrivateRoute({ children }) {
+  const accessToken = localStorage.getItem("accessToken");
+  return accessToken ? children : <Navigate to="/login" />;
+}
+
 function App() {
   return (
     <div className="app">
@@ -30,30 +35,71 @@ function App() {
             {/* 로그인 페이지 경로 */}
             <Route path="/login" element={<LoginPage />} />
             {/* 홈 페이지 경로 */}
-            <Route path="/home" element={<HomePage />} />
+            <Route path="/home" element={
+              <PrivateRoute>
+                <HomePage />
+              </PrivateRoute>
+            } />
             {/* 마이페이지 경로 */}
-            <Route path="/mypage/:id" element={<MyPage />} />
+            <Route path="/mypage/:id" element={
+              <PrivateRoute>
+                <MyPage />
+              </PrivateRoute>
+            } />
             {/* 프로필 수정 경로 */}
-            <Route path="/editprofile" element={<EditProfile />} />
+            <Route path="/editprofile" element={
+              <PrivateRoute>
+                <EditProfile />
+              </PrivateRoute>
+            } />
             {/* 랭킹 경로 */}
-            <Route path="/usersearch" element={<UserSearch />} />
+            <Route path="/usersearch" element={
+              <PrivateRoute>
+                <UserSearch />
+              </PrivateRoute>
+            } />
             {/* 첫방문 -> 지역 / 닉네임 선택 */}
-            <Route path="/firstvisit" element={<FirstVisit />} />
+            <Route path="/firstvisit" element={
+              <PrivateRoute>
+                <FirstVisit />
+              </PrivateRoute>
+            } />
             {/* 첫방문 -> 지역 / 닉네임 선택 */}
-            <Route path="/conceptbook" element={<ConceptBook />} />
-            
+            <Route path="/conceptbook" element={
+              <PrivateRoute>
+                <ConceptBook />
+              </PrivateRoute>
+            } />
             
             {/* 여기에 추가적인 경로를 설정할것 */}
-            <Route path="/raid" element={<RaidLobby/>} />
-            <Route path="/raid/:roomName" element={<RaidWaitRoom />}/>
+            <Route path="/raid" element={
+              <PrivateRoute>
+                <RaidLobby />
+              </PrivateRoute>
+            } />
+            <Route path="/raid/:roomName" element={
+              <PrivateRoute>
+                <RaidWaitRoom />
+              </PrivateRoute>
+            } />
             
-            <Route path="/enter">
-              <Route path=":roomNo" element ={<WaitRoom/>}/>
-            </Route>
+            <Route path="/enter/:roomNo" element={
+              <PrivateRoute>
+                <WaitRoom />
+              </PrivateRoute>
+            } />
 
             {/* 테스트용 운동방 추가 */}
-            <Route path="/trainingTest" element={<TrainingRoom />} />
-            <Route path="/beforeTraining" element={<BeforeTraining/>} />
+            <Route path="/trainingTest" element={
+              <PrivateRoute>
+                <TrainingRoom />
+              </PrivateRoute>
+            } />
+            <Route path="/beforeTraining" element={
+              <PrivateRoute>
+                <BeforeTraining />
+              </PrivateRoute>
+            } />
 
             {/* 예외처리 경로 - 와일드 카드 */}
             <Route path="*" element={<NotFound />} />
