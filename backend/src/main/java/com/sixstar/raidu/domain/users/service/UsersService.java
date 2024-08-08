@@ -15,4 +15,6 @@ public interface UsersService {
   void checkEmail(String email);
 
   void sendTempPassword(String email);
+
+  void sendEmailAuthCode(String email);
 }

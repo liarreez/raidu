@@ -39,7 +39,9 @@ public enum BaseFailureResponse {
   OVERLAPPING_SEASON_EXISTS(HttpStatus.BAD_REQUEST, "입력된 기간과 겹치는 시즌이 존재합니다!"),
   IS_NOT_ADMIN(HttpStatus.UNAUTHORIZED, "관리자 권한이 필요합니다!"),
   SAME_NAME_SEASON_EXISTS(HttpStatus.BAD_REQUEST, "동일한 이름의 시즌이 존재합니다!"),
-  PASSWORD_IS_NOT_CORRECT(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다!")
+  PASSWORD_IS_NOT_CORRECT(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다!"),
+  EMAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "메일 전송에 실패했습니다"),
+  IS_NOT_CORRECT_EMAIL_AUTH_CODE(HttpStatus.UNAUTHORIZED, "인증 코드가 일치하지 않습니다!"),
   ;
 
   private final HttpStatus status;
