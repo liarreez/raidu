@@ -93,13 +93,19 @@ const RaidWaitRoom = () => {
         
         })
         
-        // .then(axios.get(SERVER_URL+'/api/raidu/rooms/'+roomName, {
-        //     headers: {
-        //         'Authorization': `Bearer ${token}` // Bearer 토큰을 사용하는 경우
-        //     }
-        // })).then((res) => {
-        //     console.log('REACT line 95: '+res);
-        // }).error((e) => console.log('error occured : '+e))
+        axios.get(SERVER_URL+'/api/raidu/rooms/'+roomName, {
+            headers: {
+                'Authorization': `Bearer ${token}` // Bearer 토큰을 사용하는 경우
+            }
+        }).then((res) => {
+            const roomInfo = res.data.data.room;
+            const partInfo = res.data.data.userProfileList;
+            setRoomNamed(roomInfo.title);
+            setRoomSet(new Room(roomInfo.roundTime, roomInfo.restTime, roomInfo.totalRounds));
+            console.log(res.data.data.room)
+            console.log(res.data.data.userProfileList)
+          //  setParticipantsList([...participantsList, ])
+        })
 
         setRoomSet(
             new Room(40, 15, 3)
@@ -108,7 +114,6 @@ const RaidWaitRoom = () => {
         setIsRoomLocked(false);
         
 
-       // console.log("AM I CAPTAIN ? " + location.state.isCaptain)
     },[]); // onMount 
 
     useEffect(() => {
@@ -439,7 +444,7 @@ const RaidWaitRoom = () => {
                                     준비하기 버튼 눌리고 나면 setReady(true)가 되는데, 이 상태인 동안에는 button color가 hover 시와 똑같도록 설정
                                 */}
                                 <Grid item xs={5}>
-                                    <div className='raidWaitRoom-shareButton' onClick={sendTest2}>
+                                    <div className='raidWaitRoom-shareButton' >
                                         <span className='raidWaitRoom-buttonText'>링크 공유</span>
                                     </div>
                                 </Grid>
