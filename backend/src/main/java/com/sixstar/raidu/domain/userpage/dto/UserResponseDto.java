@@ -16,14 +16,14 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 public class UserResponseDto {
-    Long uuid;
+    Long id;
     String nickname;
     Long regionId;
     int currentSeasonUserScore;
 
     @Builder
-    public UserResponseDto(Long uuid, String nickname, Long regionId, int currentSeasonUserScore){
-        this.uuid = uuid;
+    public UserResponseDto(Long id, String nickname, Long regionId, int currentSeasonUserScore){
+        this.id = id;
         this.nickname = nickname;
         this.regionId = regionId;
         this.currentSeasonUserScore = currentSeasonUserScore;
@@ -31,7 +31,7 @@ public class UserResponseDto {
 
     public static UserResponseDto fromEntity(SeasonUserScore seasonUserScore, int score){
         return UserResponseDto.builder()
-            .uuid(seasonUserScore.getUserProfile().getUser().getUuid())
+            .id(seasonUserScore.getUserProfile().getId())
             .nickname(seasonUserScore.getUserProfile().getNickname())
             .regionId(seasonUserScore.getUserProfile().getRegion().getId())
             .currentSeasonUserScore(score)
