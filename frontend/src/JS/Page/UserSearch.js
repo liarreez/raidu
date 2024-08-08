@@ -1,28 +1,34 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import FadeAnime from "../Component/FadeAnime";
 import TopNav from "../Component/TopNav";
 import SpringAnime from "../Component/SpringAnime";
 import "../../CSS/UserSearch.css";
 import ranking from "../../Imgs/ranking.gif";
 
-const testUsers = [
-  { id: 1, nickname: "user1", region: "대충 지역", contribution: 120 },
-  { id: 2, nickname: "user10", region: "대충지역", contribution: 98 },
-  { id: 3, nickname: "user11", region: "대충지역", contribution: 150 },
-  { id: 4, nickname: "user12", region: "대충지역", contribution: 80 },
-  { id: 5, nickname: "user13", region: "대충지역", contribution: 75 },
-];
+
+const SERVERURL = "http://localhost:8080";
 
 const Ranking = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const handleSearch = () => {
-    const filteredUsers = testUsers.filter(user =>
-      user.nickname.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setUsers(filteredUsers);
+  const handleSearch = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await axios.post(`${SERVERURL}/api/raidu/userpage/list`, {nickname: searchTerm }, {headers: { Authorization: `Bearer ${accessToken}` }}
+      );
+      console.log(response)
+      if (response.data.status === "OK") {
+        setUsers(response.data.data.data);
+      } else {
+        setUsers([]);
+      }
+    } catch (error) {
+      console.error(error);
+      setUsers([]);
+    }
   };
 
   return (
@@ -44,7 +50,7 @@ const Ranking = () => {
                   {selectedUser ? (
                     <div className="profile-card">
                       <h3>{selectedUser.nickname}</h3>
-                      등등..추가적인 내용을 서버에서 받아올 것
+                      {/* 추가적인 내용을 서버에서 받아올 것 */}
                     </div>
                   ) : (
                     <div className="profile-notchosen">선택한 유저 없음!</div>
@@ -71,31 +77,31 @@ const Ranking = () => {
                 <div>누적 기여도</div>
                 <div>상세 정보</div>
               </div>
-                <div className="search-result-container">
-                  {users.length === 0 ? (
-                    <div className="no-results">검색 결과가 없습니다. 유저를 검색해주세요.</div>
-                  ) : (
-                    users.map((user) => (
-                      <div className="search-result-card" key={user.id}>
-                        <div>{user.nickname}</div>
-                        <div>{user.region}</div>
-                        <div>{user.contribution}</div>
-                        <div>
-                          <button
-                            onClick={() => {
-                              setSelectedUser(user);
-                              document
-                                .getElementById("rank-icon")
-                                .scrollIntoView({ behavior: "smooth" });
-                            }}
-                          >
-                            프로필 카드
-                          </button>
-                        </div>
+              <div className="search-result-container">
+                {users.length === 0 ? (
+                  <div className="no-results">검색 결과가 없습니다. 유저를 검색해주세요.</div>
+                ) : (
+                  users.map((user) => (
+                    <div className="search-result-card" key={user.uuid}>
+                      <div>{user.nickname}</div>
+                      <div>{user.regionId}</div>
+                      <div>{user.currentSeasonUserScore}</div>
+                      <div>
+                        <button
+                          onClick={() => {
+                            setSelectedUser(user);
+                            document
+                              .getElementById("rank-icon")
+                              .scrollIntoView({ behavior: "smooth" });
+                          }}
+                        >
+                          프로필 카드
+                        </button>
                       </div>
-                    ))
-                  )}
-                </div>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           </SpringAnime>
         </div>
