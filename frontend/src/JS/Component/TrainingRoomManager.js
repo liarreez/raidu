@@ -17,6 +17,8 @@ import TimerRest from './TimerRest';
 
 import { Modal, Box } from '@mui/material';
 
+import { Navigate, useNavigate } from 'react-router-dom';
+
 const APPLICATION_SERVER_URL = "http://localhost:8080/api/raidu/rooms/sessions";
 
 // roomInfo = 대기방에서 받아온 정보들이 담긴 객체
@@ -24,6 +26,8 @@ const TrainingRoomManager = ({ roomInfo }) => {
 
   // waitingRoomId = 대기방 고유 Id
   const waitingRoomId = roomInfo.roomId;
+
+  const navigate = useNavigate();
 
   // 유저 닉네임
   const [myUserName, setMyUserName] = useState("");
@@ -162,6 +166,26 @@ const TrainingRoomManager = ({ roomInfo }) => {
     setSubscribers([]);
     setMainStreamManager(undefined);
     setPublisher(undefined);
+
+
+  }, [session]);
+
+  const byeBye = useCallback(() => {
+    if (session) {
+      session.disconnect();
+    }
+
+    // 방을 나갔을 때 모달 없애기
+    setOpenModal(false)
+
+    setSession(undefined);
+    setSubscribers([]);
+    setMainStreamManager(undefined);
+    setPublisher(undefined);
+
+    navigate("/login");
+
+
   }, [session]);
 
 
@@ -443,7 +467,7 @@ const TrainingRoomManager = ({ roomInfo }) => {
                 <div style={{
                   width: '100%',
                   height:'25%',
-                  fontSize: '80px',
+                  fontSize: '60px',
                   display: 'flex',
                   justifyContent: 'flex-end',
                   backgroundColor: 'lemonchiffon',
@@ -483,7 +507,7 @@ const TrainingRoomManager = ({ roomInfo }) => {
               <div style={{
                 width: '100%',
                 height: '20%',
-                backgroundColor:'coral',
+                // backgroundColor:'coral',
               }}>
                 <TimerRest currentTime={currentTime} timerActive={timerActive}/>
               </div>
@@ -554,7 +578,7 @@ const TrainingRoomManager = ({ roomInfo }) => {
                 display: 'flex',
                 justifyContent: 'flex-end',
               }}>
-                <button className="btn btn-large btn-danger" onClick={leaveSession}>
+                <button className="btn btn-large btn-danger" onClick={byeBye}>
                   나가기
                 </button>
               </div>
