@@ -1,7 +1,7 @@
 import { Select, FormControl, InputLabel, Grid, MenuItem } from '@mui/material';
 import { useState, useEffect } from 'react';
 
-const RaidWaitRoom_roominfoform = ({roomSet, isCaptain}) => {
+const RaidWaitRoom_roominfoform = ({roomSet, isCaptain, rounds, roomSetSetter, exerciseSetSetter}) => {
                                 // 방 설정과 방장 여부
     // PROPS =========================================
     const { roundCount, roundTime, restTime } = roomSet;
@@ -20,21 +20,30 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain}) => {
     // EVENT HANDLERS =========================================
     const handleLocalRestTimeChange = (e) => {
         setLocalRestTime(e.target.value);
+        roomSetSetter(roundTime, e.target.value, roundCount);
     }
 
     const handleLocalRoundCountChange = (e) => {
         setLocalRoundCount(e.target.value);
+        exerciseSetSetter([]); // 사이즈가 바뀌면 다 비워야 한다.
+        roomSetSetter(roundTime, restTime, e.target.value);
     }
 
     const handleLocalRoundTimeChange = (e) => {
         setLocalRoundTime(e.target.value);
+        roomSetSetter(e.target.value, restTime, roundCount);
     }
 
-    const handleExcerciseOptionChange = (e, num) => {
+    const handleExerciseOptionChange = (e, index) => {
         let nowList = [...exerciseOption];
-        nowList[num] = e.target.value;
+        nowList[index] = e.target.value;
         setExerciseOption(nowList);
     }
+
+    useEffect(() => { // 사용자가 운동 종목 리스트를 변경할 때마다 상위 컴포넌트에 반영함
+        exerciseSetSetter(exerciseOption);
+        console.log(exerciseOption);
+    },[exerciseOption]);
 
     // CALC PART - option values =========================================
     useEffect(() => { 
@@ -156,53 +165,27 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain}) => {
                 {/* 하단부 form */}
                 <Grid item xs={5}>
                     <div style={formStyle}>
-                        <div style={interFormStyle}>
-                            <span style={spanStyle}>1라운드 </span>
-                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
-                                <InputLabel id="demo-simple-select-filled-label">1라운드 운동 선택</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-filled-label"
-                                    id="demo-simple-select-filled"
-                                    value={exerciseOption[0] === 'undefined' ? "" : exerciseOption[0] }
-                                    onChange={(e) => handleExcerciseOptionChange(e, 0)}
-                                >
-                                    
-                                    <MenuItem value={'lunge'}>런지</MenuItem>
-                                    <MenuItem value={'jumpingJack'}>팔벌려뛰기</MenuItem>
-                                </Select>
-                            </FormControl>   
-                        </div>
-                        <div style={interFormStyle}>
-                            <span style={spanStyle}>2라운드 </span>
-                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
-                                <InputLabel id="demo-simple-select-filled-label">2라운드 운동 선택</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-filled-label"
-                                    id="demo-simple-select-filled"
-                                    value={exerciseOption[1] === 'undefined' ? "" : exerciseOption[1] }
-                                    onChange={(e) => handleExcerciseOptionChange(e, 1)}
-                                >
-                                    
-                                    <MenuItem value={'lunge'}>런지</MenuItem>
-                                    <MenuItem value={'jumpingJack'}>팔벌려뛰기</MenuItem>
-                                </Select>
-                            </FormControl>    
-                        </div>
-                        <div style={interFormStyle}>
-                            <span style={spanStyle}>3라운드 </span>
-                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
-                                <InputLabel id="demo-simple-select-filled-label">3라운드 운동 선택</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-filled-label"
-                                    id="demo-simple-select-filled"
-                                    value={exerciseOption[2] === 'undefined' ? "" : exerciseOption[2] }
-                                    onChange={(e) => handleExcerciseOptionChange(e, 2)}
-                                >
-                                    <MenuItem value={'lunge'}>런지</MenuItem>
-                                    <MenuItem value={'jumpingJack'}>팔벌려뛰기</MenuItem>
-                                </Select>
-                            </FormControl>    
-                        </div>
+                        {
+                        
+                            Array.from({ length: rounds }).map((_, index) => (
+                                <div key={index} style={interFormStyle}>
+                                    <span style={spanStyle}>{index + 1}라운드 </span>
+                                    <FormControl variant="filled" sx={{ minWidth: '50%' }}>
+                                        <InputLabel id={`exercise-option-label-${index}`}>운동 선택</InputLabel>
+                                        <Select
+                                            labelId={`exercise-option-label-${index}`}
+                                            id={`exercise-option-select-${index}`}
+                                            value={exerciseOption[index] || ''}
+                                            onChange={(e) => handleExerciseOptionChange(e, index)}
+                                        >
+                                            <MenuItem value={'lunge'}>런지</MenuItem>
+                                            <MenuItem value={'jumpingJack'}>팔벌려뛰기</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                            ))
+                        }
+                        
                     </div>
                 </Grid>
             </Grid>
