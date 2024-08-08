@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
-const APPLICATION_SERVER_URL = 'http://localhost:8080/api/raidu/rooms/sessions';
+const APPLICATION_SERVER_URL = API_URL+'/api/raidu/rooms/sessions';
 
 // setWaitingRoomId = 대기방 고유 Id 변경 함수
 const CreateWaitingRoom = ({ setWaitingRoomId }) => {

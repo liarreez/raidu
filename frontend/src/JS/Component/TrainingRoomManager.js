@@ -18,8 +18,10 @@ import TimerRest from './TimerRest';
 import { Modal, Box } from '@mui/material';
 
 import { Navigate, useNavigate } from 'react-router-dom';
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
-const APPLICATION_SERVER_URL = "http://localhost:8080/api/raidu/rooms/sessions";
+
+const APPLICATION_SERVER_URL = API_URL+"/api/raidu/rooms/sessions";
 
 // roomData = 대기방에서 받아온 정보들이 담긴 객체
 const TrainingRoomManager = ({ roomData }) => {
