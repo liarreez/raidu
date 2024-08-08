@@ -1,10 +1,11 @@
 //=========== import libraries 
 import React, { useState, useEffect } from 'react';
 import { Grid } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
-//=========== import webSocket
+//=========== import networks
 import { Socketest } from '../Component/Socketest.js'
+import axios from 'axios'; 
 
 //=========== import essets
 import '../../CSS/RaidWaitRoom.css';
@@ -39,23 +40,32 @@ class Room {
     }
 }   
 
+const SERVER_URL = 'http://localhost:8080';
+const token = localStorage.getItem('accessToken');
+
 const RaidWaitRoom = () => {
     // ========= roomName은 pathVariable로 줄 거고
     // ========= roomSet은 props로 넘기고
     // ========= isRoomLocked는 대기실에서 입장할 수 있는 모든 방이 false입니다
-
+    const location = useLocation();
     const [isFullScreen, setIsFullScreen] = useState(false);
 
     const { roomName } = useParams(); // 꼭 방의 제목일 필요 없다. PK 받아서 숫자로 지정할 것임
     const [roomSet, setRoomSet] = useState(new Room(0, 0, 0)); // roomSet은 객체임.
     // const [roomSet, setRoomSet] = useState()로 두게 되면 undefined 오류가 나므로
     // 초깃값을 임의의 어떤 값으로 채워주는 것이 좋다. DOM 로드 후 -> useEffect 실행되기 때문
+
+    const [exerciseSet, setExerciseSet] = useState([]); // 이 부분은 하위 컴포 roominfoform에서만 세팅합니다.
+    useEffect(() => {
+        console.log("RaidWaitRoom line 60 ", exerciseSet)
+    }, [exerciseSet])
+
     const [roomNamed, setRoomNamed] = useState(''); 
     const [isRoomLocked, setIsRoomLocked] = useState(false);
     
     // room setting은 방장만 바꿀 수 있으므로 유의하여 컴포에 props 넘길 것 ㅜ 
     // room setting과 me.isCaptain을 컴포에 넘겨야 할 것 같음
-    const [me, setMe] = useState(new User("김싸피", 1, "profile1.png", 572, 15600, false, true))
+    const [me, setMe] = useState(new User("", 0, "", 0, 0, true, false ));
     // 세션으로 받게 되면 세션 값으로 세팅해 주세요
     
     const [participantsList, setParticipantsList] = useState([])
@@ -67,18 +77,52 @@ const RaidWaitRoom = () => {
 
     
     useEffect(() => {
+        axios.get(SERVER_URL+'/api/raidu/userpage', {
+            headers: {
+                'Authorization': `Bearer ${token}` // Bearer 토큰을 사용하는 경우
+            }
+        }).then((res) => {
+            const data = res.data.data.userProfile;
+            console.log(data);
+            setMe(new User(data.nickname, data.symbolImageUrl, data.profileImageUrl, data.level, data.bestScore, false, (location.state !== null && location.state !== undefined) ? location.state.isCaptain : false))
+            
+        
+        })
+        
+        // .then(axios.get(SERVER_URL+'/api/raidu/rooms/'+roomName, {
+        //     headers: {
+        //         'Authorization': `Bearer ${token}` // Bearer 토큰을 사용하는 경우
+        //     }
+        // })).then((res) => {
+        //     console.log('REACT line 95: '+res);
+        // }).error((e) => console.log('error occured : '+e))
+
         setRoomSet(
             new Room(40, 15, 3)
-        );
+        );  
         setRoomNamed(roomName); // 방 이름 변경 가능하게 하려면 이 부분 수정해야 함. 지금은 pathVal에서 가져온다
         setIsRoomLocked(false);
+        
+
+       // console.log("AM I CAPTAIN ? " + location.state.isCaptain)
+    },[]); // onMount 
+
+    useEffect(() => {
         setParticipantsList([
             me,
-            new User("이싸피", 2, "profile2.png", 4, 420, true, false),
-            new User("최싸피", 3, "profile3.png", 5, 520, true, false),
-            new User("박싸피", 4, "profile4.png", 6, 620, true, false)
+       //     new User("이싸피", 2, "profile2.png", 4, 420, true, false),
+       //     new User("최싸피", 3, "profile3.png", 5, 520, true, false),
+       //     new User("박싸피", 4, "profile4.png", 6, 620, true, false)
         ]);
-    },[]); // onMount 
+    },[me])
+
+    const roomSetSetter = (roundTime, restTime, roundCount) => {
+        setRoomSet(new Room(roundTime, restTime, roundCount));
+    }
+
+    const exerciseSetSetter = (list) => {
+        setExerciseSet(list);
+    }
 
     // 운동 set은 하위 컴포넌트에서 넘어와야 하는 값임 
     // 레디를 눌렀을 때 disabled되며, 게임이 시작하면 서버로 넘어간다
@@ -112,7 +156,7 @@ const RaidWaitRoom = () => {
                         case '1': console.log('unhandled message'); break;
                         case '2': updateUserReadyState(parsedMessage.user, parsedMessage.readyType); break;
                         case '3': setChatMessages((prevMessages) => [...prevMessages, parsedMessage]); break;
-                        case '4': console.log('game start'); break;
+                        case '4': gameStart(); break;
                         default: console.log('?')
                     }
                     setMessages((prevMessages) => [...prevMessages, parsedMessage]);
@@ -178,14 +222,18 @@ const RaidWaitRoom = () => {
     };
 
     const sendTest2 = () => { // 사용자 준비 상태 관련 웹소켓 메서드
-        const readyType = !me.readyState;
-        if (websocketClient) {
-            const message = JSON.stringify({
-                ...COMMONFORM,
-                type:"2",
-                readyType
-            })
-            websocketClient.send(DESTINATION, message);
+        if(checkExerciseOption){
+            const readyType = !me.readyState;
+            if (websocketClient) {
+                const message = JSON.stringify({
+                    ...COMMONFORM,
+                    type:"2",
+                    readyType
+                })
+                websocketClient.send(DESTINATION, message);
+            }
+        }else{
+            console.log('모든 라운드에 대한 운동 종목 선택을 완료해 주세요.')
         }
     };
 
@@ -226,21 +274,57 @@ const RaidWaitRoom = () => {
         }
     };
 
+    const checkExerciseOption = () => { 
+        // '준비하기' 버튼을 누르기 전(1인 게임의 경우 '시작하기' 전) 모든 라운드의 운동 종류 선택이 완료되었는지 체크합니다. 
+        console.log('checkExerciseOption : ' + exerciseSet.length);
+        console.log('checkExerciseOption : ' + roomSet.roundCount);
+        return exerciseSet.length == roomSet.roundCount;
+    }
+
     const checkReadyState = () => {
-        // 모든 사용자가 준비 상태인지 확인
-        const isAllReady = participantsList.every(user => user.readyState);
-        return isAllReady;
+        if(checkExerciseOption){
+            // 모든 사용자가 준비 상태인지, 모든 라운드별 운동 종목을 선택했는지 확인해 주세요
+            if(participantsList.length != 1){ // 방에 남은 참가자가 한 명이면 레디 상태와 관련 없이 무조건 시작 가능합니다.
+                const isAllReady = participantsList.every(user => user.readyState);
+                return isAllReady;
+            }else return true;
+        }else{
+            console.log('모든 운동 종목에 대한 선택을 완료해 주세요.')
+            return false;
+        }
     };
 
     const tryGameStart = () => {
         if (checkReadyState()) {
-            sendTest4();
+            console.log('============ PRINTING SETTINGS =============');
+            // 방 정보
+            // 사용자 정보
+            // 선택한 운동 정보 묶어서 보여주기
+            console.log(roomSet)
+            console.log(me);
+            console.log(exerciseSet);
+
+
+
+            sendTest4(); // 웹소켓으로 모든 방 안의 참여자에게 게임 시작 알림을 보냅니다.
             // 로딩스피너 보였으면 좋겠어용 ~ 
         } else {
             console.log('아직 준비되지 않은 사용자가 있어요.')
         }
     };
 
+    const gameStart = () => {
+        axios.post(SERVER_URL+'/api/raidu/rooms/sessions', {roomName}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then((res) => console.log(res.data.data.sessionId))
+    }
+
+    // 0808 checkReadyState() 로직 제대로 작동하지 않아 확인 필요합니다. 
+    // 발생하고 있는 버그 : 모든 운동 라운드에 대한 종목 선택이 진행되지 않아도 게임이 시작되거나 준비가 진행됩니다.
+    // 
 
     return(
         <div className="raidWaitRoom-container raidWaitRoom-html raidWaitRoom-body"> 
@@ -279,7 +363,7 @@ const RaidWaitRoom = () => {
                     <Grid container direction="column" spacing={1} style={{ height: '100%' }}>
                         <Grid item xs={10} style={{ height: '100%' }}>
                             <div style={{ height: '100%' }} className='raidWaitRoom-rightTopCompo'>
-                                <RoomInfoForm roomSet={roomSet} isCaptain={me.isCaptain} />
+                                <RoomInfoForm roomSet={roomSet} roomSetSetter={roomSetSetter} isCaptain={me.isCaptain} rounds={roomSet.roundCount} exerciseSetSetter={exerciseSetSetter}/>
                             </div>
                         </Grid>
                         <Grid item xs={2}>
@@ -322,10 +406,11 @@ const RaidWaitRoom = () => {
                                     </div>
                                 </Grid>
                                 <Grid item xs={2}>
-                                    <div className="raidWaitRoom-outarea" onClick={sendTest3}> 
-                                        {/* <a href='/'>  // 잠깐 동작 막음 */}
+                                    <div className="raidWaitRoom-outarea" > 
+                                        <a href='/raid'>  
+                                        {/* 방에서 나갈 때 나가기 처리도 해야 하고 방장이면 방 삭제도 해야 됩니다 */}
                                             <img src={out} alt="way out" className="raidWaitRoom-out"/>
-                                        {/* </a> */}
+                                        </a>
                                     </div>
                                 </Grid>
                             </Grid>

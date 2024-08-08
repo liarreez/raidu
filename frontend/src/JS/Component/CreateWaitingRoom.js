@@ -23,7 +23,7 @@ const CreateWaitingRoom = ({ setWaitingRoomId }) => {
       });
       const newwaitingRoom = response.data.data.sessionId;
       setWaitingRoom(newwaitingRoom);
-      setWaitingRoomId(newwaitingRoom);
+      setWaitingRoomId(newwaitingRoom); 
       console.log("New session ID:", newwaitingRoom);
     } catch (error) {
       console.error('대기방 만들기에 실패했습니다.', error);
