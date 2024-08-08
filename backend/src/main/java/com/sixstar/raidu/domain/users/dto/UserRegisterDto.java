@@ -19,14 +19,21 @@ public class UserRegisterDto {
   @NotBlank(message = "비밀번호를 입력하세요!")
   @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_\\-+=]).{8,20}$", message = "유효하지 않은 비밀번호입니다!")
   private String password;;
-  private String code;
+//  private String code;
+
 
   @Builder
-  public UserRegisterDto(String email, String password, String code) {
+  public UserRegisterDto(String email, String password) {
     this.email = email;
     this.password = password;
-    this.code = code;
   }
+
+//  @Builder
+//  public UserRegisterDto(String email, String password, String code) {
+//    this.email = email;
+//    this.password = password;
+//    this.code = code;
+//  }
 
   public static User toEntity(UserRegisterDto memberRegisterDto) {
     return User.builder()
