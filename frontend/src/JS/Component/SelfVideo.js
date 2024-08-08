@@ -195,34 +195,6 @@ const SelfVideo = (props) => {
     }
   };
 
-  // 스쿼트
-  const getSquatStage = (kneeAngle) =>{
-
-  }
-
-  const countingSquat = (pose) => {
-    const nose = pose.keypoints[NOSE];
-
-    const leftShoulder = pose.keypoints[LEFT_SHOULDER];
-    const leftElbow = pose.keypoints[LEFT_ELBOW];
-    const leftWrist = post.keypoints[LEFT_WRIST];
-    const leftHip = pose.keypoints[LEFT_HIP];
-    const leftKnee = pose.keypoints[LEFT_KNEE];
-    const leftAnkle = pose.keypoints[LEFT_ANKLE];
-
-    const rightShoulder = pose.keypoints[RIGHT_SHOULDER];
-    const rightElbow = pose.keypoints[RIGHT_ELBOW];
-    const rightWrist = post.keypoints[RIGHT_WRIST];
-    const rightHip = pose.keypoints[RIGHT_HIP];
-    const rightKnee = pose.keypoints[RIGHT_KNEE];
-    const rightAnkle = pose.keypoints[RIGHT_ANKLE];
-
-    // const offsetAngle = calculateAngle(leftShoulder, rightShoulder, nose);
-
-    const hipVerticalAngle = calculateAngle(leftShoulder, [leftHip.x, 0], leftHip)
-    
-
-  }
 
 
   // const [count, setCount] = useState(0);
