@@ -32,7 +32,7 @@ const TrainingRoomManager = ({ roomData }) => {
   const navigate = useNavigate();
 
   // 유저 닉네임
-  const [myUserName, setMyUserName] = useState("바보");
+  const [myUserName, setMyUserName] = useState("");
 
   // setMyUserName(roomData.me.nickname)
   // 세션 (개인의 세션 = 대기방에 들어간 한 사람의 비디오라고 생각하면 된다.)
@@ -66,11 +66,11 @@ const TrainingRoomManager = ({ roomData }) => {
   // 현재 어떤 단계인가 (세팅, 운동, 휴식, 정산으로 나뉠듯)
   const [currentStep, setCurrentStep] = useState('ready');
   // 정해둔 셋팅 시간(준비시간)
-  const [setupTime, setSetupTime] = useState(3);
+  const [setupTime, setSetupTime] = useState(5);
   // 정해둔 운동 시간
-  const [exerciseTime, setExerciseTime] = useState(2);
+  const [exerciseTime, setExerciseTime] = useState(15);
   // 정해둔 중간 정산 시간
-  const [middleMotionTime, setMiddleMotionTime] = useState(2);
+  const [middleMotionTime, setMiddleMotionTime] = useState(4);
   // 정해둔 휴식 시간
   const [restTime, setRestTime] = useState(8);
   // 정해둔 마지막 정산 전 애니메이션 시간
@@ -217,6 +217,7 @@ const TrainingRoomManager = ({ roomData }) => {
     }
   };
 
+
   const deleteSubscriber = useCallback((streamManager) => {
     setSubscribers((prevSubscribers) => prevSubscribers.filter((sub) => sub !== streamManager));
   }, []);
@@ -332,9 +333,26 @@ const TrainingRoomManager = ({ roomData }) => {
     }
   }, [currentStep]);
 
-  useState(() => {
-    joinTrainingRoom();
-  })
+  const createHashedUserName = ( ) => {
+    // 현재 시각을 밀리초 단위로 변환
+    const timestamp = Date.now();
+    // 랜덤 값 생성
+    const randomValue = Math.floor(Math.random() * 1001);
+    // 해시화 (간단한 예로, Base36 인코딩을 사용)
+    const hash = (timestamp + randomValue).toString(36).toUpperCase();
+    setMyUserName(hash);
+    console.log(hash, myUserName);
+    // return hash;
+  }
+
+  // useEffect(() => {
+  //   createHashedUserName();
+  // }, [])
+
+  // useEffect(() => {
+  //   console.log(myUserName);
+  //   joinTrainingRoom();
+  // }, [])
 
   
 
