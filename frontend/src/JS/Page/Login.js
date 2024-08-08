@@ -20,8 +20,10 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 import axios from "axios";
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
-const SERVERURL = "http://localhost:8080";
+
+const SERVERURL = API_URL;
 
 const modalStyle = {
   position: "absolute",
@@ -39,6 +41,7 @@ const modalStyle = {
 };
 
 const SignUp = () => {
+  console.log(API_URL)
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -20,6 +20,8 @@ import Participants from '../Component/RaidWaitRoom_participants.js';
 import RoomInfoForm from '../Component/RaidWaitRoom_roominfoform.js';
 import Chatting from '../Component/RaidWaitRoom_chatting.js';
 
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
+
 class User {
     constructor(nickname, badge, profileImage, level, highestScore, readyState, isCaptain) {
         this.nickname = nickname; // 닉네임
@@ -41,7 +43,7 @@ class Room {
     }
 }   
 
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = API_URL;
 const token = localStorage.getItem('accessToken');
 
 const RaidWaitRoom = () => {
@@ -373,7 +375,7 @@ const RaidWaitRoom = () => {
         <div className="raidWaitRoom-container raidWaitRoom-html raidWaitRoom-body"> 
           {/* header */}
             <header className="raidWaitRoom-header">
-                <a href='/' className="raidWaitRoom-logoArea"><img src = {logo} className="raidWaitRoom-logo" alt="logoImg"/></a>
+                <div onClick={()=>navigate("/home")} className="raidWaitRoom-logoArea"><img src = {logo} className="raidWaitRoom-logo" alt="logoImg"/></div>
                 <span className="raidWaitRoom-headerContent"> 
                     <img src = {isRoomLocked ? locked : unlocked} className="raidWaitRoom-lock" alt={isRoomLocked ? "locked" : "unlocked"}/>
                     <span className="raidWaitRoom-roomName">{roomNamed}</span>

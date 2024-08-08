@@ -1,4 +1,5 @@
 import React from "react";
+import { API_URL, ENV } from './config';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 

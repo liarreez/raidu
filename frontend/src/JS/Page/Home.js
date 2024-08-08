@@ -22,9 +22,10 @@ import raidu from "../../Imgs/button-raidu.png"
 import SpringAnime from "../Component/SpringAnime";
 import Rerenderer from "../Component/Rerenderer";
 import FirstRenderer from "../Component/FirstRenderer";
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
 
-const SERVERURL = "http://localhost:8080";
+const SERVERURL = API_URL;
 
 const StepProgressBar = ({ raidPercentage }) => {
   const [percent, setPercent] = useState(0);

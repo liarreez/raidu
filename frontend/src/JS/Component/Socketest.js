@@ -1,8 +1,10 @@
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
  // const SOCKET_URL = 'http://i11a108.p.ssafy.io/api/ws'; // 백서버 포트 넣기
- const SOCKET_URL = 'http://localhost:8080/api/ws'; // 로컬 테스트 시 사용
+
+ const SOCKET_URL = API_URL+'/api/ws'; // 로컬 테스트 시 사용
 
 export class Socketest {
   constructor(UserIdVal) {

@@ -5,9 +5,9 @@ import TopNav from "../Component/TopNav";
 import SpringAnime from "../Component/SpringAnime";
 import "../../CSS/UserSearch.css";
 import ranking from "../../Imgs/ranking.gif";
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
-
-const SERVERURL = "http://localhost:8080";
+const SERVERURL = API_URL;
 
 const Ranking = () => {
   const [searchTerm, setSearchTerm] = useState("");

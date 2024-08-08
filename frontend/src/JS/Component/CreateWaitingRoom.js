@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
-const APPLICATION_SERVER_URL = 'http://localhost:8080/api/raidu/rooms/sessions';
+const APPLICATION_SERVER_URL = API_URL+'/api/raidu/rooms/sessions';
 
 // setWaitingRoomId = 대기방 고유 Id 변경 함수
 const CreateWaitingRoom = ({ setWaitingRoomId }) => {
@@ -11,6 +12,8 @@ const CreateWaitingRoom = ({ setWaitingRoomId }) => {
   const [TrainingRoomName, setTrainingRoomName] = useState('');
   // 유효성 토큰 (로그인이 되었는가 // 나중에 다른 곳에서 받아와야 할 듯!)
   const token = 'eyJhbGciOiJIUzUxMiJ9.eyJjYXRlZ29yeSI6IkFDQ0VTUyIsImVtYWlsIjoic3NhZnlAc3NhZnkuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MjI1MDAwMTgsImV4cCI6MTcyMzEwNDgxOH0.GAMSTSsS33cmxkty2r_ls4pY1xYDkvgflAhMUljGYOvBvOuHjRWZ9DKOCmVj0cwSvUmwwUMcqEadH-NPDVDsGQ';
+
+console.log(APPLICATION_SERVER_URL)
 
   // 대기방 고유 Id 생성 로직
   const createWaitingRoomId = async () => {
