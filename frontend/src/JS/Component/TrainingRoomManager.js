@@ -21,16 +21,20 @@ import { Navigate, useNavigate } from 'react-router-dom';
 
 const APPLICATION_SERVER_URL = "http://localhost:8080/api/raidu/rooms/sessions";
 
-// roomInfo = 대기방에서 받아온 정보들이 담긴 객체
-const TrainingRoomManager = ({ roomInfo }) => {
+// roomData = 대기방에서 받아온 정보들이 담긴 객체
+const TrainingRoomManager = ({ roomData }) => {
 
   // waitingRoomId = 대기방 고유 Id
-  const waitingRoomId = roomInfo.roomId;
+  const waitingRoomId = roomData.roomId;
+
+  console.log(roomData)
 
   const navigate = useNavigate();
 
   // 유저 닉네임
-  const [myUserName, setMyUserName] = useState("");
+  const [myUserName, setMyUserName] = useState("바보");
+
+  // setMyUserName(roomData.me.nickname)
   // 세션 (개인의 세션 = 대기방에 들어간 한 사람의 비디오라고 생각하면 된다.)
   const [session, setSession] = useState();
   const [mainStreamManager, setMainStreamManager] = useState();
@@ -42,8 +46,9 @@ const TrainingRoomManager = ({ roomInfo }) => {
   // (이건 아마 나중에는 쓸 필요는 없을 듯 - 같은 방 들어가기 확인용)
   const [inputWaitingRoomId, setInputWaitingRoomId] = useState(waitingRoomId || "");
   // 유효성 토큰 (로그인이 되었는가 // 나중에 다른 곳에서 받아와야 할 듯!)
-  const token =
-    "eyJhbGciOiJIUzUxMiJ9.eyJjYXRlZ29yeSI6IkFDQ0VTUyIsImVtYWlsIjoic3NhZnlAc3NhZnkuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MjI1MDAwMTgsImV4cCI6MTcyMzEwNDgxOH0.GAMSTSsS33cmxkty2r_ls4pY1xYDkvgflAhMUljGYOvBvOuHjRWZ9DKOCmVj0cwSvUmwwUMcqEadH-NPDVDsGQ";
+  const token = roomData.token
+  // const token =
+  //   "eyJhbGciOiJIUzUxMiJ9.eyJjYXRlZ29yeSI6IkFDQ0VTUyIsImVtYWlsIjoic3NhZnlAc3NhZnkuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MjI1MDAwMTgsImV4cCI6MTcyMzEwNDgxOH0.GAMSTSsS33cmxkty2r_ls4pY1xYDkvgflAhMUljGYOvBvOuHjRWZ9DKOCmVj0cwSvUmwwUMcqEadH-NPDVDsGQ";
 
   // 전투력 총합치 << 현재는 확인을 위해 넣은 것으로, 나중에는 모든 사람들 전투력 합산을 가져올 예정
   const [CombatPower, setCombatPower] = useState(0);
@@ -326,6 +331,10 @@ const TrainingRoomManager = ({ roomInfo }) => {
       setOpenModal(false);
     }
   }, [currentStep]);
+
+  useState(() => {
+    joinTrainingRoom();
+  })
 
   
 
