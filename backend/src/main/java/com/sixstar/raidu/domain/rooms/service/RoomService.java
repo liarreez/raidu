@@ -21,4 +21,5 @@ public interface RoomService {
         throws OpenViduJavaClientException, OpenViduHttpException;
     Map<String, Object> completeRoom(Long roomId, RoomCompleteRequest request);
     Map<String, Object> getCapturedMonster(MonsterCaptureRequest request);
+    Map<String, Object> getRoomInfo(Long roomId);
 }

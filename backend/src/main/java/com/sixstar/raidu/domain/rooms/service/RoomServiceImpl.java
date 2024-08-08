@@ -11,6 +11,7 @@ import com.sixstar.raidu.domain.rooms.dto.*;
 import com.sixstar.raidu.domain.rooms.entity.*;
 import com.sixstar.raidu.domain.rooms.repository.*;
 import com.sixstar.raidu.domain.rooms.repository.specification.RoomSpecification;
+import com.sixstar.raidu.domain.userpage.dto.UserProfileResponseDto;
 import com.sixstar.raidu.domain.userpage.entity.Monster;
 import com.sixstar.raidu.domain.userpage.entity.UserMonster;
 import com.sixstar.raidu.domain.userpage.entity.UserProfile;
@@ -167,7 +168,7 @@ public class RoomServiceImpl implements RoomService{
 
         List<RoomResponse> waitingRoomList = roomRepository.findAll(spec)
                 .stream()
-                .map(RoomResponse::new)
+                .map(RoomResponse::fromEntity)
                 .toList();
 
         Map<String, Object> map = new HashMap<>();
@@ -210,7 +211,7 @@ public class RoomServiceImpl implements RoomService{
         room.update(request.getRoundTime(), request.getRestTime(), request.getTotalRounds());
         entityManager.flush();
 
-        RoomResponse updatedRoom = new RoomResponse(room);
+        RoomResponse updatedRoom = RoomResponse.fromEntity(room);
 
         Map<String, Object> map = new HashMap<>();
         map.put("updatedRoom", updatedRoom);
@@ -326,6 +327,19 @@ public class RoomServiceImpl implements RoomService{
         MonsterCaptureResponse monsterCaptureResponse = MonsterCaptureResponse.fromEntity(capturedMonster, isNew);
         Map<String, Object> map = new HashMap<>();
         map.put("capturedMonster", monsterCaptureResponse);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> getRoomInfo(Long roomId) {
+        Room room = findRoomByIdOrThrow(roomId);
+        List<UserProfileResponseDto> userProfileList = roomUserRepository.findByRoomId(roomId).stream()
+            .map(roomUser -> UserProfileResponseDto.fromEntity(roomUser.getUserProfile()))
+            .toList();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("room", RoomResponse.fromEntity(room));
+        map.put("userProfileList", userProfileList);
         return map;
     }
 
