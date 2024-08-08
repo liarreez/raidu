@@ -158,13 +158,13 @@ const RaidLobby = () => {
             */}
 
             <Grid container direction='column' spacing={1} style={{ height: 'calc(100vh - 64px)', flexGrow: 1 }}>
-                <Grid item xs={1} style={{height: '100vh', backgroundColor: 'red'}}>
+                <Grid item xs={1} style={{height: '100vh', border: '2px dashed black'}}>
                     <button onClick={openModal}>방 만들기</button>
                 </Grid>
-                <Grid item xs={1} style={{height: '100vh', backgroundColor: 'orange'}}>
+                <Grid item xs={1} style={{height: '100vh', border: '2px dashed black'}}>
                     
                 </Grid>
-                <Grid item xs={6} style={{height: '100vh', backgroundColor: 'yellow'}}>
+                <Grid item xs={6} style={{height: '100vh', border: '2px dashed black'}}>
                     {
                         roomList.map((each, index) => (
 
@@ -174,7 +174,7 @@ const RaidLobby = () => {
                         ))
                     }
                 </Grid> 
-                <Grid item xs={5} style={{height: '100vh', backgroundColor: 'skyblue'}}>
+                <Grid item xs={5} style={{height: '100vh', border: '2px dashed black'}}>
 
                 </Grid> 
             </Grid>

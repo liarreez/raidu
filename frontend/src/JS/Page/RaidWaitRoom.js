@@ -84,7 +84,7 @@ const RaidWaitRoom = () => {
         }).then((res) => {
             const data = res.data.data.userProfile;
             console.log(data);
-            setMe(new User(data.nickname, data.symbolImageUrl, data.profileImageUrl, data.level, data.bestScore, false, location.state.isCaptain ? location.state.isCaptain : false))
+            setMe(new User(data.nickname, data.symbolImageUrl, data.profileImageUrl, data.level, data.bestScore, false, (location.state !== null && location.state !== undefined) ? location.state.isCaptain : false))
             
         
         })
@@ -95,7 +95,7 @@ const RaidWaitRoom = () => {
         setRoomNamed(roomName); // 방 이름 변경 가능하게 하려면 이 부분 수정해야 함. 지금은 pathVal에서 가져온다
         setIsRoomLocked(false);
         
-        console.log("AM I CAPTAIN ? " + location.state.isCaptain)
+       // console.log("AM I CAPTAIN ? " + location.state.isCaptain)
     },[]); // onMount 
 
     useEffect(() => {
@@ -287,6 +287,16 @@ const RaidWaitRoom = () => {
 
     const tryGameStart = () => {
         if (checkReadyState()) {
+            console.log('============ PRINTING SETTINGS =============');
+            // 방 정보
+            // 사용자 정보
+            // 선택한 운동 정보 묶어서 보여주기
+            console.log(roomSet)
+            console.log(me);
+            console.log(exerciseSet);
+
+
+
             sendTest4();
             // 로딩스피너 보였으면 좋겠어용 ~ 
         } else {
