@@ -17,9 +17,11 @@ const Ranking = () => {
   const handleSearch = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-      const response = await axios.post(`${SERVERURL}/api/raidu/userpage/list`, {nickname: searchTerm }, {headers: { Authorization: `Bearer ${accessToken}` }}
-      );
-      console.log(response)
+      const response = await axios.get(`http://localhost:8080/api/raidu/userpage/list`, {
+        params: { nickname: searchTerm },
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      console.log(response);
       if (response.data.status === "OK") {
         setUsers(response.data.data.data);
       } else {
@@ -30,6 +32,7 @@ const Ranking = () => {
       setUsers([]);
     }
   };
+  
 
   return (
     <FadeAnime>
