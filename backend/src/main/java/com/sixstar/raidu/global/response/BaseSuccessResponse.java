@@ -35,6 +35,7 @@ public enum BaseSuccessResponse {
   NICKNAME_CHECK_SUCCESS(HttpStatus.OK, "Nickname check successfully"),
   PASSWORD_CHECK_SUCCESS(HttpStatus.OK, "Password check successfully"),
   GET_CAPTURED_MONSTER_SUCCESS(HttpStatus.OK, "Get captured monster successfully"),
+  GET_ROOM_INFORMATION_SUCCESS(HttpStatus.OK, "Get Room Information successfully")
 
   ;
 

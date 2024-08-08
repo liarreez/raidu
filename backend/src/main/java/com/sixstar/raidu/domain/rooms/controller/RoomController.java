@@ -100,4 +100,10 @@ public class RoomController {
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_CAPTURED_MONSTER_SUCCESS, response);
     }
 
+    @GetMapping("{roomId}")
+    public ResponseEntity<BaseResponse<?>> getRoomInfo(@PathVariable("roomId") Long roomId){
+        Map<String, Object> response = roomService.getRoomInfo(roomId);
+        return baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_ROOM_INFORMATION_SUCCESS, response);
+    }
+
 }
