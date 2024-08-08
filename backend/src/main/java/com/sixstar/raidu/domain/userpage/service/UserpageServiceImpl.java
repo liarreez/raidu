@@ -59,6 +59,25 @@ public class UserpageServiceImpl implements UserpageService {
     }
     UserProfile userProfile = UserprofileRegisterDto.toEntity(userprofileRegisterDto, user, region);
     userProfileRepository.save(userProfile);
+
+    Season season = findCurrentSeason();
+
+    initializeSeasonUserScore(season, userProfile);
+  }
+
+  private void initializeSeasonUserScore(Season season, UserProfile userProfile) {
+    SeasonUserScore seasonUserScore = SeasonUserScore.builder()
+        .season(season)
+        .userProfile(userProfile)
+        .score(0)
+        .build();
+
+    seasonUserScoreRepository.save(seasonUserScore);
+  }
+
+  private Season findCurrentSeason() {
+    return seasonRepository.findSeasonByEndTime(now())
+        .orElseThrow(() -> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND));
   }
 
   @Override
@@ -96,8 +115,7 @@ public class UserpageServiceImpl implements UserpageService {
 
   @Override
   public Map<String, Object> findUsers(String nickname) {
-    Season season = seasonRepository.findSeasonByEndTime(now())
-        .orElseThrow(() -> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND));
+    Season season = findCurrentSeason();
     List<SeasonUserScore> seasonUserScores = seasonUserScoreRepository.findBySeason(season);
 
     List<UserResponseDto> userResponseDtos = seasonUserScores.stream()
