@@ -18,7 +18,7 @@ public class UserRegisterDto {
   private String email;
   @NotBlank(message = "비밀번호를 입력하세요!")
   @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_\\-+=]).{8,20}$", message = "유효하지 않은 비밀번호입니다!")
-  private String password;;
+  private String password;
 //  private String code;
 
 

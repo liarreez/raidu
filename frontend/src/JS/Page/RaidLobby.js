@@ -212,6 +212,7 @@ const RaidLobby = () => {
                             value={maxParticipants}
                             onChange={handleChange}
                             >
+                            <option value="">1 ~ 4인 선택</option>
                             <option value="1">1인</option>
                             <option value="2">2인</option>
                             <option value="3">3인</option>
@@ -227,6 +228,7 @@ const RaidLobby = () => {
                             value={roundTime}
                             onChange={handleChange}
                             >
+                                <option value="">15 ~ 180초 선택</option>
                             {[...Array(10).keys()].map(i => (
                                 <option key={i} value={(i + 1) * 15}>
                                 {(i + 1) * 15}
@@ -237,12 +239,14 @@ const RaidLobby = () => {
 
                         <div>
                             <label htmlFor="restTime">휴식 시간 (초):</label>
+                            
                             <select
                             id="restTime"
                             name="restTime"
                             value={restTime}
                             onChange={handleChange}
                             >
+                                <option value="">15 ~ 180초 선택</option>
                             {[...Array(10).keys()].map(i => (
                                 <option key={i} value={(i + 1) * 15}>
                                 {(i + 1) * 15}
@@ -259,6 +263,7 @@ const RaidLobby = () => {
                             value={totalRounds}
                             onChange={handleChange}
                             >
+                            <option value="">1 ~ 3라운드 선택</option>
                             <option value="1">1라운드</option>
                             <option value="2">2라운드</option>
                             <option value="3">3라운드</option>
