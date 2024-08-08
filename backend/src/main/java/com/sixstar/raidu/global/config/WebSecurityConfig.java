@@ -74,7 +74,7 @@ public class WebSecurityConfig {
             .requestMatchers("/", "/index.html", "/error", "/login", "/api/raidu/users/register",
                 "/api/raidu/users/login", "/api/raidu/users/social-register",
                 "/api/raidu/users/social-login", "/api/raidu/users/refresh-token",
-                "/api/raidu/users/check-email", "/api/raidu/users/recover"
+                "/api/raidu/users/check-email", "/api/raidu/users/recover", "/api/raidu/users/temp-pass"
                 , "/public/**", "/static/**", "/resources/**", "/webjars/**", "/enter/**",
                 "/api/ws/**")
             .permitAll()

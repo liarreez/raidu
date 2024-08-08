@@ -28,6 +28,15 @@ spring:
     resources:
       static-locations: classpath:/public/
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: raidu0816@gmail.com
+    password: mksvorpvsntejjvj
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
 logging:
   level:
     root: INFO

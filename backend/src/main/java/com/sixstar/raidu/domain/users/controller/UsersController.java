@@ -1,6 +1,6 @@
 package com.sixstar.raidu.domain.users.controller;
 
-import com.sixstar.raidu.domain.users.dto.CheckEmailRequestDto;
+import com.sixstar.raidu.domain.users.dto.EmailRequestDto;
 import com.sixstar.raidu.domain.users.dto.UserRegisterDto;
 import com.sixstar.raidu.domain.users.service.UsersService;
 import com.sixstar.raidu.global.response.BaseResponse;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -45,8 +44,14 @@ public class UsersController {
   }
 
   @GetMapping("/check-email")
-  public ResponseEntity<BaseResponse<?>> checkEmail(@RequestBody CheckEmailRequestDto checkEmailRequestDto) {
-    usersService.checkEmail(checkEmailRequestDto.getEmail());
+  public ResponseEntity<BaseResponse<?>> checkEmail(@RequestBody EmailRequestDto emailRequestDto) {
+    usersService.checkEmail(emailRequestDto.getEmail());
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.EMAIL_CHECK_SUCCESS);
+  }
+
+  @PostMapping("/temp-pass")
+  public ResponseEntity<BaseResponse<?>> sendTempPassword(@RequestBody EmailRequestDto emailRequestDto) {
+    usersService.sendTempPassword(emailRequestDto.getEmail());
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.SEND_TEMP_PASSWORD_SUCCESS);
   }
 }
