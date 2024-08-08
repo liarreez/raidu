@@ -3,11 +3,14 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import UserVideo from "../Component/UserVideo";
 import SelfVideo from "./SelfVideo";
+import SelfRestVideo from './SelfRestVideo';
 import "../../CSS/TrainingRoomManager.css";
 import TotalCombatPower from './TotalCombatPower';
 
 import restSoldier from '../../Imgs/restSoldier.gif'
 import standSoldier from '../../Imgs/standSoldier.png'
+
+import burgerking from "../../Imgs/burgerking.png";
 
 import Timer from './Timer';
 
@@ -63,7 +66,7 @@ const TrainingRoomManager = ({ roomInfo }) => {
   // 정해둔 마지막 정산 전 애니메이션 시간
   const [lastMotionTime, setLastMotionTime] = useState(3);
   // 정해둔 완료 시간
-  const [endingTime, setEndingTime] = useState(4);
+  const [endingTime, setEndingTime] = useState(6);
   // 총 라운드 수
   const [roundCount, setRoundCount] = useState(2);
   // 현재 라운드
@@ -151,11 +154,15 @@ const TrainingRoomManager = ({ roomInfo }) => {
       session.disconnect();
     }
 
+    // 방을 나갔을 때 모달 없애기
+    setOpenModal(false)
+
     setSession(undefined);
     setSubscribers([]);
     setMainStreamManager(undefined);
     setPublisher(undefined);
   }, [session]);
+
 
   const getToken = async () => {
     return await createToken(inputWaitingRoomId || waitingRoomId);
@@ -491,7 +498,7 @@ const TrainingRoomManager = ({ roomInfo }) => {
                   height: '100%',
                   border: '2px solid purple'
                 }}>
-                  {publisher && <SelfVideo streamManager={publisher} ChangeCount={ChangeCount} />}
+                  {publisher && <SelfRestVideo streamManager={publisher} ChangeCount={ChangeCount} />}
                 </div>
                 {/* 운동 선택 div */}
                 <div style={{
@@ -539,7 +546,40 @@ const TrainingRoomManager = ({ roomInfo }) => {
           {/* 마지막 정산 화면 */}
           {currentStep === 'ending' &&
             <div>
-
+              {/* 나가기 버튼 */}
+              <div style={{
+                width: '100%',
+                height: '10%',
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}>
+                <button className="btn btn-large btn-danger" onClick={leaveSession}>
+                  나가기
+                </button>
+              </div>
+              {/* 아래 정보들 */}
+              <div style={{
+                width: '100%',
+                height: '90%',
+                display:'flex',
+              }}>
+                {/* 몬스터 정보 */}
+                <div style={{
+                  width: '30%',
+                  height: '100%',
+                }}>
+                  <img src={burgerking} alt="잡은 몬스터"/>
+                </div>
+                {/* 다른 정보들 */}
+                <div style={{
+                  width: '70%',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  backgroundColor:'cyan',
+                }}>
+                </div>
+              </div>
             </div>
           }
           {/* <div style={{

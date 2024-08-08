@@ -230,7 +230,7 @@ const SelfVideo = (props) => {
       if (OpenViduVideo) {
         await tf.setBackend("webgl");
         await tf.ready();
-        const videoElement = document.querySelector("#myVideo>video");
+        const videoElement = document.querySelector("#myRestVideo>video");
         if (videoElement) {
           if (videoElement && videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
             await makeModel(videoElement);
@@ -261,7 +261,7 @@ const SelfVideo = (props) => {
         </select>
       </div>
       {props.streamManager !== undefined ? (
-        <div className="streamcomponent-self" id="myVideo">
+        <div className="streamcomponent-self" id="myRestVideo">
           <OpenViduVideo streamManager={props.streamManager} />
           <div className='self-name'>
             <p>닉네임 : {getNicknameTag()}</p>
