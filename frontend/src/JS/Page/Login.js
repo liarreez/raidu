@@ -41,6 +41,7 @@ const modalStyle = {
 };
 
 const SignUp = () => {
+  console.log(API_URL)
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

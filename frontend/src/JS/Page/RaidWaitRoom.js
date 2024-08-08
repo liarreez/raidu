@@ -375,7 +375,7 @@ const RaidWaitRoom = () => {
         <div className="raidWaitRoom-container raidWaitRoom-html raidWaitRoom-body"> 
           {/* header */}
             <header className="raidWaitRoom-header">
-                <a href='/' className="raidWaitRoom-logoArea"><img src = {logo} className="raidWaitRoom-logo" alt="logoImg"/></a>
+                <div onClick={()=>navigate("/home")} className="raidWaitRoom-logoArea"><img src = {logo} className="raidWaitRoom-logo" alt="logoImg"/></div>
                 <span className="raidWaitRoom-headerContent"> 
                     <img src = {isRoomLocked ? locked : unlocked} className="raidWaitRoom-lock" alt={isRoomLocked ? "locked" : "unlocked"}/>
                     <span className="raidWaitRoom-roomName">{roomNamed}</span>

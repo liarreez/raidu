@@ -190,7 +190,7 @@ const TrainingRoomManager = ({ roomData }) => {
     setMainStreamManager(undefined);
     setPublisher(undefined);
 
-    navigate("/login");
+    navigate("/home");
 
 
   }, [session]);
