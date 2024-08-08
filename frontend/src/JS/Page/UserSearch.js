@@ -17,7 +17,7 @@ const Ranking = () => {
   const handleSearch = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-      const response = await axios.post(SERVERURL + "api/raidu/userpage/list", {nickname: searchTerm }, {headers: { Authorization: `Bearer ${accessToken}` }}
+      const response = await axios.post(`${SERVERURL}/api/raidu/userpage/list`, {nickname: searchTerm }, {headers: { Authorization: `Bearer ${accessToken}` }}
       );
       console.log(response)
       if (response.data.status === "OK") {
@@ -26,7 +26,7 @@ const Ranking = () => {
         setUsers([]);
       }
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error(error);
       setUsers([]);
     }
   };
