@@ -2,13 +2,13 @@ package com.sixstar.raidu.domain.rooms.dto;
 
 import com.sixstar.raidu.domain.rooms.entity.Room;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 public class RoomResponse {
     private Long id;
@@ -22,16 +22,34 @@ public class RoomResponse {
     private LocalDateTime updatedAt;
     private String status;
 
-    public RoomResponse(Room room){
-        this.id = room.getId();
-        this.title = room.getTitle();
-        this.maxParticipants = room.getMaxParticipants();
-        this.isPublic = room.getIsPublic();
-        this.roundTime = room.getRoundTime();
-        this.restTime = room.getRestTime();
-        this.totalRounds = room.getTotalRounds();
-        this.createdAt = room.getCreatedAt();
-        this.updatedAt = room.getUpdatedAt();
-        this.status = room.getStatus();
+    @Builder
+    public RoomResponse(Long id, String title, int maxParticipants, boolean isPublic, int roundTime,
+        int restTime, int totalRounds, LocalDateTime createdAt, LocalDateTime updatedAt,
+        String status) {
+        this.id = id;
+        this.title = title;
+        this.maxParticipants = maxParticipants;
+        this.isPublic = isPublic;
+        this.roundTime = roundTime;
+        this.restTime = restTime;
+        this.totalRounds = totalRounds;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.status = status;
+    }
+
+    public static RoomResponse fromEntity(Room room){
+        return RoomResponse.builder()
+            .id(room.getId())
+            .title(room.getTitle())
+            .maxParticipants(room.getMaxParticipants())
+            .isPublic(room.getIsPublic())
+            .roundTime(room.getRoundTime())
+            .restTime(room.getRestTime())
+            .totalRounds(room.getTotalRounds())
+            .createdAt(room.getCreatedAt())
+            .updatedAt(room.getUpdatedAt())
+            .status(room.getStatus())
+            .build();
     }
 }

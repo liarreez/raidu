@@ -18,7 +18,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     registry.addEndpoint("/api/ws")
-        .setAllowedOrigins("http://localhost:3000", "http://localhost:5173", "https://i11a108.p.ssafy.io:4443"
+        .setAllowedOrigins("http://localhost:3000", "http://localhost:5173", "https://i11a108.p.ssafy.io:5443"
             ,"https://i11a108.p.ssafy.io:3000","https://i11a108.p.ssafy.io","https://i11a108.p.ssafy.io:8080","https://i11a108.p.ssafy.io:8082")
         .withSockJS() // not allows wildcard(*) on AllowedOriginPatterns, apic 테스트 시 주석 처리
     ;
