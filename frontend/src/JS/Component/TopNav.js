@@ -97,6 +97,8 @@ function ResponsiveAppBar() {
         navigate("/editprofile");
       } else if (setting === "로그아웃") {
         // 로그아웃 처리 로직 추가해야함
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         navigate("/login");
       }
     },

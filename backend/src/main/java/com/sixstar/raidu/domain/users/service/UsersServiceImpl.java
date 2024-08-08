@@ -1,8 +1,10 @@
 package com.sixstar.raidu.domain.users.service;
 
 import com.sixstar.raidu.domain.users.dto.UserRegisterDto;
+import com.sixstar.raidu.domain.users.entity.EmailCode;
 import com.sixstar.raidu.domain.users.entity.User;
 import com.sixstar.raidu.domain.users.enums.TokenType;
+import com.sixstar.raidu.domain.users.repository.EmailCodeRepository;
 import com.sixstar.raidu.domain.users.repository.UserRepository;
 import com.sixstar.raidu.domain.users.security.AuthorizationHeaderParser;
 import com.sixstar.raidu.domain.users.security.JWTUtil;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UsersServiceImpl implements UsersService {
 
     private final UserRepository userRepository;
+    private final EmailCodeRepository emailCodeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JWTUtil jwtUtil;
     private final JavaMailSender javaMailSender;
@@ -34,6 +37,7 @@ public class UsersServiceImpl implements UsersService {
     @Transactional
     @Override
     public Map<String, Object> register(UserRegisterDto userRegisterDto) {
+        isCorrectEmailAuthCode(userRegisterDto.getEmail(), userRegisterDto.getCode());
         checkEmail(userRegisterDto.getEmail());
         userRegisterDto.setPassword(bCryptPasswordEncoder.encode(userRegisterDto.getPassword()));
         User member = UserRegisterDto.toEntity(userRegisterDto);
@@ -88,6 +92,8 @@ public class UsersServiceImpl implements UsersService {
     @Transactional
     @Override
     public void sendTempPassword(String email) {
+        User user = getUserByEmail(email);
+
         MimeMessage message = javaMailSender.createMimeMessage();
         String tempPassword = generateTempPassword();
 
@@ -98,12 +104,35 @@ public class UsersServiceImpl implements UsersService {
             helper.setText("귀하의 임시 비밀번호는 " + tempPassword + " 입니다. 로그인 후 비밀번호를 변경해 주세요.",true);
             javaMailSender.send(message);
         } catch (MessagingException e) {
-            e.printStackTrace(); // 에러 출력
+            throw new BaseException(BaseFailureResponse.EMAIL_SEND_ERROR);
         }
         javaMailSender.send(message);
 
-        User user = getUserByEmail(email);
         user.setPassword(bCryptPasswordEncoder.encode(tempPassword));
+    }
+
+    @Override
+    public void sendEmailAuthCode(String email) {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        String emailAuthCode = generateEmailAuthCode();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message,false,"utf-8");
+            helper.setTo(email);
+            helper.setSubject("Raidu 이메일 인증 코드");
+            helper.setText("귀하의 이메일 인증 코드는 " + emailAuthCode + " 입니다. 유효시간 3분 이내에 입력 후 회원가입해주세요",true);
+            javaMailSender.send(message);
+        } catch (MessagingException e) {
+            throw new BaseException(BaseFailureResponse.EMAIL_SEND_ERROR);
+        }
+        javaMailSender.send(message);
+
+        EmailCode emailCode = EmailCode.builder()
+            .email(email)
+            .code(emailAuthCode)
+            .build();
+
+        emailCodeRepository.save(emailCode);
     }
 
     private String generateTempPassword() {
@@ -123,6 +152,20 @@ public class UsersServiceImpl implements UsersService {
         return sb.toString();
     }
 
+    private String generateEmailAuthCode() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 2; i++) {
+            sb.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        for (int i = 0; i < 4; i++) {
+            sb.append(numbers.charAt(random.nextInt(numbers.length())));
+        }
+        return sb.toString();
+    }
+
     private String getEmailFromAuth(String authorization) {
         String token = AuthorizationHeaderParser.parseTokenFromAuthorizationHeader(authorization);
         return jwtUtil.getEmail(token);
@@ -135,5 +178,11 @@ public class UsersServiceImpl implements UsersService {
 
     private boolean isDuplicatedEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    private void isCorrectEmailAuthCode(String email, String code) {
+        if (!code.equals(emailCodeRepository.findCodeByEmail(email))) {
+            throw new BaseException(BaseFailureResponse.IS_NOT_CORRECT_EMAIL_AUTH_CODE);
+        }
     }
 }

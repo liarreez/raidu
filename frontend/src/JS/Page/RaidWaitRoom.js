@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Grid } from '@mui/material';
 import { useLocation, useParams } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 //=========== import networks
 import { Socketest } from '../Component/Socketest.js'
@@ -49,6 +50,9 @@ const RaidWaitRoom = () => {
     // ========= isRoomLocked는 대기실에서 입장할 수 있는 모든 방이 false입니다
     const location = useLocation();
     const [isFullScreen, setIsFullScreen] = useState(false);
+
+    // 페이지 이동을 위한 네비게이트
+    const navigate = useNavigate();
 
     const { roomName } = useParams(); // 꼭 방의 제목일 필요 없다. PK 받아서 숫자로 지정할 것임
     const [roomSet, setRoomSet] = useState(new Room(0, 0, 0)); // roomSet은 객체임.
@@ -313,14 +317,48 @@ const RaidWaitRoom = () => {
         }
     };
 
-    const gameStart = () => {
-        axios.post(SERVER_URL+'/api/raidu/rooms/sessions', {roomName}, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            }
-        }).then((res) => console.log(res.data.data.sessionId))
-    }
+    // const gameStart = async () => {
+    //     axios.post(SERVER_URL+'/api/raidu/rooms/sessions', {roomName}, {
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': 'Bearer ' + token
+    //         }
+    //     }).then((res) => {
+    //         navigate("/trainingTest", {
+    //             state: {
+    //                 // 여기에 대기방에서 설정한 내용들을 적어주시면 됩니다.
+    //                 roomId: res.data.data.sessionId,
+    //                 roomInfo: roomSet,
+    //                 token: token,
+    //                 userInfo: me,
+    //                 exerciseSet: exerciseSet,
+    //             },
+    //         });
+    //     })
+    // }
+
+    const gameStart = async () => {
+        try {
+            const response = await axios.post(SERVER_URL + '/api/raidu/rooms/sessions', { roomName }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+    
+            navigate("/trainingTest", {
+                state: {
+                    roomId: response.data.data.sessionId,
+                    roomInfo: roomSet,
+                    token: token,
+                    userInfo: me,
+                    exerciseSet: exerciseSet,
+                },
+            });
+        } catch (error) {
+            console.error('Error starting the game:', error);
+        }
+    };
 
     // 0808 checkReadyState() 로직 제대로 작동하지 않아 확인 필요합니다. 
     // 발생하고 있는 버그 : 모든 운동 라운드에 대한 종목 선택이 진행되지 않아도 게임이 시작되거나 준비가 진행됩니다.

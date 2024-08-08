@@ -13,19 +13,28 @@ import standSoldier from '../../Imgs/standSoldier.png'
 import burgerking from "../../Imgs/burgerking.png";
 
 import Timer from './Timer';
+import TimerRest from './TimerRest';
 
 import { Modal, Box } from '@mui/material';
 
+import { Navigate, useNavigate } from 'react-router-dom';
+
 const APPLICATION_SERVER_URL = "http://localhost:8080/api/raidu/rooms/sessions";
 
-// roomInfo = 대기방에서 받아온 정보들이 담긴 객체
-const TrainingRoomManager = ({ roomInfo }) => {
+// roomData = 대기방에서 받아온 정보들이 담긴 객체
+const TrainingRoomManager = ({ roomData }) => {
 
   // waitingRoomId = 대기방 고유 Id
-  const waitingRoomId = roomInfo.roomId;
+  const waitingRoomId = roomData.roomId;
+
+  console.log(roomData)
+
+  const navigate = useNavigate();
 
   // 유저 닉네임
-  const [myUserName, setMyUserName] = useState("");
+  const [myUserName, setMyUserName] = useState("바보");
+
+  // setMyUserName(roomData.me.nickname)
   // 세션 (개인의 세션 = 대기방에 들어간 한 사람의 비디오라고 생각하면 된다.)
   const [session, setSession] = useState();
   const [mainStreamManager, setMainStreamManager] = useState();
@@ -37,8 +46,9 @@ const TrainingRoomManager = ({ roomInfo }) => {
   // (이건 아마 나중에는 쓸 필요는 없을 듯 - 같은 방 들어가기 확인용)
   const [inputWaitingRoomId, setInputWaitingRoomId] = useState(waitingRoomId || "");
   // 유효성 토큰 (로그인이 되었는가 // 나중에 다른 곳에서 받아와야 할 듯!)
-  const token =
-    "eyJhbGciOiJIUzUxMiJ9.eyJjYXRlZ29yeSI6IkFDQ0VTUyIsImVtYWlsIjoic3NhZnlAc3NhZnkuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MjI1MDAwMTgsImV4cCI6MTcyMzEwNDgxOH0.GAMSTSsS33cmxkty2r_ls4pY1xYDkvgflAhMUljGYOvBvOuHjRWZ9DKOCmVj0cwSvUmwwUMcqEadH-NPDVDsGQ";
+  const token = roomData.token
+  // const token =
+  //   "eyJhbGciOiJIUzUxMiJ9.eyJjYXRlZ29yeSI6IkFDQ0VTUyIsImVtYWlsIjoic3NhZnlAc3NhZnkuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MjI1MDAwMTgsImV4cCI6MTcyMzEwNDgxOH0.GAMSTSsS33cmxkty2r_ls4pY1xYDkvgflAhMUljGYOvBvOuHjRWZ9DKOCmVj0cwSvUmwwUMcqEadH-NPDVDsGQ";
 
   // 전투력 총합치 << 현재는 확인을 위해 넣은 것으로, 나중에는 모든 사람들 전투력 합산을 가져올 예정
   const [CombatPower, setCombatPower] = useState(0);
@@ -161,6 +171,26 @@ const TrainingRoomManager = ({ roomInfo }) => {
     setSubscribers([]);
     setMainStreamManager(undefined);
     setPublisher(undefined);
+
+
+  }, [session]);
+
+  const byeBye = useCallback(() => {
+    if (session) {
+      session.disconnect();
+    }
+
+    // 방을 나갔을 때 모달 없애기
+    setOpenModal(false)
+
+    setSession(undefined);
+    setSubscribers([]);
+    setMainStreamManager(undefined);
+    setPublisher(undefined);
+
+    navigate("/login");
+
+
   }, [session]);
 
 
@@ -302,6 +332,10 @@ const TrainingRoomManager = ({ roomInfo }) => {
     }
   }, [currentStep]);
 
+  useState(() => {
+    joinTrainingRoom();
+  })
+
   
 
   return (
@@ -442,7 +476,7 @@ const TrainingRoomManager = ({ roomInfo }) => {
                 <div style={{
                   width: '100%',
                   height:'25%',
-                  fontSize: '80px',
+                  fontSize: '60px',
                   display: 'flex',
                   justifyContent: 'flex-end',
                   backgroundColor: 'lemonchiffon',
@@ -482,9 +516,9 @@ const TrainingRoomManager = ({ roomInfo }) => {
               <div style={{
                 width: '100%',
                 height: '20%',
-                backgroundColor:'coral',
+                // backgroundColor:'coral',
               }}>
-                {/* <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} /> */}
+                <TimerRest currentTime={currentTime} timerActive={timerActive}/>
               </div>
               {/* 자기 화면 및 운동 선택 div */}
               <div style={{
@@ -553,7 +587,7 @@ const TrainingRoomManager = ({ roomInfo }) => {
                 display: 'flex',
                 justifyContent: 'flex-end',
               }}>
-                <button className="btn btn-large btn-danger" onClick={leaveSession}>
+                <button className="btn btn-large btn-danger" onClick={byeBye}>
                   나가기
                 </button>
               </div>
