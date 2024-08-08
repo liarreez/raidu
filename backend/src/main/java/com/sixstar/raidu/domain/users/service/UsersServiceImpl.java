@@ -37,7 +37,7 @@ public class UsersServiceImpl implements UsersService {
     @Transactional
     @Override
     public Map<String, Object> register(UserRegisterDto userRegisterDto) {
-        isCorrectEmailAuthCode(userRegisterDto.getEmail(), userRegisterDto.getCode());
+//        isCorrectEmailAuthCode(userRegisterDto.getEmail(), userRegisterDto.getCode());
         checkEmail(userRegisterDto.getEmail());
         userRegisterDto.setPassword(bCryptPasswordEncoder.encode(userRegisterDto.getPassword()));
         User member = UserRegisterDto.toEntity(userRegisterDto);
