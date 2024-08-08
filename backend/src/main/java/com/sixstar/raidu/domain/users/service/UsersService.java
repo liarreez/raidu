@@ -13,4 +13,6 @@ public interface UsersService {
   void logout(String authorization);
 
   void checkEmail(String email);
+
+  void sendTempPassword(String email);
 }

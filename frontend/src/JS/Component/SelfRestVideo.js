@@ -195,36 +195,6 @@ const SelfVideo = (props) => {
     }
   };
 
-  // 스쿼트
-  const getSquatStage = (kneeAngle) =>{
-
-  }
-
-  const countingSquat = (pose) => {
-    const nose = pose.keypoints[NOSE];
-
-    const leftShoulder = pose.keypoints[LEFT_SHOULDER];
-    const leftElbow = pose.keypoints[LEFT_ELBOW];
-    const leftWrist = post.keypoints[LEFT_WRIST];
-    const leftHip = pose.keypoints[LEFT_HIP];
-    const leftKnee = pose.keypoints[LEFT_KNEE];
-    const leftAnkle = pose.keypoints[LEFT_ANKLE];
-
-    const rightShoulder = pose.keypoints[RIGHT_SHOULDER];
-    const rightElbow = pose.keypoints[RIGHT_ELBOW];
-    const rightWrist = post.keypoints[RIGHT_WRIST];
-    const rightHip = pose.keypoints[RIGHT_HIP];
-    const rightKnee = pose.keypoints[RIGHT_KNEE];
-    const rightAnkle = pose.keypoints[RIGHT_ANKLE];
-
-    // const offsetAngle = calculateAngle(leftShoulder, rightShoulder, nose);
-
-    const hipVerticalAngle = calculateAngle(leftShoulder, [leftHip.x, 0], leftHip)
-    
-
-  }
-
-
   // const [count, setCount] = useState(0);
   let count = 0;
   const setCount = (num) => {
@@ -260,7 +230,7 @@ const SelfVideo = (props) => {
       if (OpenViduVideo) {
         await tf.setBackend("webgl");
         await tf.ready();
-        const videoElement = document.querySelector("#myVideo>video");
+        const videoElement = document.querySelector("#myRestVideo>video");
         if (videoElement) {
           if (videoElement && videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
             await makeModel(videoElement);
@@ -291,7 +261,7 @@ const SelfVideo = (props) => {
         </select>
       </div>
       {props.streamManager !== undefined ? (
-        <div className="streamcomponent-self" id="myVideo">
+        <div className="streamcomponent-self" id="myRestVideo">
           <OpenViduVideo streamManager={props.streamManager} />
           <div className='self-name'>
             <p>닉네임 : {getNicknameTag()}</p>

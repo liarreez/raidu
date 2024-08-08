@@ -53,7 +53,7 @@ public class UserpageServiceImpl implements UserpageService {
     Region region = regionRepository.findByName(userprofileRegisterDto.getRegion())
         .orElseThrow(() -> new BaseException(BaseFailureResponse.REGION_NOT_FOUND));
 
-    checkNickname(nickname);
+    checkNickname(authorization, nickname);
     if (userProfileRepository.existsByEmail(email)) {
       throw new BaseException(BaseFailureResponse.SETTING_IS_REGISTERED);
     }
@@ -127,14 +127,18 @@ public class UserpageServiceImpl implements UserpageService {
     UserProfile userProfile = getUserProfileByEmail(email);
     String nickname = userInfoModifyDto.getNickname();
 
-    checkNickname(nickname);
+    checkNickname(authorization, nickname);
     userProfile.setNickname(nickname);
     user.setPassword(bCryptPasswordEncoder.encode(userInfoModifyDto.getPassword()));
   }
 
   @Override
-  public void checkNickname(String nickname) {
-    System.out.println(nickname);
+  public void checkNickname(String authorization, String nickname) {
+    String email = getEmailFromAuth(authorization);
+    if (userProfileRepository.existsByEmail(email) &&
+        nickname.equals(getUserProfileByEmail(email).getNickname())) {
+      return;
+    }
     if (userProfileRepository.existsByNickname(nickname)) {
       throw new BaseException(BaseFailureResponse.NICKNAME_IS_DUPLICATED);
     }
