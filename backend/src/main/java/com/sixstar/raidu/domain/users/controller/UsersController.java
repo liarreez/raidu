@@ -54,4 +54,10 @@ public class UsersController {
     usersService.sendTempPassword(emailRequestDto.getEmail());
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.SEND_TEMP_PASSWORD_SUCCESS);
   }
+
+  @PostMapping("/email-auth")
+  public ResponseEntity<BaseResponse<?>> sendEmailAuthCode(@RequestBody EmailRequestDto emailRequestDto) {
+    usersService.sendEmailAuthCode(emailRequestDto.getEmail());
+    return baseResponseService.getSuccessResponse(BaseSuccessResponse.SEND_EMAIL_AUTH_CODE_SUCCESS);
+  }
 }
