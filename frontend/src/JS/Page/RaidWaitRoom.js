@@ -88,6 +88,14 @@ const RaidWaitRoom = () => {
             
         
         })
+        
+        // .then(axios.get(SERVER_URL+'/api/raidu/rooms/'+roomName, {
+        //     headers: {
+        //         'Authorization': `Bearer ${token}` // Bearer 토큰을 사용하는 경우
+        //     }
+        // })).then((res) => {
+        //     console.log('REACT line 95: '+res);
+        // }).error((e) => console.log('error occured : '+e))
 
         setRoomSet(
             new Room(40, 15, 3)
@@ -95,6 +103,7 @@ const RaidWaitRoom = () => {
         setRoomNamed(roomName); // 방 이름 변경 가능하게 하려면 이 부분 수정해야 함. 지금은 pathVal에서 가져온다
         setIsRoomLocked(false);
         
+
        // console.log("AM I CAPTAIN ? " + location.state.isCaptain)
     },[]); // onMount 
 
@@ -147,7 +156,7 @@ const RaidWaitRoom = () => {
                         case '1': console.log('unhandled message'); break;
                         case '2': updateUserReadyState(parsedMessage.user, parsedMessage.readyType); break;
                         case '3': setChatMessages((prevMessages) => [...prevMessages, parsedMessage]); break;
-                        case '4': console.log('game start'); break;
+                        case '4': gameStart(); break;
                         default: console.log('?')
                     }
                     setMessages((prevMessages) => [...prevMessages, parsedMessage]);
@@ -297,12 +306,21 @@ const RaidWaitRoom = () => {
 
 
 
-            sendTest4();
+            sendTest4(); // 웹소켓으로 모든 방 안의 참여자에게 게임 시작 알림을 보냅니다.
             // 로딩스피너 보였으면 좋겠어용 ~ 
         } else {
             console.log('아직 준비되지 않은 사용자가 있어요.')
         }
     };
+
+    const gameStart = () => {
+        axios.post(SERVER_URL+'/api/raidu/rooms/sessions', {roomName}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }).then((res) => console.log(res.data.data.sessionId))
+    }
 
     // 0808 checkReadyState() 로직 제대로 작동하지 않아 확인 필요합니다. 
     // 발생하고 있는 버그 : 모든 운동 라운드에 대한 종목 선택이 진행되지 않아도 게임이 시작되거나 준비가 진행됩니다.

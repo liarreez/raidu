@@ -218,7 +218,7 @@ const RaidLobby = () => {
                         </div>
 
                         <div>
-                            <label htmlFor="roundTime">세트별 시간 (초):</label>
+                            <label htmlFor="roundTime">라운드별 시간 (초):</label>
                             <select
                             id="roundTime"
                             name="roundTime"
@@ -250,16 +250,16 @@ const RaidLobby = () => {
                         </div>
 
                         <div>
-                            <label htmlFor="totalRounds">세트 수:</label>
+                            <label htmlFor="totalRounds">라운드 수:</label>
                             <select
                             id="totalRounds"
                             name="totalRounds"
                             value={totalRounds}
                             onChange={handleChange}
                             >
-                            <option value="1">1세트</option>
-                            <option value="2">2세트</option>
-                            <option value="3">3세트</option>
+                            <option value="1">1라운드</option>
+                            <option value="2">2라운드</option>
+                            <option value="3">3라운드</option>
                             </select>
                         </div>
 
