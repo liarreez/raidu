@@ -94,7 +94,7 @@ public class RoomController {
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.COMPLETE_ROOM_SUCCESS, response);
     }
 
-    @GetMapping("/monster")
+    @PostMapping("/monster")
     public ResponseEntity<BaseResponse<?>> getCapturedMonster(@RequestBody MonsterCaptureRequest request){
         Map<String, Object> response = roomService.getCapturedMonster(request);
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_CAPTURED_MONSTER_SUCCESS, response);
