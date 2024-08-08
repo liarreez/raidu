@@ -43,7 +43,7 @@ public class UsersController {
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.LOGOUT_SUCCESS);
   }
 
-  @GetMapping("/check-email")
+  @PostMapping("/check-email")
   public ResponseEntity<BaseResponse<?>> checkEmail(@RequestBody EmailRequestDto emailRequestDto) {
     usersService.checkEmail(emailRequestDto.getEmail());
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.EMAIL_CHECK_SUCCESS);

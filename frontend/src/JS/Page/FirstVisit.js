@@ -31,7 +31,7 @@ const RegionSelecter = ({ setSelectedRegion }) => {
       name: "근력의 절벽",
       icon: icon_cliff,
       desc:
-        "근력 절벽은 이두 왕국의 힘과 용기를 상징하는 지역입니다.\n\n" +
+        "근력의 절벽은 이두 왕국의 힘과 용기를 상징하는 지역입니다.\n\n" +
         "이두 왕국은 그들의 영토를 지키기 위해 강인한 힘을 가진 사람들을 필요로 했고, " +
         "근력 절벽은 그들 중에서도 가장 뛰어난 힘을 가진 사람들을 양성하는 장소가 되었습니다.\n\n" +
         "강인하고 폭발적인 힘에 관심이 있는 이들이 선택하기 좋은 지역입니다.",
@@ -42,7 +42,7 @@ const RegionSelecter = ({ setSelectedRegion }) => {
       name: "지구력의 사막",
       icon: icon_desert,
       desc:
-        "지구력 사막은 그 이름처럼 지구력과 인내심을 상징하는 곳입니다.\n\n" +
+        "지구력의 사막은 그 이름처럼 지구력과 인내심을 상징하는 곳입니다.\n\n" +
         "이곳의 주민들은 끝없는 모래언덕과 뜨거운 태양 아래에서도 변치 않는 끈기를 발휘합니다. " +
         "이들에게 사막에서의 삶은 단순한 생존이 아니라 그들의 강인함과 지구력을 증명하는 과정입니다.\n\n" +
         "지속성, 꾸준함의 미덕을 아는 이들이 선택하기 좋은 지역입니다.",
@@ -89,7 +89,7 @@ const FirstVisit = () => {
     name: "근력의 절벽",
     icon: icon_cliff,
     desc:
-      "근력 절벽은 이두 왕국의 힘과 용기를 상징하는 지역입니다.\n\n" +
+      "근력의 절벽은 이두 왕국의 힘과 용기를 상징하는 지역입니다.\n\n" +
       "이두 왕국은 그들의 영토를 지키기 위해 강인한 힘을 가진 사람들을 필요로 했고, " +
       "근력 절벽은 그들 중에서도 가장 뛰어난 힘을 가진 사람들을 양성하는 장소가 되었습니다.\n\n" +
       "강인하고 폭발적인 힘에 관심이 있는 이들이 선택하기 좋은 지역입니다.",
@@ -129,6 +129,17 @@ const FirstVisit = () => {
   const checkNickname = async () => {
     // 닉네임 중복 확인 로직을 여기에 추가
     // 서버에 요청하여 닉네임 중복 확인
+  // nickname이 null인 경우
+  if (nickname === null) {
+    alert("닉네임 값이 없습니다.");
+    return;
+  }
+  
+  // nickname이 공백 문자열인 경우
+  if (nickname.trim() === "") {
+    alert("닉네임은 공백만으로 구성될 수 없습니다.");
+    return;
+  }
     const accessToken = localStorage.getItem("accessToken");
     try {
       const response = await axios.post(
@@ -137,7 +148,9 @@ const FirstVisit = () => {
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
-      if (response.data.isValid) {
+      console.log(response)
+
+      if (response.data.message === "Nickname check successfully") {
         setIsNicknameValid(true);
       } else {
         setIsNicknameValid(false);
@@ -161,8 +174,8 @@ const FirstVisit = () => {
         console.log("지역/닉네임 설정 - 사용한 토큰 : " + accessToken);
         const response = await axios.post(
           `${SERVERURL}/api/raidu/userpage/register`,
-          { nickname: nickname, region: selectedRegion.name },
-          { headers: { Authorization: `Bearer ${accessToken}` } }
+          { "nickname": nickname, "region": selectedRegion.name },
+          { headers: { "Authorization": `Bearer ${accessToken}` } }
         );
         console.log(response);
         // setUser(data);
@@ -289,7 +302,7 @@ const FirstVisit = () => {
               닉네임 중복 확인을 진행해주세요!
             </p>
             <p
-              className={`modal-small-text ${nicknameChecked && !isNicknameValid ? "" : "hidden"}`}
+              className={`modal-small-text ${(nicknameChecked && !isNicknameValid) ? "" : "hidden"}`}
               style={{
                 color: "red",
                 fontSize: "10px",
@@ -299,7 +312,7 @@ const FirstVisit = () => {
               이미 존재하는 닉네임입니다!
             </p>
             <p
-              className={`modal-small-text ${nicknameChecked && isNicknameValid ? "" : "hidden"}`}
+              className={`modal-small-text ${(nicknameChecked && isNicknameValid) ? "" : "hidden"}`}
               style={{
                 color: "green",
                 fontSize: "10px",
