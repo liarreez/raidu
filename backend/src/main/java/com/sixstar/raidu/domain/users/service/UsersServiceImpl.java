@@ -92,6 +92,8 @@ public class UsersServiceImpl implements UsersService {
     @Transactional
     @Override
     public void sendTempPassword(String email) {
+        User user = getUserByEmail(email);
+
         MimeMessage message = javaMailSender.createMimeMessage();
         String tempPassword = generateTempPassword();
 
@@ -106,7 +108,6 @@ public class UsersServiceImpl implements UsersService {
         }
         javaMailSender.send(message);
 
-        User user = getUserByEmail(email);
         user.setPassword(bCryptPasswordEncoder.encode(tempPassword));
     }
 
