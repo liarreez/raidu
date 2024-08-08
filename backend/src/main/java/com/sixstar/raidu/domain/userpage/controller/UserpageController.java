@@ -58,7 +58,7 @@ public class UserpageController {
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.USER_WITHDRAW_SUCCESS);
   }
 
-  @PostMapping("/list")
+  @GetMapping("/list")
   public ResponseEntity<BaseResponse<?>> findUsers(@RequestParam(name="nickname", required = false) String nickname){
     Map<String, Object> data = userpageService.findUsers(nickname);
     return data.containsKey("message") ? baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_USERS_SUCCESS_BUT_NO_CONTENT)
