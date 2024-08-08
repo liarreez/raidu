@@ -7,14 +7,13 @@ import "../../CSS/FirstVisit.css";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import InputField from "../Component/InputField";
 
 // 4개 지역 아이콘
-import region1 from "../../Imgs/flag.gif";
-import region2 from "../../Imgs/flag.gif";
-import region3 from "../../Imgs/flag.gif";
-import region4 from "../../Imgs/flag.gif";
+import icon_cliff from "../../Imgs/icon_cliff.png";
+import icon_desert from "../../Imgs/icon_desert.png";
+import icon_forest from "../../Imgs/icon_forest.png";
+import icon_sea from "../../Imgs/icon_sea.png";
 
 import region_cliff from "../../Imgs/region_cliff.jpg"
 import region_desert from "../../Imgs/region_desert.jpg"
@@ -27,28 +26,28 @@ const SERVERURL = "http://localhost:8080"
 
 const RegionSelecter = ({ setSelectedRegion }) => {
   const regions = [
-    { id: 1, name: "근력의 절벽", icon: region1, 
+    { id: 1, name: "근력의 절벽", icon: icon_cliff, 
       desc: 
       "근력 절벽은 이두 왕국의 힘과 용기를 상징하는 지역입니다.\n\n" + 
       "이두 왕국은 그들의 영토를 지키기 위해 강인한 힘을 가진 사람들을 필요로 했고, " + 
       "근력 절벽은 그들 중에서도 가장 뛰어난 힘을 가진 사람들을 양성하는 장소가 되었습니다.\n\n" + 
       "강인하고 폭발적인 힘에 관심이 있는 이들이 선택하기 좋은 지역입니다.",
       bg: region_cliff},
-    { id: 2, name: "지구력의 사막", icon: region2, 
+    { id: 2, name: "지구력의 사막", icon: icon_desert, 
       desc: 
       "지구력 사막은 그 이름처럼 지구력과 인내심을 상징하는 곳입니다.\n\n" + 
       "이곳의 주민들은 끝없는 모래언덕과 뜨거운 태양 아래에서도 변치 않는 끈기를 발휘합니다. " + 
       "이들에게 사막에서의 삶은 단순한 생존이 아니라 그들의 강인함과 지구력을 증명하는 과정입니다.\n\n" + 
       "지속성, 꾸준함의 미덕을 아는 이들이 선택하기 좋은 지역입니다.",
       bg: region_desert},
-    { id: 3, name: "민첩의 숲", icon: region3, 
+    { id: 3, name: "민첩의 숲", icon: icon_forest, 
       desc: 
       "민첩의 숲은 식물과 나무, 가시로 가득한 험난한 지역입니다.\n\n" + 
       "이곳의 주민들은 빠른 판단력과 민첩함을 자랑하며, \n" + 
       "그들의 능력을 극대화하기 위한 노력을 게을리 하지 않습니다.\n\n" + 
       "빠르고 정확한 판단력, 그리고 유연한 움직임을 추구하는 이들이 선택하기 좋은 지역입니다.",
       bg: region_forest},
-    { id: 4, name: "유연의 해변", icon: region4, 
+    { id: 4, name: "유연의 해변", icon: icon_sea, 
       desc: 
       "유연의 해변은 그 이름처럼 신체의 유연함과 마음의 평온함을 상징하는 곳입니다.\n\n" +
       "그들의 문화와 생활 방식은 물의 변화와 파도의 움직임을 통해 영향을 받아왔으며, " +
@@ -120,7 +119,7 @@ const FirstVisit = () => {
       console.log("등록 시도 지역 : " + selectedRegion.name);
       try {
         const accessToken = localStorage.getItem("accessToken");
-        console.log("첫방문 페이지 - 사용한 토큰 : " + accessToken);
+        console.log("지역/닉네임 설정 - 사용한 토큰 : " + accessToken);
         const response = await axios.post(SERVERURL + "/api/raidu/userpage/register", {"nickname" : nickname, "region": selectedRegion.name},{headers: {"Authorization": `Bearer ${accessToken}`}}); // 여기에 API 주소 넣을 것
         console.log(response);
         // setUser(data);
