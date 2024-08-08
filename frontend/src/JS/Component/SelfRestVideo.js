@@ -7,7 +7,9 @@ import "@tensorflow/tfjs-backend-webgl";
 
 import '../../CSS/SelfVideo.css'
 
-const SelfVideo = (props) => {
+// 휴식 시간에 보여질 작은 화면
+
+const SelfRestVideo = (props) => {
   const NOSE = 0;
   const LEFT_EYE = 1;
   const RIGHT_EYE = 2;
@@ -281,4 +283,4 @@ const SelfVideo = (props) => {
   );
 };
 
-export default SelfVideo;
+export default SelfRestVideo;

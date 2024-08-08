@@ -13,6 +13,7 @@ import standSoldier from '../../Imgs/standSoldier.png'
 import burgerking from "../../Imgs/burgerking.png";
 
 import Timer from './Timer';
+import TimerRest from './TimerRest';
 
 import { Modal, Box } from '@mui/material';
 
@@ -484,7 +485,7 @@ const TrainingRoomManager = ({ roomInfo }) => {
                 height: '20%',
                 backgroundColor:'coral',
               }}>
-                {/* <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} /> */}
+                <TimerRest currentTime={currentTime} timerActive={timerActive}/>
               </div>
               {/* 자기 화면 및 운동 선택 div */}
               <div style={{
