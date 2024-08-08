@@ -19,14 +19,14 @@ const TrainingRoom = () => {
   // const roomInfo = { ...location.state };
 
   // roomInfo = 대기방에서 받아온 정보들이 담긴 객체
-  const roomInfo = { ...location.state }
+  const roomData = { ...location.state }
 
-  console.log(roomInfo);
+  console.log(roomData);
 
   return (
     <div>
       {/* <CreateWaitingRoom setWaitingRoomId={setWaitingRoomId} /> */}
-      <TrainingRoomManager roomInfo={roomInfo} />
+      <TrainingRoomManager roomData={roomData} />
     </div>
   );
 };
