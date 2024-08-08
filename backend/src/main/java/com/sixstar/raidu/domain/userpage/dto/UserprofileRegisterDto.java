@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UserprofileRegisterDto {
-  @Pattern(regexp = "^.{2,6}$", message = "닉네임은 2~6글자까지 설정 가능합니다!")
+  @Pattern(regexp = "^.{2,10}$", message = "닉네임은 2~10글자까지 설정 가능합니다!")
   private String nickname;
   private String region;
 
