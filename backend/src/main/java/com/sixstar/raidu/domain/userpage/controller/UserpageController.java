@@ -65,13 +65,13 @@ public class UserpageController {
     : baseResponseService.getSuccessResponse(BaseSuccessResponse.GET_USERS_SUCCESS, data);
   }
 
-  @GetMapping("/check-nickname")
-  public ResponseEntity<BaseResponse<?>> checkNickname(@RequestBody CheckNicknameDto checkNicknameDto) {
-    userpageService.checkNickname(checkNicknameDto.getNickname());
+  @PostMapping("/check-nickname")
+  public ResponseEntity<BaseResponse<?>> checkNickname(@RequestHeader("Authorization") String authorization, @RequestBody CheckNicknameDto checkNicknameDto) {
+    userpageService.checkNickname(authorization, checkNicknameDto.getNickname());
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.NICKNAME_CHECK_SUCCESS);
   }
 
-  @GetMapping("/check-password")
+  @PostMapping("/check-password")
   public ResponseEntity<BaseResponse<?>> checkPassword(@RequestHeader("Authorization") String authorization, @RequestBody CheckPasswordDto checkPasswordDto) {
     userpageService.checkPassword(authorization, checkPasswordDto.getPassword());
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.PASSWORD_CHECK_SUCCESS);

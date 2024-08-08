@@ -127,8 +127,13 @@ body, html {
 
 .first-region-img {
     flex-grow: 1;
-    background-color: gray;
+    background-color: white;
     overflow: hidden;
+}
+
+.first-region-img img{
+    width: 100%;
+    object-fit: cover;
 }
 
 .first-region-bottom {
@@ -196,6 +201,8 @@ body, html {
     border-radius: 50%;
     background-color: white;
     transition: 0.3s ease-in-out;
+
+    overflow: hidden;
 }
 
 .selecter-icon:hover {
@@ -205,7 +212,8 @@ body, html {
 
 
 .selecter-icon img {
-    width: 80%;
+    width: 120%;
+    object-fit: cover;
 }
 
 /* 모달 CSS */

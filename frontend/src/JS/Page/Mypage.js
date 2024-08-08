@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import TopNav from "../Component/TopNav";
 import FadeAnime from "../Component/FadeAnime";
 import SpringAnime from "../Component/SpringAnime";
 import "react-step-progress-bar/styles.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
-
+import axios from "axios";
 
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -18,24 +17,24 @@ import "../../CSS/Mypage.css";
 import test from "../../Imgs/test.png";
 import burgerking from "../../Imgs/burgerking.png";
 import { useParams } from "react-router-dom";
+import AnimatedNumber from "../Component/AnimatedNumber";
 
 const SERVERURL = "http://localhost:8080";
-const expPercentage = 60;
 
-function StepProgressBar() {
+function StepProgressBar({ expPercentage }) {
   const [percent, setPercent] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (percent < expPercentage) {
-        setPercent(prevPercent => prevPercent + 1);
+        setPercent((prevPercent) => prevPercent + 1);
       } else {
         clearInterval(interval);
       }
     }, 40);
 
     return () => clearInterval(interval); // Cleanup on unmount
-  }, [percent]);
+  }, [percent, expPercentage]);
 
   return (
     <ProgressBar
@@ -52,21 +51,32 @@ function StepProgressBar() {
 }
 
 function Mypage() {
-  const uuid = useParams();
+  const { id } = useParams();
   const [activeTab, setActiveTab] = useState("history");
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(SERVERURL + `api/raidu/userpage/profile/${uuid}`);
-        const jsonData = await response.json();
+        console.log("fetchData 함수 실행 중... id값은 : " + id);
+        const accessToken = localStorage.getItem("accessToken");
+        console.log(accessToken);
+        const response = await axios.get(
+          SERVERURL + `/api/raidu/userpage/profile/${id}`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        console.log("데이터 수신...");
+        console.log(response);
+        setUserData(response.data.data.userProfile);
+        setLoading(false); // 데이터가 로드된 후 로딩 상태를 false로 설정
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [id]);
 
   const renderMonsterCards = () => {
     const monsters = [
@@ -124,24 +134,51 @@ function Mypage() {
   const renderHistory = () => {
     const records = [];
     return (
-      <div style={{display: "flex", backgroundColor: "blue", width: "100%", height: "490px"}}>
-        <div style={{display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "green", flex: 3, padding: "10px"}}>
-          
-        </div>
-        <div style={{display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "purple", flex: 2, padding: "10px"}}>
-
-        </div>
+      <div style={{ display: "flex", width: "100%", height: "490px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flex: 3,
+            padding: "10px",
+          }}
+        >그래프 자리</div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flex: 2,
+            backgroundColor: "gray",
+            padding: "10px",
+          }}
+        >표 자리</div>
       </div>
     );
   };
 
   const renderTabContent = () => {
     if (activeTab === "history") {
-      return <SpringAnime from="right"><div>{renderHistory()}</div></SpringAnime>;
+      return (
+        <SpringAnime from="right">
+          <div>{renderHistory()}</div>
+        </SpringAnime>
+      );
     } else if (activeTab === "monster") {
-      return <SpringAnime from="left"><div>{renderMonsterCards()}</div></SpringAnime>;
+      return (
+        <SpringAnime from="left">
+          <div>{renderMonsterCards()}</div>
+        </SpringAnime>
+      );
     }
   };
+
+  if (loading) {
+    return <div>로딩 중...</div>; // 로딩 상태일 때 표시할 내용
+  }
+
+  const expPercentage = (userData.exp / 1000) * 100;
 
   return (
     <FadeAnime>
@@ -169,14 +206,19 @@ function Mypage() {
                     </div>
                   </div>
                   <div className="profile-text-wrapper">
-                    <div className="profile-text-name">test_username</div>
+                    <div className="profile-text-name">{userData.nickname}</div>
                     <div className="profile-text-level">
-                      <div>
-                        <h2>LV.123</h2>
+                      <div style={{ display: "flex", alignItems: "end", marginTop: "10px", marginBottom: "20px" }}>
+                        <div style={{ display: "inline", fontWeight: "bold", fontSize: "16px" }}>LV</div>
+                        <h2 style={{ margin: "0", padding: "0" }}>&nbsp; {`${userData.level}`}</h2>
+                        <div style={{ color: "gray", marginLeft: "20px", fontSize: "14px" }}>
+                          <AnimatedNumber targetNumber={userData.exp} /> / 1000
+                        </div>
                       </div>
-                      <StepProgressBar />
+                      <StepProgressBar expPercentage={expPercentage} />
                       <div>
                         <h3>최고 기록</h3>
+                        <div>{userData.bestScore > 0 ? userData.bestScore : "기록 없음"}</div>
                       </div>
                     </div>
                   </div>
