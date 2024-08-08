@@ -12,15 +12,33 @@
 }
 
 .nav-logo {
-    background-color: grey;
     height: 50px;
-    width: 100px;
+    width: 130px;
     margin-left: 20px;    
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-logo img {
+    width: inherit;
+    height: auto;
+    object-fit: cover;
 }
 
 .nav-logo-large {
-    background-color: grey;
     height: 50px;
-    width: 100px;
-    margin-left: 5px;    
+    width: 130px;
+    margin-left: 5px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-logo-large img {
+    width: inherit;
+    height: auto;
+    object-fit: cover;
 }
