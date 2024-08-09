@@ -212,8 +212,8 @@ button:hover {
     height: inherit;
 }
 
-.search-result-card {
-
+.result-card-img {
+    width: 45px;
 }
 
 .search-result-card div {
