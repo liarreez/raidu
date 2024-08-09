@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.69bb575a.css",
-    "main.js": "/static/js/main.67c98d91.js",
+    "main.css": "/static/css/main.e8443033.css",
+    "main.js": "/static/js/main.a8875c6b.js",
     "static/media/back.jpg": "/static/media/back.6a4fd6d197a02180bf7e.jpg",
     "static/media/monster.gif": "/static/media/monster.274051db64c80eb2b9cd.gif",
     "static/media/icon_desert.png": "/static/media/icon_desert.9a324217477905e5da71.png",
@@ -22,7 +22,7 @@
     "static/media/document.gif": "/static/media/document.8c7646f88368a9238b58.gif",
     "static/media/button-raidu.png": "/static/media/button-raidu.d6bcba065605cefd052f.png",
     "static/media/turtleneck.png": "/static/media/turtleneck.c8f53e4bd4576dc9924c.png",
-    "static/media/logo.png": "/static/media/logo.11c46b17caa156632002.png",
+    "static/media/logo.png": "/static/media/logo.422afe8d9f27949075c4.png",
     "static/media/topgrass.png": "/static/media/topgrass.56247141cd63d1d16ffd.png",
     "static/media/button-training.png": "/static/media/button-training.a7496c8b505cd4327d89.png",
     "static/media/restSoldier.gif": "/static/media/restSoldier.deafcc14057e40139244.gif",
@@ -32,11 +32,11 @@
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.69bb575a.css.map": "/static/css/main.69bb575a.css.map",
-    "main.67c98d91.js.map": "/static/js/main.67c98d91.js.map"
+    "main.e8443033.css.map": "/static/css/main.e8443033.css.map",
+    "main.a8875c6b.js.map": "/static/js/main.a8875c6b.js.map"
   },
   "entrypoints": [
-    "static/css/main.69bb575a.css",
-    "static/js/main.67c98d91.js"
+    "static/css/main.e8443033.css",
+    "static/js/main.a8875c6b.js"
   ]
 }
