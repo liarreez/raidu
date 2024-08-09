@@ -73,6 +73,8 @@ const RaidWaitRoom = () => {
     // 세션으로 받게 되면 세션 값으로 세팅해 주세요
     
     const [participantsList, setParticipantsList] = useState([])
+
+    const [rendered, setRendered] = useState(false);
     
     // 방 제목 수정하는 방법
     // 상단 흰색 제목이 있는 영역을 클릭하면 수정할 수 있다.
@@ -107,12 +109,10 @@ const RaidWaitRoom = () => {
           //  setParticipantsList([...participantsList, ])
         })
 
-        setRoomSet(
-            new Room(40, 15, 3)
-        );  
         setRoomNamed(roomName); // 방 이름 변경 가능하게 하려면 이 부분 수정해야 함. 지금은 pathVal에서 가져온다
         setIsRoomLocked(false);
         
+        setRendered(true);
 
     },[]); // onMount 
 
@@ -151,7 +151,7 @@ const RaidWaitRoom = () => {
                 client.disconnect();
             }
         };
-    }, [roomName]);
+    }, [roomNamed, exerciseSet]);
 
     useEffect(() => { 
         // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
@@ -184,7 +184,7 @@ const RaidWaitRoom = () => {
                 websocketClient.disconnect()
             }
         };
-    }, [websocketClient, roomName]);
+    }, [websocketClient, roomNamed, exerciseSet]);
 
 
 
@@ -303,17 +303,16 @@ const RaidWaitRoom = () => {
         }
     };
 
+
     const tryGameStart = () => {
         if (checkReadyState()) {
             console.log('============ PRINTING SETTINGS =============');
             // 방 정보
             // 사용자 정보
             // 선택한 운동 정보 묶어서 보여주기
-            console.log(roomSet)
+            console.log(roomSet);
             console.log(me);
             console.log(exerciseSet);
-
-
 
             sendTest4(); // 웹소켓으로 모든 방 안의 참여자에게 게임 시작 알림을 보냅니다.
             // 로딩스피너 보였으면 좋겠어용 ~ 
@@ -322,48 +321,32 @@ const RaidWaitRoom = () => {
         }
     };
 
-    // const gameStart = async () => {
-    //     axios.post(SERVER_URL+'/api/raidu/rooms/sessions', {roomName}, {
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Authorization': 'Bearer ' + token
-    //         }
-    //     }).then((res) => {
-    //         navigate("/trainingTest", {
-    //             state: {
-    //                 // 여기에 대기방에서 설정한 내용들을 적어주시면 됩니다.
-    //                 roomId: res.data.data.sessionId,
-    //                 roomInfo: roomSet,
-    //                 token: token,
-    //                 userInfo: me,
-    //                 exerciseSet: exerciseSet,
-    //             },
-    //         });
-    //     })
-    // }
+    const gameStart = () => {
+        axios.post(SERVER_URL+'/api/raidu/rooms/sessions', {roomName}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Bearer 토큰을 사용하는 경우
+            }
+        }).then((res) => {
+                const roomInfo = roomSet;
+                const userInfo = me;
+                const exerciseInfo = exerciseSet;
 
-    const gameStart = async () => {
-        try {
-            const response = await axios.post(SERVER_URL + '/api/raidu/rooms/sessions', { roomName }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                }
-            });
-    
-            navigate("/trainingTest", {
-                state: {
-                    roomId: response.data.data.sessionId,
-                    roomInfo: roomSet,
-                    token: token,
-                    userInfo: me,
-                    exerciseSet: exerciseSet,
-                },
-            });
-        } catch (error) {
-            console.error('Error starting the game:', error);
-        }
-    };
+                console.log('=========TEST=========')
+                console.log(roomInfo);
+                console.log(userInfo);
+                console.log(exerciseInfo);
+
+                navigate("/trainingTest", {
+                    state: {
+                        roomId: res.data.data.sessionId,
+                        roomInfo,
+                        userInfo,
+                        exerciseInfo,
+                    },
+                });
+        })
+    }
 
     // 0808 checkReadyState() 로직 제대로 작동하지 않아 확인 필요합니다. 
     // 발생하고 있는 버그 : 모든 운동 라운드에 대한 종목 선택이 진행되지 않아도 게임이 시작되거나 준비가 진행됩니다.
