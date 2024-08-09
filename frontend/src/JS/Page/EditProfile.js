@@ -12,8 +12,7 @@ import document from "../../Imgs/document.gif";
 import InputField from "../Component/InputField";
 
 import "../../CSS/EditProfile.css";
-import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
-
+import { API_URL } from "../../config"; // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
 const SERVERURL = API_URL;
 const accessToken = localStorage.getItem("accessToken");
@@ -27,7 +26,8 @@ const EditProfile = () => {
   const [userData, setUserData] = useState({});
   const [isNicknameValid, setIsNicknameValid] = useState(false);
   const [nicknameChecked, setNicknameChecked] = useState(false);
-  const [error, setError] = useState(false); // Added for password validation
+  const [error, setError] = useState(false); // 비밀번호 유효성 검사
+  const [nicknameLengthValid, setNicknameLengthValid] = useState(true); // 닉네임 길이 유효성 검사
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,8 +68,16 @@ const EditProfile = () => {
   };
 
   const handleNicknameChange = (e) => {
-    setNickname(e.target.value);
+    const value = e.target.value;
+    setNickname(value);
     setNicknameChecked(false);
+
+    // 닉네임 길이 유효성 검사
+    if (value.length >= 2 && value.length <= 10) {
+      setNicknameLengthValid(true);
+    } else {
+      setNicknameLengthValid(false);
+    }
   };
 
   const handleNewPasswordChange = (e) => {
@@ -100,17 +108,15 @@ const EditProfile = () => {
   };
 
   const checkNickname = async () => {
-    // nickname이 null인 경우
-    if (nickname === null) {
-      alert("닉네임 값이 없습니다.");
-      return;
+    if (!nicknameLengthValid) {
+      return; // 닉네임 길이가 유효하지 않으면 중복 확인을 실행하지 않음
     }
 
-    // nickname이 공백 문자열인 경우
-    if (nickname.trim() === "") {
+    if (nickname === null || nickname.trim() === "") {
       alert("닉네임은 공백만으로 구성될 수 없습니다.");
       return;
     }
+
     try {
       const response = await axios.post(
         `${SERVERURL}/api/raidu/userpage/check-nickname`,
@@ -139,11 +145,11 @@ const EditProfile = () => {
       return;
     }
 
-    if (nicknameChecked && isNicknameValid && !error) {
+    if (nicknameChecked && isNicknameValid && !error && newPassword && confirmPassword) {
       try {
         const response = await axios.post(
           `${SERVERURL}/api/raidu/userpage/info`,
-          { "nickname": nickname, "password":newPassword },
+          { nickname: nickname, password: newPassword },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         console.log(response);
@@ -210,20 +216,26 @@ const EditProfile = () => {
                         ></img>
                       </div>
                       <h2>프로필 수정</h2>
-                      <InputField
-                        label="닉네임"
-                        type="text"
-                        value={nickname}
-                        onChange={handleNicknameChange}
-                      />
-                      <button
-                        className="button-gray"
-                        onClick={checkNickname}
-                        style={{ fontSize: "12px", padding: "8px", marginTop: "10px" }}
-                      >
-                        닉네임 중복 확인
-                      </button>
-                      {/* 1. 중복확인을 누르지 않았을때 2. 중복확인을 눌렀으나 중복일때 3. 중복확인을 눌렀고 중복이 아닐때 */}
+                      <div style={{display: "flex", flexDirection: "column"}}>
+                        <InputField
+                          label="닉네임(2~10자)"
+                          type="text"
+                          value={nickname}
+                          onChange={handleNicknameChange}
+                        />
+                        <button
+                          className="button-gray"
+                          onClick={checkNickname}
+                          disabled={!nicknameLengthValid} // 닉네임 길이가 유효하지 않으면 버튼 비활성화
+                          style={{ fontSize: "12px", padding: "8px", marginTop: "10px" }}
+                        >
+                          중복 확인
+                        </button>
+                        {/* 닉네임 길이 경고 메시지 */}
+
+                      </div>
+
+                      {/* 1. 중복확인을 누르지 않았을 때, 2. 중복확인을 눌렀으나 중복일 때, 3. 중복확인을 눌렀고 중복이 아닐 때 */}
                       <div
                         style={{
                           position: "relative",
@@ -233,6 +245,7 @@ const EditProfile = () => {
                           justifyContent: "center",
                           alignItems: "center",
                           marginBottom: "10px",
+                          marginTop: "20px"
                         }}
                       >
                         <p
@@ -269,6 +282,12 @@ const EditProfile = () => {
                         >
                           사용 가능한 닉네임입니다!
                         </p>
+
+                        {!nicknameLengthValid && (
+                          <p style={{ color: "red", fontSize: "10px", marginTop: "5px", position: "relative", top:"-15px" }}>
+                            닉네임은 2~10자 길이만 가능합니다.
+                          </p>
+                        )}
                       </div>
                       <InputField
                         label="새 비밀번호 (영문, 숫자, 특수기호 포함 8글자 이상)"
@@ -284,7 +303,7 @@ const EditProfile = () => {
                         value={confirmPassword}
                         onChange={handleConfirmPasswordChange}
                       />
-                      {/* Display error message if the password is not valid */}
+                      {/* 비밀번호 조건 유효성 검사 실패 시 경고 메시지 표시 */}
                       {error && (
                         <p style={{ color: "red", fontSize: "10px" }}>
                           비밀번호는 영문, 숫자, 특수기호 포함 8글자 이상이어야 합니다.
@@ -294,7 +313,11 @@ const EditProfile = () => {
                         <button className="button-cancel" onClick={handleCancel}>
                           취소
                         </button>
-                        <button className="button-confirm" onClick={handleSubmit}>
+                        <button
+                          className="button-confirm"
+                          onClick={handleSubmit}
+                          disabled={!(nickname && newPassword && confirmPassword)} // 모든 필드가 채워져 있어야만 버튼 활성화
+                        >
                           수정하기
                         </button>
                       </div>
