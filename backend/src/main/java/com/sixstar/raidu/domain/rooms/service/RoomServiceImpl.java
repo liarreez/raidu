@@ -333,13 +333,17 @@ public class RoomServiceImpl implements RoomService{
     @Override
     public Map<String, Object> getRoomInfo(Long roomId) {
         Room room = findRoomByIdOrThrow(roomId);
-        List<UserProfileResponseDto> userProfileList = roomUserRepository.findByRoomId(roomId).stream()
+        UserProfile host = findRoomByIdOrThrow(roomId).getUserProfile();
+
+        List<UserProfileResponseDto> guestList = roomUserRepository.findByRoomId(roomId).stream()
+            .filter(roomUser -> !Objects.equals(roomUser.getUserProfile().getId(), host.getId()))
             .map(roomUser -> UserProfileResponseDto.fromEntity(roomUser.getUserProfile()))
             .toList();
 
         Map<String, Object> map = new HashMap<>();
         map.put("room", RoomResponse.fromEntity(room));
-        map.put("userProfileList", userProfileList);
+        map.put("host", UserProfileResponseDto.fromEntity(host));
+        map.put("guestList", guestList);
         return map;
     }
 

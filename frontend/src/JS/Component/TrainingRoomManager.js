@@ -712,17 +712,7 @@ const TrainingRoomManager = ({ roomData }) => {
           {/* 마지막 정산 화면 */}
           {currentStep === 'ending' &&
             <div>
-              {/* 나가기 버튼 */}
-              <div style={{
-                width: '100%',
-                height: '10%',
-                display: 'flex',
-                justifyContent: 'flex-end',
-              }}>
-                <button className="btn btn-large btn-danger" onClick={byeBye}>
-                  나가기
-                </button>
-              </div>
+              
               {/* 아래 정보들 */}
               <div style={{
                 width: '100%',
@@ -745,6 +735,18 @@ const TrainingRoomManager = ({ roomData }) => {
                   backgroundColor:'cyan',
                 }}>
                 </div>
+              </div>
+
+              {/* 나가기 버튼 */}
+              <div style={{
+                width: '100%',
+                height: '10%',
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}>
+                <button className="btn btn-large btn-danger" onClick={byeBye}>
+                  나가기
+                </button>
               </div>
             </div>
           }
