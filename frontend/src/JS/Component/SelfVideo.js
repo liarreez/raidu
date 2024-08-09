@@ -104,6 +104,7 @@ const SelfVideo = (props) => {
     setCount(newCount);
     props.ChangeCount(newCount);
     document.querySelector(".count-box > p").innerText = `Count: ${count}`;
+    props.sendTest2();
     // console.log(`Current count: ${count}`);
   };
 
@@ -206,6 +207,13 @@ const SelfVideo = (props) => {
   // const [jumpingJack, setJumpingJack] = useState(false)
   // const [lunge, setLunge] = useState(false)
   const [selectedExercise, setSelectedExercise] = useState("");
+
+  // 라운드 바뀔 시 운동이 바뀌는 이벤트
+  useEffect(() => {
+    props.myCombatPower[(props.currentRound) - 1] = count;
+    setCount(0);
+    setSelectedExercise(props.exerciseForRound[props.currentRound])
+  }, [props.currentRound])
 
 
   // 운동 바꾸는 이벤트

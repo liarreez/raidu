@@ -55,6 +55,47 @@ const TrainingRoomManager = ({ roomData }) => {
   const roundCount = roomData.roomInfo.roundCount;
   // 라운드 별 운동 배열
   const exerciseForRound = roomData.exerciseInfo;
+
+  
+  // 라운드 별 운동 가중치(운동에 따라 저장)
+  const roundWeight = [];
+  // 라운드 별 운동 횟수(count)
+  const eachRoundCount = [];
+  // 라운드 별 전투력(가중치 * 횟수)
+  const myCombatPower = [];
+  // 자신의 전투력
+  const [myTotalCombatPower, setMyTotalCombatPower] = useState(0);
+
+  // 전체 전투력(프로그레스 바에 들어갈 예정)
+  const [totalCombatPower, setTotalCombatPower] = useState(0);
+
+  // 전체 전투력 합산(웹소켓을 통해)
+  const addCombatPower = (score) => {
+    setTotalCombatPower(totalCombatPower + score);
+  };
+
+  
+  // const addMyCombatPower = (score, currentRound) => {
+  //   myCombatPower[currentRound] += score;
+  // }
+
+  
+  
+  
+
+  // 운동별 가중치
+  const exerciseScore = {
+    'jumpingJack': 30,
+    'lunge' : 50,
+  }
+
+  // 운동 가중치에 따라 라운드 별 운동 가중치 설정
+  for (let i = 0; i < exerciseForRound.length; i++) {
+    roundWeight[i] = exerciseScore[exerciseForRound[i]];
+  }
+
+
+
   // 정해둔 마지막 정산 전 애니메이션 시간
   const lastMotionTime = 3;
   // 정해둔 완료 시간(마지막 정산)
@@ -68,15 +109,15 @@ const TrainingRoomManager = ({ roomData }) => {
   console.log(exerciseForRound);
   console.log(exerciseForRound[currentRound]);
 
-  // 개인 운동 개수 저장을 위한 배열
-  const countForRound = [];
-  // 현재 운동 시 개수(운동이 완료되면 초기화)
-  const [currentCount, setCurrentCount] = useState(0);
+  // // 개인 운동 개수 저장을 위한 배열
+  // const countForRound = [];
+  // // 현재 운동 시 개수(운동이 완료되면 초기화)
+  // const [currentCount, setCurrentCount] = useState(0);
 
-  // 자신 전투력
-  const [myCombatPower, setmyCombatPower] = useState(0);
-  // 전체 전투력
-  const [totalCombatPower, setTotalCombatPower] = useState(0);
+  // // 자신 전투력
+  // const [myCombatPower, setmyCombatPower] = useState(0);
+  // // 전체 전투력
+  // const [totalCombatPower, setTotalCombatPower] = useState(0);
 
 
   // 웹 소켓을 위한 변수 선언
@@ -105,7 +146,8 @@ const TrainingRoomManager = ({ roomData }) => {
                   const parsedMessage = JSON.parse(message.body);
                   switch(parsedMessage.type){
                     case '1': handleStartTimer(); break;
-                      default: console.log('?')
+                    case '2': addCombatPower(parsedMessage.body); break;
+                    default: console.log('?')
                   }
                   setMessages((prevMessages) => [...prevMessages, parsedMessage]);
               });
@@ -144,11 +186,18 @@ const TrainingRoomManager = ({ roomData }) => {
     }
   };
 
+  const sendTest2 = () => {
+    if (websocketClient) {
+      const message = JSON.stringify({
+        ...COMMONFORM,
+        type: '2',
+        body: roundWeight[currentRound],
+        currentRound,
+      })
+      websocketClient.send(DESTINATION, message);
+    }
+  };
 
-  
-  
-
-  
 
   // 정해둔 중간 정산 시간
   // const [middleMotionTime, setMiddleMotionTime] = useState(6);
@@ -552,11 +601,21 @@ const TrainingRoomManager = ({ roomData }) => {
           <div className="training-frame">
             <div className="video-frame">
               <div className="other-video">
-                {subscribers.map((sub, i) => (
-                    <UserVideo key={i} streamManager={sub} />
+                  {subscribers.map((sub, i) => (
+                  <>
+                    <UserVideo key={i} num={i} streamManager={sub} />
+                    <p>{JSON.parse(sub.stream.connection.data).clientData}</p>
+                  </>
                 ))}
               </div>
-              <div className="my-video">{publisher && <SelfVideo streamManager={publisher} ChangeCount={ChangeCount} />}</div>
+                <div className="my-video">{publisher &&
+                  <SelfVideo streamManager={publisher}
+                    ChangeCount={ChangeCount} sendTest2={sendTest2}
+                    currentRound={currentRound} exerciseForRound={exerciseForRound}
+                    myCombatPower={myCombatPower}
+                    
+                  />}
+                </div>
             </div>
             <div className='progress-box'>
               {/* <h3>총 전투력 넣을 예정</h3> */}
