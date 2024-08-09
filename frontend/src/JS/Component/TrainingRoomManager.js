@@ -214,6 +214,7 @@ const TrainingRoomManager = ({ roomData }) => {
   //타이머 관련으로 넣은 값들. 나중에 수정 필요함
   // 타이머에 넣을 숫자 < 초기값은 0으로 설정
   const [initialTime, setInitialTime] = useState(0);
+  // 현재 시간(현재 지나가고 있는 시간)
   const [currentTime, setCurrentTime] = useState(0);
   // 타이머 시작 여부 상태
   const [timerActive, setTimerActive] = useState(false);
