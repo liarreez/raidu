@@ -44,14 +44,13 @@ class Room {
 }   
 
 const SERVER_URL = API_URL;
-const token = localStorage.getItem('accessToken');
 
 const RaidWaitRoom = () => {
     // ========= roomName은 pathVariable로 줄 거고
     // ========= roomSet은 props로 넘기고
     // ========= isRoomLocked는 대기실에서 입장할 수 있는 모든 방이 false입니다
     const location = useLocation();
-    const [isFullScreen, setIsFullScreen] = useState(false);
+    const [token, setToken] = useState(localStorage.getItem('accessToken'));
 
     // 페이지 이동을 위한 네비게이트
     const navigate = useNavigate();
@@ -75,8 +74,6 @@ const RaidWaitRoom = () => {
     // 세션으로 받게 되면 세션 값으로 세팅해 주세요
     
     const [participantsList, setParticipantsList] = useState([])
-
-    const [rendered, setRendered] = useState(false);
     
     // 방 제목 수정하는 방법
     // 상단 흰색 제목이 있는 영역을 클릭하면 수정할 수 있다.
@@ -85,47 +82,62 @@ const RaidWaitRoom = () => {
 
     
     useEffect(() => {
-        axios.get(SERVER_URL+'/api/raidu/userpage', {
+        axios.get(SERVER_URL + '/api/raidu/userpage', {
             headers: {
                 'Authorization': `Bearer ${token}` // Bearer 토큰을 사용하는 경우
             }
         }).then((res) => {
             const data = res.data.data.userProfile;
             console.log(data);
-            setMe(new User(data.nickname, data.symbolImageUrl, data.profileImageUrl, data.level, data.bestScore, false, (location.state !== null && location.state !== undefined) ? location.state.isCaptain : false))
-            
-        
-        })
-        
-        axios.get(SERVER_URL+'/api/raidu/rooms/'+roomName, {
-            headers: {
-                'Authorization': `Bearer ${token}` // Bearer 토큰을 사용하는 경우
-            }
+            setMe(new User(
+                data.nickname, 
+                data.symbolImageUrl, 
+                data.profileImageUrl, 
+                data.level, 
+                data.bestScore, 
+                false, 
+                (location.state !== null && location.state !== undefined) ? location.state.isCaptain : false
+            ));
+
+            // 두 번째 요청
+            return axios.get(SERVER_URL + '/api/raidu/rooms/' + roomName, {
+                headers: {
+                    'Authorization': `Bearer ${token}` // Bearer 토큰을 사용하는 경우
+                }
+            });
         }).then((res) => {
             const roomInfo = res.data.data.room;
             const partInfo = res.data.data.userProfileList;
             setRoomNamed(roomInfo.title);
             setRoomSet(new Room(roomInfo.roundTime, roomInfo.restTime, roomInfo.totalRounds));
-            console.log(res.data.data.room)
-            console.log(res.data.data.userProfileList)
-          //  setParticipantsList([...participantsList, ])
-        })
+            console.log(roomInfo);
+            console.log('참가자 정보 ==========')
+            console.log(partInfo[0]);
+            for(let i = 0; i<partInfo.length; i++){
+                setParticipantsList([...participantsList, new User(
+                    partInfo[i].nickname,
+                    partInfo[i].symbolImageUrl,
+                    partInfo[i].profileImageUrl,
+                    partInfo[i].level,
+                    partInfo[i].bestScore,
+                    false,
+                    i == 0 ? true : false // 여기가 방장 세팅 부분입니다 ~!~!
+                )])
+            }
+            
+            // partInfo.map((each) => {
+            //     setParticipantsList([...participantsList, new User(each.nickname, each.symbolImageUrl, each.profileImageUrl, each.level, each.bestScore, false, )])
+            // })
+            // setParticipantsList([...participantsList, ])
+        }).catch((error) => {
+            console.error('Error fetching data:', error);
+        });
 
         setRoomNamed(roomName); // 방 이름 변경 가능하게 하려면 이 부분 수정해야 함. 지금은 pathVal에서 가져온다
         setIsRoomLocked(false);
-        
-        setRendered(true);
 
-    },[]); // onMount 
+    },[token]); // onMount 
 
-    useEffect(() => {
-        setParticipantsList([
-            me,
-       //     new User("이싸피", 2, "profile2.png", 4, 420, true, false),
-       //     new User("최싸피", 3, "profile3.png", 5, 520, true, false),
-       //     new User("박싸피", 4, "profile4.png", 6, 620, true, false)
-        ]);
-    },[me])
 
     const roomSetSetter = (roundTime, restTime, roundCount) => {
         setRoomSet(new Room(roundTime, restTime, roundCount));
@@ -167,7 +179,7 @@ const RaidWaitRoom = () => {
                         case '1': console.log('unhandled message'); break;
                         case '2': updateUserReadyState(parsedMessage.user, parsedMessage.readyType); break;
                         case '3': setChatMessages((prevMessages) => [...prevMessages, parsedMessage]); break;
-                        case '4': gameStart(); break;
+                        case '4': gameStart(parsedMessage.sessionId); break;
                         default: console.log('?')
                     }
                     setMessages((prevMessages) => [...prevMessages, parsedMessage]);
@@ -259,12 +271,13 @@ const RaidWaitRoom = () => {
         }
     };
 
-    const sendTest4 = () => { // 방장이 게임 시작을 누르면 메시지 발송
+    const sendTest4 = (sessionId) => { // 방장이 게임 시작을 누르면 메시지 발송
         if (websocketClient) {
             const message = JSON.stringify({
                 ...COMMONFORM,
                 type: "4",
-                startType: true
+                startType: true,
+                sessionId
             })
             websocketClient.send(DESTINATION, message);
         }
@@ -316,38 +329,44 @@ const RaidWaitRoom = () => {
             console.log(me);
             console.log(exerciseSet);
 
-            sendTest4(); // 웹소켓으로 모든 방 안의 참여자에게 게임 시작 알림을 보냅니다.
+            axios.post(SERVER_URL+'/api/raidu/rooms/sessions', {roomName}, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // Bearer 토큰을 사용하는 경우
+                }
+            }).then((res) => {
+                sendTest4(res.data.data.sessionId);
+                // 웹소켓으로 모든 방 안의 참여자에게 게임 시작 알림을 보냅니다.
+
+            })
+
             // 로딩스피너 보였으면 좋겠어용 ~ 
         } else {
             console.log('아직 준비되지 않은 사용자가 있어요.')
         }
     };
 
-    const gameStart = () => {
-        axios.post(SERVER_URL+'/api/raidu/rooms/sessions', {roomName}, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` // Bearer 토큰을 사용하는 경우
-            }
-        }).then((res) => {
-                const roomInfo = roomSet;
-                const userInfo = me;
-                const exerciseInfo = exerciseSet;
+    const gameStart = (sessionId) => {
+        
+        const roomInfo = roomSet;
+        const userInfo = me;
+        const exerciseInfo = exerciseSet;
 
-                console.log('=========TEST=========')
-                console.log(roomInfo);
-                console.log(userInfo);
-                console.log(exerciseInfo);
+        console.log('=========TEST=========')
+        console.log(roomInfo);
+        console.log(userInfo);
+        console.log(exerciseInfo);
+        console.log(sessionId)
 
-                navigate("/trainingTest", {
-                    state: {
-                        roomId: res.data.data.sessionId,
-                        roomInfo,
-                        userInfo,
-                        exerciseInfo,
-                    },
-                });
-        })
+        navigate("/trainingTest", {
+            state: {
+                roomId: sessionId,
+                roomInfo,
+                userInfo,
+                exerciseInfo,
+            },
+        });
+        
     }
 
     // 0808 checkReadyState() 로직 제대로 작동하지 않아 확인 필요합니다. 
