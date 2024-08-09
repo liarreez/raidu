@@ -9,6 +9,7 @@ import '../../CSS/RaidLobby.css';
 
 //=========== import components
 import TopNav from "../Component/TopNav";
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
 const RaidLobby = () => {
 
@@ -24,7 +25,8 @@ const RaidLobby = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [me, setMe] = useState(null);
 
-    const SERVER_URL = 'http://localhost:8080';
+
+    const SERVER_URL = API_URL;
     const token = localStorage.getItem('accessToken');
 
     useEffect(() => {

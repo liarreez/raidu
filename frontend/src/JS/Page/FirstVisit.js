@@ -21,8 +21,9 @@ import region_forest from "../../Imgs/region_forest.jpg";
 import region_sea from "../../Imgs/region_sea.jpg";
 
 import SpringAnime from "../Component/SpringAnime";
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
-const SERVERURL = "http://localhost:8080";
+const SERVERURL = API_URL;
 
 const RegionSelecter = ({ setSelectedRegion }) => {
   const regions = [

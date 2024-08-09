@@ -1,0 +1,42 @@
+{
+  "files": {
+    "main.css": "/static/css/main.69bb575a.css",
+    "main.js": "/static/js/main.67c98d91.js",
+    "static/media/back.jpg": "/static/media/back.6a4fd6d197a02180bf7e.jpg",
+    "static/media/monster.gif": "/static/media/monster.274051db64c80eb2b9cd.gif",
+    "static/media/icon_desert.png": "/static/media/icon_desert.9a324217477905e5da71.png",
+    "static/media/icon_cliff.png": "/static/media/icon_cliff.97a9eff3836096c10be6.png",
+    "static/media/region_forest.jpg": "/static/media/region_forest.9b143b4d2c5fd153e11d.jpg",
+    "static/media/region_sea.jpg": "/static/media/region_sea.98e81ff4fc150fc61d72.jpg",
+    "static/media/icon_forest.png": "/static/media/icon_forest.4d4cc6bfeed21e6ce823.png",
+    "static/media/region_desert.jpg": "/static/media/region_desert.9d5c31e9208c0ba82ec6.jpg",
+    "static/media/icon_sea.png": "/static/media/icon_sea.05a5c085b657493dd66d.png",
+    "static/media/region_cliff.jpg": "/static/media/region_cliff.7dd3dee101e57e3dffdd.jpg",
+    "static/media/helmet.gif": "/static/media/helmet.d7a402801f66b37d0c43.gif",
+    "static/media/flag.gif": "/static/media/flag.df517efca1c9712687f5.gif",
+    "static/media/standSoldier.png": "/static/media/standSoldier.b7d3c2e31d84a7322040.png",
+    "static/media/ranking.gif": "/static/media/ranking.2d7306cd3b97c4fb80f8.gif",
+    "static/media/login.gif": "/static/media/login.35877fff23ede6b490fd.gif",
+    "static/media/sign.gif": "/static/media/sign.cae3dec744af4e07c50c.gif",
+    "static/media/burgerking.png": "/static/media/burgerking.1bfa5cf10bd792e49cfb.png",
+    "static/media/document.gif": "/static/media/document.8c7646f88368a9238b58.gif",
+    "static/media/button-raidu.png": "/static/media/button-raidu.d6bcba065605cefd052f.png",
+    "static/media/turtleneck.png": "/static/media/turtleneck.c8f53e4bd4576dc9924c.png",
+    "static/media/logo.png": "/static/media/logo.11c46b17caa156632002.png",
+    "static/media/topgrass.png": "/static/media/topgrass.56247141cd63d1d16ffd.png",
+    "static/media/button-training.png": "/static/media/button-training.a7496c8b505cd4327d89.png",
+    "static/media/restSoldier.gif": "/static/media/restSoldier.deafcc14057e40139244.gif",
+    "static/media/test.png": "/static/media/test.d4cb59a48c9ed667f72c.png",
+    "static/media/slick.svg": "/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
+    "index.html": "/index.html",
+    "main.69bb575a.css.map": "/static/css/main.69bb575a.css.map",
+    "main.67c98d91.js.map": "/static/js/main.67c98d91.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.69bb575a.css",
+    "static/js/main.67c98d91.js"
+  ]
+}

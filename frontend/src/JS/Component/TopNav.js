@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import topgrass from "../../Imgs/topgrass.png";
 import logo from "../../Imgs/logo.png";
 import "../../CSS/TopNav.css";
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
 const pages = [
   { name: "활동", subLevels: ["레이두"] },
@@ -43,7 +44,7 @@ const theme = createTheme({
 });
 
 function ResponsiveAppBar() {
-  const SERVERURL = "http://localhost:8080";
+  const SERVERURL = API_URL;
   const navigate = useNavigate();
   const [userData, setUserData] = React.useState(null);
   const [anchorElNav, setAnchorElNav] = React.useState(null);

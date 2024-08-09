@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Socketest } from '../Component/Socketest';
 import { useParams } from 'react-router-dom';
-
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 function Home() {
   const { roomNo } = useParams();
   const [messages, setMessages] = useState([]);

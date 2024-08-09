@@ -18,8 +18,10 @@ import TimerRest from './TimerRest';
 import { Modal, Box } from '@mui/material';
 
 import { Navigate, useNavigate } from 'react-router-dom';
+import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
-const APPLICATION_SERVER_URL = "http://localhost:8080/api/raidu/rooms/sessions";
+
+const APPLICATION_SERVER_URL = API_URL+"/api/raidu/rooms/sessions";
 
 // roomData = 대기방에서 받아온 정보들이 담긴 객체
 const TrainingRoomManager = ({ roomData }) => {
@@ -46,7 +48,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // (이건 아마 나중에는 쓸 필요는 없을 듯 - 같은 방 들어가기 확인용)
   const [inputWaitingRoomId, setInputWaitingRoomId] = useState(waitingRoomId || "");
   // 유효성 토큰 (로그인이 되었는가 // 나중에 다른 곳에서 받아와야 할 듯!)
-  const token = roomData.token
+  const token = localStorage.getItem('accessToken');
   // const token =
   //   "eyJhbGciOiJIUzUxMiJ9.eyJjYXRlZ29yeSI6IkFDQ0VTUyIsImVtYWlsIjoic3NhZnlAc3NhZnkuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MjI1MDAwMTgsImV4cCI6MTcyMzEwNDgxOH0.GAMSTSsS33cmxkty2r_ls4pY1xYDkvgflAhMUljGYOvBvOuHjRWZ9DKOCmVj0cwSvUmwwUMcqEadH-NPDVDsGQ";
 
@@ -66,11 +68,11 @@ const TrainingRoomManager = ({ roomData }) => {
   // 현재 어떤 단계인가 (세팅, 운동, 휴식, 정산으로 나뉠듯)
   const [currentStep, setCurrentStep] = useState('ready');
   // 정해둔 셋팅 시간(준비시간)
-  const [setupTime, setSetupTime] = useState(5);
+  const [setupTime, setSetupTime] = useState(3);
   // 정해둔 운동 시간
-  const [exerciseTime, setExerciseTime] = useState(15);
+  const [exerciseTime, setExerciseTime] = useState(2);
   // 정해둔 중간 정산 시간
-  const [middleMotionTime, setMiddleMotionTime] = useState(4);
+  const [middleMotionTime, setMiddleMotionTime] = useState(6);
   // 정해둔 휴식 시간
   const [restTime, setRestTime] = useState(8);
   // 정해둔 마지막 정산 전 애니메이션 시간
@@ -188,7 +190,7 @@ const TrainingRoomManager = ({ roomData }) => {
     setMainStreamManager(undefined);
     setPublisher(undefined);
 
-    navigate("/login");
+    navigate("/home");
 
 
   }, [session]);
@@ -398,13 +400,13 @@ const TrainingRoomManager = ({ roomData }) => {
       ) : (
         <div id="session" className="training">
           <div id="session-header" className="training-header">
-            <div>
+            {/* <div>
               <h1 id="session-title">운동방입니다.</h1>
               <button className="btn btn-large btn-danger" onClick={leaveSession}>
                 운동방 나가기
               </button>
               <progress vlaue={null} />
-            </div>
+            </div> */}
             <div>
               <h2>현재 단계 : {currentStep}</h2>
               {/* <input
@@ -428,7 +430,7 @@ const TrainingRoomManager = ({ roomData }) => {
             </div>
             <div className='progress-box'>
               {/* <h3>총 전투력 넣을 예정</h3> */}
-              <div>
+              {/* <div>
                 <input
                   type="number"
                   value={combatGauge}
@@ -436,16 +438,19 @@ const TrainingRoomManager = ({ roomData }) => {
                   min='0'
                   max='100'
                 />
-              </div>
-                <p>단계 : { combatLevel }</p>
-              <TotalCombatPower
-                visualParts={[
-                  {
-                    percentage: `${combatGauge}%`,
-                    color: "orange"
-                  }
-                ]}
-              />
+              </div> */}
+                <TotalCombatPower
+                  visualParts={[
+                    {
+                      percentage: `${combatGauge}%`,
+                      color: "orange"
+                    }
+                  ]}
+                />
+                <p style={{
+                  fontSize: '40px',
+                  fontWeight: 'bold',
+                }}>단계 : { combatLevel }</p>
             </div>
             <div className='soldier-box'>
                 {/* <h1>용사 gif</h1> */}
@@ -534,6 +539,9 @@ const TrainingRoomManager = ({ roomData }) => {
               <div style={{
                 width: '100%',
                 height: '20%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
                 // backgroundColor:'coral',
               }}>
                 <TimerRest currentTime={currentTime} timerActive={timerActive}/>
