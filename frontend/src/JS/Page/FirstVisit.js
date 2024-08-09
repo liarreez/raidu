@@ -21,7 +21,7 @@ import region_forest from "../../Imgs/region_forest.jpg";
 import region_sea from "../../Imgs/region_sea.jpg";
 
 import SpringAnime from "../Component/SpringAnime";
-import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
+import { API_URL } from "../../config"; // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
 const SERVERURL = API_URL;
 
@@ -83,9 +83,8 @@ const RegionSelecter = ({ setSelectedRegion }) => {
     </div>
   );
 };
-
 const FirstVisit = () => {
-  const [selectedRegion, setSelectedRegion] = useState(    {
+  const [selectedRegion, setSelectedRegion] = useState({
     id: 1,
     name: "근력의 절벽",
     icon: icon_cliff,
@@ -101,12 +100,12 @@ const FirstVisit = () => {
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
   const [nickname, setNickname] = useState("");
   const [isNicknameValid, setIsNicknameValid] = useState(false);
-  const [nicknameChecked, setNicknameChecked] = useState(false); // 중복 확인 여부 상태 추가
+  const [nicknameChecked, setNicknameChecked] = useState(false);
+  const [nicknameLengthValid, setNicknameLengthValid] = useState(true); // 닉네임 길이 유효성 상태 추가
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 페이지 입장 시 첫 번째 모달을 자동으로 열기
     setIsFirstModalOpen(true);
   }, []);
 
@@ -123,24 +122,25 @@ const FirstVisit = () => {
   };
 
   const handleNicknameChange = (e) => {
-    setNickname(e.target.value);
-    setNicknameChecked(false); // 닉네임이 변경될 때 중복 확인 상태 초기화
+    const value = e.target.value;
+
+    // 닉네임 길이 유효성 검사
+    if (value.length >= 2 && value.length <= 10) {
+      setNickname(value);
+      setNicknameLengthValid(true); // 유효한 길이일 때
+    } else {
+      setNickname(value.substring(0, 10)); // 최대 10자까지만 허용
+      setNicknameLengthValid(false); // 유효하지 않은 길이일 때
+    }
+    setNicknameChecked(false);
   };
 
   const checkNickname = async () => {
-    // 닉네임 중복 확인 로직을 여기에 추가
-    // 서버에 요청하여 닉네임 중복 확인
-  // nickname이 null인 경우
-  if (nickname === null) {
-    alert("닉네임 값이 없습니다.");
-    return;
-  }
-  
-  // nickname이 공백 문자열인 경우
-  if (nickname.trim() === "") {
-    alert("닉네임은 공백만으로 구성될 수 없습니다.");
-    return;
-  }
+    if (nickname === null || nickname.trim() === "" || !nicknameLengthValid) {
+      alert("닉네임이 올바르지 않습니다.");
+      return;
+    }
+
     const accessToken = localStorage.getItem("accessToken");
     try {
       const response = await axios.post(
@@ -149,7 +149,7 @@ const FirstVisit = () => {
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
-      console.log(response)
+      console.log(response);
 
       if (response.data.message === "Nickname check successfully") {
         setIsNicknameValid(true);
@@ -165,21 +165,16 @@ const FirstVisit = () => {
   };
 
   const completeAccountSetup = async () => {
-    if (isNicknameValid && nicknameChecked) {
-      // 계정 설정 완료 로직을 여기에 추가하세요
-      // 예: 서버에 사용자 정보 저장
-      console.log("등록 시도 닉네임 : " + nickname);
-      console.log("등록 시도 지역 : " + selectedRegion.name);
+    if (isNicknameValid && nicknameChecked && nicknameLengthValid) {
       try {
         const accessToken = localStorage.getItem("accessToken");
         console.log("지역/닉네임 설정 - 사용한 토큰 : " + accessToken);
         const response = await axios.post(
           `${SERVERURL}/api/raidu/userpage/register`,
-          { "nickname": nickname, "region": selectedRegion.name },
-          { headers: { "Authorization": `Bearer ${accessToken}` } }
+          { nickname: nickname, region: selectedRegion.name },
+          { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         console.log(response);
-        // setUser(data);
       } catch (error) {
         console.error("유저 정보 불러오기 실패...");
         console.log(error);
@@ -266,7 +261,7 @@ const FirstVisit = () => {
           <p className="modal-large-text underline">닉네임을 입력하세요</p>
           <div className="modal-name-input">
             <InputField
-              label="닉네임"
+              label="닉네임(2~10자)"
               type="text"
               value={nickname}
               onChange={handleNicknameChange}
@@ -280,7 +275,6 @@ const FirstVisit = () => {
               중복 확인
             </button>
           </div>
-          {/* 1. 중복확인을 누르지 않았을때 2. 중복확인을 눌렀으나 중복일때 3. 중복확인을 눌렀고 중복이 아닐때*/}
           <div
             style={{
               position: "relative",
@@ -303,7 +297,7 @@ const FirstVisit = () => {
               닉네임 중복 확인을 진행해주세요!
             </p>
             <p
-              className={`modal-small-text ${(nicknameChecked && !isNicknameValid) ? "" : "hidden"}`}
+              className={`modal-small-text ${nicknameChecked && !isNicknameValid ? "" : "hidden"}`}
               style={{
                 color: "red",
                 fontSize: "10px",
@@ -313,7 +307,7 @@ const FirstVisit = () => {
               이미 존재하는 닉네임입니다!
             </p>
             <p
-              className={`modal-small-text ${(nicknameChecked && isNicknameValid) ? "" : "hidden"}`}
+              className={`modal-small-text ${nicknameChecked && isNicknameValid ? "" : "hidden"}`}
               style={{
                 color: "green",
                 fontSize: "10px",
@@ -322,10 +316,36 @@ const FirstVisit = () => {
             >
               사용 가능한 닉네임입니다!
             </p>
+
+            <div
+              style={{
+                position: "relative",
+                height: "20px",
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: "10px",
+                top: "-10px",
+              }}
+            >
+              <p
+                className={`modal-small-text ${nicknameLengthValid ? "hidden" : ""}`}
+                style={{
+                  color: "red",
+                  fontSize: "10px",
+                  position: "absolute",
+                }}
+              >
+                닉네임은 2~10자 길이만 가능합니다!
+              </p>
+            </div>
           </div>
 
           <button
-            className={`modal-button button-green ${nicknameChecked ? "" : "hidden"}`}
+            className={`modal-button button-green ${
+              nicknameChecked && nicknameLengthValid ? "" : "hidden"
+            }`}
             onClick={completeAccountSetup}
           >
             계정 설정 완료

@@ -6,6 +6,12 @@ import SpringAnime from "../Component/SpringAnime";
 import "../../CSS/UserSearch.css";
 import ranking from "../../Imgs/ranking.gif";
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
+import { useNavigate } from "react-router-dom";
+
+import icon_cliff from "../../Imgs/icon_cliff.png";
+import icon_desert from "../../Imgs/icon_desert.png";
+import icon_forest from "../../Imgs/icon_forest.png";
+import icon_sea from "../../Imgs/icon_sea.png";
 
 const SERVERURL = API_URL;
 
@@ -13,6 +19,7 @@ const Ranking = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     try {
@@ -32,7 +39,21 @@ const Ranking = () => {
       setUsers([]);
     }
   };
-  
+
+  const getRegionDetails = (regionId) => {
+    switch (regionId) {
+      case 1:
+        return { name: "근력의 절벽", icon: icon_cliff };
+      case 2:
+        return { name: "인내력의 사막", icon: icon_desert };
+      case 3:
+        return { name: "민첩의 숲", icon: icon_forest };
+      case 4:
+        return { name: "유연의 바다", icon: icon_sea };
+      default:
+        return { name: "알 수 없는 지역", icon: "" };
+    }
+  };
 
   return (
     <FadeAnime>
@@ -48,18 +69,6 @@ const Ranking = () => {
                 <img alt="랭킹 아이콘" src={ranking}></img>
               </div>
               <h2>유저 검색</h2>
-              <SpringAnime from="up">
-                <div id="profile-card-container">
-                  {selectedUser ? (
-                    <div className="profile-card">
-                      <h3>{selectedUser.nickname}</h3>
-                      {/* 추가적인 내용을 서버에서 받아올 것 */}
-                    </div>
-                  ) : (
-                    <div className="profile-notchosen">선택한 유저 없음!</div>
-                  )}
-                </div>
-              </SpringAnime>
 
               <div className="title-bar">
                 <div>유저 리스트</div>
@@ -84,25 +93,30 @@ const Ranking = () => {
                 {users.length === 0 ? (
                   <div className="no-results">검색 결과가 없습니다. 유저를 검색해주세요.</div>
                 ) : (
-                  users.map((user) => (
-                    <div className="search-result-card" key={user.uuid}>
-                      <div>{user.nickname}</div>
-                      <div>{user.regionId}</div>
-                      <div>{user.currentSeasonUserScore}</div>
-                      <div>
-                        <button
-                          onClick={() => {
-                            setSelectedUser(user);
-                            document
-                              .getElementById("rank-icon")
-                              .scrollIntoView({ behavior: "smooth" });
-                          }}
-                        >
-                          프로필 카드
-                        </button>
+                  users.map((user) => {
+                    const regionDetails = getRegionDetails(user.regionId);
+                    return (
+                      <div className="search-result-card" key={user.uuid}>
+                        <div>{user.nickname}</div>
+                        <div>
+                          <div style={{display: "flex", flexDirection:"column", alignItems:"center", justifyContent: "center", fontWeight: "bold"}}>
+                            <img className="result-card-img" alt="지역 이미지" src={regionDetails.icon}></img>
+                            {regionDetails.name}
+                          </div>
+                        </div>
+                        <div>{user.currentSeasonUserScore}</div>
+                        <div>
+                          <button
+                            onClick={() => {
+                              console.log(navigate(`/mypage/${user.id}`));
+                            }}
+                          >
+                            마이페이지 방문
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             </div>

@@ -5,6 +5,7 @@ import SpringAnime from "../Component/SpringAnime";
 import "react-step-progress-bar/styles.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -16,6 +17,7 @@ import "../../CSS/Mypage.css";
 
 import test from "../../Imgs/test.png";
 import burgerking from "../../Imgs/burgerking.png";
+import turtleneck from "../../Imgs/turtleneck.png";
 import { useParams } from "react-router-dom";
 import AnimatedNumber from "../Component/AnimatedNumber";
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
@@ -58,6 +60,9 @@ function Mypage() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -83,11 +88,11 @@ function Mypage() {
   const renderMonsterCards = () => {
     const monsters = [
       { name: "이름 1", image: burgerking },
-      { name: "이름 2", image: burgerking },
+      { name: "이름 2", image: turtleneck },
       { name: "이름 3", image: burgerking },
-      { name: "이름 4", image: burgerking },
+      { name: "이름 4", image: turtleneck },
       { name: "이름 5", image: burgerking },
-      { name: "이름 6", image: burgerking },
+      { name: "이름 6", image: turtleneck },
     ];
 
     return (
@@ -180,7 +185,7 @@ function Mypage() {
     return <div>로딩 중...</div>; // 로딩 상태일 때 표시할 내용
   }
 
-  const expPercentage = (userData.exp / 1000) * 100;
+  const expPercentage = (userData.exp / 750) * 100;
 
   return (
     <FadeAnime>
@@ -214,7 +219,7 @@ function Mypage() {
                         <div style={{ display: "inline", fontWeight: "bold", fontSize: "16px" }}>LV</div>
                         <h2 style={{ margin: "0", padding: "0" }}>&nbsp; {`${userData.level}`}</h2>
                         <div style={{ color: "gray", marginLeft: "20px", fontSize: "14px" }}>
-                          <AnimatedNumber targetNumber={userData.exp} /> / 1000
+                          <AnimatedNumber targetNumber={userData.exp} /> / 750
                         </div>
                       </div>
                       <StepProgressBar expPercentage={expPercentage} />
@@ -225,7 +230,7 @@ function Mypage() {
                     </div>
                   </div>
                   <div className="profile-button-wrapper">
-                    <button>프로필 수정</button>
+                    <button onClick={()=>navigate("/editprofile")}>정보 수정</button>
                   </div>
                 </div>
               </div>
