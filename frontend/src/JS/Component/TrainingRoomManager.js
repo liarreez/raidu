@@ -26,15 +26,48 @@ const APPLICATION_SERVER_URL = API_URL+"/api/raidu/rooms/sessions";
 // roomData = 대기방에서 받아온 정보들이 담긴 객체
 const TrainingRoomManager = ({ roomData }) => {
 
+  // 대기방에서 운동방으로 넘어올 때 받은 정보들을 저장해준 후, 운동방을 자동 시작
+  // useEffect(() => {
+  //   joinTrainingRoom();
+  // }, [])
+
   // waitingRoomId = 대기방 고유 Id
   const waitingRoomId = roomData.roomId;
+  // 유저 닉네임
+  const myUserName = roomData.userInfo.nickname;
 
-  console.log(roomData)
+  // 현재 어떤 단계인가 (세팅, 운동, 휴식, 정산으로 나뉠듯)
+  const [currentStep, setCurrentStep] = useState('ready');
+  // 정해둔 셋팅 시간(준비시간)
+  const setupTime = 3;
+  // 정해둔 운동시간
+  const exerciseTime = roomData.roomInfo.roundTime;
+  // 정해둔 쉬는시간
+  const restTime = roomData.roomInfo.restTime;
+  // 정해둔 라운드(운동 횟수)
+  const roundCount = roomData.roomInfo.roundCount;
+  // 라운드 별 운동 배열
+  const exerciseForRound = roomData.exerciseInfo;
+  // 정해둔 완료 시간
+  const endingTime = 6;
+  // 현재 라운드
+  const [currentRound, setCurrentRound] = useState(0);
+  // 처음에 헷갈리지 않도록 만들기 위한 것(시작하였는가? 준비부터 시작되었는가?)
+  const [isStart, setIsStart] = useState(false);
 
+  // 정해둔 중간 정산 시간
+  const [middleMotionTime, setMiddleMotionTime] = useState(6);
+  // 정해둔 마지막 정산 전 애니메이션 시간
+  const [lastMotionTime, setLastMotionTime] = useState(3);
+
+
+  // console.log(roomData)
+
+  // 운동이 다 끝나고 [나가기] 클릭 시 이동하기 위한 navigate
   const navigate = useNavigate();
 
   // 유저 닉네임
-  const [myUserName, setMyUserName] = useState("");
+  // const [myUserName, setMyUserName] = useState("");
 
   // setMyUserName(roomData.me.nickname)
   // 세션 (개인의 세션 = 대기방에 들어간 한 사람의 비디오라고 생각하면 된다.)
@@ -66,25 +99,25 @@ const TrainingRoomManager = ({ roomData }) => {
   // 루틴 만들기... 인데 일단은 받아올 수 없으니 임시로 만들기.
   // 나중에 그냥 받아와도 괜찮고, 여기에 저장해도 OK.
   // 현재 어떤 단계인가 (세팅, 운동, 휴식, 정산으로 나뉠듯)
-  const [currentStep, setCurrentStep] = useState('ready');
-  // 정해둔 셋팅 시간(준비시간)
-  const [setupTime, setSetupTime] = useState(3);
-  // 정해둔 운동 시간
-  const [exerciseTime, setExerciseTime] = useState(2);
-  // 정해둔 중간 정산 시간
-  const [middleMotionTime, setMiddleMotionTime] = useState(6);
-  // 정해둔 휴식 시간
-  const [restTime, setRestTime] = useState(8);
-  // 정해둔 마지막 정산 전 애니메이션 시간
-  const [lastMotionTime, setLastMotionTime] = useState(3);
-  // 정해둔 완료 시간
-  const [endingTime, setEndingTime] = useState(6);
-  // 총 라운드 수
-  const [roundCount, setRoundCount] = useState(2);
-  // 현재 라운드
-  const [currentRound, setCurrentRound] = useState(0);
-  // 처음에 헷갈리지 않도록 만들기 위한 것(시작하였는가? 준비부터 시작되었는가?)
-  const [isStart, setIsStart] = useState(false);
+  // const [currentStep, setCurrentStep] = useState('ready');
+  // // 정해둔 셋팅 시간(준비시간)
+  // const [setupTime, setSetupTime] = useState(3);
+  // // 정해둔 운동 시간
+  // const [exerciseTime, setExerciseTime] = useState(2);
+  // // 정해둔 중간 정산 시간
+  // const [middleMotionTime, setMiddleMotionTime] = useState(6);
+  // // 정해둔 휴식 시간
+  // const [restTime, setRestTime] = useState(8);
+  // // 정해둔 마지막 정산 전 애니메이션 시간
+  // const [lastMotionTime, setLastMotionTime] = useState(3);
+  // // 정해둔 완료 시간
+  // const [endingTime, setEndingTime] = useState(6);
+  // // 총 라운드 수
+  // const [roundCount, setRoundCount] = useState(2);
+  // // 현재 라운드
+  // const [currentRound, setCurrentRound] = useState(0);
+  // // 처음에 헷갈리지 않도록 만들기 위한 것(시작하였는가? 준비부터 시작되었는가?)
+  // const [isStart, setIsStart] = useState(false);
 
   // 모달 열리고 닫힘 여부
   const [openModal, setOpenModal] = useState(false);
@@ -335,17 +368,17 @@ const TrainingRoomManager = ({ roomData }) => {
     }
   }, [currentStep]);
 
-  const createHashedUserName = ( ) => {
-    // 현재 시각을 밀리초 단위로 변환
-    const timestamp = Date.now();
-    // 랜덤 값 생성
-    const randomValue = Math.floor(Math.random() * 1001);
-    // 해시화 (간단한 예로, Base36 인코딩을 사용)
-    const hash = (timestamp + randomValue).toString(36).toUpperCase();
-    setMyUserName(hash);
-    console.log(hash, myUserName);
-    // return hash;
-  }
+  // const createHashedUserName = ( ) => {
+  //   // 현재 시각을 밀리초 단위로 변환
+  //   const timestamp = Date.now();
+  //   // 랜덤 값 생성
+  //   const randomValue = Math.floor(Math.random() * 1001);
+  //   // 해시화 (간단한 예로, Base36 인코딩을 사용)
+  //   const hash = (timestamp + randomValue).toString(36).toUpperCase();
+  //   setMyUserName(hash);
+  //   console.log(hash, myUserName);
+  //   // return hash;
+  // }
 
   // useEffect(() => {
   //   createHashedUserName();
@@ -372,13 +405,13 @@ const TrainingRoomManager = ({ roomData }) => {
           >
             <p>
               <label>닉네임: </label>
-              <input
+              {/* <input
                 className="form-control"
                 type="text"
                 value={myUserName}
-                onChange={(e) => setMyUserName(e.target.value)}
+                // onChange={(e) => setMyUserName(e.target.value)}
                 required
-              />
+              /> */}
             </p>
             <p>
               <label>세션 아이디 (선택 사항): </label>
