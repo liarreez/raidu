@@ -16,6 +16,7 @@ import "../../CSS/Mypage.css";
 
 import test from "../../Imgs/test.png";
 import burgerking from "../../Imgs/burgerking.png";
+import turtleneck from "../../Imgs/turtleneck.png";
 import { useParams } from "react-router-dom";
 import AnimatedNumber from "../Component/AnimatedNumber";
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
@@ -83,11 +84,11 @@ function Mypage() {
   const renderMonsterCards = () => {
     const monsters = [
       { name: "이름 1", image: burgerking },
-      { name: "이름 2", image: burgerking },
+      { name: "이름 2", image: turtleneck },
       { name: "이름 3", image: burgerking },
-      { name: "이름 4", image: burgerking },
+      { name: "이름 4", image: turtleneck },
       { name: "이름 5", image: burgerking },
-      { name: "이름 6", image: burgerking },
+      { name: "이름 6", image: turtleneck },
     ];
 
     return (
