@@ -1,8 +1,152 @@
-/* 전체 페이지를 뷰포트의 크기에 맞추기 위한 스타일 */
-.raidLobby-html {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
+@import url('./KeyColor.css');
+
+.lobby-page-wrapper {
     width: 100%;
     overflow: hidden;
+    min-width: 1200px;
+    height: 100vh;
+    /* height 값은 이미지 에셋 추가후 생각하자 */
+    background-size: cover;
+    background-position: bottom;
+    box-sizing: border-box;
+}
+
+.top-nav {
+    position: relative;
+    z-index: 10;
+}
+
+.lobby-content-wrapper {
+    display: flex;
+    /* position: absolute; */
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    /* margin-top: 140px; */
+}
+
+.lobby-content {
+    /* 사이징, 양식 */
+    display: flex;
+    width: 100vw;
+    height: calc(100vh + 300px);
+    background-color: white;
+    box-sizing: border-box;
+    overflow: hidden;
+    /* 그림자 */
+    box-shadow: 0px 18px 15px 5px rgba(0,0,0,0.3);
+    /* 위치 포지셔닝 */
+    top: -400px;
+    padding-top: 450px;
+    box-sizing: border-box;
+    position: relative;
+
+    gap: 20px;
+}
+
+
+.lobby-make-button {
+    width: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 140px;
+    border-radius: 8px 8px 8px 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0px 5px 10px 3px rgba(0,0,0,0.2);
+}
+
+.lobby-make-button img {
+    width: inherit;
+    height: inherit;
+    transition: all 0.3s linear;
+}
+
+.lobby-make-button img:hover {
+    filter: brightness(80%);
+    transform: scale(1.1);
+} 
+
+.lobby-make-button h3 {
+    position: absolute;
+    color: white;
+    background-color: rgba(0,0,0,0.5);
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 24px;
+
+    z-index: 2;
+}
+
+.lobby-list-wrapper {
+    flex: 3;
+    height: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 600px;
+    box-sizing: border-box;
+    margin-left: 60px;
+    overflow-y: auto;
+    position: relative;
+
+    /* 스크롤바 숨기기 */
+    ::-webkit-scrollbar {
+        width: 0px; /* 스크롤바 너비를 0으로 설정 */
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: transparent; /* 스크롤바 손잡이 색상을 투명으로 설정 */
+    }
+}
+
+.lobby-list-wrapper::before, 
+.lobby-list-wrapper::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 30px; /* 흐림 효과의 높이 */
+    pointer-events: none; /* 흐림 효과가 클릭 등 이벤트에 영향을 미치지 않도록 설정 */
+    z-index: 1;
+}
+
+.lobby-list-wrapper::before {
+    top: 0;
+    background: linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0));
+}
+
+.lobby-list-wrapper::after {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
+}
+
+
+
+.lobby-list-card {
+    min-width: 500px;
+    min-height: 120px;
+    max-height: 120px;
+    border-radius: 4px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    transition: 0.3s ease-in-out;
+    box-shadow: 0px 8px 8px 1px rgba(0,0,0,0.1);
+}
+
+.lobby-list-card:hover {
+    transform: scale(1.05);
+    border: 1px soid var(--hard-color-black);
+}
+
+.lobby-content-right {
+    flex: 2;
+    height: 480px;
+    display: flex;
+
+    justify-content: center;
+    margin-right: 60px;
 }

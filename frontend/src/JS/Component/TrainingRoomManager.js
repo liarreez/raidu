@@ -15,6 +15,8 @@ import burgerking from "../../Imgs/burgerking.png";
 import Timer from './Timer';
 import TimerRest from './TimerRest';
 
+import { Socketest } from './Socketest';
+
 import { Modal, Box } from '@mui/material';
 
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -26,13 +28,15 @@ const APPLICATION_SERVER_URL = API_URL+"/api/raidu/rooms/sessions";
 // roomData = 대기방에서 받아온 정보들이 담긴 객체
 const TrainingRoomManager = ({ roomData }) => {
 
-  console.log('받아온 데이터어어어어어어어어어어');
-  console.log(roomData)
+  const [hasJoined, setHasJoined] = useState(false);
 
   // 대기방에서 운동방으로 넘어올 때 받은 정보들을 저장해준 후, 운동방을 자동 시작
   useEffect(() => {
-    joinTrainingRoom();
-  }, [])
+    if (!hasJoined) {
+      joinTrainingRoom();
+      setHasJoined(true);
+    }
+  }, [hasJoined]);
 
   // waitingRoomId = 대기방 고유 Id
   const waitingRoomId = roomData.roomId;
@@ -51,17 +55,103 @@ const TrainingRoomManager = ({ roomData }) => {
   const roundCount = roomData.roomInfo.roundCount;
   // 라운드 별 운동 배열
   const exerciseForRound = roomData.exerciseInfo;
-  // 정해둔 완료 시간
+  // 정해둔 마지막 정산 전 애니메이션 시간
+  const lastMotionTime = 3;
+  // 정해둔 완료 시간(마지막 정산)
   const endingTime = 6;
   // 현재 라운드
   const [currentRound, setCurrentRound] = useState(0);
   // 처음에 헷갈리지 않도록 만들기 위한 것(시작하였는가? 준비부터 시작되었는가?)
   const [isStart, setIsStart] = useState(false);
 
+  console.log('운동 데이터어어어')
+  console.log(exerciseForRound);
+  console.log(exerciseForRound[currentRound]);
+
+  // 개인 운동 개수 저장을 위한 배열
+  const countForRound = [];
+  // 현재 운동 시 개수(운동이 완료되면 초기화)
+  const [currentCount, setCurrentCount] = useState(0);
+
+  // 자신 전투력
+  const [myCombatPower, setmyCombatPower] = useState(0);
+  // 전체 전투력
+  const [totalCombatPower, setTotalCombatPower] = useState(0);
+
+
+  // 웹 소켓을 위한 변수 선언
+  const [websocketClient, setWebsocketClient] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
+
+  useEffect(() => { 
+    // 페이지 진입 시 room PK를 가지고 소켓 클라이언트 객체를 생성합니다.
+    const client = new Socketest(waitingRoomId);
+    setWebsocketClient(client);
+    return() => {
+        if(client) {
+            client.disconnect();
+        }
+    };
+  }, [hasJoined]);
+  
+  useEffect(() => { 
+      // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
+      if(!websocketClient) return;
+      const connectWebSocket = async () => {
+          try {
+              await websocketClient.connect();
+              const subscription = websocketClient.subscribe('/sub/message/' + waitingRoomId, (message) => {
+                  const parsedMessage = JSON.parse(message.body);
+                  switch(parsedMessage.type){
+                    case '1': handleStartTimer(); break;
+                      default: console.log('?')
+                  }
+                  setMessages((prevMessages) => [...prevMessages, parsedMessage]);
+              });
+              return () => {
+                  if(subscription) subscription.unsubscribe();
+                  websocketClient.disconnect();
+              };
+          } catch (error) {
+              console.error('Error caused by websocket connecting process : ', error);
+          }
+      };
+      connectWebSocket();
+      return () => {
+          if(websocketClient) {
+              websocketClient.disconnect()
+          }
+      };
+  }, [websocketClient, hasJoined]);
+
+  const DESTINATION = '/pub/message';
+  const COMMONFORM = { // 메시지 타입 관계없이 공통적으로 쓰이는 내용입니다.
+    user: myUserName,
+    channel: waitingRoomId,
+    // timestamp: getTime()
+};
+
+
+  const sendTest1 = () => {
+    if (websocketClient) {
+      const message = JSON.stringify({
+        ...COMMONFORM,
+        type: '1',
+        startType: true,
+      })
+      websocketClient.send(DESTINATION, message);
+    }
+  };
+
+
+  
+  
+
+  
+
   // 정해둔 중간 정산 시간
-  const [middleMotionTime, setMiddleMotionTime] = useState(6);
-  // 정해둔 마지막 정산 전 애니메이션 시간
-  const [lastMotionTime, setLastMotionTime] = useState(3);
+  // const [middleMotionTime, setMiddleMotionTime] = useState(6);
 
 
   // console.log(roomData)
@@ -89,7 +179,7 @@ const TrainingRoomManager = ({ roomData }) => {
   //   "eyJhbGciOiJIUzUxMiJ9.eyJjYXRlZ29yeSI6IkFDQ0VTUyIsImVtYWlsIjoic3NhZnlAc3NhZnkuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MjI1MDAwMTgsImV4cCI6MTcyMzEwNDgxOH0.GAMSTSsS33cmxkty2r_ls4pY1xYDkvgflAhMUljGYOvBvOuHjRWZ9DKOCmVj0cwSvUmwwUMcqEadH-NPDVDsGQ";
 
   // 전투력 총합치 << 현재는 확인을 위해 넣은 것으로, 나중에는 모든 사람들 전투력 합산을 가져올 예정
-  const [CombatPower, setCombatPower] = useState(0);
+  // const [CombatPower, setCombatPower] = useState(0);
 
   // 운동 개수를 가져온 변수 << 나중에 모든 사람들 전투력과 합산 해야함
   const [countPower, setCountPower] = useState(0);
@@ -147,6 +237,7 @@ const TrainingRoomManager = ({ roomData }) => {
   //타이머 관련으로 넣은 값들. 나중에 수정 필요함
   // 타이머에 넣을 숫자 < 초기값은 0으로 설정
   const [initialTime, setInitialTime] = useState(0);
+  // 현재 시간(현재 지나가고 있는 시간)
   const [currentTime, setCurrentTime] = useState(0);
   // 타이머 시작 여부 상태
   const [timerActive, setTimerActive] = useState(false);
@@ -166,8 +257,10 @@ const TrainingRoomManager = ({ roomData }) => {
     setSession(mySession);
 
     mySession.on("streamCreated", (event) => {
-      const subscriber = mySession.subscribe(event.stream, undefined);
-      setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+      if (event.stream.connection.connectionId !== mySession.connection.connectionId) {
+        const subscriber = mySession.subscribe(event.stream, undefined);
+        setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+      }
     });
 
     mySession.on("streamDestroyed", (event) => {
@@ -233,7 +326,7 @@ const TrainingRoomManager = ({ roomData }) => {
 
 
   const getToken = async () => {
-    return await createToken(inputWaitingRoomId || waitingRoomId);
+    return await createToken(waitingRoomId);
   };
 
   const createToken = async (sessionId) => {
@@ -300,9 +393,9 @@ const TrainingRoomManager = ({ roomData }) => {
       if (currentRound < roundCount - 1) {
         // nextStep = 'middleMotion';
         // nextTime = middleMotionTime;
-        setCurrentStep('middleMotion');
-        setInitialTime(middleMotionTime);
-        setCurrentTime(middleMotionTime);
+        setCurrentStep('rest');
+        setInitialTime(restTime);
+        setCurrentTime(restTime);
         setTimerActive(true);
         setCurrentRound(currentRound + 1);
       } else {
@@ -313,13 +406,13 @@ const TrainingRoomManager = ({ roomData }) => {
         setCurrentTime(lastMotionTime);
         setTimerActive(true);
       }
-    } else if (currentStep === 'middleMotion') {
-      // nextStep = 'rest';
-      // nextTime = restTime;
-      setCurrentStep('rest');
-      setInitialTime(restTime);
-      setCurrentTime(restTime);
-      setTimerActive(true);
+    // } else if (currentStep === 'middleMotion') {
+    //   // nextStep = 'rest';
+    //   // nextTime = restTime;
+    //   setCurrentStep('rest');
+    //   setInitialTime(restTime);
+    //   setCurrentTime(restTime);
+    //   setTimerActive(true);
     } else if (currentStep === 'rest') {
       // nextStep = 'exercise';
       // nextTime = exerciseTime;
@@ -392,6 +485,7 @@ const TrainingRoomManager = ({ roomData }) => {
   //   joinTrainingRoom();
   // }, [])
 
+
   
 
   return (
@@ -451,7 +545,7 @@ const TrainingRoomManager = ({ roomData }) => {
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
-              <button onClick={handleStartTimer}>타이머 시작</button>
+              <button onClick={sendTest1}>타이머 시작</button>
             </div>
               <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} />
           </div>
