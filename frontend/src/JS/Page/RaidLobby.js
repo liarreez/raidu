@@ -4,127 +4,125 @@ import { Box, Button, Typography, Modal } from "@mui/material";
 import axios from "axios";
 
 import FadeAnime from "../Component/FadeAnime";
+import SpringAnime from "../Component/SpringAnime";
 import "../../CSS/RaidLobby.css";
 import TopNav from "../Component/TopNav";
 import { API_URL } from "../../config"; // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
+import raidu from "../../Imgs/button-raidu.png";
 
 // Modal 렌더링을 분리
 const RoomCreationModal = ({
-    modalOpen,
-    closeModal,
-    handleSubmit,
-    handleChange,
-    clearVals,
-    title,
-    maxParticipants,
-    roundTime,
-    restTime,
-    totalRounds,
-    isPublic,
-  }) => {
-    const modalStyle = {
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      width: 400,
-      bgcolor: "background.paper",
-      border: "2px solid #000",
-      borderRadius: "35px",
-      boxShadow: 24,
-      p: 4,
-    };
-  
-    return (
-      <Modal
-        open={modalOpen}
-        onClose={closeModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h5" component="h2">
-            방 만들기
-          </Typography>
-  
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="title">방 제목:</label>
-              <input type="text" id="title" name="title" value={title} onChange={handleChange} />
-            </div>
-  
-            <div>
-              <label htmlFor="maxParticipants">인원:</label>
-              <select
-                id="maxParticipants"
-                name="maxParticipants"
-                value={maxParticipants}
-                onChange={handleChange}
-              >
-                <option value="">1 ~ 4인 선택</option>
-                <option value="1">1인</option>
-                <option value="2">2인</option>
-                <option value="3">3인</option>
-                <option value="4">4인</option>
-              </select>
-            </div>
-  
-            <div>
-              <label htmlFor="roundTime">라운드별 시간 (초):</label>
-              <select id="roundTime" name="roundTime" value={roundTime} onChange={handleChange}>
-                <option value="">15 ~ 180초 선택</option>
-                {[...Array(10).keys()].map((i) => (
-                  <option key={i} value={(i + 1) * 15}>
-                    {(i + 1) * 15}
-                  </option>
-                ))}
-              </select>
-            </div>
-  
-            <div>
-              <label htmlFor="restTime">휴식 시간 (초):</label>
-  
-              <select id="restTime" name="restTime" value={restTime} onChange={handleChange}>
-                <option value="">15 ~ 180초 선택</option>
-                {[...Array(10).keys()].map((i) => (
-                  <option key={i} value={(i + 1) * 15}>
-                    {(i + 1) * 15}
-                  </option>
-                ))}
-              </select>
-            </div>
-  
-            <div>
-              <label htmlFor="totalRounds">라운드 수:</label>
-              <select
-                id="totalRounds"
-                name="totalRounds"
-                value={totalRounds}
-                onChange={handleChange}
-              >
-                <option value="">1 ~ 3라운드 선택</option>
-                <option value="1">1라운드</option>
-                <option value="2">2라운드</option>
-                <option value="3">3라운드</option>
-              </select>
-            </div>
-  
-            <div>
-              <label htmlFor="isPublic">비밀방 여부:</label>
-              <input type="checkbox" id="isPublic" name="isPublic" onChange={handleChange} />
-            </div>
-  
-            <button type="button" onClick={clearVals}>
-              취소
-            </button>
-            <button type="submit">만들기</button>
-          </form>
-        </Box>
-      </Modal>
-    );
+  modalOpen,
+  closeModal,
+  handleSubmit,
+  handleChange,
+  clearVals,
+  title,
+  maxParticipants,
+  roundTime,
+  restTime,
+  totalRounds,
+  isPublic,
+}) => {
+  const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    borderRadius: "35px",
+    boxShadow: 24,
+    p: 4,
   };
 
+  return (
+    <Modal
+      open={modalOpen}
+      onClose={closeModal}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={modalStyle}>
+        <Typography id="modal-modal-title" variant="h5" component="h2">
+          방 만들기
+        </Typography>
+
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="title">방 제목:</label>
+            <input type="text" id="title" name="title" value={title} onChange={handleChange} />
+          </div>
+
+          <div>
+            <label htmlFor="maxParticipants">인원:</label>
+            <select
+              id="maxParticipants"
+              name="maxParticipants"
+              value={maxParticipants}
+              onChange={handleChange}
+            >
+              <option value="">1 ~ 4인 선택</option>
+              <option value="1">1인</option>
+              <option value="2">2인</option>
+              <option value="3">3인</option>
+              <option value="4">4인</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="roundTime">라운드별 시간 (초):</label>
+            <select id="roundTime" name="roundTime" value={roundTime} onChange={handleChange}>
+              <option value="">15 ~ 180초 선택</option>
+              {[...Array(10).keys()].map((i) => (
+                <option key={i} value={(i + 1) * 15}>
+                  {(i + 1) * 15}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="restTime">휴식 시간 (초):</label>
+
+            <select id="restTime" name="restTime" value={restTime} onChange={handleChange}>
+              <option value="">15 ~ 180초 선택</option>
+              {[...Array(10).keys()].map((i) => (
+                <option key={i} value={(i + 1) * 15}>
+                  {(i + 1) * 15}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="totalRounds">라운드 수:</label>
+            <select id="totalRounds" name="totalRounds" value={totalRounds} onChange={handleChange}>
+              <option value="">1 ~ 3라운드 선택</option>
+              <option value="1">1라운드</option>
+              <option value="2">2라운드</option>
+              <option value="3">3라운드</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="isPublic">비밀방 여부:</label>
+            <input type="checkbox" id="isPublic" name="isPublic" onChange={handleChange} />
+          </div>
+
+          <button type="button" onClick={clearVals}>
+            취소
+          </button>
+          <button type="submit">만들기</button>
+        </form>
+      </Box>
+    </Modal>
+  );
+};
+
+// 여기부터 로비 렌더링
 const RaidLobby = () => {
   const [roomList, setRoomList] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -237,27 +235,40 @@ const RaidLobby = () => {
   return (
     <div className="raidLobby-html">
       <FadeAnime>
-        <TopNav />
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            height: "calc(100vh - 64px)",
-            flexGrow: 1,
-          }}
-        >
-          <div>
-            <button onClick={openModal}>방 만들기</button>
+        <div className="lobby-page-wrapper">
+          <div className="top-nav">
+            <TopNav />
           </div>
-          <div>
-            {roomList.map((each, index) => (
-              <Typography key={index} onClick={(e) => changeLocation(e, each.id)} style={{ cursor: "pointer" }}>
-                {each.title}
-              </Typography>
-            ))}
+
+          <div className="lobby-content-wrapper">
+            <SpringAnime from="down">
+              <div className="lobby-content">
+                {/* 방 리스트 */}
+                <div className="lobby-list-wrapper">
+                  {roomList.map((each, index) => (
+                    <div className="lobby-list-card" key={index} onClick={(e) => changeLocation(e, each.id)}>
+                      {/* <Typography
+                        key={index}
+                        onClick={(e) => changeLocation(e, each.id)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {each.title}
+                      </Typography> */}
+                      {each.title}
+                    </div>
+                  ))}
+                </div>
+                {/* 방 만들기 버튼 */}
+                <div className="lobby-content-right">
+                  <div className="lobby-make-button" onClick={openModal}>
+                    <h3>방 만들기</h3>
+                    <img src={raidu} alt="방 만들기" />
+                  </div>
+                </div>
+              </div>
+            </SpringAnime>
           </div>
-          <Box sx={{ flex: 5, border: "2px dashed black" }}></Box>
-        </Box>
+        </div>
 
         <RoomCreationModal
           modalOpen={modalOpen}
@@ -276,7 +287,5 @@ const RaidLobby = () => {
     </div>
   );
 };
-
-
 
 export default RaidLobby;
