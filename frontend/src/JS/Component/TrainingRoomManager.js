@@ -30,53 +30,6 @@ const TrainingRoomManager = ({ roomData }) => {
 
   const [hasJoined, setHasJoined] = useState(false);
 
-  // 웹 소켓을 위한 변수 선언
-  const [websocketClient, setWebsocketClient] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [chatMessages, setChatMessages] = useState([]);
-
-  useEffect(() => { 
-    // 페이지 진입 시 room PK를 가지고 소켓 클라이언트 객체를 생성합니다.
-    const client = new Socketest(waitingRoomId);
-    setWebsocketClient(client);
-    return() => {
-        if(client) {
-            client.disconnect();
-        }
-    };
-  }, [hasJoined]);
-  
-  useEffect(() => { 
-      // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
-      if(!websocketClient) return;
-      const connectWebSocket = async () => {
-          try {
-              await websocketClient.connect();
-              const subscription = websocketClient.subscribe('/sub/message/' + waitingRoomId, (message) => {
-                  const parsedMessage = JSON.parse(message.body);
-                  switch(parsedMessage.type){
-                      default: console.log('?')
-                  }
-                  setMessages((prevMessages) => [...prevMessages, parsedMessage]);
-              });
-              return () => {
-                  if(subscription) subscription.unsubscribe();
-                  websocketClient.disconnect();
-              };
-          } catch (error) {
-              console.error('Error caused by websocket connecting process : ', error);
-          }
-      };
-      connectWebSocket();
-      return () => {
-          if(websocketClient) {
-              websocketClient.disconnect()
-          }
-      };
-  }, [websocketClient, hasJoined]);
-
-
-  
   // 대기방에서 운동방으로 넘어올 때 받은 정보들을 저장해준 후, 운동방을 자동 시작
   useEffect(() => {
     if (!hasJoined) {
@@ -124,6 +77,76 @@ const TrainingRoomManager = ({ roomData }) => {
   const [myCombatPower, setmyCombatPower] = useState(0);
   // 전체 전투력
   const [totalCombatPower, setTotalCombatPower] = useState(0);
+
+
+  // 웹 소켓을 위한 변수 선언
+  const [websocketClient, setWebsocketClient] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
+
+  useEffect(() => { 
+    // 페이지 진입 시 room PK를 가지고 소켓 클라이언트 객체를 생성합니다.
+    const client = new Socketest(waitingRoomId);
+    setWebsocketClient(client);
+    return() => {
+        if(client) {
+            client.disconnect();
+        }
+    };
+  }, [hasJoined]);
+  
+  useEffect(() => { 
+      // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
+      if(!websocketClient) return;
+      const connectWebSocket = async () => {
+          try {
+              await websocketClient.connect();
+              const subscription = websocketClient.subscribe('/sub/message/' + waitingRoomId, (message) => {
+                  const parsedMessage = JSON.parse(message.body);
+                  switch(parsedMessage.type){
+                    case '1': handleStartTimer(); break;
+                      default: console.log('?')
+                  }
+                  setMessages((prevMessages) => [...prevMessages, parsedMessage]);
+              });
+              return () => {
+                  if(subscription) subscription.unsubscribe();
+                  websocketClient.disconnect();
+              };
+          } catch (error) {
+              console.error('Error caused by websocket connecting process : ', error);
+          }
+      };
+      connectWebSocket();
+      return () => {
+          if(websocketClient) {
+              websocketClient.disconnect()
+          }
+      };
+  }, [websocketClient, hasJoined]);
+
+  const DESTINATION = '/pub/message';
+  const COMMONFORM = { // 메시지 타입 관계없이 공통적으로 쓰이는 내용입니다.
+    user: myUserName,
+    channel: waitingRoomId,
+    // timestamp: getTime()
+};
+
+
+  const sendTest1 = () => {
+    if (websocketClient) {
+      const message = JSON.stringify({
+        ...COMMONFORM,
+        type: '1',
+        startType: true,
+      })
+      websocketClient.send(DESTINATION, message);
+    }
+  };
+
+
+  
+  
 
   
 
@@ -522,7 +545,7 @@ const TrainingRoomManager = ({ roomData }) => {
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
-              <button onClick={handleStartTimer}>타이머 시작</button>
+              <button onClick={sendTest1}>타이머 시작</button>
             </div>
               <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} />
           </div>
