@@ -26,11 +26,12 @@ const APPLICATION_SERVER_URL = API_URL+"/api/raidu/rooms/sessions";
 // roomData = 대기방에서 받아온 정보들이 담긴 객체
 const TrainingRoomManager = ({ roomData }) => {
 
-  console.log('받아온 데이터어어어어어어어어어어');
-  console.log(roomData)
+
 
   // 대기방에서 운동방으로 넘어올 때 받은 정보들을 저장해준 후, 운동방을 자동 시작
   useEffect(() => {
+    console.log('받아온 데이터어어어어어어어어어어');
+    console.log(roomData)
     joinTrainingRoom();
   }, [])
 
@@ -166,8 +167,10 @@ const TrainingRoomManager = ({ roomData }) => {
     setSession(mySession);
 
     mySession.on("streamCreated", (event) => {
-      const subscriber = mySession.subscribe(event.stream, undefined);
-      setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+      if (event.stream.connection.connectionId !== mySession.connection.connectionId) {
+        const subscriber = mySession.subscribe(event.stream, undefined);
+        setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+      }
     });
 
     mySession.on("streamDestroyed", (event) => {
@@ -391,6 +394,7 @@ const TrainingRoomManager = ({ roomData }) => {
   //   console.log(myUserName);
   //   joinTrainingRoom();
   // }, [])
+
 
   
 
