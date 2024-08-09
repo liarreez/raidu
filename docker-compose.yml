@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  openvidu_network:
+    external: true
+
 services:
   db:
     image: mysql:8.0.32
@@ -17,6 +21,8 @@ services:
       retries: 5
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - openvidu_network
 
   backend:
     build:
@@ -34,16 +40,20 @@ services:
       SPRING_DATASOURCE_PASSWORD: raidu1!
       SPRING_PROFILES_ACTIVE: prod
       JWT_SECRET: klmqskdlnpqncoqkwmdklcksoandfmklmqfmwqkdfcxnjkspring.application.name=raidu
-      OPENVIDU_URL: https://i11a108.p.ssafy.io:4443/
+      OPENVIDU_URL: http://i11a108.p.ssafy.io:4443/
       OPENVIDU_SECRET: z5F_hX2nQ-8rV3sW1dG7bM6tC
     command: >
       sh -c "./wait-for-it.sh db:3306 -- java -jar /app/app.jar"
+    networks:
+      - openvidu_network
 
   certbot:
     image: certbot/certbot
     volumes:
       - ./nginx/certbot/www:/var/www/certbot
       - ./nginx/certbot/conf:/etc/letsencrypt
+    networks:
+      - openvidu_network
 
   jenkins:
     image: jenkins/jenkins:lts
@@ -51,6 +61,8 @@ services:
       - "8081:8081" # Jenkins 포트 설정
     volumes:
       - jenkins_home:/var/jenkins_home
+    networks:
+      - openvidu_network
 
 volumes:
   db_data:
