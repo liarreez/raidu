@@ -6,6 +6,7 @@ import SpringAnime from "../Component/SpringAnime";
 import "../../CSS/UserSearch.css";
 import ranking from "../../Imgs/ranking.gif";
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
+import { useNavigate } from "react-router-dom";
 
 const SERVERURL = API_URL;
 
@@ -13,6 +14,7 @@ const Ranking = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     try {
@@ -48,18 +50,17 @@ const Ranking = () => {
                 <img alt="랭킹 아이콘" src={ranking}></img>
               </div>
               <h2>유저 검색</h2>
-              <SpringAnime from="up">
+              {/* <SpringAnime from="up">
                 <div id="profile-card-container">
                   {selectedUser ? (
                     <div className="profile-card">
                       <h3>{selectedUser.nickname}</h3>
-                      {/* 추가적인 내용을 서버에서 받아올 것 */}
                     </div>
                   ) : (
                     <div className="profile-notchosen">선택한 유저 없음!</div>
                   )}
                 </div>
-              </SpringAnime>
+              </SpringAnime> */}
 
               <div className="title-bar">
                 <div>유저 리스트</div>
@@ -92,13 +93,14 @@ const Ranking = () => {
                       <div>
                         <button
                           onClick={() => {
-                            setSelectedUser(user);
-                            document
-                              .getElementById("rank-icon")
-                              .scrollIntoView({ behavior: "smooth" });
+                            console.log(navigate(`/mypage/${user.id}`))
+                            // setSelectedUser(user);
+                            // document
+                            //   .getElementById("rank-icon")
+                            //   .scrollIntoView({ behavior: "smooth" });
                           }}
                         >
-                          프로필 카드
+                          마이페이지 방문
                         </button>
                       </div>
                     </div>
