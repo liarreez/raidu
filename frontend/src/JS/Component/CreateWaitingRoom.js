@@ -11,7 +11,7 @@ const CreateWaitingRoom = ({ setWaitingRoomId }) => {
   // 대기방 이름 저장하는 변수
   const [TrainingRoomName, setTrainingRoomName] = useState('');
   // 유효성 토큰 (로그인이 되었는가 // 나중에 다른 곳에서 받아와야 할 듯!)
-  const token = 'eyJhbGciOiJIUzUxMiJ9.eyJjYXRlZ29yeSI6IkFDQ0VTUyIsImVtYWlsIjoic3NhZnlAc3NhZnkuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MjI1MDAwMTgsImV4cCI6MTcyMzEwNDgxOH0.GAMSTSsS33cmxkty2r_ls4pY1xYDkvgflAhMUljGYOvBvOuHjRWZ9DKOCmVj0cwSvUmwwUMcqEadH-NPDVDsGQ';
+  const token = localStorage.getItem('accessToken');
 
 console.log(APPLICATION_SERVER_URL)
 
