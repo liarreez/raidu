@@ -17,7 +17,7 @@ const Ranking = () => {
   const handleSearch = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-      const response = await axios.get(`http://localhost:8080/api/raidu/userpage/list`, {
+      const response = await axios.get(SERVERURL + `/api/raidu/userpage/list`, {
         params: { nickname: searchTerm },
         headers: { Authorization: `Bearer ${accessToken}` }
       });
