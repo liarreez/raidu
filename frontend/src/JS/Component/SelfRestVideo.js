@@ -5,7 +5,7 @@ import * as poseDetection from "@tensorflow-models/pose-detection";
 import * as tf from "@tensorflow/tfjs-core";
 import "@tensorflow/tfjs-backend-webgl";
 
-import '../../CSS/SelfVideo.css'
+import '../../CSS/SelfRestVideo.css'
 
 // 휴식 시간에 보여질 작은 화면
 
@@ -263,17 +263,17 @@ const SelfRestVideo = (props) => {
         </select>
       </div>
       {props.streamManager !== undefined ? (
-        <div className="streamcomponent-self" id="myRestVideo">
+        <div className="streamcomponent-self-rest" id="myRestVideo">
           <OpenViduVideo streamManager={props.streamManager} />
-          <div className='self-name'>
+          <div className='self-rest-name'>
             <p>닉네임 : {getNicknameTag()}</p>
           </div>
-          <div className="count-box">
+          <div className="count-rest-box">
             {/* <p> Count: {count}</p> */}
             <p> count : 0 </p>
           </div>
           {!bodyState && (
-            <div className="warning">
+            <div className="warning-rest">
               <p>전신이 다 보이도록 멀리 떨어져주세요!</p>
             </div>
           )}
