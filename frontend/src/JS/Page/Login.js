@@ -41,7 +41,6 @@ const modalStyle = {
 };
 
 const SignUp = () => {
-  console.log(API_URL)
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,15 +75,18 @@ const SignUp = () => {
     // 회원가입 API 호출
     signUp({ email, password })
       .then(response => {
+        console.log(response)
+        alert("회원가입이 완료되었습니다!")
         handleClose();
       })
       .catch(error => {
         console.error(error);
+        if(error.response.data.message === "중복된 이메일입니다!") {
+          alert("이미 사용된 이메일입니다!");
+        }
         alert("회원가입에 실패했습니다.");
+        return;
       });
-
-    console.log("회원가입이 완료되었습니다.");
-    handleClose();
   };
 
   useEffect(() => {

@@ -172,7 +172,7 @@ const Main = () => {
               <HomeSlider />
             </div>
             <div className="home-num-container">
-              <Rerenderer>
+              <FirstRenderer>
                 <FadeAnime>
                   <div style={{display: "flex", flexDirection: "row"}}>
                   <div style={{color: "#66CD79"}}>
@@ -184,7 +184,7 @@ const Main = () => {
                   </div>
 
                 </FadeAnime>
-              </Rerenderer>
+              </FirstRenderer>
             </div>
 
             {/* <- 레이드 / 운동백과 -> */}
@@ -207,7 +207,7 @@ const Main = () => {
 
             {/* 현황판 */}
             <div style={{ height: "700px", width: "950px" }}>
-              <Rerenderer>
+              <FirstRenderer>
                 <SpringAnime>
                   <div className="home-stat-container">
                     <div className="home-season-title">Season1</div>
@@ -243,7 +243,7 @@ const Main = () => {
                     </div>
                   </div>
                 </SpringAnime>
-              </Rerenderer>
+              </FirstRenderer>
             </div>
           </div>
         </div>
