@@ -26,10 +26,13 @@ const APPLICATION_SERVER_URL = API_URL+"/api/raidu/rooms/sessions";
 // roomData = 대기방에서 받아온 정보들이 담긴 객체
 const TrainingRoomManager = ({ roomData }) => {
 
+  console.log('받아온 데이터어어어어어어어어어어');
+  console.log(roomData)
+
   // 대기방에서 운동방으로 넘어올 때 받은 정보들을 저장해준 후, 운동방을 자동 시작
-  // useEffect(() => {
-  //   joinTrainingRoom();
-  // }, [])
+  useEffect(() => {
+    joinTrainingRoom();
+  }, [])
 
   // waitingRoomId = 대기방 고유 Id
   const waitingRoomId = roomData.roomId;
@@ -81,7 +84,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // (이건 아마 나중에는 쓸 필요는 없을 듯 - 같은 방 들어가기 확인용)
   const [inputWaitingRoomId, setInputWaitingRoomId] = useState(waitingRoomId || "");
   // 유효성 토큰 (로그인이 되었는가 // 나중에 다른 곳에서 받아와야 할 듯!)
-  const token = localStorage.getItem('accessToken');
+  const acessToken = localStorage.getItem('accessToken');
   // const token =
   //   "eyJhbGciOiJIUzUxMiJ9.eyJjYXRlZ29yeSI6IkFDQ0VTUyIsImVtYWlsIjoic3NhZnlAc3NhZnkuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MjI1MDAwMTgsImV4cCI6MTcyMzEwNDgxOH0.GAMSTSsS33cmxkty2r_ls4pY1xYDkvgflAhMUljGYOvBvOuHjRWZ9DKOCmVj0cwSvUmwwUMcqEadH-NPDVDsGQ";
 
@@ -241,7 +244,7 @@ const TrainingRoomManager = ({ roomData }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
+            Authorization: "Bearer " + acessToken,
           },
         }
       );
