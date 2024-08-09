@@ -1,4 +1,33 @@
 @import url('./KeyColor.css');
+
+.hidden {
+    animation-name: fadeOut;
+    animation-duration: 0.5s; /* 애니메이션의 지속 시간 */
+    animation-fill-mode: forwards; /* 애니메이션이 완료된 후 상태 유지 */
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1; /* 시작 시 투명도 1 (완전 불투명) */
+    }
+    to {
+      opacity: 0; /* 끝 시 투명도 0 (완전 투명) */
+    }
+  }
+
+button {
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1; /* 버튼이 기본적으로 보임 */
+}
+
+button:disabled {
+    opacity: 0; /* disabled 상태일 때 투명도 0으로 설정 */
+}
+
+p {
+    transition: 0.3s ease-in-out;
+}
+
 .edit-page-wrapper {
     width: 100%;
     overflow-y: auto;
@@ -100,6 +129,14 @@
 
 .button-confirm:hover {
     background-color: var(--hard-color-green-selected);
+}
+
+.button-gray {
+    height: 35px;
+    border: none;
+    font-weight: bold;
+    font-family: inherit;
+    border-radius: 4px;
 }
 
 .button-cancel {

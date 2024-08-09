@@ -5,6 +5,7 @@ import SpringAnime from "../Component/SpringAnime";
 import "react-step-progress-bar/styles.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -58,6 +59,9 @@ function Mypage() {
   const [activeTab, setActiveTab] = useState("history");
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -181,7 +185,7 @@ function Mypage() {
     return <div>로딩 중...</div>; // 로딩 상태일 때 표시할 내용
   }
 
-  const expPercentage = (userData.exp / 1000) * 100;
+  const expPercentage = (userData.exp / 750) * 100;
 
   return (
     <FadeAnime>
@@ -215,7 +219,7 @@ function Mypage() {
                         <div style={{ display: "inline", fontWeight: "bold", fontSize: "16px" }}>LV</div>
                         <h2 style={{ margin: "0", padding: "0" }}>&nbsp; {`${userData.level}`}</h2>
                         <div style={{ color: "gray", marginLeft: "20px", fontSize: "14px" }}>
-                          <AnimatedNumber targetNumber={userData.exp} /> / 1000
+                          <AnimatedNumber targetNumber={userData.exp} /> / 750
                         </div>
                       </div>
                       <StepProgressBar expPercentage={expPercentage} />
@@ -226,7 +230,7 @@ function Mypage() {
                     </div>
                   </div>
                   <div className="profile-button-wrapper">
-                    <button>프로필 수정</button>
+                    <button onClick={()=>navigate("/editprofile")}>정보 수정</button>
                   </div>
                 </div>
               </div>
