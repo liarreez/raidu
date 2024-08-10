@@ -23,11 +23,12 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
 
-const APPLICATION_SERVER_URL = API_URL+"/api/raidu/rooms/sessions";
+const APPLICATION_SERVER_URL = API_URL+"/api/raidu/rooms";
 
 // roomData = 대기방에서 받아온 정보들이 담긴 객체
 const TrainingRoomManager = ({ roomData }) => {
 
+  // 운동방이 시작했는가? (joinTrainingRoom을 한번만 하기 위해 넣은 확인용)
   const [hasJoined, setHasJoined] = useState(false);
 
   // 대기방에서 운동방으로 넘어올 때 받은 정보들을 저장해준 후, 운동방을 자동 시작
@@ -44,6 +45,8 @@ const TrainingRoomManager = ({ roomData }) => {
   const myUserName = roomData.userInfo.nickname;
 
   // 현재 어떤 단계인가 (세팅, 운동, 휴식, 정산으로 나뉠듯)
+  // 기본 상태는 ready
+  // setup, exercise, rest, ending
   const [currentStep, setCurrentStep] = useState('ready');
   // 정해둔 셋팅 시간(준비시간)
   const setupTime = 3;
@@ -66,7 +69,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // 자신의 전투력
   const [myTotalCombatPower, setMyTotalCombatPower] = useState(0);
 
-  // 전체 전투력(프로그레스 바에 들어갈 예정)
+  // 전체 전투력(모두의 전투력이 들어갈 예정)
   const [totalCombatPower, setTotalCombatPower] = useState(0);
 
   // 전체 전투력 합산(웹소켓을 통해)
@@ -74,16 +77,27 @@ const TrainingRoomManager = ({ roomData }) => {
     setTotalCombatPower(totalCombatPower + score);
   };
 
+  // 프로그레스 바에 들어가는 전체 전투력 게이지
+  const [totalCombatGauge, setTotalCombatGauge] = useState(0);
+  // 프로그레스 바가 다 찰때마다 올라가는 레벨(단계)
+  const [totalCombatLevel, setTotalCombatLevel] = useState(0);
+
+  // 프로그레스 바 게이지와 레벨(단계)를 넣어주기 위한 내용
+  useEffect(() => {
+    const level = Math.floor((totalCombatPower) / 750);
+    const gauge = (totalCombatPower) % 750;
+    setTotalCombatGauge(gauge);
+    setTotalCombatLevel(level);
+    console.log(`잘 넣어집니당 ${gauge} ${combatGauge} / ${level} ${combatLevel}`);
+  }, [totalCombatPower])
+
   
   // const addMyCombatPower = (score, currentRound) => {
   //   myCombatPower[currentRound] += score;
   // }
 
-  
-  
-  
 
-  // 운동별 가중치
+  // 운동별 가중치(운동 종목 : 가중치)
   const exerciseScore = {
     'jumpingJack': 30,
     'lunge' : 50,
@@ -105,9 +119,9 @@ const TrainingRoomManager = ({ roomData }) => {
   // 처음에 헷갈리지 않도록 만들기 위한 것(시작하였는가? 준비부터 시작되었는가?)
   const [isStart, setIsStart] = useState(false);
 
-  console.log('운동 데이터어어어')
-  console.log(exerciseForRound);
-  console.log(exerciseForRound[currentRound]);
+  // console.log('운동 데이터어어어')
+  // console.log(exerciseForRound);
+  // console.log(exerciseForRound[currentRound]);
 
   // // 개인 운동 개수 저장을 위한 배열
   // const countForRound = [];
@@ -238,29 +252,6 @@ const TrainingRoomManager = ({ roomData }) => {
   const [combatLevel, setCombatLevel] = useState(0);
 
 
-  // 루틴 만들기... 인데 일단은 받아올 수 없으니 임시로 만들기.
-  // 나중에 그냥 받아와도 괜찮고, 여기에 저장해도 OK.
-  // 현재 어떤 단계인가 (세팅, 운동, 휴식, 정산으로 나뉠듯)
-  // const [currentStep, setCurrentStep] = useState('ready');
-  // // 정해둔 셋팅 시간(준비시간)
-  // const [setupTime, setSetupTime] = useState(3);
-  // // 정해둔 운동 시간
-  // const [exerciseTime, setExerciseTime] = useState(2);
-  // // 정해둔 중간 정산 시간
-  // const [middleMotionTime, setMiddleMotionTime] = useState(6);
-  // // 정해둔 휴식 시간
-  // const [restTime, setRestTime] = useState(8);
-  // // 정해둔 마지막 정산 전 애니메이션 시간
-  // const [lastMotionTime, setLastMotionTime] = useState(3);
-  // // 정해둔 완료 시간
-  // const [endingTime, setEndingTime] = useState(6);
-  // // 총 라운드 수
-  // const [roundCount, setRoundCount] = useState(2);
-  // // 현재 라운드
-  // const [currentRound, setCurrentRound] = useState(0);
-  // // 처음에 헷갈리지 않도록 만들기 위한 것(시작하였는가? 준비부터 시작되었는가?)
-  // const [isStart, setIsStart] = useState(false);
-
   // 모달 열리고 닫힘 여부
   const [openModal, setOpenModal] = useState(false);
 
@@ -381,7 +372,7 @@ const TrainingRoomManager = ({ roomData }) => {
   const createToken = async (sessionId) => {
     try {
       const response = await axios.post(
-        `${APPLICATION_SERVER_URL}/${sessionId}/connections`,
+        `${APPLICATION_SERVER_URL}/sessions/${sessionId}/connections`,
         {},
         {
           headers: {
@@ -421,57 +412,41 @@ const TrainingRoomManager = ({ roomData }) => {
 
   // 루틴 단계 넘어가기 로직
   const handleNextStep = () => {
-    // 현재 단계가 준비단계면 운동으로 넘어간다.
-    // let nextStep;
-    // let nextTime;
+    //들어오자마자 카메라 셋팅 단계로 넘어감
     if (currentStep === 'ready') {
-      // nextStep = 'setup';
-      // nextTime = setupTime;
       setCurrentStep('setup');
       setInitialTime(setupTime);
       setCurrentTime(setupTime);
       setTimerActive(true);
-    } else if (currentStep === 'setup') {
-      // nextStep = 'exercise';
-      // nextTime = exerciseTime;
+    } else if (currentStep === 'setup') { // 셋팅 단계 후 운동 시작
       setCurrentStep('exercise');
       setInitialTime(exerciseTime);
       setCurrentTime(exerciseTime);
       setTimerActive(true);
-    } else if (currentStep === 'exercise') {
+    } else if (currentStep === 'exercise') { // 라운드에 따라 운동 후 휴식 or 마지막 화면 나오기
       if (currentRound < roundCount - 1) {
-        // nextStep = 'middleMotion';
-        // nextTime = middleMotionTime;
         setCurrentStep('rest');
         setInitialTime(restTime);
         setCurrentTime(restTime);
         setTimerActive(true);
         setCurrentRound(currentRound + 1);
       } else {
-        // nextStep = 'lastMotion';
-        // nextTime = lastMotionTime;
         setCurrentStep('lastMotion');
         setInitialTime(lastMotionTime);
         setCurrentTime(lastMotionTime);
         setTimerActive(true);
       }
     // } else if (currentStep === 'middleMotion') {
-    //   // nextStep = 'rest';
-    //   // nextTime = restTime;
     //   setCurrentStep('rest');
     //   setInitialTime(restTime);
     //   setCurrentTime(restTime);
     //   setTimerActive(true);
     } else if (currentStep === 'rest') {
-      // nextStep = 'exercise';
-      // nextTime = exerciseTime;
       setCurrentStep('exercise');
       setInitialTime(exerciseTime);
       setCurrentTime(exerciseTime);
       setTimerActive(true);
     } else if (currentStep === 'lastMotion') {
-      // nextStep = 'ending';
-      // nextTime = endingTime
       setCurrentStep('ending');
       setInitialTime(endingTime);
       setCurrentTime(endingTime);
@@ -481,9 +456,6 @@ const TrainingRoomManager = ({ roomData }) => {
       setTimerActive(false);
       return;
     }
-
-    // setCurrentStep(nextStep);
-    // setInitialTime(nextTime);
   }
 
   useEffect(() => {
@@ -497,9 +469,6 @@ const TrainingRoomManager = ({ roomData }) => {
   const handleStartTimer = () => {
     setCurrentStep('ready');
     setInitialTime(0);
-    // setInitialTime(5);
-    // console.log(setupTime, initialTime);
-    // setCurrentTime(setupTime);
     setTimerActive(true);
     setIsStart(true);
   }
@@ -507,35 +476,67 @@ const TrainingRoomManager = ({ roomData }) => {
   // 특정 상태일 때(중간정산, 휴식, 마지막 모션 및 정산) 모달 나오도록
   useEffect(() => {
     if (['middleMotion', 'rest', 'lastMotion', 'ending'].includes(currentStep)) {
+      
+      // 정산 전 마지막 모션 때 API 보내주기
+      if (currentStep === 'lastMotion') {
+        // 현재 시간 받아주기
+        const nowDate = Date.now()
+        // 한국 시간으로 로컬라이징 + 저장 포멧
+        const endTime = new Date(nowDate + (9 * 60 * 60 * 1000)).toISOString().slice(0, 19);
+        
+        console.log('-------------------시간---------------------')
+        console.log(nowDate, endTime)
+
+        // API로 줄 roundRecordList 만들기
+        const roundRecordList = [];
+
+        for (let i = 0; i < exerciseForRound.length; i++) {
+          const roundRecord = {
+            roundNumber: (i + 1),
+            dictionaryName: exerciseForRound[i],
+            exerciseCount: eachRoundCount[i]
+          }
+          roundRecordList[i] = roundRecord
+        }
+
+
+      }
+
       setOpenModal(true);
     } else {
       setOpenModal(false);
     }
   }, [currentStep]);
 
-  // const createHashedUserName = ( ) => {
-  //   // 현재 시각을 밀리초 단위로 변환
-  //   const timestamp = Date.now();
-  //   // 랜덤 값 생성
-  //   const randomValue = Math.floor(Math.random() * 1001);
-  //   // 해시화 (간단한 예로, Base36 인코딩을 사용)
-  //   const hash = (timestamp + randomValue).toString(36).toUpperCase();
-  //   setMyUserName(hash);
-  //   console.log(hash, myUserName);
-  //   // return hash;
-  // }
 
-  // useEffect(() => {
-  //   createHashedUserName();
-  // }, [])
+  // 기록 저장을 위한 API
+  const record = async (roomId, endTime, roundRecordList) => {
+    try {
+      const response = await axios.post(
+        `${APPLICATION_SERVER_URL}/${roomId}/complete`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + acessToken,
+          },
+          body: {
+            email: 'email',
+            endTime: endTime,
+            personalCombatPower: myTotalCombatPower,
+            totalCombatPower: totalCombatPower,
+            participantsCount: subscribers.length,
+            stage: totalCombatLevel,
+            roundRecordList: roundRecordList,
+          }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("기록 저장에 실패하였습니다.", error);
+      throw error;
+    }
+  };
 
-  // useEffect(() => {
-  //   console.log(myUserName);
-  //   joinTrainingRoom();
-  // }, [])
-
-
-  
 
   return (
     <div className="">
@@ -631,7 +632,7 @@ const TrainingRoomManager = ({ roomData }) => {
                 <TotalCombatPower
                   visualParts={[
                     {
-                      percentage: `${combatGauge}%`,
+                      percentage: `${ totalCombatGauge }%`,
                       color: "orange"
                     }
                   ]}
@@ -639,7 +640,7 @@ const TrainingRoomManager = ({ roomData }) => {
                 <p style={{
                   fontSize: '40px',
                   fontWeight: 'bold',
-                }}>단계 : { combatLevel }</p>
+                }}>단계 : { totalCombatLevel }</p>
             </div>
             <div className='soldier-box'>
                 {/* <h1>용사 gif</h1> */}
