@@ -404,6 +404,8 @@ const TrainingRoomManager = ({ roomData }) => {
   //   }
   // }
 
+  // 운동 시간인지 아닌지를 확인하기 위한 boolean (운동 시간이 아닐 때 카운트가 올라가지 않도록)
+  const [isExercise, setIsExercise] = useState(false)
 
   // 타이머가 0이 되었을 때 다음 단계로 넘어가는 로직
   useEffect(() => {
@@ -425,18 +427,22 @@ const TrainingRoomManager = ({ roomData }) => {
       setCurrentStep('exercise');
       setInitialTime(exerciseTime);
       setCurrentTime(exerciseTime);
+      setIsExercise(true);
       setTimerActive(true);
     } else if (currentStep === 'exercise') { // 라운드에 따라 운동 후 휴식 or 마지막 화면 나오기
       if (currentRound < roundCount - 1) {
         setCurrentStep('rest');
         setInitialTime(restTime);
         setCurrentTime(restTime);
+        setIsExercise(false);
         setTimerActive(true);
-        // setCurrentRound(currentRound + 1);
+        setCurrentRound(currentRound + 1);
       } else {
         setCurrentStep('lastMotion');
         setInitialTime(lastMotionTime);
         setCurrentTime(lastMotionTime);
+        setCurrentRound(currentRound + 1);
+        setIsExercise(false);
         setTimerActive(true);
       }
     // } else if (currentStep === 'middleMotion') {
@@ -445,18 +451,21 @@ const TrainingRoomManager = ({ roomData }) => {
     //   setCurrentTime(restTime);
     //   setTimerActive(true);
     } else if (currentStep === 'rest') {
-      setCurrentRound(currentRound + 1);
+      // setCurrentRound(currentRound + 1);
       setCurrentStep('exercise');
       setInitialTime(exerciseTime);
       setCurrentTime(exerciseTime);
+      setIsExercise(true);
       setTimerActive(true);
     } else if (currentStep === 'lastMotion') {
       setCurrentStep('ending');
       setInitialTime(endingTime);
       setCurrentTime(endingTime);
+      setIsExercise(false);
       setTimerActive(true);
     } else if (currentStep === 'ending') {
-      setCurrentStep('finish!')
+      setCurrentStep('finish!');
+      setIsExercise(false);
       setTimerActive(false);
       return;
     }
@@ -654,7 +663,7 @@ const TrainingRoomManager = ({ roomData }) => {
                     sendTest2={sendTest2}
                     currentRound={currentRound} exerciseForRound={exerciseForRound}
                     myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
-                    roundWeight={roundWeight}
+                    roundWeight={roundWeight} isExercise={isExercise}
                     
                   />}
                 </div>

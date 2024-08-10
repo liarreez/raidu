@@ -31,8 +31,27 @@ const SelfVideo = (props) => {
   // const [jumpingJack, setJumpingJack] = useState(false)
   // const [lunge, setLunge] = useState(false)
 
-  // 현재 라운드에 선택한 운동(맨 초기값은 현재 라운드 운동으로 선택해준다.)
-  const [selectedExercise, setSelectedExercise] = useState(props.exerciseForRound[props.currentRound]);
+  // 현재 라운드에 선택한 운동을 넣을 변수
+  const [selectedExercise, setSelectedExercise] = useState('');
+
+  // 현재 라운드를 알려주는 변수(props로 가져온 현재 라운드와는 다른 변수이다. < 그 아이를 집어넣을 예정)
+  const [nowRound, setnowRound] = useState();
+
+  // 맨 처음 실행 한번만을 확인하기 위해 만든 것
+  const [nowStart, setNowStart] = useState(false)
+
+  // 처음에 비디오가 실행될 때, 현재 라운드와 운동을 바꿔줘야 한다.
+  useEffect(() => {
+    if (!nowStart) {
+      setNowStart(true);
+      setSelectedExercise(props.exerciseForRound[0]);
+      setnowRound(0);
+      console.log('비디오 시작합니다.');
+      console.log(selectedExercise);
+      initializeModel();
+    }
+
+  }, [])
 
   // let count = 0;
   let stageOfJumpingJack = "down";
@@ -117,6 +136,7 @@ const SelfVideo = (props) => {
 
   // 카운터 증가 함수
   const updateCount = () => {
+
     // count++;
     console.log('카운트가 증가합니당');
     console.log(count);
@@ -139,6 +159,8 @@ const SelfVideo = (props) => {
     // 카운트가 올라간걸 웹소켓으로 뿌린다.
     props.sendTest2();
     // console.log(`Current count: ${count}`);
+    // if (props.isExercise === true) {
+    // }
   };
 
   // 팔벌려뛰기 카운팅 함수
@@ -234,55 +256,97 @@ const SelfVideo = (props) => {
   
   
 
-  // 라운드 바뀔 시 운동이 바뀌는 이벤트
+  // 라운드 바뀔 시 운동이 바뀌는 이벤트 // 운동이 바뀐 후에는, 포즈 모델이 불러와져야 한다.
   useEffect(() => {
-    console.log('라운드 변경!')
-    props.eachRoundCount[(props.currentRound) - 1] = count;
-    props.myCombatPower[(props.currentRound) - 1] = count * props.roundWeight[(props.currentRound) - 1];
-    setCount(0);
-    setSelectedExercise(props.exerciseForRound[props.currentRound]);
-    // props.ChangeCount(0);
-    document.querySelector(".count-box > p").innerText = `숫자 : ${count}`;
-    // if (props.currentRound !== 0) {
-    // }
+    if (nowRound !== 0 && nowRound < props.roundWeight.length ) {
+      // 처음 라운드가 아닐 때에 & 라운드가 남아있을 때 실행
+      console.log('라운드 변경!');
+      console.log(nowRound);
+      props.eachRoundCount[(nowRound) - 1] = count;
+      props.myCombatPower[(nowRound) - 1] = count * props.roundWeight[(nowRound) - 1];
+      setCount(0);
+      setSelectedExercise(props.exerciseForRound[nowRound]);
+      // props.ChangeCount(0);
+      document.querySelector(".count-box > p").innerText = `숫자 : ${count}`;
+
+      // 운동 종류에 따라 알림 내용 다르게 하기
+      if (selectedExercise === 'jumpingJack') {
+        document.querySelector(".warning > p").innerText = `전신이 다 보이도록 멀리 떨어져주세요!`;
+      } else if (selectedExercise === 'lunge') {
+        document.querySelector(".warning > p").innerText = `측면이 다 보이도록 멀리 떨어져주세요!`;
+      } else if (selectedExercise === 'default') {
+        document.querySelector(".warning > p").innerText = `카메라에 잘 보이게 서주세요!`;
+      }
+
+      initializeModel();
+
+    } else if (nowRound === props.roundWeight.length) {
+      // 마지막 운동 후 실행
+      console.log('마지막 라운드 끝!');
+      console.log(nowRound);
+      props.eachRoundCount[(nowRound) - 1] = count;
+      props.myCombatPower[(nowRound) - 1] = count * props.roundWeight[(nowRound) - 1];
+    }
+
+  }, [nowRound])
+
+
+  // 위에서 라운드가 바뀌면 내부에 있는 라운드도 바꿔준다!
+  useEffect(() => {
+    setnowRound(props.currentRound);
   }, [props.currentRound])
 
 
-  // 운동 바꾸는 이벤트
-  const handleExerciseChange = (e) => {
-    console.log(e.target.value);
-    setSelectedExercise(e.target.value);
-    setCount(0);
-    // props.ChangeCount(0);
-    document.querySelector(".count-box > span").innerText = `Count: ${count}`;
-  };
-
-  useEffect(() => {
-    // 운동 종류에 따라 알림 내용 다르게 하기
-    if (selectedExercise === 'jumpingJack') {
-      document.querySelector(".warning > p").innerText = `전신이 다 보이도록 멀리 떨어져주세요!`;
-    } else if (selectedExercise === 'lunge') {
-      document.querySelector(".warning > p").innerText = `측면이 다 보이도록 멀리 떨어져주세요!`;
-    } else if (selectedExercise === 'default') {
-      document.querySelector(".warning > p").innerText = `카메라에 잘 보이게 서주세요!`;
-    }
-
-
-    const initializeModel = async () => {
-      if (OpenViduVideo) {
-        await tf.setBackend("webgl");
-        await tf.ready();
-        const videoElement = document.querySelector("#myVideo>video");
-        if (videoElement) {
-          if (videoElement && videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
-            await makeModel(videoElement);
-          }
+  // 포즈 모델을 부르는 함수
+  const initializeModel = async () => {
+    if (OpenViduVideo) {
+      await tf.setBackend("webgl");
+      await tf.ready();
+      const videoElement = document.querySelector("#myVideo>video");
+      if (videoElement) {
+        if (videoElement && videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
+          await makeModel(videoElement);
         }
       }
-    };
+    }
+  };
 
-    initializeModel();
-  }, [selectedExercise]);
+
+  // // 운동 바꾸는 이벤트
+  // const handleExerciseChange = (e) => {
+  //   console.log(e.target.value);
+  //   setSelectedExercise(e.target.value);
+  //   setCount(0);
+  //   // props.ChangeCount(0);
+  //   document.querySelector(".count-box > span").innerText = `Count: ${count}`;
+  // };
+
+  // useEffect(() => {
+  //   // 운동 종류에 따라 알림 내용 다르게 하기
+  //   if (selectedExercise === 'jumpingJack') {
+  //     document.querySelector(".warning > p").innerText = `전신이 다 보이도록 멀리 떨어져주세요!`;
+  //   } else if (selectedExercise === 'lunge') {
+  //     document.querySelector(".warning > p").innerText = `측면이 다 보이도록 멀리 떨어져주세요!`;
+  //   } else if (selectedExercise === 'default') {
+  //     document.querySelector(".warning > p").innerText = `카메라에 잘 보이게 서주세요!`;
+  //   }
+
+
+  //   const initializeModel = async () => {
+  //     if (OpenViduVideo) {
+  //       await tf.setBackend("webgl");
+  //       await tf.ready();
+  //       const videoElement = document.querySelector("#myVideo>video");
+  //       if (videoElement) {
+  //         if (videoElement && videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
+  //           await makeModel(videoElement);
+  //         }
+  //       }
+  //     }
+  //   };
+
+  //   initializeModel();
+  // }, [selectedExercise]);
 
   // useEffect(() => {
   //   props.ChangeCount(count)
