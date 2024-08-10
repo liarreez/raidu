@@ -2,6 +2,7 @@ package com.sixstar.raidu.domain.rooms.service;
 
 import com.sixstar.raidu.domain.dictionary.entity.Dictionary;
 import com.sixstar.raidu.domain.dictionary.repository.DictionaryRepository;
+import com.sixstar.raidu.domain.main.dto.RegionResponseDto;
 import com.sixstar.raidu.domain.main.entity.Region;
 import com.sixstar.raidu.domain.main.entity.Season;
 import com.sixstar.raidu.domain.main.entity.SeasonRegionScore;
@@ -272,14 +273,26 @@ public class RoomServiceImpl implements RoomService{
 
         // 경험치, 레벨, 최고기록 업데이트
         UserProfile userProfile = findUserProfileByEmailOrThrow(request.getEmail());
-        int gainedExp = (room.getRoundTime()/60)*50;
+        int gainedExp = ((room.getRoundTime()*room.getTotalRounds())/60)*50;
+
+        boolean isLevelUp = false;
+        if(userProfile.getExp()+gainedExp >= 750){
+            isLevelUp = true;
+        }
+
         userProfile.updateExp(gainedExp);
-        userProfile.updateBestScore(request.getPersonalCombatPower(), request.getEndTime());
+
+        boolean isBestScoreUpdated = false;
+        if(userProfile.getBestScore() < request.getPersonalCombatPower())
+        {
+            userProfile.updateBestScore(request.getPersonalCombatPower(), request.getEndTime());
+            isBestScoreUpdated = true;
+        }
 
         // 시즌지역점수, 시즌사용자점수 누적
         Season season = seasonRepository.findSeasonByEndTime(request.getEndTime())
                 .orElseThrow(() -> new BaseException(BaseFailureResponse.SEASON_NOT_FOUND));
-        updateSeasonScores(season, userProfile.getRegion(), userProfile, request.getPersonalCombatPower());
+        SeasonRegionScore updatedSeasonRegionScore = updateSeasonScores(season, userProfile.getRegion(), userProfile, request.getPersonalCombatPower());
 
         // exerciseRoom 저장
         ExerciseRoomRecord exerciseRoomRecord = ExerciseRoomRecordSaveRequest.toEntity(userProfile, room, request);
@@ -299,8 +312,13 @@ public class RoomServiceImpl implements RoomService{
 
         // 업데이트된 레벨, 경험치 반환
         Map<String, Object> map = new HashMap<>();
+        map.put("region", RegionResponseDto.fromEntity(updatedSeasonRegionScore.getRegion()));
+        map.put("updatedSeasonScore", updatedSeasonRegionScore.getScore());
         map.put("updatedLevel", userProfile.getLevel());
         map.put("updatedExp", userProfile.getExp());
+        map.put("isLevelUp", isLevelUp);
+        map.put("isBestScoreUpdated", isBestScoreUpdated);
+
         return map;
     }
 
@@ -348,12 +366,14 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Transactional
-    private void updateSeasonScores(Season currentSeason, Region region, UserProfile userProfile, int personalCombatPower) {
+    private SeasonRegionScore updateSeasonScores(Season currentSeason, Region region, UserProfile userProfile, int personalCombatPower) {
         SeasonUserScore seasonUserScore = seasonUserScoreRepository.findBySeasonAndUserProfile(currentSeason, userProfile);
         seasonUserScore.updateSeasonUserScore(personalCombatPower);
 
         SeasonRegionScore seasonRegionScore = seasonRegionScoreRepository.findBySeasonAndRegion(currentSeason, region);
         seasonRegionScore.updateSeasonRegionScore(personalCombatPower);
+
+        return seasonRegionScore;
     }
 
 }

@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.345558bf.css",
-    "main.js": "/static/js/main.e78d030d.js",
+    "main.js": "/static/js/main.def686d4.js",
     "static/media/back.jpg": "/static/media/back.6a4fd6d197a02180bf7e.jpg",
     "static/media/monster.gif": "/static/media/monster.274051db64c80eb2b9cd.gif",
     "static/media/icon_desert.png": "/static/media/icon_desert.9a324217477905e5da71.png",
@@ -33,10 +33,10 @@
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
     "main.345558bf.css.map": "/static/css/main.345558bf.css.map",
-    "main.e78d030d.js.map": "/static/js/main.e78d030d.js.map"
+    "main.def686d4.js.map": "/static/js/main.def686d4.js.map"
   },
   "entrypoints": [
     "static/css/main.345558bf.css",
-    "static/js/main.e78d030d.js"
+    "static/js/main.def686d4.js"
   ]
 }

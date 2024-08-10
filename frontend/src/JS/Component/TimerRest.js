@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../CSS/Timer.css'
 
-// 타이머를 위한 컴포넌트
+// 휴식시간 타이머를 위한 컴포넌트
 
 const TimerRest = ({ currentTime, timerActive}) => {
   const [count, setCount] = useState(currentTime);

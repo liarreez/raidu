@@ -26,9 +26,27 @@ const SelfVideo = (props) => {
   const LEFT_ANKLE = 15;
   const RIGHT_ANKLE = 16;
 
+
+  const [bodyState, setBodyState] = useState(false);
+  // const [jumpingJack, setJumpingJack] = useState(false)
+  // const [lunge, setLunge] = useState(false)
+
+  // 현재 라운드에 선택한 운동(맨 초기값은 현재 라운드 운동으로 선택해준다.)
+  const [selectedExercise, setSelectedExercise] = useState(props.exerciseForRound[props.currentRound]);
+
   // let count = 0;
   let stageOfJumpingJack = "down";
   let stageOfLunge = "up";
+
+  // const [count, setCount] = useState(0);
+  // 운동 개수를 세줄 변수 (라운드별로 초기화 예정)
+  let count = 0;
+  const setCount = (num) => {
+    count = num;
+  };
+
+  // 비디오에서 보여지는 내 총 전투력
+  const [selfCombatPower, setSelfCombatPower] = useState(0);
 
   const makeModel = async (video) => {
     const detectorConfig = {
@@ -96,14 +114,30 @@ const SelfVideo = (props) => {
     return angle;
   }
 
+
   // 카운터 증가 함수
   const updateCount = () => {
     // count++;
+    console.log('카운트가 증가합니당');
     console.log(count);
     const newCount = count + 1;
     setCount(newCount);
-    props.ChangeCount(newCount);
-    document.querySelector(".count-box > p").innerText = `Count: ${count}`;
+    // props.ChangeCount(newCount);
+
+    console.log('현재 라운드!!!');
+    console.log(props.currentRound);
+    console.log('현재 운동 가중치');
+    console.log(props.roundWeight[props.currentRound]);
+
+    //현재 라운드에 설정되어 있는 운동의 가중치 * 운동 횟수로 점수 설정
+    setSelfCombatPower(selfCombatPower + (count * props.roundWeight[props.currentRound]))
+    console.log(selfCombatPower);
+
+    document.querySelector(".count-box > p").innerText = `전투력 : ${selfCombatPower}`;
+    document.querySelector(".count-box > span").innerText = `숫자 : ${count}`;
+
+    // 카운트가 올라간걸 웹소켓으로 뿌린다.
+    props.sendTest2();
     // console.log(`Current count: ${count}`);
   };
 
@@ -126,7 +160,7 @@ const SelfVideo = (props) => {
 
     if (angle1 < 30 && angle2 < 30 && angle3 > 150 && angle4 > 150 && stageOfJumpingJack === "up") {
       stageOfJumpingJack = "down";
-      // console.log("했다했다");
+      console.log("했다했다");
       updateCount();
     }
     if (
@@ -197,15 +231,21 @@ const SelfVideo = (props) => {
 
 
 
-  // const [count, setCount] = useState(0);
-  let count = 0;
-  const setCount = (num) => {
-    count = num;
-  };
-  const [bodyState, setBodyState] = useState(false);
-  // const [jumpingJack, setJumpingJack] = useState(false)
-  // const [lunge, setLunge] = useState(false)
-  const [selectedExercise, setSelectedExercise] = useState("");
+  
+  
+
+  // 라운드 바뀔 시 운동이 바뀌는 이벤트
+  useEffect(() => {
+    console.log('라운드 변경!')
+    props.eachRoundCount[(props.currentRound) - 1] = count;
+    props.myCombatPower[(props.currentRound) - 1] = count * props.roundWeight[(props.currentRound) - 1];
+    setCount(0);
+    setSelectedExercise(props.exerciseForRound[props.currentRound]);
+    // props.ChangeCount(0);
+    document.querySelector(".count-box > p").innerText = `숫자 : ${count}`;
+    // if (props.currentRound !== 0) {
+    // }
+  }, [props.currentRound])
 
 
   // 운동 바꾸는 이벤트
@@ -213,8 +253,8 @@ const SelfVideo = (props) => {
     console.log(e.target.value);
     setSelectedExercise(e.target.value);
     setCount(0);
-    props.ChangeCount(0);
-    document.querySelector(".count-box > p").innerText = `Count: ${count}`;
+    // props.ChangeCount(0);
+    document.querySelector(".count-box > span").innerText = `Count: ${count}`;
   };
 
   useEffect(() => {
@@ -255,22 +295,24 @@ const SelfVideo = (props) => {
 
   return (
     <div>
-      <div>
+      {/* <div>
         <select name="select" id="" onChange={handleExerciseChange}>
           <option value="default">운동을 선택해주세요.</option>
           <option value="jumpingJack">팔벌려뛰기</option>
           <option value="lunge">런지</option>
         </select>
-      </div>
+      </div> */}
       {props.streamManager !== undefined ? (
         <div className="streamcomponent-self" id="myVideo">
           <OpenViduVideo streamManager={props.streamManager} />
           <div className='self-name'>
             <p>닉네임 : {getNicknameTag()}</p>
+            <p>현재 운동 : { selectedExercise }</p>
           </div>
           <div className="count-box">
             {/* <p> Count: {count}</p> */}
-            <p> count : 0 </p>
+            <p> 전투력 : {selfCombatPower} </p>
+            <span>숫자 : { count }</span>
           </div>
           {!bodyState && (
             <div className="warning">
