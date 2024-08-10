@@ -499,6 +499,15 @@ const TrainingRoomManager = ({ roomData }) => {
           roundRecordList[i] = roundRecord
         }
 
+        // 라운드별 자신의 전투력으로 총 전투력 만들기
+        myCombatPower.forEach(power => {
+          setMyTotalCombatPower(myTotalCombatPower + power);
+        })
+
+        // 기록 저장
+
+        // 잡은 몬스터 정보 불러오기
+
 
       }
 
@@ -520,7 +529,7 @@ const TrainingRoomManager = ({ roomData }) => {
             Authorization: "Bearer " + acessToken,
           },
           body: {
-            email: 'email',
+            email: 'email 받으면 넣기',
             endTime: endTime,
             personalCombatPower: myTotalCombatPower,
             totalCombatPower: totalCombatPower,
@@ -533,6 +542,30 @@ const TrainingRoomManager = ({ roomData }) => {
       return response.data;
     } catch (error) {
       console.error("기록 저장에 실패하였습니다.", error);
+      throw error;
+    }
+  };
+
+  // 몬스터 정보를 가져오는 API
+  const getMonster = async () => {
+    try {
+      const response = await axios.post(
+        `${APPLICATION_SERVER_URL}/monster`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + acessToken,
+          },
+          body: {
+            "email": 'email 받으면 넣기',
+            "stage": totalCombatLevel,
+          }
+          
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("몬스터 불러오기가 실패하였습니다.", error);
       throw error;
     }
   };
@@ -613,7 +646,8 @@ const TrainingRoomManager = ({ roomData }) => {
                   <SelfVideo streamManager={publisher}
                     ChangeCount={ChangeCount} sendTest2={sendTest2}
                     currentRound={currentRound} exerciseForRound={exerciseForRound}
-                    myCombatPower={myCombatPower}
+                    myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
+                    roundWeight={roundWeight}
                     
                   />}
                 </div>

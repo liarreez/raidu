@@ -96,6 +96,9 @@ const SelfVideo = (props) => {
     return angle;
   }
 
+  // 비디오에서 보여지는 내 총 전투력
+  const [selfCombatPower, setSelfCombatPower] = useState(0);
+
   // 카운터 증가 함수
   const updateCount = () => {
     // count++;
@@ -103,7 +106,13 @@ const SelfVideo = (props) => {
     const newCount = count + 1;
     setCount(newCount);
     props.ChangeCount(newCount);
-    document.querySelector(".count-box > p").innerText = `Count: ${count}`;
+
+    //현재 라운드에 설정되어 있는 운동의 가중치 * 운동 횟수로 점수 설정
+    setSelfCombatPower(selfCombatPower + (count * props.roundWeight[props.currentRound]))
+
+    document.querySelector(".count-box > p").innerText = `전투력 : ${selfCombatPower}`;
+
+    // 카운트가 올라간걸 웹소켓으로 뿌린다.
     props.sendTest2();
     // console.log(`Current count: ${count}`);
   };
@@ -210,7 +219,8 @@ const SelfVideo = (props) => {
 
   // 라운드 바뀔 시 운동이 바뀌는 이벤트
   useEffect(() => {
-    props.myCombatPower[(props.currentRound) - 1] = count;
+    props.eachRoundCount[(props.currentRound) - 1] = count;
+    props.myCombatPower[(props.currentRound) - 1] = count * props.roundWeight[(props.currentRound) - 1];
     setCount(0);
     setSelectedExercise(props.exerciseForRound[props.currentRound])
   }, [props.currentRound])
@@ -263,22 +273,23 @@ const SelfVideo = (props) => {
 
   return (
     <div>
-      <div>
+      {/* <div>
         <select name="select" id="" onChange={handleExerciseChange}>
           <option value="default">운동을 선택해주세요.</option>
           <option value="jumpingJack">팔벌려뛰기</option>
           <option value="lunge">런지</option>
         </select>
-      </div>
+      </div> */}
       {props.streamManager !== undefined ? (
         <div className="streamcomponent-self" id="myVideo">
           <OpenViduVideo streamManager={props.streamManager} />
           <div className='self-name'>
             <p>닉네임 : {getNicknameTag()}</p>
+            <p>현재 운동 : { selectedExercise }</p>
           </div>
           <div className="count-box">
             {/* <p> Count: {count}</p> */}
-            <p> count : 0 </p>
+            <p> 전투력 : {selfCombatPower} </p>
           </div>
           {!bodyState && (
             <div className="warning">
