@@ -74,21 +74,59 @@ const TrainingRoomManager = ({ roomData }) => {
   // 라운드 별 운동 가중치(운동에 따라 저장)
   const roundWeight = [];
   // 라운드 별 운동 횟수(count)
-  const eachRoundCount = [];
+  // const eachRoundCount = [];
+  const [eachRoundCount, setEachRoundCount] = useState([]);
   // 라운드 별 전투력(가중치 * 횟수)
-  const myCombatPower = [];
+  // const myCombatPower = [];
+  const [myCombatPower, setMyCombatPower] = useState([]);
   // 자신의 전투력
   const [myTotalCombatPower, setMyTotalCombatPower] = useState(0);
 
-  // 실험용(바로바로 누적되는 자신의 전투력)
-  let addMyCombatPower = 0;
-
-  useEffect(() => {
-    addMyCombatPower = 0;
-    myCombatPower.forEach(power => {
-      addMyCombatPower = addMyCombatPower + power
+  // 자식 컴포넌트(selfVideo) 에서 라운드 별 운동 횟수 변경을 위해 함수 선언
+  // const updateEachRoundCount = (nowRound, count) => {
+  //   console.log('라운드 카운트를 업데이트 해요');
+  //   eachRoundCount[(nowRound) - 1] = count;
+  //   setEachRoundCount(...eachRoundCount);
+  //   // setEachRoundCount(eachRoundCount[(nowRound) - 1]) = count;
+  // }
+  const updateEachRoundCount = (roundIndex, newCount) => {
+    setEachRoundCount(prevState => {
+      console.log('라운드 카운트를 업데이트 해요');
+      const updatedCounts = [...prevState];
+      console.log(updatedCounts);
+      updatedCounts[roundIndex] = newCount;
+      return updatedCounts;
     });
-  }, [myCombatPower])
+  };
+
+  // 자식 컴포넌트(selfVideo) 에서 라운드 별 전투력 변경을 위해 함수 선언
+  const updateMyCombatPower = (nowRound, count, weight) => {
+    console.log('라운드 전투력을 업데이트 해요');
+    setMyCombatPower[(nowRound) - 1] = count * weight; // weight = roundWeight[(nowRound) - 1]
+  }
+  // const updateMyCombatPower = (roundIndex, newPower) => {
+  //   setMyCombatPower(prevState => {
+  //     const updatedPower = [...prevState];
+  //     updatedPower[roundIndex] = newPower;
+  //     return updatedPower;
+  //   });
+  // };
+
+  // 실험용(바로바로 누적되는 자신의 전투력)
+  // let addMyCombatPower = 0;
+  const [addMyCombatPower, setAddMyCombatPower] = useState(0);
+
+  // useEffect(() => {
+  //   addMyCombatPower = 0;
+  //   myCombatPower.forEach(power => {
+  //     addMyCombatPower = addMyCombatPower + power
+  //   });
+  // }, [myCombatPower])
+
+  // 자식 컴포넌트(selfVideo) 에서 본인 누적 전투력 변경을 위해 함수 선언
+  const ChangeAddMyCombatPower = (weigthPower) => {
+    setAddMyCombatPower(addMyCombatPower + weigthPower);
+  };
 
   // 전체 전투력(모두의 전투력이 들어갈 예정)
   const [totalCombatPower, setTotalCombatPower] = useState(0);
@@ -266,15 +304,15 @@ const TrainingRoomManager = ({ roomData }) => {
   // const [CombatPower, setCombatPower] = useState(0);
 
   // 운동 개수를 가져온 변수 << 나중에 모든 사람들 전투력과 합산 해야함
-  // const [countPower, setCountPower] = useState(0);
+  const [countPower, setCountPower] = useState(0);
   // // 프로그레스 바 게이지
   // const [combatGauge, setCombatGauge] = useState(0);
   // // 프로그레스 바 레벨(게이지가 몇번 다 찼는가?)
   // const [combatLevel, setCombatLevel] = useState(0);
 
-  // function ChangeCount(cnt) {
-  //   setCountPower(cnt);
-  // }
+  function ChangeCount(cnt) {
+    setCountPower(cnt);
+  }
 
   // 모달 열리고 닫힘 여부
   const [openModal, setOpenModal] = useState(false);
@@ -679,12 +717,17 @@ const TrainingRoomManager = ({ roomData }) => {
               </div>
                 <div className="my-video">{publisher &&
                   <SelfVideo streamManager={publisher}
-                    // ChangeCount={ChangeCount}
+                    countPower={countPower}
+                    ChangeCount={ChangeCount}
                     sendTest2={sendTest2}
                     currentRound={currentRound} exerciseForRound={exerciseForRound}
                     myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
                     roundWeight={roundWeight} isExercise={isExercise}
                     addMyCombatPower={addMyCombatPower}
+                    updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
+                    // setEachRoundCount={setEachRoundCount}
+                    // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
+                    // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
                     
                   />}
                 </div>

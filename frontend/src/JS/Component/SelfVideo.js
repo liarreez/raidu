@@ -110,7 +110,7 @@ const SelfVideo = (props) => {
       const pose = poses[0];
       processPose(pose, selectedExercise);
     }
-    setTimeout(() => detectModel(detector, video), 100);
+    setTimeout(() => detectModel(detector, video, selectedExercise), 100);
   };
 
   // 전신이 다 보이는지 여부를 반환하는 함수
@@ -164,17 +164,29 @@ const SelfVideo = (props) => {
     console.log(count);
     const newCount = count + 1;
     setCount(newCount);
-    props.eachRoundCount[nowRound] = newCount
+
+
+
+    // props.eachRoundCount[props.currentRound] = newCount
+    // props.ChangeEachRoundCount(props.currentRound, newCount);
+    
+
+
+
     console.log('바뀐 카운트');
     console.log(count);
-    // props.ChangeCount(newCount);
+    // console.log(props.eachRoundCount, props.eachRoundCount[props.currentRound])
+    props.ChangeCount(newCount);
 
     console.log('현재 라운드!!!');
-    console.log(props.currentRound);
+    console.log(nowRound);
     console.log('현재 운동 가중치');
     console.log(props.roundWeight[nowRound]);
 
-    props.myCombatPower[nowRound] = props.myCombatPower[nowRound] + props.roundWeight[nowRound]
+    const newCombatPower = props.myCombatPower[props.currentRound] + props.roundWeight[props.currentRound]
+    // props.ChangeMyCombatPower(props.currentRound, newCombatPower);
+
+    // props.ChangeAddMyCombatPower(props.roundWeight[props.currentRound]);
 
     //현재 라운드에 설정되어 있는 운동의 가중치 * 운동 횟수로 점수 설정
     // setSelfCombatPower(selfCombatPower + (count * props.roundWeight[nowRound]));
@@ -182,8 +194,8 @@ const SelfVideo = (props) => {
     setSelfCombatPower(newSelfCombatPower);
     console.log(selfCombatPower);
 
-    document.querySelector(".count-box > p").innerText = `전투력 : ${selfCombatPower}`;
-    document.querySelector(".count-box > span").innerText = `숫자 : ${count}`;
+    // document.querySelector(".count-box > p").innerText = `전투력 : ${selfCombatPower}`;
+    // document.querySelector(".count-box > span").innerText = `숫자 : ${count}`;
 
     // 카운트가 올라간걸 웹소켓으로 뿌린다.
     props.sendTest2();
@@ -295,39 +307,49 @@ const SelfVideo = (props) => {
       // console.log(selectedExercise);
       console.log('현재 라운드')
       console.log(nowRound);
+      console.log('외부에서의 라운드');
+      console.log(props.currentRound);
+      // 해당 라운드 운동으로 포즈모델 불러오기
       initializeModel(props.exerciseForRound[0]);
+
     } else if (nowRound !== 0 && nowRound < props.roundWeight.length ) {
       // 처음 라운드가 아닐 때에 & 라운드가 남아있을 때 실행
       console.log('라운드 변경!');
       console.log(nowRound);
-      props.eachRoundCount[(nowRound) - 1] = count;
-      props.myCombatPower[(nowRound) - 1] = count * props.roundWeight[(nowRound) - 1];
+      console.log('외부에서의 라운드');
+      console.log(props.currentRound);
+
+      // props.updateEachRoundCount(nowRound, count);
+      // props.updateMyCombatPower(nowRound, count, props.roundWeight[(nowRound) - 1])
+
+      // props.eachRoundCount[(nowRound) - 1] = count;
+      // props.myCombatPower[(nowRound) - 1] = count * props.roundWeight[(nowRound) - 1];
+      
       setCount(0);
+      props.ChangeCount(0);
+      
+      console.log('카운트는 그대로 남아있나용?');
+      console.log(props.eachRoundCount);
+
       const nextExercise = props.exerciseForRound[nowRound];
       // setSelectedExercise(nextExercise);
       console.log('운동도 변경!');
       console.log(props.exerciseForRound[nowRound])
       // console.log(selectedExercise);
       // props.ChangeCount(0);
-      document.querySelector(".count-box > p").innerText = `숫자 : ${count}`;
+      // document.querySelector(".count-box > p").innerText = `숫자 : ${count}`;
 
-      // 운동 종류에 따라 알림 내용 다르게 하기
-      // if (selectedExercise === 'jumpingJack') {
-      //   document.querySelector(".warning > p").innerText = `전신이 다 보이도록 멀리 떨어져주세요!`;
-      // } else if (selectedExercise === 'lunge') {
-      //   document.querySelector(".warning > p").innerText = `측면이 다 보이도록 멀리 떨어져주세요!`;
-      // } else if (selectedExercise === 'default') {
-      //   document.querySelector(".warning > p").innerText = `카메라에 잘 보이게 서주세요!`;
-      // }
-
+      // 해당 라운드 운동으로 포즈모델 불러오기
       initializeModel(props.exerciseForRound[nowRound]);
 
     } else if (nowRound === props.roundWeight.length) {
       // 마지막 운동 후 실행
       console.log('마지막 라운드 끝!');
       console.log(nowRound);
-      props.eachRoundCount[(nowRound) - 1] = count;
-      props.myCombatPower[(nowRound) - 1] = count * props.roundWeight[(nowRound) - 1];
+      console.log('마지막으로 카운트는 그대로 남아있나용?');
+      console.log(props.eachRoundCount);
+      // props.eachRoundCount[(nowRound) - 1] = count;
+      // props.myCombatPower[(nowRound) - 1] = count * props.roundWeight[(nowRound) - 1];
     }
 
   }, [nowRound])
@@ -335,7 +357,20 @@ const SelfVideo = (props) => {
 
   // 위에서 라운드가 바뀌면 내부에 있는 라운드도 바꿔준다!
   useEffect(() => {
+    console.log('위에 라운드가 바뀌었다!');
+    console.log(props.currentRound);
     setnowRound(props.currentRound);
+    console.log('아래도 바꿔야지');
+    console.log(nowRound);
+    console.log('이건이쪽 카운트');
+    console.log(count);
+    console.log('이건 위쪽 카운트');
+    console.log(props.countPower);
+    props.updateEachRoundCount(nowRound, props.countPower);
+    // props.updateMyCombatPower(props.currentRound, count, props.roundWeight[(props.currentRound) - 1])
+
+    console.log(props.eachRoundCount)
+
   }, [props.currentRound])
 
 
@@ -413,12 +448,12 @@ const SelfVideo = (props) => {
           <OpenViduVideo streamManager={props.streamManager} />
           <div className='self-name'>
             <p>닉네임 : {getNicknameTag()}</p>
-            <p>현재 운동 : { props.exerciseForRound[nowRound] }</p>
+            <p>현재 운동 : { props.exerciseForRound[props.currentRound] }</p>
           </div>
           <div className="count-box">
             {/* <p> Count: {count}</p> */}
             <p> 전투력 : {props.addMyCombatPower} </p>
-            <span>숫자 : { props.eachRoundCount[nowRound] }</span>
+            <span>숫자 : { props.eachRoundCount[props.currentRound] }</span>
           </div>
           {!bodyState && (
             <div className="warning">
