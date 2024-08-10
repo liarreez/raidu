@@ -47,6 +47,14 @@ const TrainingRoomManager = ({ roomData }) => {
   // 유저 닉네임
   const myUserName = roomData.userInfo.nickname;
 
+  // 타이머 시작 한번만 하기 위해서 만든 상태
+  const [firstClick, setFirstClick] = useState(true);
+
+  // 처음 버튼 클릭 시, 버튼 안보이게 하기
+  const ClickEnd = () => {
+    setFirstClick(false);
+  }
+
   // 현재 어떤 단계인가 (세팅, 운동, 휴식, 정산으로 나뉠듯)
   // 기본 상태는 ready
   // setup, exercise, rest, ending
@@ -162,8 +170,8 @@ const TrainingRoomManager = ({ roomData }) => {
               const subscription = websocketClient.subscribe('/sub/message/' + waitingRoomId, (message) => {
                   const parsedMessage = JSON.parse(message.body);
                   switch(parsedMessage.type){
-                    case '1': handleStartTimer(); break;
-                    case '2': addCombatPower(parsedMessage.body); break;
+                    case '1': handleStartTimer(); ClickEnd(); break;
+                    case '2': addCombatPower(parsedMessage.body); console.log('전투력 올라간다'); break;
                     default: console.log('?')
                   }
                   setMessages((prevMessages) => [...prevMessages, parsedMessage]);
@@ -493,7 +501,7 @@ const TrainingRoomManager = ({ roomData }) => {
       // 정산 전 마지막 모션 때 API 보내주기
       if (currentStep === 'lastMotion') {
         // 마지막 라운드 저장을 위해서 현재 라운드 + 1 해주기
-        setCurrentRound(currentRound + 1);
+        // setCurrentRound(currentRound + 1);
         // 현재 시간 받아주기
         const nowDate = Date.now()
         // 한국 시간으로 로컬라이징 + 저장 포멧
@@ -643,7 +651,9 @@ const TrainingRoomManager = ({ roomData }) => {
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
-              <button onClick={sendTest1}>타이머 시작</button>
+              {firstClick && 
+                <button onClick={sendTest1}>타이머 시작</button>
+              }
             </div>
               <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} />
           </div>
