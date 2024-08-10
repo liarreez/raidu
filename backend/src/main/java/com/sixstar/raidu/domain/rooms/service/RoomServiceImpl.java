@@ -273,12 +273,21 @@ public class RoomServiceImpl implements RoomService{
 
         // 경험치, 레벨, 최고기록 업데이트
         UserProfile userProfile = findUserProfileByEmailOrThrow(request.getEmail());
-        System.out.println(userProfile.getEmail());
-        System.out.println("ROUND TIME     "+room.getRoundTime()+"   ROUNDDD    "+room.getTotalRounds());
         int gainedExp = ((room.getRoundTime()*room.getTotalRounds())/60)*50;
-        System.out.println(gainedExp);
+
+        boolean isLevelUp = false;
+        if(userProfile.getExp()+gainedExp >= 750){
+            isLevelUp = true;
+        }
+
         userProfile.updateExp(gainedExp);
-        userProfile.updateBestScore(request.getPersonalCombatPower(), request.getEndTime());
+
+        boolean isBestScoreUpdated = false;
+        if(userProfile.getBestScore() < request.getPersonalCombatPower())
+        {
+            userProfile.updateBestScore(request.getPersonalCombatPower(), request.getEndTime());
+            isBestScoreUpdated = true;
+        }
 
         // 시즌지역점수, 시즌사용자점수 누적
         Season season = seasonRepository.findSeasonByEndTime(request.getEndTime())
@@ -307,6 +316,9 @@ public class RoomServiceImpl implements RoomService{
         map.put("updatedSeasonScore", updatedSeasonRegionScore.getScore());
         map.put("updatedLevel", userProfile.getLevel());
         map.put("updatedExp", userProfile.getExp());
+        map.put("isLevelUp", isLevelUp);
+        map.put("isBestScoreUpdated", isBestScoreUpdated);
+
         return map;
     }
 

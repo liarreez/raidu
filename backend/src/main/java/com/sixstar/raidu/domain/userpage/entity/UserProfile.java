@@ -141,9 +141,7 @@ public class UserProfile {
   }
 
   public void updateBestScore(int personalCombatPower, LocalDateTime endTime){
-    if(this.bestScore<personalCombatPower){
       this.bestScore = personalCombatPower;
       this.bestScoreUpdatedAt = endTime;
-    }
   }
 }
