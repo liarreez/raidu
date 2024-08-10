@@ -32,7 +32,7 @@ const SelfVideo = (props) => {
   // const [lunge, setLunge] = useState(false)
 
   // 현재 라운드에 선택한 운동을 넣을 변수
-  const [selectedExercise, setSelectedExercise] = useState();
+  // const [selectedExercise, setSelectedExercise] = useState();
   // let selectedExercise = '';
   // const setSelectedExercise = (newSelect) => {
   //   selectedExercise = newSelect;
@@ -50,7 +50,7 @@ const SelfVideo = (props) => {
       console.log(props)
       setNowStart(true);
       // const nowExercise = props.exerciseForRound[0]
-      setSelectedExercise(props.exerciseForRound[0]);
+      // setSelectedExercise(props.exerciseForRound[0]);
       setnowRound(0);
     }
   }, [])
@@ -88,7 +88,7 @@ const SelfVideo = (props) => {
     selfCombatPower = power;
   }
 
-  const makeModel = async (video) => {
+  const makeModel = async (video, selectedExercise) => {
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_THUNDER,
       enableTracking: true,
@@ -100,15 +100,15 @@ const SelfVideo = (props) => {
     );
 
     console.log("포즈 감지 시작");
-    await detectModel(detector, video);
+    await detectModel(detector, video, selectedExercise);
   };
 
-  const detectModel = async (detector, video) => {
+  const detectModel = async (detector, video, selectedExercise) => {
     const poses = await detector.estimatePoses(video);
     if (poses && poses.length > 0) {
       // console.log(poses);
       const pose = poses[0];
-      processPose(pose);
+      processPose(pose, selectedExercise);
     }
     setTimeout(() => detectModel(detector, video), 100);
   };
@@ -127,7 +127,7 @@ const SelfVideo = (props) => {
     );
   }
 
-  const processPose = (pose) => {
+  const processPose = (pose, selectedExercise) => {
     if (isFullBodyVisible(pose)) {
       // console.log(selectedExercise);
       setBodyState(true);
@@ -164,6 +164,7 @@ const SelfVideo = (props) => {
     console.log(count);
     const newCount = count + 1;
     setCount(newCount);
+    props.eachRoundCount[nowRound] = newCount
     console.log('바뀐 카운트');
     console.log(count);
     // props.ChangeCount(newCount);
@@ -172,6 +173,8 @@ const SelfVideo = (props) => {
     console.log(props.currentRound);
     console.log('현재 운동 가중치');
     console.log(props.roundWeight[nowRound]);
+
+    props.myCombatPower[nowRound] = props.myCombatPower[nowRound] + props.roundWeight[nowRound]
 
     //현재 라운드에 설정되어 있는 운동의 가중치 * 운동 횟수로 점수 설정
     // setSelfCombatPower(selfCombatPower + (count * props.roundWeight[nowRound]));
@@ -287,12 +290,12 @@ const SelfVideo = (props) => {
     // 처음에 들어왔을 때(라운드가 0일 떄), 실행해준다(처음 실행)
     if (nowRound === 0) {
       console.log('비디오 시작합니다.');
-      setSelectedExercise(props.exerciseForRound[0]);
+      // setSelectedExercise(props.exerciseForRound[0]);
       console.log(props.exerciseForRound[0]);
-      console.log(selectedExercise);
+      // console.log(selectedExercise);
       console.log('현재 라운드')
       console.log(nowRound);
-      initializeModel();
+      initializeModel(props.exerciseForRound[0]);
     } else if (nowRound !== 0 && nowRound < props.roundWeight.length ) {
       // 처음 라운드가 아닐 때에 & 라운드가 남아있을 때 실행
       console.log('라운드 변경!');
@@ -301,9 +304,10 @@ const SelfVideo = (props) => {
       props.myCombatPower[(nowRound) - 1] = count * props.roundWeight[(nowRound) - 1];
       setCount(0);
       const nextExercise = props.exerciseForRound[nowRound];
-      setSelectedExercise(nextExercise);
+      // setSelectedExercise(nextExercise);
       console.log('운동도 변경!');
-      console.log(selectedExercise);
+      console.log(props.exerciseForRound[nowRound])
+      // console.log(selectedExercise);
       // props.ChangeCount(0);
       document.querySelector(".count-box > p").innerText = `숫자 : ${count}`;
 
@@ -316,7 +320,7 @@ const SelfVideo = (props) => {
       //   document.querySelector(".warning > p").innerText = `카메라에 잘 보이게 서주세요!`;
       // }
 
-      initializeModel();
+      initializeModel(props.exerciseForRound[nowRound]);
 
     } else if (nowRound === props.roundWeight.length) {
       // 마지막 운동 후 실행
@@ -336,14 +340,14 @@ const SelfVideo = (props) => {
 
 
   // 포즈 모델을 부르는 함수
-  const initializeModel = async () => {
+  const initializeModel = async (selectedExercise) => {
     if (OpenViduVideo) {
       await tf.setBackend("webgl");
       await tf.ready();
       const videoElement = document.querySelector("#myVideo>video");
       if (videoElement) {
         if (videoElement && videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
-          await makeModel(videoElement);
+          await makeModel(videoElement, selectedExercise);
         }
       }
     }
@@ -409,12 +413,12 @@ const SelfVideo = (props) => {
           <OpenViduVideo streamManager={props.streamManager} />
           <div className='self-name'>
             <p>닉네임 : {getNicknameTag()}</p>
-            <p>현재 운동 : { selectedExercise }</p>
+            <p>현재 운동 : { props.exerciseForRound[nowRound] }</p>
           </div>
           <div className="count-box">
             {/* <p> Count: {count}</p> */}
-            <p> 전투력 : {selfCombatPower} </p>
-            <span>숫자 : { count }</span>
+            <p> 전투력 : {props.addMyCombatPower} </p>
+            <span>숫자 : { props.eachRoundCount[nowRound] }</span>
           </div>
           {!bodyState && (
             <div className="warning">

@@ -80,6 +80,16 @@ const TrainingRoomManager = ({ roomData }) => {
   // 자신의 전투력
   const [myTotalCombatPower, setMyTotalCombatPower] = useState(0);
 
+  // 실험용(바로바로 누적되는 자신의 전투력)
+  let addMyCombatPower = 0;
+
+  useEffect(() => {
+    addMyCombatPower = 0;
+    myCombatPower.forEach(power => {
+      addMyCombatPower = addMyCombatPower + power
+    });
+  }, [myCombatPower])
+
   // 전체 전투력(모두의 전투력이 들어갈 예정)
   const [totalCombatPower, setTotalCombatPower] = useState(0);
 
@@ -674,6 +684,7 @@ const TrainingRoomManager = ({ roomData }) => {
                     currentRound={currentRound} exerciseForRound={exerciseForRound}
                     myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
                     roundWeight={roundWeight} isExercise={isExercise}
+                    addMyCombatPower={addMyCombatPower}
                     
                   />}
                 </div>
