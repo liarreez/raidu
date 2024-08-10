@@ -128,7 +128,7 @@ public class UserProfile {
   }
 
   public void updateExp(int gainedExp){
-    this.exp = gainedExp;
+    this.exp += gainedExp;
     updateLevel();
   }
 
