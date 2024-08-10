@@ -34,6 +34,9 @@ const TrainingRoomManager = ({ roomData }) => {
   // 대기방에서 운동방으로 넘어올 때 받은 정보들을 저장해준 후, 운동방을 자동 시작
   useEffect(() => {
     if (!hasJoined) {
+      console.log('방 정보 및 라운드별 가중치 제대로 나오나요?!---------');
+      console.log(roomData);
+      console.log(roundWeight);
       joinTrainingRoom();
       setHasJoined(true);
     }
@@ -88,7 +91,7 @@ const TrainingRoomManager = ({ roomData }) => {
     const gauge = (totalCombatPower) % 750;
     setTotalCombatGauge(gauge);
     setTotalCombatLevel(level);
-    console.log(`잘 넣어집니당 ${gauge} ${combatGauge} / ${level} ${combatLevel}`);
+    console.log(`잘 넣어집니당 ${gauge} ${totalCombatGauge} / ${level} ${totalCombatLevel}`);
   }, [totalCombatPower])
 
   
@@ -245,19 +248,19 @@ const TrainingRoomManager = ({ roomData }) => {
   // const [CombatPower, setCombatPower] = useState(0);
 
   // 운동 개수를 가져온 변수 << 나중에 모든 사람들 전투력과 합산 해야함
-  const [countPower, setCountPower] = useState(0);
-  // 프로그레스 바 게이지
-  const [combatGauge, setCombatGauge] = useState(0);
-  // 프로그레스 바 레벨(게이지가 몇번 다 찼는가?)
-  const [combatLevel, setCombatLevel] = useState(0);
+  // const [countPower, setCountPower] = useState(0);
+  // // 프로그레스 바 게이지
+  // const [combatGauge, setCombatGauge] = useState(0);
+  // // 프로그레스 바 레벨(게이지가 몇번 다 찼는가?)
+  // const [combatLevel, setCombatLevel] = useState(0);
 
+  // function ChangeCount(cnt) {
+  //   setCountPower(cnt);
+  // }
 
   // 모달 열리고 닫힘 여부
   const [openModal, setOpenModal] = useState(false);
 
-  function ChangeCount(cnt) {
-    setCountPower(cnt);
-  }
 
   // 현재 시간을 타이머 컴포넌트 안에서 변경하기 위한 함수
   function ChangeCurrentTime(time) {
@@ -266,13 +269,13 @@ const TrainingRoomManager = ({ roomData }) => {
   
 
   // 프로그레스 바 게이지와 레벨(단계)를 넣어주기 위한 내용
-  useEffect(() => {
-    const level = Math.floor((countPower*11) / 100);
-    const gauge = (countPower*11) % 100;
-    setCombatGauge(gauge);
-    setCombatLevel(level);
-    console.log(`잘 넣어집니당 ${gauge} ${combatGauge} / ${level} ${combatLevel}`);
-  }, [countPower])
+  // useEffect(() => {
+  //   const level = Math.floor((countPower*11) / 100);
+  //   const gauge = (countPower*11) % 100;
+  //   setCombatGauge(gauge);
+  //   setCombatLevel(level);
+  //   console.log(`잘 넣어집니당 ${gauge} ${combatGauge} / ${level} ${combatLevel}`);
+  // }, [countPower])
 
   //타이머 관련으로 넣은 값들. 나중에 수정 필요함
   // 타이머에 넣을 숫자 < 초기값은 0으로 설정
@@ -429,7 +432,7 @@ const TrainingRoomManager = ({ roomData }) => {
         setInitialTime(restTime);
         setCurrentTime(restTime);
         setTimerActive(true);
-        setCurrentRound(currentRound + 1);
+        // setCurrentRound(currentRound + 1);
       } else {
         setCurrentStep('lastMotion');
         setInitialTime(lastMotionTime);
@@ -442,6 +445,7 @@ const TrainingRoomManager = ({ roomData }) => {
     //   setCurrentTime(restTime);
     //   setTimerActive(true);
     } else if (currentStep === 'rest') {
+      setCurrentRound(currentRound + 1);
       setCurrentStep('exercise');
       setInitialTime(exerciseTime);
       setCurrentTime(exerciseTime);
@@ -479,6 +483,8 @@ const TrainingRoomManager = ({ roomData }) => {
       
       // 정산 전 마지막 모션 때 API 보내주기
       if (currentStep === 'lastMotion') {
+        // 마지막 라운드 저장을 위해서 현재 라운드 + 1 해주기
+        setCurrentRound(currentRound + 1);
         // 현재 시간 받아주기
         const nowDate = Date.now()
         // 한국 시간으로 로컬라이징 + 저장 포멧
@@ -644,7 +650,8 @@ const TrainingRoomManager = ({ roomData }) => {
               </div>
                 <div className="my-video">{publisher &&
                   <SelfVideo streamManager={publisher}
-                    ChangeCount={ChangeCount} sendTest2={sendTest2}
+                    // ChangeCount={ChangeCount}
+                    sendTest2={sendTest2}
                     currentRound={currentRound} exerciseForRound={exerciseForRound}
                     myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
                     roundWeight={roundWeight}
@@ -782,7 +789,11 @@ const TrainingRoomManager = ({ roomData }) => {
                   height: '100%',
                   border: '2px solid purple'
                 }}>
-                  {publisher && <SelfRestVideo streamManager={publisher} ChangeCount={ChangeCount} />}
+                  {publisher &&
+                    <SelfRestVideo
+                    streamManager={publisher}
+                    // ChangeCount={ChangeCount}
+                    />}
                 </div>
                 {/* 운동 선택 div */}
                 <div style={{
