@@ -102,9 +102,11 @@ const TrainingRoomManager = ({ roomData }) => {
   // 정해둔 셋팅 시간(준비시간)
   const setupTime = 3;
   // 정해둔 운동시간
-  const exerciseTime = roomData.roomInfo.roundTime;
+  // const exerciseTime = roomData.roomInfo.roundTime;
+  const exerciseTime = 1;
   // 정해둔 쉬는시간
-  const restTime = roomData.roomInfo.restTime;
+  // const restTime = roomData.roomInfo.restTime;
+  const restTime = 1;
   // 정해둔 라운드(운동 횟수)
   const roundCount = roomData.roomInfo.roundCount;
   // 라운드 별 운동 배열
@@ -220,9 +222,9 @@ const TrainingRoomManager = ({ roomData }) => {
 
 
   // 정해둔 마지막 정산 전 애니메이션 시간
-  const lastMotionTime = 3;
+  const lastMotionTime = 1;
   // 정해둔 완료 시간(마지막 정산)
-  const endingTime = 6;
+  const endingTime = 100;
   // 현재 라운드
   const [currentRound, setCurrentRound] = useState(0);
   // 처음에 헷갈리지 않도록 만들기 위한 것(시작하였는가? 준비부터 시작되었는가?)
@@ -970,9 +972,9 @@ const TrainingRoomManager = ({ roomData }) => {
           {/* 마지막 정산 화면 =================================================이슬 */}
           {currentStep === 'ending' &&
             <div style={{
-              paddingTop: "120px",
+              paddingTop: "130px",
               paddingBottom: "100px",
-              paddingLeft: "180px",
+              paddingLeft: "190px",
               paddingRight: "180px"
           }}>
               <div style={{
@@ -991,7 +993,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   padding: '10px', /* 여백 설정 (필요에 따라 조정) */
                   boxSizing: 'border-box' /* 여백과 테두리를 포함하여 전체 너비와 높이 계산 */
                 }}>
-                  <div style={{ color: "black", fontSize: "20px" }}>
+                  <div style={{ color: "black", fontSize: "20px", fontFamily: 'WarhavenR' }}>
                     NEW!
                   </div>
                   <img
@@ -1007,7 +1009,8 @@ const TrainingRoomManager = ({ roomData }) => {
                     color: 'black',
                     fontSize: '20px',
                     marginTop: 'auto', /* 위쪽의 여백을 자동으로 채워서 아래쪽으로 이동 */
-                    alignSelf: 'flex-end' /* 자식 요소를 오른쪽 끝으로 정렬 */
+                    alignSelf: 'flex-end', /* 자식 요소를 오른쪽 끝으로 정렬 */
+                    fontFamily: 'WarhavenR'                    
                   }}>
                     MonsterName
                   </div>
@@ -1018,16 +1021,25 @@ const TrainingRoomManager = ({ roomData }) => {
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  marginLeft: '20px',
-                  paddingLeft: '20px'
+                  marginLeft: '15px',
+                  paddingLeft: '20px',
+                  paddingTop: '10px'
                 }}>
                   <div className='training-complete-stage'>
-                    <div style={{ color: "black", marginBottom: "20px", fontSize: "40px" }}>
-                      N Stage Clear !!!
+                    <div style={{
+                      color: "black",
+                      marginBottom: "20px", 
+                      fontSize: "37px", 
+                      fontFamily: 'WarhavenB' 
+                      }}>
+                      N STAGE CLEAR
                     </div>
                   </div>
                   <div className='training-complte-level'>
-                    <div style={{ color: "black", fontSize: "30px" }}>
+                    <div style={{ 
+                      color: "black", 
+                      fontSize: "25px", 
+                      fontFamily: 'WarhavenR' }}>
                       LV.NN
                     </div>
                     <StepProgressBar expPercentage={updatedExpPercentage}></StepProgressBar>
@@ -1040,7 +1052,11 @@ const TrainingRoomManager = ({ roomData }) => {
 
                   </div>
                   <div className='training-complte-season-region-score-text'>
-                    <div style={{ color: "black", fontSize: "20px" }}>
+                    <div style={{ 
+                      color: "black", 
+                      fontSize: "20px", 
+                      fontFamily: 'WarhavenR' 
+                      }}>
                       지역 기여도
                     </div>
                     <StepProgressBar expPercentage={updatedSeasonRegionScorePercentage}></StepProgressBar>
