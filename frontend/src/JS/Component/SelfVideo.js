@@ -183,6 +183,9 @@ const SelfVideo = (props) => {
     console.log('현재 운동 가중치');
     console.log(props.roundWeight[nowRound]);
 
+    // 카운트가 올라간걸 웹소켓으로 뿌린다.
+    props.sendTest2(props.roundWeight[nowRound]);
+
     const newCombatPower = props.myCombatPower[props.currentRound] + props.roundWeight[props.currentRound]
     // props.ChangeMyCombatPower(props.currentRound, newCombatPower);
 
@@ -197,8 +200,7 @@ const SelfVideo = (props) => {
     // document.querySelector(".count-box > p").innerText = `전투력 : ${selfCombatPower}`;
     // document.querySelector(".count-box > span").innerText = `숫자 : ${count}`;
 
-    // 카운트가 올라간걸 웹소켓으로 뿌린다.
-    props.sendTest2();
+    
     // console.log(`Current count: ${count}`);
     if (props.isExercise === true) {
     }
