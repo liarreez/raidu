@@ -56,9 +56,6 @@ function StepProgressBar({ expPercentage }) {
   );
 }
 
-// const updatedExpPercentage = (300 / 750) * 100;
-// const updatedSeasonRegionScorePercentage = (1000 / 3000) * 100;
-
 //=======================이슬
 
 const APPLICATION_SERVER_URL = API_URL + "/api/raidu/rooms";
@@ -73,6 +70,8 @@ const TrainingRoomManager = ({ roomData }) => {
   const [updatedExp, setUpdatedExp] = useState(0);
   const [updatedLevel, setUpdatedLevel] = useState(0);
   const [updatedRegionScore, setUpdatedRegionScore] = useState(0);
+
+  const [regionName, setRegionName] = useState(false);
 
   const [updatedExpPercentage, setUpdatedExpPercentage] = useState(0);
   const [updatedRegionScorePercentage, setUpdatedRegionScorePercentage] = useState(0);
@@ -97,7 +96,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // 유저 닉네임
   const myUserName = roomData.userInfo.nickname;
   const myUserEmail = roomData.userInfo.email;
-
+  
   // 타이머 시작 한번만 하기 위해서 만든 상태
   const [firstClick, setFirstClick] = useState(true);
 
@@ -115,7 +114,6 @@ const TrainingRoomManager = ({ roomData }) => {
   // 정해둔 운동시간
   // const exerciseTime = roomData.roomInfo.roundTime;
   const exerciseTime = 1;
-  const gainedExp = (exerciseTime/60)*50;
   // 정해둔 쉬는시간
   // const restTime = roomData.roomInfo.restTime;
   const restTime = 1;
@@ -123,6 +121,8 @@ const TrainingRoomManager = ({ roomData }) => {
   const roundCount = roomData.roomInfo.roundCount;
   // 라운드 별 운동 배열
   const exerciseForRound = roomData.exerciseInfo;
+  
+  const gainedExp = (exerciseTime/60)*roundCount*50;
 
 
   // 라운드 별 운동 가중치(운동에 따라 저장)
@@ -134,7 +134,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // const myCombatPower = [];
   const [myCombatPower, setMyCombatPower] = useState([]);
   // 자신의 전투력
-  const [myTotalCombatPower, setMyTotalCombatPower] = useState(0);
+  const [myTotalCombatPower, setMyTotalCombatPower] = useState(300);
 
   // 자식 컴포넌트(selfVideo) 에서 라운드 별 운동 횟수 변경을 위해 함수 선언
   const updateEachRoundCount = (roundIndex, newCount) => {
@@ -647,6 +647,8 @@ const TrainingRoomManager = ({ roomData }) => {
           setUpdatedRegionScore(data.data.updatedRegionScore)
           setIsLevelUp(data.data.isLevelUp)
 
+          setRegionName(data.data.region.name)
+
           setUpdatedExpPercentage((data.data.updatedExp/750)*100);
           setUpdatedRegionScorePercentage((data.data.updatedRegionScore/1000)*100)
 
@@ -1032,7 +1034,7 @@ const record = async (roomId, endTime, roundRecordList) => {
                     fontSize: '18px',
                     fontFamily: 'WarhavenR'                    
                   }}>
-                    {isNewMonster ? 'NEW!' : 'FALSE'}
+                    {isNewMonster ? 'NEW!' : ''}
                   </div>
                   <img
                     src={burgerking}
@@ -1076,13 +1078,14 @@ const record = async (roomId, endTime, roundRecordList) => {
                       {totalCombatLevel} STAGE CLEAR!
                     </div>
                   </div>
+
                   <div className='training-complte-level'>
                     <div style={{ 
                       color: "black", 
                       fontSize: "25px", 
                       fontFamily: 'WarhavenR',
                       marginBottom: '5px' }}>
-                      LV.{updatedLevel}
+                      LV. {updatedLevel}
                     </div>
                     <StepProgressBar expPercentage={updatedExpPercentage}></StepProgressBar>
                     <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -1091,6 +1094,7 @@ const record = async (roomId, endTime, roundRecordList) => {
                       </div>
                     </div>
                   </div>
+
                   <div className='training-complte-season-region-score-text'>
                     <div style={{ 
                       color: "black", 
@@ -1098,7 +1102,7 @@ const record = async (roomId, endTime, roundRecordList) => {
                       fontFamily: 'WarhavenR',
                       marginBottom: '5px' 
                       }}>
-                      지역 기여도 : 지역 이름 넣고 색도 지역 상징 색으로 넣고싶네요
+                      {regionName} 기여도
                     </div>
                     <StepProgressBar expPercentage={updatedRegionScorePercentage}></StepProgressBar>
                     <div style={{ display: "flex", justifyContent: "flex-end" }}>
