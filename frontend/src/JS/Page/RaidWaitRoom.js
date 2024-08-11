@@ -45,13 +45,13 @@ class Room {
 }   
 
 const SERVER_URL = API_URL;
-
 const RaidWaitRoom = () => {
     // ========= roomName은 pathVariable로 줄 거고
     // ========= roomSet은 props로 넘기고
     // ========= isRoomLocked는 대기실에서 입장할 수 있는 모든 방이 false입니다
     const location = useLocation();
     const [token, setToken] = useState(localStorage.getItem('accessToken'));
+    const [rendered, setRendered] = useState(false); // 초기화 확인
 
     // 페이지 이동을 위한 네비게이트
     const navigate = useNavigate();
@@ -83,11 +83,12 @@ const RaidWaitRoom = () => {
 
     
     useEffect(() => {
+
         // 첫 번째 요청 : token 가져가서 user 정보 받아오기
         axios.get(SERVER_URL + '/api/raidu/userpage', {
             headers: {
                 'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
             }
         }).then((res) => {
             const data = res.data.data.userProfile;
@@ -106,20 +107,28 @@ const RaidWaitRoom = () => {
             console.log('line 106 ~~~ ', me.isCaptain);
             console.log(me);
             // 두 번째 요청 : 받아온 user 정보의 이메일과 room PK 가지고 방 입장 처리하기
-            return axios.post(SERVER_URL+'/api/raidu/rooms/'+roomName+'/'+data.email, {}, {
-                headers: {
-                    'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
-                }
-            });
-            
+            // 이 부분을 isCaptain이면 실행하고 아니면 실행하지 않아야 함
 
+            if (location.state !== null && location.state !== undefined) {
+                console.log('난 방장이다 그래서 방에 입장할 필요가 없지')
+                // 빈 Promise 반환(아래의 .then이 실행되도록 함)
+                return Promise.resolve();
+            } else {
+                // location.state가 존재할 때만 실행
+                console.log('난 방장이 아니다 그래서 입장 처리를 따로 해 줘야 함 ㅋㅋ')
+                return axios.post(SERVER_URL + '/api/raidu/rooms/' + roomName + '/' + data.email, {}, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
+                    }
+                }); 
+            }
             
         }).then((res) => {
             // 세 번째 요청 : 들어간 방의 정보와 기참가자 정보 리스트 받아오기
             return axios.get(SERVER_URL + '/api/raidu/rooms/' + roomName, {
                 headers: {
                     'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
-                    'Content-Type':'application/json'
+                    'Content-Type':'application/json',
                 }
             });
         }).then((res) => {
@@ -135,22 +144,24 @@ const RaidWaitRoom = () => {
             console.log('참가자 정보 ==========')
             console.log(guestInfo)
 
-            // 방장 세팅하기
-            setParticipantsList([...participantsList, new User(hostInfo.nickname, hostInfo.mosterBadgeUrl, hostInfo.profileImageUrl, 
-                hostInfo.level, hostInfo.bestScore, true, true, hostInfo.email
-            )])
+            // 방장과 참가자 정보를 업데이트합니다.
+            setParticipantsList((prevList) => [
+                ...prevList,
+                new User(hostInfo.nickname, hostInfo.mosterBadgeUrl, hostInfo.profileImageUrl, 
+                    hostInfo.level, hostInfo.bestScore, true, true, hostInfo.email
+                ),
+                ...guestInfo.map((each) => new User(each.nickname, each.monsterBadgeUrl, each.profileImageUrl,
+                    each.level, each.bestScore, false, false, each.email
+                ))
+            ]);
 
-            // 참가자 세팅하기 
-            if(guestInfo.length !== 0) {
-                guestInfo.map((each) => {
-                    setParticipantsList([...participantsList, new User(each.nickname, each.monsterBadgeUrl, each.profileImageUrl,
-                        each.level, each.bestScore, false, false, each.email
-                    )])
-                })
-            }
-
-            sendTest1(true); // 내가 입장하면 다른 사람에게도 입장 알림 전송
+            
             // 입장 알림 받았을 때, '나' 인 경우에는 participants 
+        }).then((res) => {
+            setRendered(true); // 로드 체크 
+            console.log(me);
+            sendTest1(true); // 내가 입장하면 다른 사람에게도 입장 알림 전송
+            console.log('I sent entered alert')
         }).catch((error) => {
             console.error('Error fetching data:', error);
         });
@@ -159,7 +170,6 @@ const RaidWaitRoom = () => {
         setIsRoomLocked(false);
 
     },[token]); // onMount 
-
 
     const roomSetSetter = (roundTime, restTime, roundCount) => {
         setRoomSet(new Room(roundTime, restTime, roundCount));
@@ -182,12 +192,12 @@ const RaidWaitRoom = () => {
         // 페이지 진입 시 room PK를 가지고 소켓 클라이언트 객체를 생성합니다.
         const client = new Socketest(roomName);
         setWebsocketClient(client);
-        return() => {
+        return() => {   
             if(client) {
                 client.disconnect();
             }
         };
-    }, [roomNamed, exerciseSet]);
+    }, [roomNamed, exerciseSet, me]);
 
     useEffect(() => { 
         // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
@@ -197,8 +207,11 @@ const RaidWaitRoom = () => {
                 await websocketClient.connect();
                 const subscription = websocketClient.subscribe('/sub/message/' + roomName, (message) => {
                     const parsedMessage = JSON.parse(message.body);
+                    console.log('====================')
+                    console.log(parsedMessage)
+                    console.log('====================')
                     switch(parsedMessage.type){
-                        case '1': console.log(parsedMessage); break;
+                        case '1': console.log('someone entered!'); console.log(parsedMessage); break;
                         case '2': updateUserReadyState(parsedMessage.user, parsedMessage.readyType); break;
                         case '3': setChatMessages((prevMessages) => [...prevMessages, parsedMessage]); break;
                         case '4': gameStart(parsedMessage.sessionId); break;
@@ -220,15 +233,23 @@ const RaidWaitRoom = () => {
                 websocketClient.disconnect()
             }
         };
-    }, [websocketClient, roomNamed, exerciseSet]);
-
+    }, [websocketClient, roomNamed, exerciseSet, me]);
+    // 버그 정리
+    // 채팅 두 번씩 보내짐 -> 방장은 한 번씩 보이고 방에 있는 사람들은 두 번씩 보내지고 받아짐(무조건 switch 문제임)
 
 
     // WATCHING USESTATES
 
     useEffect(() => {
+        console.log('participants updated ... ')
         console.log(participantsList)
     },[participantsList]);
+
+    useEffect(() => {
+        console.log('rendering finished ... ')
+        console.log(participantsList);
+        console.log(me)
+    },[rendered])
 
     
     // WEBSOCKET 동작 테스트 ===========================
@@ -255,6 +276,7 @@ const RaidWaitRoom = () => {
     };
 
     const sendTest1 = (enterType) => { // 사용자 입/퇴장 관련 웹소켓 메서드
+        console.log(me)
         if (websocketClient) {
             const message = JSON.stringify({
                 ...COMMONFORM,
@@ -264,6 +286,9 @@ const RaidWaitRoom = () => {
             })
             websocketClient.send(DESTINATION, message);
         }
+
+
+        console.log('sent sendTest1')
     };
 
     const sendTest2 = () => { // 사용자 준비 상태 관련 웹소켓 메서드
@@ -308,7 +333,7 @@ const RaidWaitRoom = () => {
     const updateUserReadyState = (name, readyType) => {
         const updatedParticipants = participantsList.map(user => {
             if (user.nickname === name) {
-                return new User(user.nickname, user.badge, user.profileImage, user.level, user.highestScore, readyType, user.isCaptain);
+                return new User(user.nickname, user.badge, user.profileImage, user.level, user.highestScore, readyType, user.isCaptain, user.email);
             }
             return user;
         });
@@ -316,7 +341,7 @@ const RaidWaitRoom = () => {
         setParticipantsList(updatedParticipants);
 
         if (name === me.nickname) {
-            setMe(prevMe => new User(prevMe.nickname, prevMe.badge, prevMe.profileImage, prevMe.level, prevMe.highestScore, readyType, prevMe.isCaptain));
+            setMe(prevMe => new User(prevMe.nickname, prevMe.badge, prevMe.profileImage, prevMe.level, prevMe.highestScore, readyType, prevMe.isCaptain, prevMe.email));
         }
     };
 
