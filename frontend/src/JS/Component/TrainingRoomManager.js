@@ -136,7 +136,14 @@ const TrainingRoomManager = ({ roomData }) => {
 
   // 전체 전투력 합산(웹소켓을 통해)
   const addCombatPower = (score) => {
-    setTotalCombatPower(totalCombatPower + score);
+    // console.log('기존 전투력');
+    // console.log(totalCombatPower);
+    setTotalCombatPower((prevTotal) => {
+      const newTotal = prevTotal + score;
+      // console.log('바뀐 전투력');
+      // console.log(newTotal);
+      return newTotal;
+    });
   };
 
   // 프로그레스 바에 들어가는 전체 전투력 게이지
@@ -150,7 +157,7 @@ const TrainingRoomManager = ({ roomData }) => {
     const gauge = (totalCombatPower) % 750;
     setTotalCombatGauge(gauge);
     setTotalCombatLevel(level);
-    console.log(`잘 넣어집니당 ${gauge} ${totalCombatGauge} / ${level} ${totalCombatLevel}`);
+    // console.log(`잘 넣어집니당 ${gauge} ${totalCombatGauge} / ${level} ${totalCombatLevel}`);
   }, [totalCombatPower])
 
   
@@ -262,12 +269,12 @@ const TrainingRoomManager = ({ roomData }) => {
     }
   };
 
-  const sendTest2 = () => {
+  const sendTest2 = (roundWeight) => {
     if (websocketClient) {
       const message = JSON.stringify({
         ...COMMONFORM,
         type: '2',
-        body: roundWeight[currentRound],
+        body: roundWeight,
         currentRound,
       })
       websocketClient.send(DESTINATION, message);
@@ -746,10 +753,11 @@ const TrainingRoomManager = ({ roomData }) => {
                   max='100'
                 />
               </div> */}
+                <h3>현재 점수 { totalCombatPower }</h3>
                 <TotalCombatPower
                   visualParts={[
                     {
-                      percentage: `${ totalCombatGauge }%`,
+                      percentage: `${(totalCombatGauge / 750)*100}%`,
                       color: "orange"
                     }
                   ]}
