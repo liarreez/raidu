@@ -21,6 +21,7 @@ import RoomInfoForm from '../Component/RaidWaitRoom_roominfoform.js';
 import Chatting from '../Component/RaidWaitRoom_chatting.js';
 
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
+import { render } from '@testing-library/react';
 
 class User {
     constructor(nickname, badge, profileImage, level, highestScore, readyState, isCaptain, email) {
@@ -52,6 +53,7 @@ const RaidWaitRoom = () => {
     const location = useLocation();
     const [token, setToken] = useState(localStorage.getItem('accessToken'));
     const [rendered, setRendered] = useState(false); // 초기화 확인
+    const [webSocketReady, setWebSocketReady] = useState(0);
 
     // 페이지 이동을 위한 네비게이트
     const navigate = useNavigate();
@@ -62,6 +64,39 @@ const RaidWaitRoom = () => {
     // 초깃값을 임의의 어떤 값으로 채워주는 것이 좋다. DOM 로드 후 -> useEffect 실행되기 때문
 
     const [exerciseSet, setExerciseSet] = useState([]); // 이 부분은 하위 컴포 roominfoform에서만 세팅합니다.
+
+    // 페이지 이탈 시 로직 (미완)
+    // useEffect(() => {
+    //     const handleBeforeUnload = (event) => {
+    //         // 사용자에게 표시할 메시지 설정
+    //         const message = '이 방을 정말로 나갈까요?';
+            
+    //         // 브라우저가 사용자에게 이 메시지를 표시할 수 있게 설정
+    //         event.returnValue = message;
+
+    //         // 이 메시지는 대부분의 브라우저에서는 무시되며,
+    //         // 사용자에게는 기본 경고 메시지가 표시될 수 있음
+    //         return message;
+    //     };
+
+    //     // 페이지를 떠날 때 이벤트 리스너 추가
+    //     window.addEventListener('beforeunload', handleBeforeUnload);
+
+    //     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    //     return () => {
+    //         sendTest1(false);
+    //         // DB 작업 추가해야 함
+
+    //         axios.delete(SERVER_URL + '/api/raidu/rooms/' + roomName + '/' + me.email, {}, {
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
+    //             }
+    //         }); 
+    //         window.removeEventListener('beforeunload', handleBeforeUnload);
+    //     };
+
+    // },[]) // 컴포넌트 언마운트 시 실행됨 
+
     useEffect(() => {
         console.log("RaidWaitRoom line 60 ", exerciseSet)
     }, [exerciseSet])
@@ -104,11 +139,7 @@ const RaidWaitRoom = () => {
                 data.email
             ));
 
-            console.log('line 106 ~~~ ', me.isCaptain);
-            console.log(me);
             // 두 번째 요청 : 받아온 user 정보의 이메일과 room PK 가지고 방 입장 처리하기
-            // 이 부분을 isCaptain이면 실행하고 아니면 실행하지 않아야 함
-
             if (location.state !== null && location.state !== undefined) {
                 console.log('난 방장이다 그래서 방에 입장할 필요가 없지')
                 // 빈 Promise 반환(아래의 .then이 실행되도록 함)
@@ -124,13 +155,29 @@ const RaidWaitRoom = () => {
             }
             
         }).then((res) => {
-            // 세 번째 요청 : 들어간 방의 정보와 기참가자 정보 리스트 받아오기
-            return axios.get(SERVER_URL + '/api/raidu/rooms/' + roomName, {
-                headers: {
-                    'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
-                    'Content-Type':'application/json',
-                }
-            });
+            refreshParticipants();
+
+        }).then((res) => {
+            setRoomNamed(roomName); // 방 이름 변경 가능하게 하려면 이 부분 수정해야 함. 지금은 pathVal에서 가져온다
+            setRendered(true); // 로드 체크 
+
+        }).catch((error) => {
+            console.error('Error fetching data:', error);
+        });
+
+        setIsRoomLocked(false);
+
+    },[token]); // onMount 
+
+    const refreshParticipants = () => {
+        // 세 번째 요청 : 들어간 방의 정보와 기참가자 정보 리스트 받아오기
+
+        // 방장이 퇴장했을 경우를 try-catch로 처리해야 함 (*room이 조회되지 않을 것이므로)
+        return axios.get(SERVER_URL + '/api/raidu/rooms/' + roomName, {
+            headers: {
+                'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
+                'Content-Type':'application/json',
+            }
         }).then((res) => {
             console.log(res);
             const roomInfo = res.data.data.room;
@@ -145,8 +192,7 @@ const RaidWaitRoom = () => {
             console.log(guestInfo)
 
             // 방장과 참가자 정보를 업데이트합니다.
-            setParticipantsList((prevList) => [
-                ...prevList,
+            setParticipantsList(() => [
                 new User(hostInfo.nickname, hostInfo.mosterBadgeUrl, hostInfo.profileImageUrl, 
                     hostInfo.level, hostInfo.bestScore, true, true, hostInfo.email
                 ),
@@ -154,22 +200,9 @@ const RaidWaitRoom = () => {
                     each.level, each.bestScore, false, false, each.email
                 ))
             ]);
-
-            
-            // 입장 알림 받았을 때, '나' 인 경우에는 participants 
-        }).then((res) => {
-            setRendered(true); // 로드 체크 
-            console.log(me);
-            sendTest1(true); // 내가 입장하면 다른 사람에게도 입장 알림 전송
-            console.log('I sent entered alert')
-        }).catch((error) => {
-            console.error('Error fetching data:', error);
         });
-
-        setRoomNamed(roomName); // 방 이름 변경 가능하게 하려면 이 부분 수정해야 함. 지금은 pathVal에서 가져온다
-        setIsRoomLocked(false);
-
-    },[token]); // onMount 
+        
+    }
 
     const roomSetSetter = (roundTime, restTime, roundCount) => {
         setRoomSet(new Room(roundTime, restTime, roundCount));
@@ -197,7 +230,7 @@ const RaidWaitRoom = () => {
                 client.disconnect();
             }
         };
-    }, [roomNamed, exerciseSet, me]);
+    }, [roomNamed]);
 
     useEffect(() => { 
         // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
@@ -211,7 +244,7 @@ const RaidWaitRoom = () => {
                     console.log(parsedMessage)
                     console.log('====================')
                     switch(parsedMessage.type){
-                        case '1': console.log('someone entered!'); console.log(parsedMessage); break;
+                        case '1': refreshParticipants(); break;
                         case '2': updateUserReadyState(parsedMessage.user, parsedMessage.readyType); break;
                         case '3': setChatMessages((prevMessages) => [...prevMessages, parsedMessage]); break;
                         case '4': gameStart(parsedMessage.sessionId); break;
@@ -219,6 +252,8 @@ const RaidWaitRoom = () => {
                     }
                     setMessages((prevMessages) => [...prevMessages, parsedMessage]);
                 });
+
+                setWebSocketReady(webSocketReady+1);
                 return () => {
                     if(subscription) subscription.unsubscribe();
                     websocketClient.disconnect();
@@ -228,15 +263,13 @@ const RaidWaitRoom = () => {
             }
         };
         connectWebSocket();
+        
         return () => {
             if(websocketClient) {
                 websocketClient.disconnect()
             }
         };
-    }, [websocketClient, roomNamed, exerciseSet, me]);
-    // 버그 정리
-    // 채팅 두 번씩 보내짐 -> 방장은 한 번씩 보이고 방에 있는 사람들은 두 번씩 보내지고 받아짐(무조건 switch 문제임)
-
+    }, [websocketClient, roomNamed, exerciseSet]);
 
     // WATCHING USESTATES
 
@@ -249,7 +282,17 @@ const RaidWaitRoom = () => {
         console.log('rendering finished ... ')
         console.log(participantsList);
         console.log(me)
+        
+      //  rendered == true && sendTest1(true); // 내가 입장하면 다른 사람에게도 입장 알림 전송
+        console.log('I sent entered alert')
     },[rendered])
+
+    useEffect(() => {
+        console.log(`webSocketReady value = ${webSocketReady}`)
+        sendTest1(true);
+    //    if(rendered === true && webSocketReady === 5) sendTest1(true)
+        // webSocketReady가 1씩 증가하는 로직을 가지고 있고, 이 값이 1이어야 최초 초기화
+    },[websocketClient, webSocketReady, rendered])
 
     
     // WEBSOCKET 동작 테스트 ===========================
@@ -275,20 +318,34 @@ const RaidWaitRoom = () => {
         timestamp: getTime()
     };
 
-    const sendTest1 = (enterType) => { // 사용자 입/퇴장 관련 웹소켓 메서드
-        console.log(me)
-        if (websocketClient) {
+    const waitForWebSocketConnection = () => {
+        return new Promise((resolve) => {
+            const checkConnection = () => {
+                if (websocketClient && websocketClient.isConnected) {
+                    resolve();
+                } else {
+                    setTimeout(checkConnection, 1000); // 1초 후 재시도
+                }
+            };
+            checkConnection();
+        });
+    };
+    
+    const sendTest1 = async (enterType) => {
+        try {
+            await waitForWebSocketConnection();
             const message = JSON.stringify({
                 ...COMMONFORM,
                 type: "1",
-                enterType,
-                userInfo: me
-            })
+                enterType, 
+       //         isCaptain: me.isCaptain
+            });
             websocketClient.send(DESTINATION, message);
+            console.log('Message sent successfully');
+
+        } catch (e) {
+            console.error('Error sending message:', e);
         }
-
-
-        console.log('sent sendTest1')
     };
 
     const sendTest2 = () => { // 사용자 준비 상태 관련 웹소켓 메서드
@@ -330,6 +387,15 @@ const RaidWaitRoom = () => {
         }
     };
 
+    // const exit = async () => {
+    //     await axios.delete(SERVER_URL + '/api/raidu/rooms/' + roomName + '/' + me.email, {}, {
+    //         headers: {
+    //             'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
+    //         }
+    //     }); 
+    // }
+
+    // 레디부터 작업하기
     const updateUserReadyState = (name, readyType) => {
         const updatedParticipants = participantsList.map(user => {
             if (user.nickname === name) {
@@ -423,7 +489,7 @@ const RaidWaitRoom = () => {
         <div className="raidWaitRoom-container raidWaitRoom-html raidWaitRoom-body"> 
           {/* header */}
             <header className="raidWaitRoom-header">
-                <div onClick={()=>navigate("/home")} className="raidWaitRoom-logoArea"><img src = {logo} className="raidWaitRoom-logo" alt="logoImg"/></div>
+                <a href="/home" className="raidWaitRoom-logoArea"><img src = {logo} className="raidWaitRoom-logo" alt="logoImg"/></a>
                 <span className="raidWaitRoom-headerContent"> 
                     <img src = {isRoomLocked ? locked : unlocked} className="raidWaitRoom-lock" alt={isRoomLocked ? "locked" : "unlocked"}/>
                     <span className="raidWaitRoom-roomName">{roomNamed}</span>
@@ -499,7 +565,8 @@ const RaidWaitRoom = () => {
                                     </div>
                                 </Grid>
                                 <Grid item xs={2}>
-                                    <div className="raidWaitRoom-outarea" > 
+                                    <div className="raidWaitRoom-outarea"> 
+                                        
                                         <a href='/raid'>  
                                         {/* 방에서 나갈 때 나가기 처리도 해야 하고 방장이면 방 삭제도 해야 됩니다 */}
                                             <img src={out} alt="way out" className="raidWaitRoom-out"/>
