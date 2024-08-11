@@ -136,12 +136,12 @@ const TrainingRoomManager = ({ roomData }) => {
 
   // 전체 전투력 합산(웹소켓을 통해)
   const addCombatPower = (score) => {
-    console.log('기존 전투력');
-    console.log(totalCombatPower);
+    // console.log('기존 전투력');
+    // console.log(totalCombatPower);
     setTotalCombatPower((prevTotal) => {
       const newTotal = prevTotal + score;
-      console.log('바뀐 전투력');
-      console.log(newTotal);
+      // console.log('바뀐 전투력');
+      // console.log(newTotal);
       return newTotal;
     });
   };
@@ -157,7 +157,7 @@ const TrainingRoomManager = ({ roomData }) => {
     const gauge = (totalCombatPower) % 750;
     setTotalCombatGauge(gauge);
     setTotalCombatLevel(level);
-    console.log(`잘 넣어집니당 ${gauge} ${totalCombatGauge} / ${level} ${totalCombatLevel}`);
+    // console.log(`잘 넣어집니당 ${gauge} ${totalCombatGauge} / ${level} ${totalCombatLevel}`);
   }, [totalCombatPower])
 
   
