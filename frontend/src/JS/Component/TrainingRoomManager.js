@@ -47,6 +47,9 @@ const TrainingRoomManager = ({ roomData }) => {
   // 유저 닉네임
   const myUserName = roomData.userInfo.nickname;
 
+  // 방장 유무
+  const isCaptain = roomData.userInfo.isCaptain;
+
   // 타이머 시작 한번만 하기 위해서 만든 상태
   const [firstClick, setFirstClick] = useState(true);
 
@@ -114,6 +117,15 @@ const TrainingRoomManager = ({ roomData }) => {
   //     return updatedPower;
   //   });
   // };
+
+  // 자식 컴포넌트(selfVideo) 에서 자신의 전투력 변경을 위해 함수 선언
+  // 가중치를 받아온다.
+  const UpdateMyTotalCombatPower = (weight) => {
+    setMyTotalCombatPower(prevPower => {
+      const updatePower = prevPower + weight;
+      return updatePower;
+    })
+  }
 
   // 실험용(바로바로 누적되는 자신의 전투력)
   // let addMyCombatPower = 0;
@@ -581,9 +593,9 @@ const TrainingRoomManager = ({ roomData }) => {
         }
 
         // 라운드별 자신의 전투력으로 총 전투력 만들기
-        myCombatPower.forEach(power => {
-          setMyTotalCombatPower(myTotalCombatPower + power);
-        })
+        // myCombatPower.forEach(power => {
+        //   setMyTotalCombatPower(myTotalCombatPower + power);
+        // })
 
         // 기록 저장
 
@@ -709,7 +721,7 @@ const TrainingRoomManager = ({ roomData }) => {
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
-              {firstClick && 
+              {firstClick && isCaptain &&
                 <button onClick={sendTest1}>타이머 시작</button>
               }
             </div>
@@ -733,6 +745,7 @@ const TrainingRoomManager = ({ roomData }) => {
                     currentRound={currentRound} exerciseForRound={exerciseForRound}
                     myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
                     roundWeight={roundWeight} isExercise={isExercise}
+                    UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
                     addMyCombatPower={addMyCombatPower}
                     updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
                     // setEachRoundCount={setEachRoundCount}
