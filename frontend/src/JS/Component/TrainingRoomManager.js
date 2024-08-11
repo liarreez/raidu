@@ -83,18 +83,21 @@ const TrainingRoomManager = ({ roomData }) => {
   const [myTotalCombatPower, setMyTotalCombatPower] = useState(0);
 
   // 자식 컴포넌트(selfVideo) 에서 라운드 별 운동 횟수 변경을 위해 함수 선언
-  // const updateEachRoundCount = (nowRound, count) => {
-  //   console.log('라운드 카운트를 업데이트 해요');
-  //   eachRoundCount[(nowRound) - 1] = count;
-  //   setEachRoundCount(...eachRoundCount);
-  //   // setEachRoundCount(eachRoundCount[(nowRound) - 1]) = count;
-  // }
   const updateEachRoundCount = (roundIndex, newCount) => {
     setEachRoundCount(prevState => {
       console.log('라운드 카운트를 업데이트 해요');
       const updatedCounts = [...prevState];
       console.log(updatedCounts);
-      updatedCounts[roundIndex] = newCount;
+      if (roundIndex === 0) {
+        updatedCounts[roundIndex] = newCount;
+
+      } else {
+        let prevCount = 0;
+        for (let i = 0; i < roundIndex; i++) {
+          prevCount = prevCount + updatedCounts[i]
+        }
+        updatedCounts[roundIndex] = newCount - prevCount;
+      }
       return updatedCounts;
     });
   };
