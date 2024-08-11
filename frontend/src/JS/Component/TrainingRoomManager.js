@@ -21,9 +21,49 @@ import { Modal, Box } from '@mui/material';
 
 import { Navigate, useNavigate } from 'react-router-dom';
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
+//=======================이슬
+import completeScroll from "../../Imgs/complete_scroll.png"
+
+import { ProgressBar, Step } from "react-step-progress-bar";
 
 
-const APPLICATION_SERVER_URL = API_URL+"/api/raidu/rooms";
+function StepProgressBar({ expPercentage }) {
+  const [percent, setPercent] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (percent < expPercentage) {
+        setPercent((prevPercent) => prevPercent + 1);
+      } else {
+        clearInterval(interval);
+      }
+    }, 40);
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [percent, expPercentage]);
+
+  return (
+    <ProgressBar
+      percent={percent}
+      filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
+      unfilledBackground="#3E3A3A"
+      width="500px"
+      height="20px"
+    >
+      <Step transition="scale">{({ accomplished }) => <div />}</Step>
+      <Step transition="scale">{({ accomplished }) => <div />}</Step>
+    </ProgressBar>
+  );
+}
+
+const updatedExpPercentage = (300 / 750) * 100;
+const updatedSeasonRegionScorePercentage = (1000 / 3000) * 100;
+
+
+
+//=======================이슬
+
+const APPLICATION_SERVER_URL = API_URL + "/api/raidu/rooms";
 
 // roomData = 대기방에서 받아온 정보들이 담긴 객체
 const TrainingRoomManager = ({ roomData }) => {
@@ -70,7 +110,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // 라운드 별 운동 배열
   const exerciseForRound = roomData.exerciseInfo;
 
-  
+
   // 라운드 별 운동 가중치(운동에 따라 저장)
   const roundWeight = [];
   // 라운드 별 운동 횟수(count)
@@ -160,7 +200,7 @@ const TrainingRoomManager = ({ roomData }) => {
     // console.log(`잘 넣어집니당 ${gauge} ${totalCombatGauge} / ${level} ${totalCombatLevel}`);
   }, [totalCombatPower])
 
-  
+
   // const addMyCombatPower = (score, currentRound) => {
   //   myCombatPower[currentRound] += score;
   // }
@@ -169,7 +209,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // 운동별 가중치(운동 종목 : 가중치)
   const exerciseScore = {
     'jumpingJack': 30,
-    'lunge' : 50,
+    'lunge': 50,
   }
 
   // 운동 가중치에 따라 라운드 별 운동 가중치 설정
@@ -208,46 +248,46 @@ const TrainingRoomManager = ({ roomData }) => {
   const [messages, setMessages] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
 
-  useEffect(() => { 
+  useEffect(() => {
     // 페이지 진입 시 room PK를 가지고 소켓 클라이언트 객체를 생성합니다.
     const client = new Socketest(waitingRoomId);
     setWebsocketClient(client);
-    return() => {
-        if(client) {
-            client.disconnect();
-        }
+    return () => {
+      if (client) {
+        client.disconnect();
+      }
     };
   }, [hasJoined]);
-  
-  useEffect(() => { 
-      // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
-      if(!websocketClient) return;
-      const connectWebSocket = async () => {
-          try {
-              await websocketClient.connect();
-              const subscription = websocketClient.subscribe('/sub/message/' + waitingRoomId, (message) => {
-                  const parsedMessage = JSON.parse(message.body);
-                  switch(parsedMessage.type){
-                    case '1': handleStartTimer(); ClickEnd(); break;
-                    case '2': addCombatPower(parsedMessage.body); console.log('전투력 올라간다'); break;
-                    default: console.log('?')
-                  }
-                  setMessages((prevMessages) => [...prevMessages, parsedMessage]);
-              });
-              return () => {
-                  if(subscription) subscription.unsubscribe();
-                  websocketClient.disconnect();
-              };
-          } catch (error) {
-              console.error('Error caused by websocket connecting process : ', error);
+
+  useEffect(() => {
+    // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
+    if (!websocketClient) return;
+    const connectWebSocket = async () => {
+      try {
+        await websocketClient.connect();
+        const subscription = websocketClient.subscribe('/sub/message/' + waitingRoomId, (message) => {
+          const parsedMessage = JSON.parse(message.body);
+          switch (parsedMessage.type) {
+            case '1': handleStartTimer(); ClickEnd(); break;
+            case '2': addCombatPower(parsedMessage.body); console.log('전투력 올라간다'); break;
+            default: console.log('?')
           }
-      };
-      connectWebSocket();
-      return () => {
-          if(websocketClient) {
-              websocketClient.disconnect()
-          }
-      };
+          setMessages((prevMessages) => [...prevMessages, parsedMessage]);
+        });
+        return () => {
+          if (subscription) subscription.unsubscribe();
+          websocketClient.disconnect();
+        };
+      } catch (error) {
+        console.error('Error caused by websocket connecting process : ', error);
+      }
+    };
+    connectWebSocket();
+    return () => {
+      if (websocketClient) {
+        websocketClient.disconnect()
+      }
+    };
   }, [websocketClient, hasJoined]);
 
   const DESTINATION = '/pub/message';
@@ -255,7 +295,7 @@ const TrainingRoomManager = ({ roomData }) => {
     user: myUserName,
     channel: waitingRoomId,
     // timestamp: getTime()
-};
+  };
 
 
   const sendTest1 = () => {
@@ -332,7 +372,7 @@ const TrainingRoomManager = ({ roomData }) => {
   function ChangeCurrentTime(time) {
     setCurrentTime(time);
   }
-  
+
 
   // 프로그레스 바 게이지와 레벨(단계)를 넣어주기 위한 내용
   // useEffect(() => {
@@ -350,7 +390,7 @@ const TrainingRoomManager = ({ roomData }) => {
   const [currentTime, setCurrentTime] = useState(0);
   // 타이머 시작 여부 상태
   const [timerActive, setTimerActive] = useState(false);
-  
+
   useEffect(() => {
     if (waitingRoomId) {
       // 처음에 들어왔을 때 받았던 대기방 고유 Id를 받아온다.
@@ -511,11 +551,11 @@ const TrainingRoomManager = ({ roomData }) => {
         setIsExercise(false);
         setTimerActive(true);
       }
-    // } else if (currentStep === 'middleMotion') {
-    //   setCurrentStep('rest');
-    //   setInitialTime(restTime);
-    //   setCurrentTime(restTime);
-    //   setTimerActive(true);
+      // } else if (currentStep === 'middleMotion') {
+      //   setCurrentStep('rest');
+      //   setInitialTime(restTime);
+      //   setCurrentTime(restTime);
+      //   setTimerActive(true);
     } else if (currentStep === 'rest') {
       // setCurrentRound(currentRound + 1);
       setCurrentStep('exercise');
@@ -555,7 +595,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // 특정 상태일 때(중간정산, 휴식, 마지막 모션 및 정산) 모달 나오도록
   useEffect(() => {
     if (['middleMotion', 'rest', 'lastMotion', 'ending'].includes(currentStep)) {
-      
+
       // 정산 전 마지막 모션 때 API 보내주기
       if (currentStep === 'lastMotion') {
         // 마지막 라운드 저장을 위해서 현재 라운드 + 1 해주기
@@ -564,7 +604,7 @@ const TrainingRoomManager = ({ roomData }) => {
         const nowDate = Date.now()
         // 한국 시간으로 로컬라이징 + 저장 포멧
         const endTime = new Date(nowDate + (9 * 60 * 60 * 1000)).toISOString().slice(0, 19);
-        
+
         console.log('-------------------시간---------------------')
         console.log(nowDate, endTime)
 
@@ -641,7 +681,7 @@ const TrainingRoomManager = ({ roomData }) => {
             "email": 'email 받으면 넣기',
             "stage": totalCombatLevel,
           }
-          
+
         }
       );
       return response.data;
@@ -709,38 +749,38 @@ const TrainingRoomManager = ({ roomData }) => {
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
-              {firstClick && 
+              {firstClick &&
                 <button onClick={sendTest1}>타이머 시작</button>
               }
             </div>
-              <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} />
+            <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} />
           </div>
           <div className="training-frame">
             <div className="video-frame">
               <div className="other-video">
-                  {subscribers.map((sub, i) => (
+                {subscribers.map((sub, i) => (
                   <>
                     <UserVideo key={i} num={i} streamManager={sub} />
                     <p>{JSON.parse(sub.stream.connection.data).clientData}</p>
                   </>
                 ))}
               </div>
-                <div className="my-video">{publisher &&
-                  <SelfVideo streamManager={publisher}
-                    countPower={countPower}
-                    ChangeCount={ChangeCount}
-                    sendTest2={sendTest2}
-                    currentRound={currentRound} exerciseForRound={exerciseForRound}
-                    myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
-                    roundWeight={roundWeight} isExercise={isExercise}
-                    addMyCombatPower={addMyCombatPower}
-                    updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
-                    // setEachRoundCount={setEachRoundCount}
-                    // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
-                    // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
-                    
-                  />}
-                </div>
+              <div className="my-video">{publisher &&
+                <SelfVideo streamManager={publisher}
+                  countPower={countPower}
+                  ChangeCount={ChangeCount}
+                  sendTest2={sendTest2}
+                  currentRound={currentRound} exerciseForRound={exerciseForRound}
+                  myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
+                  roundWeight={roundWeight} isExercise={isExercise}
+                  addMyCombatPower={addMyCombatPower}
+                  updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
+                // setEachRoundCount={setEachRoundCount}
+                // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
+                // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
+
+                />}
+              </div>
             </div>
             <div className='progress-box'>
               {/* <h3>총 전투력 넣을 예정</h3> */}
@@ -753,23 +793,23 @@ const TrainingRoomManager = ({ roomData }) => {
                   max='100'
                 />
               </div> */}
-                <h3>현재 점수 { totalCombatPower }</h3>
-                <TotalCombatPower
-                  visualParts={[
-                    {
-                      percentage: `${(totalCombatGauge / 750)*100}%`,
-                      color: "orange"
-                    }
-                  ]}
-                />
-                <p style={{
-                  fontSize: '40px',
-                  fontWeight: 'bold',
-                }}>단계 : { totalCombatLevel }</p>
+              <h3>현재 점수 {totalCombatPower}</h3>
+              <TotalCombatPower
+                visualParts={[
+                  {
+                    percentage: `${(totalCombatGauge / 750) * 100}%`,
+                    color: "orange"
+                  }
+                ]}
+              />
+              <p style={{
+                fontSize: '40px',
+                fontWeight: 'bold',
+              }}>단계 : {totalCombatLevel}</p>
             </div>
             <div className='soldier-box'>
-                {/* <h1>용사 gif</h1> */}
-                <img className='soldier-gif' src={restSoldier} alt="휴식용사"/>
+              {/* <h1>용사 gif</h1> */}
+              <img className='soldier-gif' src={restSoldier} alt="휴식용사" />
             </div>
           </div>
         </div>
@@ -788,10 +828,14 @@ const TrainingRoomManager = ({ roomData }) => {
           left: '50%',
           transform: 'translate(-50%,0)',
           width: '80%',
-          height: '65%',
-          bgcolor: 'background.paper',
-          boxShadow: 24,
+          height: '70%',
+          // bgcolor: 'background.paper',
+          // boxShadow: 24,
           p: 4,
+          backgroundImage: currentStep === 'ending' ? `url(${completeScroll})` : 'none',
+          backgroundSize: 'auto 100%',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
         }}>
           {/* 중간 정산 화면 */}
           {currentStep === 'middleMotion' &&
@@ -799,21 +843,21 @@ const TrainingRoomManager = ({ roomData }) => {
               display: 'flex',
               width: '100%',
               height: '100%',
-              backgroundColor:'skyblue',
+              backgroundColor: 'skyblue',
             }}>
               <img style={{
-                width:'40%',
+                width: '40%',
               }} src={standSoldier} alt="서있는 용사" />
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
                 width: '60%',
                 height: '100%',
-                backgroundColor:'coral',
+                backgroundColor: 'coral',
               }}>
                 <div style={{
                   width: '100%',
-                  height:'25%',
+                  height: '25%',
                   fontSize: '60px',
                   display: 'flex',
                   justifyContent: 'flex-end',
@@ -826,7 +870,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   width: '100%',
                   height: '35%',
                   fontSize: '50px',
-                  backgroundColor:'lightgreen'
+                  backgroundColor: 'lightgreen'
                 }}>
                   <p>여기에는 사람들의 기여도</p>
                 </div>
@@ -834,7 +878,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   width: '100%',
                   height: '40%',
                   fontSize: '40px',
-                  backgroundColor:'lightgray',
+                  backgroundColor: 'lightgray',
                 }}>
                   <p>이 아래에는 그 뭐냐 프로그레스 바</p>
                 </div>
@@ -859,7 +903,7 @@ const TrainingRoomManager = ({ roomData }) => {
                 alignItems: 'center'
                 // backgroundColor:'coral',
               }}>
-                <TimerRest currentTime={currentTime} timerActive={timerActive}/>
+                <TimerRest currentTime={currentTime} timerActive={timerActive} />
               </div>
               {/* 자기 화면 및 운동 선택 div */}
               <div style={{
@@ -875,7 +919,7 @@ const TrainingRoomManager = ({ roomData }) => {
                 }}>
                   {publisher &&
                     <SelfRestVideo
-                    streamManager={publisher}
+                      streamManager={publisher}
                     // ChangeCount={ChangeCount}
                     />}
                 </div>
@@ -922,31 +966,93 @@ const TrainingRoomManager = ({ roomData }) => {
 
             </div>
           }
-          {/* 마지막 정산 화면 */}
+          
+          {/* 마지막 정산 화면 =================================================이슬 */}
           {currentStep === 'ending' &&
-            <div>
-              
-              {/* 아래 정보들 */}
+            <div style={{
+              paddingTop: "120px",
+              paddingBottom: "100px",
+              paddingLeft: "180px",
+              paddingRight: "180px"
+          }}>
               <div style={{
                 width: '100%',
                 height: '90%',
-                display:'flex',
+                display: 'flex'
               }}>
-                {/* 몬스터 정보 */}
+
                 <div style={{
                   width: '30%',
                   height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column', /* 세로 방향으로 자식 요소를 배치 */
+                  justifyContent: 'space-between', /* 자식 요소들 사이에 공간을 분배 */
+                  
+                  padding: '10px', /* 여백 설정 (필요에 따라 조정) */
+                  boxSizing: 'border-box' /* 여백과 테두리를 포함하여 전체 너비와 높이 계산 */
                 }}>
-                  <img src={burgerking} alt="잡은 몬스터"/>
+                  <div style={{ color: "black", fontSize: "20px" }}>
+                    NEW!
+                  </div>
+                  <img
+                    src={burgerking}
+                    alt="잡은 몬스터"
+                    className="training-monster-image"
+                    style={{
+                      width: '100%', /* 부모 div의 너비를 채우도록 설정 */
+                      height: 'auto' /* 비율을 유지하면서 자동으로 높이 조정 */
+                    }}
+                  />
+                  <div style={{
+                    color: 'black',
+                    fontSize: '20px',
+                    marginTop: 'auto', /* 위쪽의 여백을 자동으로 채워서 아래쪽으로 이동 */
+                    alignSelf: 'flex-end' /* 자식 요소를 오른쪽 끝으로 정렬 */
+                  }}>
+                    MonsterName
+                  </div>
                 </div>
-                {/* 다른 정보들 */}
-                <div style={{
+
+                <div className='training-complte-right' style={{
                   width: '70%',
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  backgroundColor:'cyan',
+                  marginLeft: '20px',
+                  paddingLeft: '20px'
                 }}>
+                  <div className='training-complete-stage'>
+                    <div style={{ color: "black", marginBottom: "20px", fontSize: "40px" }}>
+                      N Stage Clear !!!
+                    </div>
+                  </div>
+                  <div className='training-complte-level'>
+                    <div style={{ color: "black", fontSize: "30px" }}>
+                      LV.NN
+                    </div>
+                    <StepProgressBar expPercentage={updatedExpPercentage}></StepProgressBar>
+                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                      <div style={{ color: "gray", fontSize: "20px" }}>
+                        +300
+                      </div>
+                    </div>
+
+
+                  </div>
+                  <div className='training-complte-season-region-score-text'>
+                    <div style={{ color: "black", fontSize: "20px" }}>
+                      지역 기여도
+                    </div>
+                    <StepProgressBar expPercentage={updatedSeasonRegionScorePercentage}></StepProgressBar>
+                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                      <div style={{ color: "gray", fontSize: "20px" }}>
+                        +3000
+                      </div>
+                    </div>
+                  </div>
+                  <div className='training-complte-season-region-score-bar'>
+
+                  </div>
                 </div>
               </div>
 
@@ -963,6 +1069,7 @@ const TrainingRoomManager = ({ roomData }) => {
               </div>
             </div>
           }
+          {/*=============================================== 이슬*/}
           {/* <div style={{
             display: 'flex',
             flexDirection: 'column',
