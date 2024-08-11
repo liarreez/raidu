@@ -47,6 +47,14 @@ const TrainingRoomManager = ({ roomData }) => {
   // 유저 닉네임
   const myUserName = roomData.userInfo.nickname;
 
+  // 타이머 시작 한번만 하기 위해서 만든 상태
+  const [firstClick, setFirstClick] = useState(true);
+
+  // 처음 버튼 클릭 시, 버튼 안보이게 하기
+  const ClickEnd = () => {
+    setFirstClick(false);
+  }
+
   // 현재 어떤 단계인가 (세팅, 운동, 휴식, 정산으로 나뉠듯)
   // 기본 상태는 ready
   // setup, exercise, rest, ending
@@ -66,11 +74,62 @@ const TrainingRoomManager = ({ roomData }) => {
   // 라운드 별 운동 가중치(운동에 따라 저장)
   const roundWeight = [];
   // 라운드 별 운동 횟수(count)
-  const eachRoundCount = [];
+  // const eachRoundCount = [];
+  const [eachRoundCount, setEachRoundCount] = useState([]);
   // 라운드 별 전투력(가중치 * 횟수)
-  const myCombatPower = [];
+  // const myCombatPower = [];
+  const [myCombatPower, setMyCombatPower] = useState([]);
   // 자신의 전투력
   const [myTotalCombatPower, setMyTotalCombatPower] = useState(0);
+
+  // 자식 컴포넌트(selfVideo) 에서 라운드 별 운동 횟수 변경을 위해 함수 선언
+  const updateEachRoundCount = (roundIndex, newCount) => {
+    setEachRoundCount(prevState => {
+      console.log('라운드 카운트를 업데이트 해요');
+      const updatedCounts = [...prevState];
+      console.log(updatedCounts);
+      if (roundIndex === 0) {
+        updatedCounts[roundIndex] = newCount;
+
+      } else {
+        let prevCount = 0;
+        for (let i = 0; i < roundIndex; i++) {
+          prevCount = prevCount + updatedCounts[i]
+        }
+        updatedCounts[roundIndex] = newCount - prevCount;
+      }
+      return updatedCounts;
+    });
+  };
+
+  // 자식 컴포넌트(selfVideo) 에서 라운드 별 전투력 변경을 위해 함수 선언
+  const updateMyCombatPower = (nowRound, count, weight) => {
+    console.log('라운드 전투력을 업데이트 해요');
+    setMyCombatPower[(nowRound) - 1] = count * weight; // weight = roundWeight[(nowRound) - 1]
+  }
+  // const updateMyCombatPower = (roundIndex, newPower) => {
+  //   setMyCombatPower(prevState => {
+  //     const updatedPower = [...prevState];
+  //     updatedPower[roundIndex] = newPower;
+  //     return updatedPower;
+  //   });
+  // };
+
+  // 실험용(바로바로 누적되는 자신의 전투력)
+  // let addMyCombatPower = 0;
+  const [addMyCombatPower, setAddMyCombatPower] = useState(0);
+
+  // useEffect(() => {
+  //   addMyCombatPower = 0;
+  //   myCombatPower.forEach(power => {
+  //     addMyCombatPower = addMyCombatPower + power
+  //   });
+  // }, [myCombatPower])
+
+  // 자식 컴포넌트(selfVideo) 에서 본인 누적 전투력 변경을 위해 함수 선언
+  const ChangeAddMyCombatPower = (weigthPower) => {
+    setAddMyCombatPower(addMyCombatPower + weigthPower);
+  };
 
   // 전체 전투력(모두의 전투력이 들어갈 예정)
   const [totalCombatPower, setTotalCombatPower] = useState(0);
@@ -162,8 +221,8 @@ const TrainingRoomManager = ({ roomData }) => {
               const subscription = websocketClient.subscribe('/sub/message/' + waitingRoomId, (message) => {
                   const parsedMessage = JSON.parse(message.body);
                   switch(parsedMessage.type){
-                    case '1': handleStartTimer(); break;
-                    case '2': addCombatPower(parsedMessage.body); break;
+                    case '1': handleStartTimer(); ClickEnd(); break;
+                    case '2': addCombatPower(parsedMessage.body); console.log('전투력 올라간다'); break;
                     default: console.log('?')
                   }
                   setMessages((prevMessages) => [...prevMessages, parsedMessage]);
@@ -248,15 +307,15 @@ const TrainingRoomManager = ({ roomData }) => {
   // const [CombatPower, setCombatPower] = useState(0);
 
   // 운동 개수를 가져온 변수 << 나중에 모든 사람들 전투력과 합산 해야함
-  // const [countPower, setCountPower] = useState(0);
+  const [countPower, setCountPower] = useState(0);
   // // 프로그레스 바 게이지
   // const [combatGauge, setCombatGauge] = useState(0);
   // // 프로그레스 바 레벨(게이지가 몇번 다 찼는가?)
   // const [combatLevel, setCombatLevel] = useState(0);
 
-  // function ChangeCount(cnt) {
-  //   setCountPower(cnt);
-  // }
+  function ChangeCount(cnt) {
+    setCountPower(cnt);
+  }
 
   // 모달 열리고 닫힘 여부
   const [openModal, setOpenModal] = useState(false);
@@ -404,6 +463,8 @@ const TrainingRoomManager = ({ roomData }) => {
   //   }
   // }
 
+  // 운동 시간인지 아닌지를 확인하기 위한 boolean (운동 시간이 아닐 때 카운트가 올라가지 않도록)
+  const [isExercise, setIsExercise] = useState(false)
 
   // 타이머가 0이 되었을 때 다음 단계로 넘어가는 로직
   useEffect(() => {
@@ -425,18 +486,22 @@ const TrainingRoomManager = ({ roomData }) => {
       setCurrentStep('exercise');
       setInitialTime(exerciseTime);
       setCurrentTime(exerciseTime);
+      setIsExercise(true);
       setTimerActive(true);
     } else if (currentStep === 'exercise') { // 라운드에 따라 운동 후 휴식 or 마지막 화면 나오기
       if (currentRound < roundCount - 1) {
         setCurrentStep('rest');
         setInitialTime(restTime);
         setCurrentTime(restTime);
+        setIsExercise(false);
         setTimerActive(true);
-        // setCurrentRound(currentRound + 1);
+        setCurrentRound(currentRound + 1);
       } else {
         setCurrentStep('lastMotion');
         setInitialTime(lastMotionTime);
         setCurrentTime(lastMotionTime);
+        setCurrentRound(currentRound + 1);
+        setIsExercise(false);
         setTimerActive(true);
       }
     // } else if (currentStep === 'middleMotion') {
@@ -445,18 +510,21 @@ const TrainingRoomManager = ({ roomData }) => {
     //   setCurrentTime(restTime);
     //   setTimerActive(true);
     } else if (currentStep === 'rest') {
-      setCurrentRound(currentRound + 1);
+      // setCurrentRound(currentRound + 1);
       setCurrentStep('exercise');
       setInitialTime(exerciseTime);
       setCurrentTime(exerciseTime);
+      setIsExercise(true);
       setTimerActive(true);
     } else if (currentStep === 'lastMotion') {
       setCurrentStep('ending');
       setInitialTime(endingTime);
       setCurrentTime(endingTime);
+      setIsExercise(false);
       setTimerActive(true);
     } else if (currentStep === 'ending') {
-      setCurrentStep('finish!')
+      setCurrentStep('finish!');
+      setIsExercise(false);
       setTimerActive(false);
       return;
     }
@@ -484,7 +552,7 @@ const TrainingRoomManager = ({ roomData }) => {
       // 정산 전 마지막 모션 때 API 보내주기
       if (currentStep === 'lastMotion') {
         // 마지막 라운드 저장을 위해서 현재 라운드 + 1 해주기
-        setCurrentRound(currentRound + 1);
+        // setCurrentRound(currentRound + 1);
         // 현재 시간 받아주기
         const nowDate = Date.now()
         // 한국 시간으로 로컬라이징 + 저장 포멧
@@ -634,7 +702,9 @@ const TrainingRoomManager = ({ roomData }) => {
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
-              <button onClick={sendTest1}>타이머 시작</button>
+              {firstClick && 
+                <button onClick={sendTest1}>타이머 시작</button>
+              }
             </div>
               <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} />
           </div>
@@ -650,11 +720,17 @@ const TrainingRoomManager = ({ roomData }) => {
               </div>
                 <div className="my-video">{publisher &&
                   <SelfVideo streamManager={publisher}
-                    // ChangeCount={ChangeCount}
+                    countPower={countPower}
+                    ChangeCount={ChangeCount}
                     sendTest2={sendTest2}
                     currentRound={currentRound} exerciseForRound={exerciseForRound}
                     myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
-                    roundWeight={roundWeight}
+                    roundWeight={roundWeight} isExercise={isExercise}
+                    addMyCombatPower={addMyCombatPower}
+                    updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
+                    // setEachRoundCount={setEachRoundCount}
+                    // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
+                    // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
                     
                   />}
                 </div>
