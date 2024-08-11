@@ -1001,18 +1001,20 @@ const TrainingRoomManager = ({ roomData }) => {
                     alt="잡은 몬스터"
                     className="training-monster-image"
                     style={{
-                      width: '100%', /* 부모 div의 너비를 채우도록 설정 */
-                      height: 'auto' /* 비율을 유지하면서 자동으로 높이 조정 */
+                      width: '100%',
+                      height: 'auto',
+                      marginTop: '5px',
+                      marginBottom: '5px'
                     }}
                   />
                   <div style={{
                     color: 'black',
-                    fontSize: '20px',
+                    fontSize: '18px',
                     marginTop: 'auto', /* 위쪽의 여백을 자동으로 채워서 아래쪽으로 이동 */
                     alignSelf: 'flex-end', /* 자식 요소를 오른쪽 끝으로 정렬 */
                     fontFamily: 'WarhavenR'                    
                   }}>
-                    MonsterName
+                    비마니우스 3세
                   </div>
                 </div>
 
