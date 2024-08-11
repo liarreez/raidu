@@ -56,8 +56,8 @@ function StepProgressBar({ expPercentage }) {
   );
 }
 
-const updatedExpPercentage = (300 / 750) * 100;
-const updatedSeasonRegionScorePercentage = (1000 / 3000) * 100;
+// const updatedExpPercentage = (300 / 750) * 100;
+// const updatedSeasonRegionScorePercentage = (1000 / 3000) * 100;
 
 //=======================이슬
 
@@ -65,6 +65,17 @@ const APPLICATION_SERVER_URL = API_URL + "/api/raidu/rooms";
 
 // roomData = 대기방에서 받아온 정보들이 담긴 객체
 const TrainingRoomManager = ({ roomData }) => {
+
+  const [isNewMonster, setIsNewMonster] = useState(false);
+  const [monsterName, setMonsterName] = useState(null);
+  const [monsterImgUrl, setMonsterImgUrl] = useState(null);
+  const [isLevelUp, setIsLevelUp] = useState(false);
+  const [updatedExp, setUpdatedExp] = useState(0);
+  const [updatedLevel, setUpdatedLevel] = useState(0);
+  const [updatedRegionScore, setUpdatedRegionScore] = useState(0);
+
+  const [updatedExpPercentage, setUpdatedExpPercentage] = useState(0);
+  const [updatedRegionScorePercentage, setUpdatedRegionScorePercentage] = useState(0);
 
   // 운동방이 시작했는가? (joinTrainingRoom을 한번만 하기 위해 넣은 확인용)
   const [hasJoined, setHasJoined] = useState(false);
@@ -104,6 +115,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // 정해둔 운동시간
   // const exerciseTime = roomData.roomInfo.roundTime;
   const exerciseTime = 1;
+  const gainedExp = (exerciseTime/60)*50;
   // 정해둔 쉬는시간
   // const restTime = roomData.roomInfo.restTime;
   const restTime = 1;
@@ -630,6 +642,14 @@ const TrainingRoomManager = ({ roomData }) => {
         // 기록 저장
         record(roomData.roomPk, endTime, roundRecordList).then(data => {
           console.log("기록 후 데이터:", data);
+          setUpdatedExp(data.data.updatedExp)
+          setUpdatedLevel(data.data.updatedLevel)
+          setUpdatedRegionScore(data.data.updatedRegionScore)
+          setIsLevelUp(data.data.isLevelUp)
+
+          setUpdatedExpPercentage((data.data.updatedExp/750)*100);
+          setUpdatedRegionScorePercentage((data.data.updatedRegionScore/1000)*100)
+
         }).catch(error => {
           console.error("기록 저장 실패:", error);
         })
@@ -637,8 +657,10 @@ const TrainingRoomManager = ({ roomData }) => {
         // 잡은 몬스터 정보 불러오기
         getMonster()
           .then(data => {
-            // API 호출 후 데이터 사용 (예: 상태 업데이트, 로그 출력 등)
             console.log("불러온 몬스터 데이터:", data);
+            setIsNewMonster(data.data.capturedMonster.new)
+            setMonsterImgUrl(data.data.capturedMonster.imageUrl)
+            setMonsterName(data.data.capturedMonster.name)
           })
           .catch(error => {
             // 에러 처리
@@ -680,7 +702,6 @@ const record = async (roomId, endTime, roundRecordList) => {
     throw error;
   }
 };
-
 
   // 몬스터 정보를 가져오는 API
   const getMonster = async () => {
@@ -1006,11 +1027,16 @@ const record = async (roomId, endTime, roundRecordList) => {
                   padding: '10px', /* 여백 설정 (필요에 따라 조정) */
                   boxSizing: 'border-box' /* 여백과 테두리를 포함하여 전체 너비와 높이 계산 */
                 }}>
-                  <div style={{ color: "black", fontSize: "20px", fontFamily: 'WarhavenR' }}>
-                    NEW!
+                  <div style={{
+                    color: 'black',
+                    fontSize: '18px',
+                    fontFamily: 'WarhavenR'                    
+                  }}>
+                    {isNewMonster ? 'NEW!' : 'FALSE'}
                   </div>
                   <img
                     src={burgerking}
+                    // src={monsterImgUrl}
                     alt="잡은 몬스터"
                     className="training-monster-image"
                     style={{
@@ -1022,12 +1048,12 @@ const record = async (roomId, endTime, roundRecordList) => {
                   />
                   <div style={{
                     color: 'black',
-                    fontSize: '18px',
+                    fontSize: '20px',
                     marginTop: 'auto', /* 위쪽의 여백을 자동으로 채워서 아래쪽으로 이동 */
                     alignSelf: 'flex-end', /* 자식 요소를 오른쪽 끝으로 정렬 */
-                    fontFamily: 'WarhavenR'                    
+                    fontFamily: 'WarhavenB'                    
                   }}>
-                    비마니우스 3세
+                    {monsterName}
                   </div>
                 </div>
 
@@ -1047,42 +1073,39 @@ const record = async (roomId, endTime, roundRecordList) => {
                       fontSize: "37px", 
                       fontFamily: 'WarhavenB' 
                       }}>
-                      N STAGE CLEAR
+                      {totalCombatLevel} STAGE CLEAR!
                     </div>
                   </div>
                   <div className='training-complte-level'>
                     <div style={{ 
                       color: "black", 
                       fontSize: "25px", 
-                      fontFamily: 'WarhavenR' }}>
-                      LV.NN
+                      fontFamily: 'WarhavenR',
+                      marginBottom: '5px' }}>
+                      LV.{updatedLevel}
                     </div>
                     <StepProgressBar expPercentage={updatedExpPercentage}></StepProgressBar>
                     <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                      <div style={{ color: "gray", fontSize: "20px" }}>
-                        +300
+                      <div style={{ color: "darkslategray", fontSize: "18px" }}>
+                        +{gainedExp}
                       </div>
                     </div>
-
-
                   </div>
                   <div className='training-complte-season-region-score-text'>
                     <div style={{ 
                       color: "black", 
                       fontSize: "20px", 
-                      fontFamily: 'WarhavenR' 
+                      fontFamily: 'WarhavenR',
+                      marginBottom: '5px' 
                       }}>
-                      지역 기여도
+                      지역 기여도 : 지역 이름 넣고 색도 지역 상징 색으로 넣고싶네요
                     </div>
-                    <StepProgressBar expPercentage={updatedSeasonRegionScorePercentage}></StepProgressBar>
+                    <StepProgressBar expPercentage={updatedRegionScorePercentage}></StepProgressBar>
                     <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                      <div style={{ color: "gray", fontSize: "20px" }}>
-                        +3000
+                      <div style={{ color: "darkslategray", fontSize: "18px" }}>
+                        +{myTotalCombatPower}
                       </div>
                     </div>
-                  </div>
-                  <div className='training-complte-season-region-score-bar'>
-
                   </div>
                 </div>
               </div>
