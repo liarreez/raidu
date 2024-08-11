@@ -115,6 +115,15 @@ const TrainingRoomManager = ({ roomData }) => {
   //   });
   // };
 
+  // 자식 컴포넌트(selfVideo) 에서 자신의 전투력 변경을 위해 함수 선언
+  // 가중치를 받아온다.
+  const UpdateMyTotalCombatPower = (weight) => {
+    setMyTotalCombatPower(prevPower => {
+      const updatePower = prevPower + weight;
+      return updatePower;
+    })
+  }
+
   // 실험용(바로바로 누적되는 자신의 전투력)
   // let addMyCombatPower = 0;
   const [addMyCombatPower, setAddMyCombatPower] = useState(0);
@@ -733,6 +742,7 @@ const TrainingRoomManager = ({ roomData }) => {
                     currentRound={currentRound} exerciseForRound={exerciseForRound}
                     myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
                     roundWeight={roundWeight} isExercise={isExercise}
+                    UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
                     addMyCombatPower={addMyCombatPower}
                     updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
                     // setEachRoundCount={setEachRoundCount}

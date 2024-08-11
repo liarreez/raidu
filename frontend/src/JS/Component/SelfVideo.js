@@ -113,6 +113,7 @@ const SelfVideo = (props) => {
     selfCombatPower = power;
   }
 
+  // 포즈 감지를 위한 모델을 만들
   const makeModel = async (video) => {
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_THUNDER,
@@ -128,12 +129,13 @@ const SelfVideo = (props) => {
     await detectModel(detector, video);
   };
 
+  // 포즈 감지를 하는 함수 (무한 재귀)
   const detectModel = async (detector, video) => {
     const poses = await detector.estimatePoses(video);
     if (poses && poses.length > 0) {
       // console.log(poses);
       // console.log('현재 운동이 잘 바뀌었나요?')
-      // console.log(selectExerciseRef.current);
+      console.log(selectExerciseRef.current);
       const pose = poses[0];
       processPose(pose, selectExerciseRef.current);
     }
@@ -154,6 +156,7 @@ const SelfVideo = (props) => {
     );
   }
 
+  // 감지한 포즈를 현재 선택된 운동이 무엇인지에 따라 해당 운동 함수 호출
   const processPose = (pose, currentExercise) => {
     if (isFullBodyVisible(pose)) {
       // console.log('지금 무슨 운동?');
@@ -211,7 +214,11 @@ const SelfVideo = (props) => {
     console.log('현재 운동 가중치');
     console.log(props.roundWeight[nowRound]);
 
+    // 자신의 현재 점수에서 가중치를 더해준다.
+    props.UpdateMyTotalCombatPower(props.roundWeight[nowRound])
+
     // 카운트가 올라간걸 웹소켓으로 뿌린다.
+    // (보내주는건 운동 가중치 => 해당 운동 가중치를 카운트가 오를 때마다 보내줌)
     props.sendTest2(props.roundWeight[nowRound]);
 
     const newCombatPower = props.myCombatPower[props.currentRound] + props.roundWeight[props.currentRound]
@@ -485,7 +492,7 @@ const SelfVideo = (props) => {
           </div>
           <div className="count-box">
             {/* <p> Count: {count}</p> */}
-            <p> 전투력 : {props.addMyCombatPower} </p>
+            <p> 전투력 : {props.myTotalCombatPower} </p>
             <span>숫자 : { props.eachRoundCount[props.currentRound] }</span>
           </div>
           {!bodyState && (
