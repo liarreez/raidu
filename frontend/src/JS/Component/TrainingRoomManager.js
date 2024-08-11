@@ -59,8 +59,6 @@ function StepProgressBar({ expPercentage }) {
 const updatedExpPercentage = (300 / 750) * 100;
 const updatedSeasonRegionScorePercentage = (1000 / 3000) * 100;
 
-
-
 //=======================이슬
 
 const APPLICATION_SERVER_URL = API_URL + "/api/raidu/rooms";
@@ -86,6 +84,8 @@ const TrainingRoomManager = ({ roomData }) => {
   const waitingRoomId = roomData.roomId;
   // 유저 닉네임
   const myUserName = roomData.userInfo.nickname;
+  const myUserEmail = roomData.userInfo.email;
+  console.log("ㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸ    ", myUserEmail)
 
   // 타이머 시작 한번만 하기 위해서 만든 상태
   const [firstClick, setFirstClick] = useState(true);
@@ -630,7 +630,15 @@ const TrainingRoomManager = ({ roomData }) => {
         // 기록 저장
 
         // 잡은 몬스터 정보 불러오기
-
+        getMonster()
+          .then(data => {
+            // API 호출 후 데이터 사용 (예: 상태 업데이트, 로그 출력 등)
+            console.log("불러온 몬스터 데이터:", data);
+          })
+          .catch(error => {
+            // 에러 처리
+            console.error("몬스터 정보 불러오기 실패:", error);
+          });
 
       }
 
@@ -652,7 +660,7 @@ const TrainingRoomManager = ({ roomData }) => {
             Authorization: "Bearer " + acessToken,
           },
           body: {
-            email: 'email 받으면 넣기',
+            email: myUserEmail,
             endTime: endTime,
             personalCombatPower: myTotalCombatPower,
             totalCombatPower: totalCombatPower,
@@ -675,17 +683,17 @@ const TrainingRoomManager = ({ roomData }) => {
       const response = await axios.post(
         `${APPLICATION_SERVER_URL}/monster`,
         {
+          email: myUserEmail,
+          stage: 3 //totalCombatLevel
+        },
+        {
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer " + acessToken,
-          },
-          body: {
-            "email": 'email 받으면 넣기',
-            "stage": totalCombatLevel,
+            Authorization: `Bearer ${acessToken}`,
           }
-
         }
       );
+      console.log("몬스터 데이터:", response.data);
       return response.data;
     } catch (error) {
       console.error("몬스터 불러오기가 실패하였습니다.", error);
