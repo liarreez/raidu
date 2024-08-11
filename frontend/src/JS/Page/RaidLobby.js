@@ -9,6 +9,12 @@ import "../../CSS/RaidLobby.css";
 import TopNav from "../Component/TopNav";
 import { API_URL } from "../../config"; // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
+import icon_exercise from "../../Imgs/icon_exercise.png";
+import icon_breaktime from "../../Imgs/icon_breaktime.png";
+import icon_counter from "../../Imgs/icon_counter.png";
+import icon_human_fill from "../../Imgs/icon_human_fill.png";
+import icon_human_empty from "../../Imgs/icon_human_empty.png";
+
 import raidu from "../../Imgs/button-raidu.png";
 
 // Modal 렌더링을 분리
@@ -246,7 +252,7 @@ const RaidLobby = () => {
                 {/* 방 리스트 */}
                 <div className="lobby-list-wrapper">
                   {roomList.map((each, index) => (
-                    <div className="lobby-list-card" key={index} onClick={(e) => changeLocation(e, each.id)}>
+                    <div className="lobby-list-card" key={index}>
                       {/* <Typography
                         key={index}
                         onClick={(e) => changeLocation(e, each.id)}
@@ -254,7 +260,44 @@ const RaidLobby = () => {
                       >
                         {each.title}
                       </Typography> */}
-                      {each.title}
+                      <div className="lobby-card-number">{each.id}</div>
+                      <div style={{ width: "100%" }}>
+                        <div className="lobby-card-title">{each.title}</div>
+                        <div className="lobby-card-icon-wrapper">
+                          <div className="lobby-card-icon">
+                            <p>휴식 시간</p>
+                            <img alt="휴식 아이콘" src={icon_breaktime}></img>
+                            <p>{each.restTime}</p>
+                          </div>
+                          <div className="lobby-card-icon">
+                            <p>운동 시간</p>
+                            <img alt="운동 아이콘" src={icon_exercise}></img>
+                            <p>{each.roundTime}</p>
+                          </div>
+                          <div className="lobby-card-icon">
+                            <p>라운드 수</p>
+                            <img alt="라운드 아이콘" src={icon_counter}></img>
+                            <p>{each.totalRounds}</p>
+                          </div>
+                          <div className="lobby-card-icon" style={{ width: "140px" }}>
+                            <p>최대 인원</p>
+                            <div className="lobby-card-pop">
+                              {[...Array(each.maxParticipants)].map((_, i) => (
+                                <img key={i} alt="인원 아이콘" src={icon_human_fill}></img>
+                              ))}
+                            </div>
+                            <p>{each.maxParticipants}</p>
+                          </div>
+                          <div>
+                            <button
+                              className="lobby-join-button"
+                              onClick={(e) => changeLocation(e, each.id)}
+                            >
+                              <span className="text">입장하기</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -263,6 +306,10 @@ const RaidLobby = () => {
                   <div className="lobby-make-button" onClick={openModal}>
                     <h3>방 만들기</h3>
                     <img src={raidu} alt="방 만들기" />
+                  </div>
+
+                  <div className="lobby-illust">
+                    <img alt="로비 일러스트"></img>
                   </div>
                 </div>
               </div>
