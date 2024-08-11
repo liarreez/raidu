@@ -5,6 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MonsterRepository extends JpaRepository<Monster, Long> {
-    List<Monster> findByStageLessThan(int stage);
+    List<Monster> findByStageLessThanEqual(int stage);
 
 }

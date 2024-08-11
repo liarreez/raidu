@@ -313,7 +313,7 @@ public class RoomServiceImpl implements RoomService{
         // 업데이트된 레벨, 경험치 반환
         Map<String, Object> map = new HashMap<>();
         map.put("region", RegionResponseDto.fromEntity(updatedSeasonRegionScore.getRegion()));
-        map.put("updatedSeasonScore", updatedSeasonRegionScore.getScore());
+        map.put("updatedRegionScore", updatedSeasonRegionScore.getScore());
         map.put("updatedLevel", userProfile.getLevel());
         map.put("updatedExp", userProfile.getExp());
         map.put("isLevelUp", isLevelUp);
@@ -333,7 +333,9 @@ public class RoomServiceImpl implements RoomService{
 
     @Override
     public Map<String, Object> getCapturedMonster(MonsterCaptureRequest request) {
-        List<Monster> monsterList = monsterRepository.findByStageLessThan(request.getStage());
+        List<Monster> monsterList = monsterRepository.findByStageLessThanEqual(request.getStage());
+        System.out.println("EMAIL           "+ request.getEmail() );
+        System.out.println("STAGee          "+ request.getStage());
         Monster capturedMonster = getRandomMonster(monsterList);
         UserProfile userProfile = findUserProfileByEmailOrThrow(request.getEmail());
 
