@@ -477,6 +477,7 @@ const RaidWaitRoom = () => {
                 roomInfo,
                 userInfo,
                 exerciseInfo,
+                roomPk: roomName
             },
         });
     }

@@ -74,6 +74,7 @@ const TrainingRoomManager = ({ roomData }) => {
     if (!hasJoined) {
       console.log('방 정보 및 라운드별 가중치 제대로 나오나요?!---------');
       console.log(roomData);
+      console.log(roomData.roomPk);
       console.log(roundWeight);
       joinTrainingRoom();
       setHasJoined(true);
@@ -85,7 +86,6 @@ const TrainingRoomManager = ({ roomData }) => {
   // 유저 닉네임
   const myUserName = roomData.userInfo.nickname;
   const myUserEmail = roomData.userInfo.email;
-  console.log("ㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸㄸ    ", myUserEmail)
 
   // 타이머 시작 한번만 하기 위해서 만든 상태
   const [firstClick, setFirstClick] = useState(true);
@@ -628,6 +628,11 @@ const TrainingRoomManager = ({ roomData }) => {
         })
 
         // 기록 저장
+        record(roomData.roomPk, endTime, roundRecordList).then(data => {
+          console.log("기록 후 데이터:", data);
+        }).catch(error => {
+          console.error("기록 저장 실패:", error);
+        })
 
         // 잡은 몬스터 정보 불러오기
         getMonster()
@@ -648,34 +653,34 @@ const TrainingRoomManager = ({ roomData }) => {
     }
   }, [currentStep]);
 
-
   // 기록 저장을 위한 API
-  const record = async (roomId, endTime, roundRecordList) => {
-    try {
-      const response = await axios.post(
-        `${APPLICATION_SERVER_URL}/${roomId}/complete`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + acessToken,
-          },
-          body: {
-            email: myUserEmail,
-            endTime: endTime,
-            personalCombatPower: myTotalCombatPower,
-            totalCombatPower: totalCombatPower,
-            participantsCount: subscribers.length,
-            stage: totalCombatLevel,
-            roundRecordList: roundRecordList,
-          }
+const record = async (roomId, endTime, roundRecordList) => {
+  try {
+    const response = await axios.post(
+      `${APPLICATION_SERVER_URL}/${roomId}/complete`,
+      {
+        email: myUserEmail,
+        endTime: endTime,
+        personalCombatPower: myTotalCombatPower,
+        totalCombatPower: totalCombatPower,
+        participantsCount: subscribers.length,
+        stage: totalCombatLevel,
+        roundRecordList: roundRecordList,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${acessToken}`,
         }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("기록 저장에 실패하였습니다.", error);
-      throw error;
-    }
-  };
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("기록 저장에 실패하였습니다.", error);
+    throw error;
+  }
+};
+
 
   // 몬스터 정보를 가져오는 API
   const getMonster = async () => {
