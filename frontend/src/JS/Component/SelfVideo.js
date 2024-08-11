@@ -404,7 +404,7 @@ const SelfVideo = (props) => {
     console.log(count);
     console.log('이건 위쪽 카운트');
     console.log(props.countPower);
-    props.updateEachRoundCount(props.currentRound, props.countPower);
+    props.updateEachRoundCount(props.currentRound -1, props.countPower);
     // props.updateMyCombatPower(props.currentRound, count, props.roundWeight[(props.currentRound) - 1])
 
     changeSelectedExercise(props.currentRound);

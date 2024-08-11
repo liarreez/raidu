@@ -47,6 +47,9 @@ const TrainingRoomManager = ({ roomData }) => {
   // 유저 닉네임
   const myUserName = roomData.userInfo.nickname;
 
+  // 방장 유무
+  const isCaptain = roomData.userInfo.isCaptain;
+
   // 타이머 시작 한번만 하기 위해서 만든 상태
   const [firstClick, setFirstClick] = useState(true);
 
@@ -590,9 +593,9 @@ const TrainingRoomManager = ({ roomData }) => {
         }
 
         // 라운드별 자신의 전투력으로 총 전투력 만들기
-        myCombatPower.forEach(power => {
-          setMyTotalCombatPower(myTotalCombatPower + power);
-        })
+        // myCombatPower.forEach(power => {
+        //   setMyTotalCombatPower(myTotalCombatPower + power);
+        // })
 
         // 기록 저장
 
@@ -718,7 +721,7 @@ const TrainingRoomManager = ({ roomData }) => {
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
-              {firstClick && 
+              {firstClick && isCaptain &&
                 <button onClick={sendTest1}>타이머 시작</button>
               }
             </div>
