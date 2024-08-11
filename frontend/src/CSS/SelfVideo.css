@@ -1,16 +1,10 @@
-/* video {
-    width: auto;
-    height: 100%;
-    float: left;
-    cursor: pointer;
-} */
 
 .streamcomponent-self {
     /* border: 5px solid green; */
     position: relative;
     /* width: 800px; */
-    width: auto;
-    height: auto;
+    /* width: auto;
+    height: auto; */
     /* border: 5px solid greenyellow; */
 }
 

@@ -23,7 +23,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
 
-const APPLICATION_SERVER_URL = API_URL+"/api/raidu/rooms";
+const APPLICATION_SERVER_URL = API_URL + "/api/raidu/rooms";
 
 // roomData = 대기방에서 받아온 정보들이 담긴 객체
 const TrainingRoomManager = ({ roomData }) => {
@@ -70,7 +70,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // 라운드 별 운동 배열
   const exerciseForRound = roomData.exerciseInfo;
 
-  
+
   // 라운드 별 운동 가중치(운동에 따라 저장)
   const roundWeight = [];
   // 라운드 별 운동 횟수(count)
@@ -150,7 +150,7 @@ const TrainingRoomManager = ({ roomData }) => {
     console.log(`잘 넣어집니당 ${gauge} ${totalCombatGauge} / ${level} ${totalCombatLevel}`);
   }, [totalCombatPower])
 
-  
+
   // const addMyCombatPower = (score, currentRound) => {
   //   myCombatPower[currentRound] += score;
   // }
@@ -159,7 +159,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // 운동별 가중치(운동 종목 : 가중치)
   const exerciseScore = {
     'jumpingJack': 30,
-    'lunge' : 50,
+    'lunge': 50,
   }
 
   // 운동 가중치에 따라 라운드 별 운동 가중치 설정
@@ -198,46 +198,46 @@ const TrainingRoomManager = ({ roomData }) => {
   const [messages, setMessages] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
 
-  useEffect(() => { 
+  useEffect(() => {
     // 페이지 진입 시 room PK를 가지고 소켓 클라이언트 객체를 생성합니다.
     const client = new Socketest(waitingRoomId);
     setWebsocketClient(client);
-    return() => {
-        if(client) {
-            client.disconnect();
-        }
+    return () => {
+      if (client) {
+        client.disconnect();
+      }
     };
   }, [hasJoined]);
-  
-  useEffect(() => { 
-      // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
-      if(!websocketClient) return;
-      const connectWebSocket = async () => {
-          try {
-              await websocketClient.connect();
-              const subscription = websocketClient.subscribe('/sub/message/' + waitingRoomId, (message) => {
-                  const parsedMessage = JSON.parse(message.body);
-                  switch(parsedMessage.type){
-                    case '1': handleStartTimer(); ClickEnd(); break;
-                    case '2': addCombatPower(parsedMessage.body); console.log('전투력 올라간다'); break;
-                    default: console.log('?')
-                  }
-                  setMessages((prevMessages) => [...prevMessages, parsedMessage]);
-              });
-              return () => {
-                  if(subscription) subscription.unsubscribe();
-                  websocketClient.disconnect();
-              };
-          } catch (error) {
-              console.error('Error caused by websocket connecting process : ', error);
+
+  useEffect(() => {
+    // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
+    if (!websocketClient) return;
+    const connectWebSocket = async () => {
+      try {
+        await websocketClient.connect();
+        const subscription = websocketClient.subscribe('/sub/message/' + waitingRoomId, (message) => {
+          const parsedMessage = JSON.parse(message.body);
+          switch (parsedMessage.type) {
+            case '1': handleStartTimer(); ClickEnd(); break;
+            case '2': addCombatPower(parsedMessage.body); console.log('전투력 올라간다'); break;
+            default: console.log('?')
           }
-      };
-      connectWebSocket();
-      return () => {
-          if(websocketClient) {
-              websocketClient.disconnect()
-          }
-      };
+          setMessages((prevMessages) => [...prevMessages, parsedMessage]);
+        });
+        return () => {
+          if (subscription) subscription.unsubscribe();
+          websocketClient.disconnect();
+        };
+      } catch (error) {
+        console.error('Error caused by websocket connecting process : ', error);
+      }
+    };
+    connectWebSocket();
+    return () => {
+      if (websocketClient) {
+        websocketClient.disconnect()
+      }
+    };
   }, [websocketClient, hasJoined]);
 
   const DESTINATION = '/pub/message';
@@ -245,7 +245,7 @@ const TrainingRoomManager = ({ roomData }) => {
     user: myUserName,
     channel: waitingRoomId,
     // timestamp: getTime()
-};
+  };
 
 
   const sendTest1 = () => {
@@ -322,7 +322,7 @@ const TrainingRoomManager = ({ roomData }) => {
   function ChangeCurrentTime(time) {
     setCurrentTime(time);
   }
-  
+
 
   // 프로그레스 바 게이지와 레벨(단계)를 넣어주기 위한 내용
   // useEffect(() => {
@@ -340,7 +340,7 @@ const TrainingRoomManager = ({ roomData }) => {
   const [currentTime, setCurrentTime] = useState(0);
   // 타이머 시작 여부 상태
   const [timerActive, setTimerActive] = useState(false);
-  
+
   useEffect(() => {
     if (waitingRoomId) {
       // 처음에 들어왔을 때 받았던 대기방 고유 Id를 받아온다.
@@ -501,11 +501,11 @@ const TrainingRoomManager = ({ roomData }) => {
         setIsExercise(false);
         setTimerActive(true);
       }
-    // } else if (currentStep === 'middleMotion') {
-    //   setCurrentStep('rest');
-    //   setInitialTime(restTime);
-    //   setCurrentTime(restTime);
-    //   setTimerActive(true);
+      // } else if (currentStep === 'middleMotion') {
+      //   setCurrentStep('rest');
+      //   setInitialTime(restTime);
+      //   setCurrentTime(restTime);
+      //   setTimerActive(true);
     } else if (currentStep === 'rest') {
       // setCurrentRound(currentRound + 1);
       setCurrentStep('exercise');
@@ -545,7 +545,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // 특정 상태일 때(중간정산, 휴식, 마지막 모션 및 정산) 모달 나오도록
   useEffect(() => {
     if (['middleMotion', 'rest', 'lastMotion', 'ending'].includes(currentStep)) {
-      
+
       // 정산 전 마지막 모션 때 API 보내주기
       if (currentStep === 'lastMotion') {
         // 마지막 라운드 저장을 위해서 현재 라운드 + 1 해주기
@@ -554,7 +554,7 @@ const TrainingRoomManager = ({ roomData }) => {
         const nowDate = Date.now()
         // 한국 시간으로 로컬라이징 + 저장 포멧
         const endTime = new Date(nowDate + (9 * 60 * 60 * 1000)).toISOString().slice(0, 19);
-        
+
         console.log('-------------------시간---------------------')
         console.log(nowDate, endTime)
 
@@ -631,7 +631,7 @@ const TrainingRoomManager = ({ roomData }) => {
             "email": 'email 받으면 넣기',
             "stage": totalCombatLevel,
           }
-          
+
         }
       );
       return response.data;
@@ -683,7 +683,7 @@ const TrainingRoomManager = ({ roomData }) => {
         </div>
       ) : (
         <div id="session" className="training">
-          <div id="session-header" className="training-header">
+          <div className="training-header">
             {/* <div>
               <h1 id="session-title">운동방입니다.</h1>
               <button className="btn btn-large btn-danger" onClick={leaveSession}>
@@ -692,45 +692,45 @@ const TrainingRoomManager = ({ roomData }) => {
               <progress vlaue={null} />
             </div> */}
             <div>
-              <h2>현재 단계 : {currentStep}</h2>
+              {/* <h2>현재 단계 : {currentStep}</h2> */}
               {/* <input
                 type='number'
                 vlaue={initialTime}
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
-              {firstClick && 
-                <button onClick={sendTest1}>타이머 시작</button>
-              }
             </div>
-              <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} />
+            <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} />
           </div>
           <div className="training-frame">
             <div className="video-frame">
+              <div className="my-video">{publisher &&
+                <SelfVideo streamManager={publisher}
+                  countPower={countPower}
+                  ChangeCount={ChangeCount}
+                  sendTest2={sendTest2}
+                  currentRound={currentRound} exerciseForRound={exerciseForRound}
+                  myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
+                  roundWeight={roundWeight} isExercise={isExercise}
+                  addMyCombatPower={addMyCombatPower}
+                  updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
+                // setEachRoundCount={setEachRoundCount}
+                // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
+                // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
+
+                />}
+              </div>
               <div className="other-video">
-                  {subscribers.map((sub, i) => (
-                  <>
-                    <UserVideo key={i} num={i} streamManager={sub} />
-                    <p>{JSON.parse(sub.stream.connection.data).clientData}</p>
-                  </>
+                {subscribers.map((sub, i) => (
+                  <div key={i} className="video-container">
+                    {sub ? (
+                      <UserVideo num={i} streamManager={sub} />
+                    ) :
+                      <img className='soldier-gif' src={restSoldier} />
+                    }
+                  </div>
                 ))}
               </div>
-                <div className="my-video">{publisher &&
-                  <SelfVideo streamManager={publisher}
-                    countPower={countPower}
-                    ChangeCount={ChangeCount}
-                    sendTest2={sendTest2}
-                    currentRound={currentRound} exerciseForRound={exerciseForRound}
-                    myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
-                    roundWeight={roundWeight} isExercise={isExercise}
-                    addMyCombatPower={addMyCombatPower}
-                    updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
-                    // setEachRoundCount={setEachRoundCount}
-                    // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
-                    // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
-                    
-                  />}
-                </div>
             </div>
             <div className='progress-box'>
               {/* <h3>총 전투력 넣을 예정</h3> */}
@@ -743,22 +743,38 @@ const TrainingRoomManager = ({ roomData }) => {
                   max='100'
                 />
               </div> */}
-                <TotalCombatPower
-                  visualParts={[
-                    {
-                      percentage: `${ totalCombatGauge }%`,
-                      color: "orange"
-                    }
-                  ]}
-                />
-                <p style={{
-                  fontSize: '40px',
-                  fontWeight: 'bold',
-                }}>단계 : { totalCombatLevel }</p>
+              <TotalCombatPower
+                visualParts={[
+                  {
+                    percentage: `${totalCombatGauge}%`,
+                    color: "orange"
+                  }
+                ]}
+              />
+              <p style={{
+                fontSize: '40px',
+                fontWeight: 'bold',
+              }}>단계 : {totalCombatLevel}</p>
             </div>
             <div className='soldier-box'>
-                {/* <h1>용사 gif</h1> */}
-                <img className='soldier-gif' src={restSoldier} alt="휴식용사"/>
+              <div className='round-box-frame'>
+                <div>
+                  {Array.from({ length: roundCount }, (_, index) => (
+                    <div
+                      key={index}
+                      className={`round-box ${currentRound === index ? 'active' : ''}`}
+                    >
+                      Round{index + 1} : {exerciseForRound[index]}
+                    </div>
+
+                  ))}
+                  {firstClick &&
+                    <button className="start-button" onClick={sendTest1}>타이머 시작</button>
+                  }
+                </div>
+              </div>
+              {/* <h1>용사 gif</h1> */}
+              <img className='soldier-gif' src={restSoldier} alt="휴식용사" />
             </div>
           </div>
         </div>
@@ -788,21 +804,21 @@ const TrainingRoomManager = ({ roomData }) => {
               display: 'flex',
               width: '100%',
               height: '100%',
-              backgroundColor:'skyblue',
+              backgroundColor: 'skyblue',
             }}>
               <img style={{
-                width:'40%',
+                width: '40%',
               }} src={standSoldier} alt="서있는 용사" />
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
                 width: '60%',
                 height: '100%',
-                backgroundColor:'coral',
+                backgroundColor: 'coral',
               }}>
                 <div style={{
                   width: '100%',
-                  height:'25%',
+                  height: '25%',
                   fontSize: '60px',
                   display: 'flex',
                   justifyContent: 'flex-end',
@@ -815,7 +831,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   width: '100%',
                   height: '35%',
                   fontSize: '50px',
-                  backgroundColor:'lightgreen'
+                  backgroundColor: 'lightgreen'
                 }}>
                   <p>여기에는 사람들의 기여도</p>
                 </div>
@@ -823,7 +839,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   width: '100%',
                   height: '40%',
                   fontSize: '40px',
-                  backgroundColor:'lightgray',
+                  backgroundColor: 'lightgray',
                 }}>
                   <p>이 아래에는 그 뭐냐 프로그레스 바</p>
                 </div>
@@ -832,76 +848,28 @@ const TrainingRoomManager = ({ roomData }) => {
           }
           {/* 휴식 시간 화면 */}
           {currentStep === 'rest' &&
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              height: '100%',
-              border: '3px solid red'
-            }}>
+            <div className="restTime">
               {/* 타이머 넣을 div */}
-              <div style={{
-                width: '100%',
-                height: '20%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-                // backgroundColor:'coral',
-              }}>
-                <TimerRest currentTime={currentTime} timerActive={timerActive}/>
+              <div className="restTime-header">
+                <TimerRest currentTime={currentTime} timerActive={timerActive} />
               </div>
               {/* 자기 화면 및 운동 선택 div */}
-              <div style={{
-                display: 'flex',
-                width: '100%',
-                height: '80%',
-              }}>
+              <div className="restTime-frame">
                 {/* 자기 화면 div */}
-                <div style={{
-                  width: '50%',
-                  height: '100%',
-                  border: '2px solid purple'
-                }}>
+                <div className="restTime-video">
                   {publisher &&
                     <SelfRestVideo
-                    streamManager={publisher}
+                      streamManager={publisher}
                     // ChangeCount={ChangeCount}
                     />}
                 </div>
                 {/* 운동 선택 div */}
-                <div style={{
-                  width: '50%',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  border: '2px solid blue'
-                }}>
-                  <div style={{
-                    width: '100%',
-                    height: '20%',
-                    fontSize: '40px',
-                    backgroundColor: 'lavender',
-                  }}>
-                    <p>휴식 시간</p>
+                <div className="restTime-box">
+                  <div className="restTime-message">
+                    <p>다음 운동을 준비해주세요</p>
                   </div>
-                  <div style={{
-                    width: '100%',
-                    height: '40%',
-                    fontSize: '30px',
-                    backgroundColor: 'lightcyan',
-                  }}>
-                    <p>운동 선택 넣을 예정</p>
-                  </div>
-                  <div style={{
-                    width: '100%',
-                    height: '40%',
-                    fontSize: '30px',
-                    backgroundColor: 'lightpink',
-                  }}>
-                    <p>쉬는 용사 넣을 예정</p>
-                  </div>
+                  <img className='rest-gif' src={restSoldier} alt="휴식용사" />
                 </div>
-
               </div>
             </div>
           }
@@ -914,19 +882,19 @@ const TrainingRoomManager = ({ roomData }) => {
           {/* 마지막 정산 화면 */}
           {currentStep === 'ending' &&
             <div>
-              
+
               {/* 아래 정보들 */}
               <div style={{
                 width: '100%',
                 height: '90%',
-                display:'flex',
+                display: 'flex',
               }}>
                 {/* 몬스터 정보 */}
                 <div style={{
                   width: '30%',
                   height: '100%',
                 }}>
-                  <img src={burgerking} alt="잡은 몬스터"/>
+                  <img src={burgerking} alt="잡은 몬스터" />
                 </div>
                 {/* 다른 정보들 */}
                 <div style={{
@@ -934,7 +902,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  backgroundColor:'cyan',
+                  backgroundColor: 'cyan',
                 }}>
                 </div>
               </div>

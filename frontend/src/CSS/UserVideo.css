@@ -1,9 +1,9 @@
-/* video {
+video {
     width: 50%;
     height: auto;
-    float: left;
-    cursor: pointer;
-} */
+    /* float: left;
+    cursor: pointer; */
+}
 
 .streamcomponent-user {
     /* border: 5px solid green; */
@@ -24,7 +24,7 @@
 
 .streamcomponent-user video {
     width: 100%;
-    height: auto;
+    height: 100%;
 }
 
 .user-name {
