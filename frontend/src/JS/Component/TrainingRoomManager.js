@@ -47,6 +47,9 @@ const TrainingRoomManager = ({ roomData }) => {
   // 유저 닉네임
   const myUserName = roomData.userInfo.nickname;
 
+  // 방장 유무
+  const isCaptain = roomData.userInfo.isCaptain;
+
   // 타이머 시작 한번만 하기 위해서 만든 상태
   const [firstClick, setFirstClick] = useState(true);
 
@@ -83,18 +86,21 @@ const TrainingRoomManager = ({ roomData }) => {
   const [myTotalCombatPower, setMyTotalCombatPower] = useState(0);
 
   // 자식 컴포넌트(selfVideo) 에서 라운드 별 운동 횟수 변경을 위해 함수 선언
-  // const updateEachRoundCount = (nowRound, count) => {
-  //   console.log('라운드 카운트를 업데이트 해요');
-  //   eachRoundCount[(nowRound) - 1] = count;
-  //   setEachRoundCount(...eachRoundCount);
-  //   // setEachRoundCount(eachRoundCount[(nowRound) - 1]) = count;
-  // }
   const updateEachRoundCount = (roundIndex, newCount) => {
     setEachRoundCount(prevState => {
       console.log('라운드 카운트를 업데이트 해요');
       const updatedCounts = [...prevState];
       console.log(updatedCounts);
-      updatedCounts[roundIndex] = newCount;
+      if (roundIndex === 0) {
+        updatedCounts[roundIndex] = newCount;
+
+      } else {
+        let prevCount = 0;
+        for (let i = 0; i < roundIndex; i++) {
+          prevCount = prevCount + updatedCounts[i]
+        }
+        updatedCounts[roundIndex] = newCount - prevCount;
+      }
       return updatedCounts;
     });
   };
@@ -111,6 +117,15 @@ const TrainingRoomManager = ({ roomData }) => {
   //     return updatedPower;
   //   });
   // };
+
+  // 자식 컴포넌트(selfVideo) 에서 자신의 전투력 변경을 위해 함수 선언
+  // 가중치를 받아온다.
+  const UpdateMyTotalCombatPower = (weight) => {
+    setMyTotalCombatPower(prevPower => {
+      const updatePower = prevPower + weight;
+      return updatePower;
+    })
+  }
 
   // 실험용(바로바로 누적되는 자신의 전투력)
   // let addMyCombatPower = 0;
@@ -133,7 +148,14 @@ const TrainingRoomManager = ({ roomData }) => {
 
   // 전체 전투력 합산(웹소켓을 통해)
   const addCombatPower = (score) => {
-    setTotalCombatPower(totalCombatPower + score);
+    // console.log('기존 전투력');
+    // console.log(totalCombatPower);
+    setTotalCombatPower((prevTotal) => {
+      const newTotal = prevTotal + score;
+      // console.log('바뀐 전투력');
+      // console.log(newTotal);
+      return newTotal;
+    });
   };
 
   // 프로그레스 바에 들어가는 전체 전투력 게이지
@@ -147,7 +169,7 @@ const TrainingRoomManager = ({ roomData }) => {
     const gauge = (totalCombatPower) % 750;
     setTotalCombatGauge(gauge);
     setTotalCombatLevel(level);
-    console.log(`잘 넣어집니당 ${gauge} ${totalCombatGauge} / ${level} ${totalCombatLevel}`);
+    // console.log(`잘 넣어집니당 ${gauge} ${totalCombatGauge} / ${level} ${totalCombatLevel}`);
   }, [totalCombatPower])
 
 
@@ -259,12 +281,12 @@ const TrainingRoomManager = ({ roomData }) => {
     }
   };
 
-  const sendTest2 = () => {
+  const sendTest2 = (roundWeight) => {
     if (websocketClient) {
       const message = JSON.stringify({
         ...COMMONFORM,
         type: '2',
-        body: roundWeight[currentRound],
+        body: roundWeight,
         currentRound,
       })
       websocketClient.send(DESTINATION, message);
@@ -571,9 +593,9 @@ const TrainingRoomManager = ({ roomData }) => {
         }
 
         // 라운드별 자신의 전투력으로 총 전투력 만들기
-        myCombatPower.forEach(power => {
-          setMyTotalCombatPower(myTotalCombatPower + power);
-        })
+        // myCombatPower.forEach(power => {
+        //   setMyTotalCombatPower(myTotalCombatPower + power);
+        // })
 
         // 기록 저장
 

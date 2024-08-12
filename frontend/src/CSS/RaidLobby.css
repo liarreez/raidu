@@ -1,9 +1,14 @@
 @import url('./KeyColor.css');
 
+.top-nav {
+    width: 100vw;
+    min-width: 1050px;
+}
+
 .lobby-page-wrapper {
-    width: 100%;
+    width: 100vw;
+    min-width: 1050px;
     overflow: hidden;
-    min-width: 1200px;
     height: 100vh;
     /* height 값은 이미지 에셋 추가후 생각하자 */
     background-size: cover;
@@ -19,7 +24,8 @@
 .lobby-content-wrapper {
     display: flex;
     /* position: absolute; */
-    width: 100%;
+    width: 100vw;
+    min-width: 1050px;
     height: 100vh;
     overflow: hidden;
     position: relative;
@@ -30,6 +36,7 @@
     /* 사이징, 양식 */
     display: flex;
     width: 100vw;
+    min-width: 1050px;
     height: calc(100vh + 300px);
     background-color: white;
     box-sizing: border-box;
@@ -91,50 +98,44 @@
     margin-left: 60px;
     overflow-y: auto;
     position: relative;
+    border-radius: 8px;
 
-    /* 스크롤바 숨기기 */
-    ::-webkit-scrollbar {
-        width: 0px; /* 스크롤바 너비를 0으로 설정 */
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background-color: transparent; /* 스크롤바 손잡이 색상을 투명으로 설정 */
-    }
+    box-shadow: inset 0px 0px 8px 1px rgba(0,0,0,0.2);
+}
+/* 스크롤바 숨기기 */
+.lobby-list-wrapper::-webkit-scrollbar {
+    width: 0px; /* 스크롤바 너비를 0으로 설정 */
 }
 
-.lobby-list-wrapper::before, 
-.lobby-list-wrapper::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 30px; /* 흐림 효과의 높이 */
-    pointer-events: none; /* 흐림 효과가 클릭 등 이벤트에 영향을 미치지 않도록 설정 */
-    z-index: 1;
+.lobby-list-wrapper::-webkit-scrollbar-thumb {
+    background-color: transparent; /* 스크롤바 손잡이 색상을 투명으로 설정 */
 }
-
-.lobby-list-wrapper::before {
-    top: 0;
-    background: linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0));
-}
-
-.lobby-list-wrapper::after {
-    bottom: 0;
-    background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
-}
-
-
 
 .lobby-list-card {
     min-width: 500px;
-    min-height: 120px;
-    max-height: 120px;
-    border-radius: 4px;
+    min-height: 140px;
+    max-height: 140px;
+    border-radius: 10px;
     margin-top: 10px;
     margin-bottom: 10px;
+    box-sizing: border-box;
+    display: flex;
 
+    overflow: hidden;
     transition: 0.3s ease-in-out;
     box-shadow: 0px 8px 8px 1px rgba(0,0,0,0.1);
+}
+
+.lobby-card-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 40px;
+    width: 100px;
+    height: 100%;
+    background-color: var(--hard-color-white);
+    color: var(--hard-color-black);
 }
 
 .lobby-list-card:hover {
@@ -142,11 +143,158 @@
     border: 1px soid var(--hard-color-black);
 }
 
+.lobby-card-title {
+    background-color: var(--hard-color-black);
+    height: 40px;
+    color: var(--hard-color-white);
+    font-weight: bold;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+
+.lobby-card-icon-wrapper {
+    display: flex;
+    padding-left: 15px;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.lobby-card-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.lobby-card-icon p {
+    color: var(--hard-color-black);
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.lobby-card-icon img{
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 5px;
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.2);
+}
+
+.lobby-card-icon:nth-child(1) img{
+ background-color: rgb(210, 241, 255);
+}
+
+.lobby-card-icon:nth-child(2) img{
+    background-color: rgb(255, 193, 171);
+}
+
+.lobby-card-icon:nth-child(3) img{
+    background-color: rgb(210, 255, 220);
+}
+
+.lobby-card-pop {
+    border-radius: 4px;
+    background-color: var(--hard-color-white);
+    width: 120px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.lobby-card-pop img{
+    box-shadow: none;
+    width: 30px;
+    height: 30px;
+    object-fit: fill;
+
+}
+
 .lobby-content-right {
     flex: 2;
     height: 480px;
     display: flex;
-
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin-right: 60px;
 }
+
+.lobby-illust {
+    width: 350px;
+    height: 315px;
+    border-radius: 8px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lobby-illust img {
+    width: inherit;
+    height: inherit;
+    object-fit: cover;
+}
+
+.lobby-join-button {
+    padding: 20px 10px;
+    font-size: 16px;
+    background-color: var(--hard-color-grey);
+    color: var(--hard-color-white);
+    font-weight: bold;
+    font-family: inherit;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .lobby-join-button:hover {
+    background-color: var(--hard-color-green);
+  }
+  
+  .lobby-join-button .text {
+    display: inline-block;
+    white-space: nowrap;
+    position: relative;
+    left: 0;
+    transition: transform 2s ease-out;
+  }
+  
+  .lobby-join-button:hover .text {
+    animation: moveText 3s cubic-bezier(0.55, 0, 0.1, 1) infinite;
+  }
+  
+  @keyframes moveText {
+    0% {
+      transform: translateX(0);
+      opacity: 1; 
+    }
+    49.9% {
+      transform: translateX(150%); 
+      opacity: 1;
+    }
+    50% {
+      transform: translateX(150%); 
+      opacity: 0; 
+    }
+    50.1% {
+      transform: translateX(-150%);
+      opacity: 0;
+    }
+    51% {
+      transform: translateX(-150%); 
+      opacity: 1; 
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
