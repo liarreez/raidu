@@ -255,18 +255,18 @@ const SelfRestVideo = (props) => {
 
   return (
     <div>
-      <div>
+      {/* <div>
         <select name="select" id="" onChange={handleExerciseChange}>
           <option value="default">운동을 선택해주세요.</option>
           <option value="jumpingJack">팔벌려뛰기</option>
           <option value="lunge">런지</option>
         </select>
-      </div>
+      </div> */}
       {props.streamManager !== undefined ? (
         <div className="streamcomponent-self-rest" id="myRestVideo">
           <OpenViduVideo streamManager={props.streamManager} />
           <div className='self-rest-name'>
-            <p>닉네임 : {getNicknameTag()}</p>
+            <p>{getNicknameTag()}</p>
           </div>
           <div className="count-rest-box">
             {/* <p> Count: {count}</p> */}

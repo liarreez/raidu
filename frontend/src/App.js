@@ -12,7 +12,6 @@ import NotFound from "./JS/Page/NotFound.js";
 import FirstVisit from "./JS/Page/FirstVisit.js";
 import ConceptBook from "./JS/Page/ConceptBook.js";
 
-import WaitRoom from "./JS/Page/WaitRoom.js";
 import RaidLobby from "./JS/Page/RaidLobby.js";
 import RaidWaitRoom from "./JS/Page/RaidWaitRoom.js";
 
@@ -81,12 +80,6 @@ function App() {
             <Route path="/raid/:roomName" element={
               <PrivateRoute>
                 <RaidWaitRoom />
-              </PrivateRoute>
-            } />
-            
-            <Route path="/enter/:roomNo" element={
-              <PrivateRoute>
-                <WaitRoom />
               </PrivateRoute>
             } />
 
