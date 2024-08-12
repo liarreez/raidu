@@ -806,7 +806,6 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                 min='0'
               /> */}
               {isCaptain && firstClick &&
-              {firstClick &&
                 <button onClick={sendTest1}>타이머 시작</button>
               }
             </div>
