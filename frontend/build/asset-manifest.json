@@ -1,11 +1,17 @@
 {
   "files": {
+<<<<<<< HEAD
     "main.css": "/static/css/main.39718ca0.css",
 <<<<<<< HEAD
     "main.js": "/static/js/main.249011f5.js",
 =======
     "main.js": "/static/js/main.07b3ace0.js",
 >>>>>>> master
+=======
+    "main.css": "/static/css/main.69dfc0e2.css",
+    "main.js": "/static/js/main.aac77fb4.js",
+    "static/media/complete_scroll.png": "/static/media/complete_scroll.f14d7e887c4e04907461.png",
+>>>>>>> faba45291b4e3ca078de6e4a8d6d6e62ea125039
     "static/media/back.jpg": "/static/media/back.6a4fd6d197a02180bf7e.jpg",
     "static/media/monster.gif": "/static/media/monster.274051db64c80eb2b9cd.gif",
     "static/media/icon_desert.png": "/static/media/icon_desert.9a324217477905e5da71.png",
@@ -30,7 +36,12 @@
     "static/media/topgrass.png": "/static/media/topgrass.56247141cd63d1d16ffd.png",
     "static/media/button-training.png": "/static/media/button-training.a7496c8b505cd4327d89.png",
     "static/media/restSoldier.gif": "/static/media/restSoldier.deafcc14057e40139244.gif",
+    "static/media/icon_counter.png": "/static/media/icon_counter.43fadac81543f9e6ecae.png",
+    "static/media/icon_breaktime.png": "/static/media/icon_breaktime.65f871f23a6290bd73bd.png",
     "static/media/test.png": "/static/media/test.d4cb59a48c9ed667f72c.png",
+    "static/media/icon_human_empty.png": "/static/media/icon_human_empty.c920752422c11377083e.png",
+    "static/media/icon_exercise.png": "/static/media/icon_exercise.b4602e18275b30338100.png",
+    "static/media/icon_human_fill.png": "/static/media/icon_human_fill.33e7df0963941edbeb70.png",
     "static/media/slick.svg": "/static/media/slick.2630a3e3eab21c607e21.svg",
     "static/media/slick.eot": "/static/media/slick.a4e97f5a2a64f0ab1323.eot",
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",

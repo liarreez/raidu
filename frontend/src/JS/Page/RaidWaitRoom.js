@@ -244,7 +244,7 @@ const RaidWaitRoom = () => {
                     console.log(parsedMessage)
                     console.log('====================')
                     switch(parsedMessage.type){
-                        case '1': refreshParticipants(); break;
+                        case '1': parsedMessage.enterType ? refreshParticipants() : parsedMessage.isCaptain===true ? navigate('/raid') : refreshParticipants(); break;
                         case '2': updateUserReadyState(parsedMessage.user, parsedMessage.readyType); break;
                         case '3': setChatMessages((prevMessages) => [...prevMessages, parsedMessage]); break;
                         case '4': gameStart(parsedMessage.sessionId); break;
@@ -338,7 +338,7 @@ const RaidWaitRoom = () => {
                 ...COMMONFORM,
                 type: "1",
                 enterType, 
-       //         isCaptain: me.isCaptain
+                isCaptain: me.isCaptain
             });
             websocketClient.send(DESTINATION, message);
             console.log('Message sent successfully');
@@ -387,13 +387,17 @@ const RaidWaitRoom = () => {
         }
     };
 
-    // const exit = async () => {
-    //     await axios.delete(SERVER_URL + '/api/raidu/rooms/' + roomName + '/' + me.email, {}, {
-    //         headers: {
-    //             'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
-    //         }
-    //     }); 
-    // }
+    const exit = async () => { // 퇴장 메서드 
+        await axios.delete(SERVER_URL + '/api/raidu/rooms/' + roomName + '/' + me.email, {
+            headers: {
+                'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
+            }
+        }).then(() => {
+            sendTest1(false)
+        }).then(() => {
+            navigate("/raid");
+        })
+    }
 
     // 레디부터 작업하기
     const updateUserReadyState = (name, readyType) => {
@@ -477,6 +481,7 @@ const RaidWaitRoom = () => {
                 roomInfo,
                 userInfo,
                 exerciseInfo,
+                roomPk: roomName
             },
         });
     }
@@ -551,26 +556,18 @@ const RaidWaitRoom = () => {
                                     )
                                 }
 
-                                {/* 방장인지 아닌지에 따라 다른 컴포 출력 
-                                
-                                    isLeader ? <span classname='buttonText' onClick={start}>시작하기</span>
-                                    : <span className='buttonText' onClick={ready}>준비하기</span>
-                                
-                                    onClick은 Grid 자체에 주면 되고, 준비하기 버튼은 토글처럼 동작해야 함
-                                    준비하기 버튼 눌리고 나면 setReady(true)가 되는데, 이 상태인 동안에는 button color가 hover 시와 똑같도록 설정
-                                */}
                                 <Grid item xs={5}>
                                     <div className='raidWaitRoom-shareButton' >
                                         <span className='raidWaitRoom-buttonText'>링크 공유</span>
                                     </div>
                                 </Grid>
                                 <Grid item xs={2}>
-                                    <div className="raidWaitRoom-outarea"> 
+                                    <div className="raidWaitRoom-outarea" onClick={exit}> 
                                         
-                                        <a href='/raid'>  
+                                        {/* <a href='/raid'>   */}
                                         {/* 방에서 나갈 때 나가기 처리도 해야 하고 방장이면 방 삭제도 해야 됩니다 */}
                                             <img src={out} alt="way out" className="raidWaitRoom-out"/>
-                                        </a>
+                                        {/* </a> */}
                                     </div>
                                 </Grid>
                             </Grid>

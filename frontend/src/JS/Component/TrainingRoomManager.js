@@ -21,12 +21,69 @@ import { Modal, Box } from '@mui/material';
 
 import { Navigate, useNavigate } from 'react-router-dom';
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
+//=======================이슬
+import completeScroll from "../../Imgs/complete_scroll.png"
 
+import { ProgressBar, Step } from "react-step-progress-bar";
+
+
+function StepProgressBar({ expPercentage }) {
+  const [percent, setPercent] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (percent < expPercentage) {
+        setPercent((prevPercent) => prevPercent + 1);
+      } else {
+        clearInterval(interval);
+      }
+    }, 40);
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [percent, expPercentage]);
+
+  return (
+    <ProgressBar
+      percent={percent}
+      filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
+      unfilledBackground="#3E3A3A"
+      width="500px"
+      height="20px"
+    >
+      <Step transition="scale">{({ accomplished }) => <div />}</Step>
+      <Step transition="scale">{({ accomplished }) => <div />}</Step>
+    </ProgressBar>
+  );
+}
+
+//=======================이슬
 
 const APPLICATION_SERVER_URL = API_URL + "/api/raidu/rooms";
 
 // roomData = 대기방에서 받아온 정보들이 담긴 객체
 const TrainingRoomManager = ({ roomData }) => {
+
+  const [isNewMonster, setIsNewMonster] = useState(false);
+  const [monsterName, setMonsterName] = useState(null);
+  const [monsterImgUrl, setMonsterImgUrl] = useState(null);
+  const [isLevelUp, setIsLevelUp] = useState(false);
+  const [updatedExp, setUpdatedExp] = useState(0);
+  const [updatedLevel, setUpdatedLevel] = useState(0);
+
+  const [regionName, setRegionName] = useState(false);
+
+  const [updatedExpPercentage, setUpdatedExpPercentage] = useState(0);
+  const [updatedRegionScorePercentage, setUpdatedRegionScorePercentage] = useState(0);
+
+  // 지역 기여도 업데이트 함수
+  const UpdateRegionScore = (updatedRegionScore, totalContribute) => {
+    setUpdatedRegionScorePercentage((prevPercent) => {
+      const newPercentage = (updatedRegionScore/totalContribute) * 100
+
+      console.log("NEWPERCE#NTAGE    ",newPercentage);
+      return newPercentage
+    })
+  }
 
   // 운동방이 시작했는가? (joinTrainingRoom을 한번만 하기 위해 넣은 확인용)
   const [hasJoined, setHasJoined] = useState(false);
@@ -36,6 +93,7 @@ const TrainingRoomManager = ({ roomData }) => {
     if (!hasJoined) {
       console.log('방 정보 및 라운드별 가중치 제대로 나오나요?!---------');
       console.log(roomData);
+      console.log(roomData.roomPk);
       console.log(roundWeight);
       joinTrainingRoom();
       setHasJoined(true);
@@ -50,6 +108,8 @@ const TrainingRoomManager = ({ roomData }) => {
   // 방장 유무
   const isCaptain = roomData.userInfo.isCaptain;
 
+  const myUserEmail = roomData.userInfo.email;
+  
   // 타이머 시작 한번만 하기 위해서 만든 상태
   const [firstClick, setFirstClick] = useState(true);
 
@@ -72,6 +132,8 @@ const TrainingRoomManager = ({ roomData }) => {
   const roundCount = roomData.roomInfo.roundCount;
   // 라운드 별 운동 배열
   const exerciseForRound = roomData.exerciseInfo;
+  
+  const gainedExp = (exerciseTime/60)*roundCount*50;
 
 
   // 라운드 별 운동 가중치(운동에 따라 저장)
@@ -83,7 +145,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // const myCombatPower = [];
   const [myCombatPower, setMyCombatPower] = useState([]);
   // 자신의 전투력
-  const [myTotalCombatPower, setMyTotalCombatPower] = useState(0);
+  const [myTotalCombatPower, setMyTotalCombatPower] = useState(300);
 
   // 자식 컴포넌트(selfVideo) 에서 라운드 별 운동 횟수 변경을 위해 함수 선언
   const updateEachRoundCount = (roundIndex, newCount) => {
@@ -192,9 +254,9 @@ const TrainingRoomManager = ({ roomData }) => {
 
 
   // 정해둔 마지막 정산 전 애니메이션 시간
-  const lastMotionTime = 3;
+  const lastMotionTime = 1;
   // 정해둔 완료 시간(마지막 정산)
-  const endingTime = 6;
+  const endingTime = 100;
   // 현재 라운드
   const [currentRound, setCurrentRound] = useState(0);
   // 처음에 헷갈리지 않도록 만들기 위한 것(시작하였는가? 준비부터 시작되었는가?)
@@ -319,8 +381,6 @@ const TrainingRoomManager = ({ roomData }) => {
   const [inputWaitingRoomId, setInputWaitingRoomId] = useState(waitingRoomId || "");
   // 유효성 토큰 (로그인이 되었는가 // 나중에 다른 곳에서 받아와야 할 듯!)
   const acessToken = localStorage.getItem('accessToken');
-  // const token =
-  //   "eyJhbGciOiJIUzUxMiJ9.eyJjYXRlZ29yeSI6IkFDQ0VTUyIsImVtYWlsIjoic3NhZnlAc3NhZnkuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MjI1MDAwMTgsImV4cCI6MTcyMzEwNDgxOH0.GAMSTSsS33cmxkty2r_ls4pY1xYDkvgflAhMUljGYOvBvOuHjRWZ9DKOCmVj0cwSvUmwwUMcqEadH-NPDVDsGQ";
 
   // 전투력 총합치 << 현재는 확인을 위해 넣은 것으로, 나중에는 모든 사람들 전투력 합산을 가져올 예정
   // const [CombatPower, setCombatPower] = useState(0);
@@ -596,11 +656,36 @@ const TrainingRoomManager = ({ roomData }) => {
         // myCombatPower.forEach(power => {
         //   setMyTotalCombatPower(myTotalCombatPower + power);
         // })
+        // myCombatPower.forEach(power => {
+        //   setMyTotalCombatPower(myTotalCombatPower + power);
+        // })
 
         // 기록 저장
+        record(roomData.roomPk, endTime, roundRecordList, myTotalCombatPower).then(data => {
+          console.log("기록 후 데이터:", data);
+          setUpdatedExp(data.data.updatedExp)
+          setUpdatedLevel(data.data.updatedLevel)
+          setIsLevelUp(data.data.isLevelUp)
+          setRegionName(data.data.region.name)
+          setUpdatedExpPercentage((data.data.updatedExp/750)*100);
+          
+          UpdateRegionScore(data.data.updatedRegionScore, data.data.totalContribute)
+        }).catch(error => {
+          console.error("기록 저장 실패:", error);
+        })
 
         // 잡은 몬스터 정보 불러오기
-
+        getMonster()
+          .then(data => {
+            console.log("불러온 몬스터 데이터:", data);
+            setIsNewMonster(data.data.capturedMonster.new)
+            setMonsterImgUrl(data.data.capturedMonster.imageUrl)
+            setMonsterName(data.data.capturedMonster.name)
+          })
+          .catch(error => {
+            // 에러 처리
+            console.error("몬스터 정보 불러오기 실패:", error);
+          });
 
       }
 
@@ -610,34 +695,33 @@ const TrainingRoomManager = ({ roomData }) => {
     }
   }, [currentStep]);
 
-
   // 기록 저장을 위한 API
-  const record = async (roomId, endTime, roundRecordList) => {
-    try {
-      const response = await axios.post(
-        `${APPLICATION_SERVER_URL}/${roomId}/complete`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + acessToken,
-          },
-          body: {
-            email: 'email 받으면 넣기',
-            endTime: endTime,
-            personalCombatPower: myTotalCombatPower,
-            totalCombatPower: totalCombatPower,
-            participantsCount: subscribers.length,
-            stage: totalCombatLevel,
-            roundRecordList: roundRecordList,
-          }
+const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
+  try {
+    const response = await axios.post(
+      `${APPLICATION_SERVER_URL}/${roomId}/complete`,
+      {
+        email: myUserEmail,
+        endTime: endTime,
+        personalCombatPower: myTotalCombatPower,
+        totalCombatPower: totalCombatPower,
+        participantsCount: subscribers.length,
+        stage: totalCombatLevel,
+        roundRecordList: roundRecordList,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${acessToken}`,
         }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("기록 저장에 실패하였습니다.", error);
-      throw error;
-    }
-  };
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("기록 저장에 실패하였습니다.", error);
+    throw error;
+  }
+};
 
   // 몬스터 정보를 가져오는 API
   const getMonster = async () => {
@@ -645,17 +729,17 @@ const TrainingRoomManager = ({ roomData }) => {
       const response = await axios.post(
         `${APPLICATION_SERVER_URL}/monster`,
         {
+          email: myUserEmail,
+          stage: 3 //totalCombatLevel
+        },
+        {
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer " + acessToken,
-          },
-          body: {
-            "email": 'email 받으면 넣기',
-            "stage": totalCombatLevel,
+            Authorization: `Bearer ${acessToken}`,
           }
-
         }
       );
+      console.log("몬스터 데이터:", response.data);
       return response.data;
     } catch (error) {
       console.error("몬스터 불러오기가 실패하였습니다.", error);
@@ -721,6 +805,9 @@ const TrainingRoomManager = ({ roomData }) => {
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
+              {isCaptain && firstClick &&
+                <button onClick={sendTest1}>타이머 시작</button>
+              }
             </div>
             <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} />
           </div>
@@ -744,31 +831,33 @@ const TrainingRoomManager = ({ roomData }) => {
               </div>
               <div className="other-video">
                 {subscribers.map((sub, i) => (
-                  <div key={i} className="video-container">
-                    {sub ? (
-                      <UserVideo num={i} streamManager={sub} />
-                    ) :
-                      <img className='soldier-gif' src={restSoldier} />
-                    }
-                  </div>
+                  <>
+                    <UserVideo key={i} num={i} streamManager={sub} />
+                    <p>{JSON.parse(sub.stream.connection.data).clientData}</p>
+                  </>
                 ))}
               </div>
+                <div className="my-video">{publisher &&
+                  <SelfVideo streamManager={publisher}
+                    countPower={countPower}
+                    ChangeCount={ChangeCount}
+                    sendTest2={sendTest2}
+                    currentRound={currentRound} exerciseForRound={exerciseForRound}
+                    myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
+                    roundWeight={roundWeight} isExercise={isExercise}
+                    UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
+                    addMyCombatPower={addMyCombatPower}
+                    updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
+                    
+                  />}
+                </div>
             </div>
             <div className='progress-box'>
-              {/* <h3>총 전투력 넣을 예정</h3> */}
-              {/* <div>
-                <input
-                  type="number"
-                  value={combatGauge}
-                  // onChange={(e) => setCombatPower(e.target.value)}
-                  min='0'
-                  max='100'
-                />
-              </div> */}
+              <h3>현재 점수 {totalCombatPower}</h3>
               <TotalCombatPower
                 visualParts={[
                   {
-                    percentage: `${totalCombatGauge}%`,
+                    percentage: `${(totalCombatGauge / 750) * 100}%`,
                     color: "orange"
                   }
                 ]}
@@ -776,7 +865,7 @@ const TrainingRoomManager = ({ roomData }) => {
               <p style={{
                 fontSize: '40px',
                 fontWeight: 'bold',
-              }}>단계 : {totalCombatLevel}</p>
+              }}>Level {totalCombatLevel}</p>
             </div>
             <div className='soldier-box'>
               <div className='round-box-frame'>
@@ -815,10 +904,14 @@ const TrainingRoomManager = ({ roomData }) => {
           left: '50%',
           transform: 'translate(-50%,0)',
           width: '80%',
-          height: '65%',
-          bgcolor: 'background.paper',
-          boxShadow: 24,
+          height: '70%',
+          // bgcolor: 'background.paper',
+          // boxShadow: 24,
           p: 4,
+          backgroundImage: currentStep === 'ending' ? `url(${completeScroll})` : 'none',
+          backgroundSize: 'auto 100%',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
         }}>
           {/* 중간 정산 화면 */}
           {currentStep === 'middleMotion' &&
@@ -901,31 +994,113 @@ const TrainingRoomManager = ({ roomData }) => {
 
             </div>
           }
-          {/* 마지막 정산 화면 */}
+          
+          {/* 마지막 정산 화면 =================================================이슬 */}
           {currentStep === 'ending' &&
-            <div>
-
-              {/* 아래 정보들 */}
+            <div style={{
+              paddingTop: "130px",
+              paddingBottom: "100px",
+              paddingLeft: "190px",
+              paddingRight: "180px"
+          }}>
               <div style={{
                 width: '100%',
                 height: '90%',
-                display: 'flex',
+                display: 'flex'
               }}>
-                {/* 몬스터 정보 */}
+
                 <div style={{
                   width: '30%',
                   height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column', /* 세로 방향으로 자식 요소를 배치 */
+                  justifyContent: 'space-between', /* 자식 요소들 사이에 공간을 분배 */
+                  
+                  padding: '10px', /* 여백 설정 (필요에 따라 조정) */
+                  boxSizing: 'border-box' /* 여백과 테두리를 포함하여 전체 너비와 높이 계산 */
                 }}>
-                  <img src={burgerking} alt="잡은 몬스터" />
+                  <div style={{
+                    color: 'black',
+                    fontSize: '18px',
+                    fontFamily: 'WarhavenR'                    
+                  }}>
+                    {isNewMonster ? 'NEW!' : ''}
+                  </div>
+                  <img
+                    src={burgerking}
+                    // src={monsterImgUrl}
+                    alt="잡은 몬스터"
+                    className="training-monster-image"
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      marginTop: '5px',
+                      marginBottom: '5px'
+                    }}
+                  />
+                  <div style={{
+                    color: 'black',
+                    fontSize: '20px',
+                    marginTop: 'auto', /* 위쪽의 여백을 자동으로 채워서 아래쪽으로 이동 */
+                    alignSelf: 'flex-end', /* 자식 요소를 오른쪽 끝으로 정렬 */
+                    fontFamily: 'WarhavenB'                    
+                  }}>
+                    {monsterName}
+                  </div>
                 </div>
-                {/* 다른 정보들 */}
-                <div style={{
+
+                <div className='training-complte-right' style={{
                   width: '70%',
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  backgroundColor: 'cyan',
+                  marginLeft: '15px',
+                  paddingLeft: '20px',
+                  paddingTop: '10px'
                 }}>
+                  <div className='training-complete-stage'>
+                    <div style={{
+                      color: "black",
+                      marginBottom: "20px", 
+                      fontSize: "37px", 
+                      fontFamily: 'WarhavenB' 
+                      }}>
+                      {totalCombatLevel} STAGE CLEAR!
+                    </div>
+                  </div>
+
+                  <div className='training-complte-level'>
+                    <div style={{ 
+                      color: "black", 
+                      fontSize: "25px", 
+                      fontFamily: 'WarhavenR',
+                      marginBottom: '5px' }}>
+                      LV. {updatedLevel} {isLevelUp ? '↑' : ''}
+                    </div>
+                    <StepProgressBar expPercentage={updatedExpPercentage}></StepProgressBar>
+                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                      <div style={{ color: "darkslategray", fontSize: "18px" }}>
+                        +{gainedExp}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='training-complte-season-region-score-text'>
+                    <div style={{ 
+                      color: "black", 
+                      fontSize: "20px", 
+                      fontFamily: 'WarhavenR',
+                      marginBottom: '5px' 
+                      }}>
+                      {regionName} 기여도
+                    </div>
+                    <StepProgressBar expPercentage={updatedRegionScorePercentage}></StepProgressBar>
+                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                      <div style={{ color: "darkslategray", fontSize: "18px" }}>
+                        +{myTotalCombatPower}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -942,6 +1117,7 @@ const TrainingRoomManager = ({ roomData }) => {
               </div>
             </div>
           }
+          {/*=============================================== 이슬*/}
           {/* <div style={{
             display: 'flex',
             flexDirection: 'column',

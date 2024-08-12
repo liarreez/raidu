@@ -4,13 +4,15 @@
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
     grid-template-columns: repeat(6, 1fr);
     grid-template-areas: 
         "header header header header header header"
         "training-frame training-frame training-frame training-frame training-frame training-frame"
-        "training-frame training-frame training-frame training-frame training-frame training-frame "
-        "training-frame training-frame training-frame training-frame training-frame training-frame "
+        "training-frame training-frame training-frame training-frame training-frame training-frame"
+        "training-frame training-frame training-frame training-frame training-frame training-frame"
+        "training-frame training-frame training-frame training-frame training-frame training-frame"
+        "training-frame training-frame training-frame training-frame training-frame training-frame"
         ;
     /* margin: 10px;
     min-width: 1200px; */
@@ -26,8 +28,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* height: 20%;
-    width: 100%; */
+    height: 100px;
+    width: 100%;
     /* background-color: azure; */
 }
 
@@ -36,10 +38,12 @@
     grid-area: training-frame;
     /* box-sizing: border-box; */
     display: grid;
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(5, 1fr);
     grid-template-columns: repeat(6, 1fr);
     grid-template-areas: 
         "video-frame video-frame video-frame progress-bar soldier-box soldier-box"
+        "video-frame video-frame video-frame progress-bar soldier-box soldier-box"
+        "video-frame video-frame video-frame progress-bar soldier-box soldier-box "
         "video-frame video-frame video-frame progress-bar soldier-box soldier-box"
         "video-frame video-frame video-frame progress-bar soldier-box soldier-box "
         ;
@@ -58,7 +62,7 @@
 .video-frame {
     grid-area: video-frame;
     display: grid;
-    grid-template-rows: 3fr 1fr;
+    grid-template-rows: 3fr 2fr;
     grid-template-areas: 
         "my-video"
         "other-video";
@@ -86,7 +90,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    object-fit: contain;
 }
 
 .progress-box {
@@ -103,10 +106,13 @@
 .soldier-box {
     grid-area: soldier-box;
     display: grid;
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     grid-template-columns: repeat(2, 1fr);
     grid-template-areas: 
     "round-box-frame round-box-frame"
+    "round-box-frame round-box-frame"
+    "round-box-frame round-box-frame"
+    "soldier-gif soldier-gif"
     "soldier-gif soldier-gif"
     ;
     justify-content: center;
@@ -121,7 +127,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    object-fit: contain;
+    padding-top: 20%;
 }
 
 .round-box {
@@ -136,7 +142,6 @@
     justify-content: center;
     border-radius: 8px;
     transition: background-color 0.3s;
-    object-fit: contain;
   }
   
   .round-box.active {
@@ -147,6 +152,7 @@
     grid-area: soldier-gif;
     width: 100%;
     height: 60%;
+    padding-top: 20%;
     object-fit: contain;
 }
 
@@ -184,6 +190,7 @@
 
 .restTime-video {
     flex: 2;
+    max-width: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -202,9 +209,13 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    padding-bottom: 10%;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .rest-gif {
     width: 100%;
+    max-width: 200px;
     object-fit: contain;
 }

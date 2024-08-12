@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Box, Button, Typography, Modal } from "@mui/material";
+import { Box, Button, Typography, Modal, Hidden } from "@mui/material";
 import axios from "axios";
 
 import FadeAnime from "../Component/FadeAnime";
@@ -14,6 +14,7 @@ import icon_breaktime from "../../Imgs/icon_breaktime.png";
 import icon_counter from "../../Imgs/icon_counter.png";
 import icon_human_fill from "../../Imgs/icon_human_fill.png";
 import icon_human_empty from "../../Imgs/icon_human_empty.png";
+import room from "../../Imgs/room.gif";
 
 import raidu from "../../Imgs/button-raidu.png";
 
@@ -31,19 +32,6 @@ const RoomCreationModal = ({
   totalRounds,
   isPublic,
 }) => {
-  const modalStyle = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    borderRadius: "35px",
-    boxShadow: 24,
-    p: 4,
-  };
-
   return (
     <Modal
       open={modalOpen}
@@ -51,79 +39,90 @@ const RoomCreationModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={modalStyle}>
-        <Typography id="modal-modal-title" variant="h5" component="h2">
-          방 만들기
-        </Typography>
+      <div className="lobby-modal-frame">
+        <div className="icon-circle" style={{ position: "relative", top: "-50px" }}>
+          <img src={room} alt="?"></img>
+        </div>
 
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="title">방 제목:</label>
-            <input type="text" id="title" name="title" value={title} onChange={handleChange} />
-          </div>
+        <div style={{ position: "relative", top: "-30px" }} className="lobby-modal-content">
+          <div className="lobby-modal-title">방 만들기</div>
 
-          <div>
-            <label htmlFor="maxParticipants">인원:</label>
-            <select
-              id="maxParticipants"
-              name="maxParticipants"
-              value={maxParticipants}
-              onChange={handleChange}
-            >
-              <option value="">1 ~ 4인 선택</option>
-              <option value="1">1인</option>
-              <option value="2">2인</option>
-              <option value="3">3인</option>
-              <option value="4">4인</option>
-            </select>
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="lobby-modal-section">
+              <label htmlFor="title">방 제목</label>
+              <input type="text" id="title" name="title" value={title} onChange={handleChange} />
+            </div>
 
-          <div>
-            <label htmlFor="roundTime">라운드별 시간 (초):</label>
-            <select id="roundTime" name="roundTime" value={roundTime} onChange={handleChange}>
-              <option value="">15 ~ 180초 선택</option>
-              {[...Array(10).keys()].map((i) => (
-                <option key={i} value={(i + 1) * 15}>
-                  {(i + 1) * 15}
-                </option>
-              ))}
-            </select>
-          </div>
+            <div className="lobby-modal-section">
+              <label htmlFor="maxParticipants">인원</label>
+              <select
+                id="maxParticipants"
+                name="maxParticipants"
+                value={maxParticipants}
+                onChange={handleChange}
+              >
+                <option value="">1 ~ 4인 선택</option>
+                <option value="1">1인</option>
+                <option value="2">2인</option>
+                <option value="3">3인</option>
+                <option value="4">4인</option>
+              </select>
+            </div>
 
-          <div>
-            <label htmlFor="restTime">휴식 시간 (초):</label>
+            <div className="lobby-modal-section">
+              <label htmlFor="roundTime">라운드별 시간 (초)</label>
+              <select id="roundTime" name="roundTime" value={roundTime} onChange={handleChange}>
+                <option value="">30 ~ 180초 선택</option>
+                {[...Array(6).keys()].map((i) => (
+                  <option key={i} value={(i + 1) * 30}>
+                    {(i + 1) * 30}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <select id="restTime" name="restTime" value={restTime} onChange={handleChange}>
-              <option value="">15 ~ 180초 선택</option>
-              {[...Array(10).keys()].map((i) => (
-                <option key={i} value={(i + 1) * 15}>
-                  {(i + 1) * 15}
-                </option>
-              ))}
-            </select>
-          </div>
+            <div className="lobby-modal-section">
+              <label htmlFor="restTime">휴식 시간 (초)</label>
 
-          <div>
-            <label htmlFor="totalRounds">라운드 수:</label>
-            <select id="totalRounds" name="totalRounds" value={totalRounds} onChange={handleChange}>
-              <option value="">1 ~ 3라운드 선택</option>
-              <option value="1">1라운드</option>
-              <option value="2">2라운드</option>
-              <option value="3">3라운드</option>
-            </select>
-          </div>
+              <select id="restTime" name="restTime" value={restTime} onChange={handleChange}>
+                <option value="">30 ~ 180초 선택</option>
+                {[...Array(6).keys()].map((i) => (
+                  <option key={i} value={(i + 1) * 30}>
+                    {(i + 1) * 30}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <div>
-            <label htmlFor="isPublic">비밀방 여부:</label>
-            <input type="checkbox" id="isPublic" name="isPublic" onChange={handleChange} />
-          </div>
+            <div className="lobby-modal-section">
+              <label htmlFor="totalRounds">라운드 수</label>
+              <select
+                id="totalRounds"
+                name="totalRounds"
+                value={totalRounds}
+                onChange={handleChange}
+              >
+                <option value="">1 ~ 3라운드 선택</option>
+                <option value="1">1라운드</option>
+                <option value="2">2라운드</option>
+                <option value="3">3라운드</option>
+              </select>
+            </div>
 
-          <button type="button" onClick={clearVals}>
-            취소
-          </button>
-          <button type="submit">만들기</button>
-        </form>
-      </Box>
+            <div className="lobby-modal-section">
+              <label htmlFor="isPublic">비밀방 여부</label>
+              <input type="checkbox" id="isPublic" name="isPublic" onChange={handleChange} />
+            </div>
+
+            <div className="lobby-modal-buttongroup">
+            <button type="button" onClick={clearVals} className="lobby-modal-button-cancel">
+              취소
+            </button>
+            <button type="submit" className="lobby-modal-button-submit">만들기</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </Modal>
   );
 };
@@ -145,15 +144,28 @@ const RaidLobby = () => {
         },
       })
       .then((res) => setRoomList(res.data.data.waitingRoomList))
-      .then(
-        axios
-          .get(SERVER_URL + "/api/raidu/userpage", {
-            headers: {
-              Authorization: `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
-            },
-          })
-          .then((res) => setMe(res.data.data.userProfile))
-      );
+      .catch((error) => {
+        console.error("방 정보 받아오기 실패!", error);
+        if (error.response.data.message === "액세스 토큰이 만료되었습니다!") {
+          alert("토큰 만료! 다시 로그인 해주세요.");
+          navigate("/login");
+        }
+      });
+
+    axios
+      .get(SERVER_URL + "/api/raidu/userpage", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
+        },
+      })
+      .then((res) => setMe(res.data.data.userProfile))
+      .catch((error) => {
+        console.error("유저 정보 가져오기 실패!", error);
+        if (error.response.data.message === "액세스 토큰이 만료되었습니다!") {
+          alert("토큰 만료! 다시 로그인 해주세요.");
+          navigate("/login");
+        }
+      });
   }, []);
 
   useEffect(() => {
@@ -211,32 +223,39 @@ const RaidLobby = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // 필수 항목 체크
+    if (!title || !maxParticipants || !roundTime || !restTime || !totalRounds) {
+        alert("모든 필수 항목을 입력해주세요!");
+        return; // 조건을 충족하지 않으면 폼 제출 중지
+    }
+
     const payload = {
-      title,
-      maxParticipants,
-      roundTime,
-      restTime,
-      totalRounds,
-      isPublic,
-      hostEmail: me.email,
+        title,
+        maxParticipants,
+        roundTime,
+        restTime,
+        totalRounds,
+        isPublic,
+        hostEmail: me.email,
     };
 
     try {
-      const response = await axios.post(SERVER_URL + "/api/raidu/rooms", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
-        },
-      });
-      navigate("/raid/" + response.data.data.roomId, {
-        state: {
-          isCaptain: true,
-        }, // 방을 만들고 들어가면 무조건 방장입니다.
-      });
+        const response = await axios.post(SERVER_URL + "/api/raidu/rooms", payload, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
+            },
+        });
+        navigate("/raid/" + response.data.data.roomId, {
+            state: {
+                isCaptain: true,
+            }, // 방을 만들고 들어가면 무조건 방장입니다.
+        });
     } catch (error) {
-      console.error("Error:", error);
+        console.error("Error:", error);
     }
-  };
+};
+
 
   return (
     <div className="raidLobby-html">

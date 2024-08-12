@@ -72,7 +72,7 @@ public class MainpageServiceImpl implements MainpageService{
         .collect(Collectors.toList());
   }
 
-  private Long getTotalContribute(Season currentSeason) {
+  public Long getTotalContribute(Season currentSeason) {
     List<SeasonRegionScore> scores = seasonRegionScoreRepository.findBySeasonId(currentSeason.getId());
 
     return scores.stream()
