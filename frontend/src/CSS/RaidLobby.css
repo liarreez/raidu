@@ -445,3 +445,7 @@
     background-color: var(--hard-color-black);
     transform: scale(1.1);
 }
+
+.lobby-list-empty {
+    margin: auto;
+}

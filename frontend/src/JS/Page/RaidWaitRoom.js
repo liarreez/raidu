@@ -97,9 +97,6 @@ const RaidWaitRoom = () => {
 
     // },[]) // 컴포넌트 언마운트 시 실행됨 
 
-    useEffect(() => {
-        console.log("RaidWaitRoom line 60 ", exerciseSet)
-    }, [exerciseSet])
 
     const [roomNamed, setRoomNamed] = useState(''); 
     const [isRoomLocked, setIsRoomLocked] = useState(false);
@@ -127,7 +124,6 @@ const RaidWaitRoom = () => {
             }
         }).then((res) => {
             const data = res.data.data.userProfile;
-            console.log(data);
             setMe(new User(
                 data.nickname, 
                 data.monsterBadgeUrl, 
@@ -141,12 +137,10 @@ const RaidWaitRoom = () => {
 
             // 두 번째 요청 : 받아온 user 정보의 이메일과 room PK 가지고 방 입장 처리하기
             if (location.state !== null && location.state !== undefined) {
-                console.log('난 방장이다 그래서 방에 입장할 필요가 없지')
                 // 빈 Promise 반환(아래의 .then이 실행되도록 함)
                 return Promise.resolve();
             } else {
                 // location.state가 존재할 때만 실행
-                console.log('난 방장이 아니다 그래서 입장 처리를 따로 해 줘야 함 ㅋㅋ')
                 return axios.post(SERVER_URL + '/api/raidu/rooms/' + roomName + '/' + data.email, {}, {
                     headers: {
                         'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
@@ -165,31 +159,29 @@ const RaidWaitRoom = () => {
             console.error('Error fetching data:', error);
         });
 
-        setIsRoomLocked(false);
 
     },[token]); // onMount 
 
     const refreshParticipants = () => {
         // 세 번째 요청 : 들어간 방의 정보와 기참가자 정보 리스트 받아오기
 
-        // 방장이 퇴장했을 경우를 try-catch로 처리해야 함 (*room이 조회되지 않을 것이므로)
         return axios.get(SERVER_URL + '/api/raidu/rooms/' + roomName, {
             headers: {
                 'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
                 'Content-Type':'application/json',
             }
         }).then((res) => {
-            console.log(res);
             const roomInfo = res.data.data.room;
             const hostInfo = res.data.data.host;
             const guestInfo = res.data.data.guestList;
             setRoomNamed(roomInfo.title);
             setRoomSet(new Room(roomInfo.roundTime, roomInfo.restTime, roomInfo.totalRounds));
-            console.log(roomInfo);
-            console.log('방장 정보 ==========')
-            console.log(hostInfo)
-            console.log('참가자 정보 ==========')
-            console.log(guestInfo)
+            setIsRoomLocked(!roomInfo.public);
+            // console.log(roomInfo);
+            // console.log('방장 정보 ==========')
+            // console.log(hostInfo)
+            // console.log('참가자 정보 ==========')
+            // console.log(guestInfo)
 
             // 방장과 참가자 정보를 업데이트합니다.
             setParticipantsList(() => [
@@ -230,7 +222,7 @@ const RaidWaitRoom = () => {
                 client.disconnect();
             }
         };
-    }, [roomNamed]);
+    }, [roomName]);
 
     useEffect(() => { 
         // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
@@ -238,6 +230,7 @@ const RaidWaitRoom = () => {
         const connectWebSocket = async () => {
             try {
                 await websocketClient.connect();
+                console.log('WEBSOCKET CLIENT SUBSCRIBING')
                 const subscription = websocketClient.subscribe('/sub/message/' + roomName, (message) => {
                     const parsedMessage = JSON.parse(message.body);
                     console.log('====================')
@@ -248,7 +241,7 @@ const RaidWaitRoom = () => {
                         case '2': updateUserReadyState(parsedMessage.user, parsedMessage.readyType); break;
                         case '3': setChatMessages((prevMessages) => [...prevMessages, parsedMessage]); break;
                         case '4': gameStart(parsedMessage.sessionId); break;
-                        default: console.log('?')
+                        default: console.log('UNKNOWN MESSAGE')
                     }
                     setMessages((prevMessages) => [...prevMessages, parsedMessage]);
                 });
@@ -269,26 +262,26 @@ const RaidWaitRoom = () => {
                 websocketClient.disconnect()
             }
         };
-    }, [websocketClient, roomNamed, exerciseSet]);
+    }, [websocketClient, roomName, exerciseSet]);
 
     // WATCHING USESTATES
 
-    useEffect(() => {
-        console.log('participants updated ... ')
-        console.log(participantsList)
-    },[participantsList]);
+    // useEffect(() => {
+    //     console.log('participants updated ... ')
+    //     console.log(participantsList)
+    // },[participantsList]);
 
-    useEffect(() => {
-        console.log('rendering finished ... ')
-        console.log(participantsList);
-        console.log(me)
+    // useEffect(() => {
+    //     console.log('rendering finished ... ')
+    //     console.log(participantsList);
+    //     console.log(me)
         
-      //  rendered == true && sendTest1(true); // 내가 입장하면 다른 사람에게도 입장 알림 전송
-        console.log('I sent entered alert')
-    },[rendered])
+    //   //  rendered == true && sendTest1(true); // 내가 입장하면 다른 사람에게도 입장 알림 전송
+    //     console.log('I sent entered alert')
+    // },[rendered])
 
     useEffect(() => {
-        console.log(`webSocketReady value = ${webSocketReady}`)
+     //   console.log(`webSocketReady value = ${webSocketReady}`)
         sendTest1(true);
     //    if(rendered === true && webSocketReady === 5) sendTest1(true)
         // webSocketReady가 1씩 증가하는 로직을 가지고 있고, 이 값이 1이어야 최초 초기화
@@ -341,16 +334,14 @@ const RaidWaitRoom = () => {
                 isCaptain: me.isCaptain
             });
             websocketClient.send(DESTINATION, message);
-            console.log('Message sent successfully');
 
         } catch (e) {
             console.error('Error sending message:', e);
         }
     };
 
-    const sendTest2 = () => { // 사용자 준비 상태 관련 웹소켓 메서드
+    const sendTest2 = (readyType) => { // 사용자 준비 상태 관련 웹소켓 메서드
         if(checkExerciseOption){
-            const readyType = !me.readyState;
             if (websocketClient) {
                 const message = JSON.stringify({
                     ...COMMONFORM,
@@ -360,7 +351,7 @@ const RaidWaitRoom = () => {
                 websocketClient.send(DESTINATION, message);
             }
         }else{
-            console.log('모든 라운드에 대한 운동 종목 선택을 완료해 주세요.')
+          //  console.log('모든 라운드에 대한 운동 종목 선택을 완료해 주세요.')
         }
     };
 
@@ -399,15 +390,17 @@ const RaidWaitRoom = () => {
         })
     }
 
-    // 레디부터 작업하기
     const updateUserReadyState = (name, readyType) => {
         const updatedParticipants = participantsList.map(user => {
             if (user.nickname === name) {
-                return new User(user.nickname, user.badge, user.profileImage, user.level, user.highestScore, readyType, user.isCaptain, user.email);
+                const nu = new User(user.nickname, user.badge, user.profileImage, user.level, user.highestScore, readyType, user.isCaptain, user.email);
+            //    return new User(user.nickname, user.badge, user.profileImage, user.level, user.highestScore, readyType, user.isCaptain, user.email);
+                console.log(nu)
+                return nu;
             }
             return user;
         });
-    
+        console.log(updatedParticipants)
         setParticipantsList(updatedParticipants);
 
         if (name === me.nickname) {
@@ -417,8 +410,8 @@ const RaidWaitRoom = () => {
 
     const checkExerciseOption = () => { 
         // '준비하기' 버튼을 누르기 전(1인 게임의 경우 '시작하기' 전) 모든 라운드의 운동 종류 선택이 완료되었는지 체크합니다. 
-        console.log('checkExerciseOption : ' + exerciseSet.length);
-        console.log('checkExerciseOption : ' + roomSet.roundCount);
+     //   console.log('checkExerciseOption : ' + exerciseSet.length);
+      //  console.log('checkExerciseOption : ' + roomSet.roundCount);
         return exerciseSet.length == roomSet.roundCount;
     }
 
@@ -430,7 +423,7 @@ const RaidWaitRoom = () => {
                 return isAllReady;
             }else return true;
         }else{
-            console.log('모든 운동 종목에 대한 선택을 완료해 주세요.')
+        //    console.log('모든 운동 종목에 대한 선택을 완료해 주세요.')
             return false;
         }
     };
@@ -438,13 +431,13 @@ const RaidWaitRoom = () => {
 
     const tryGameStart = () => {
         if (checkReadyState()) {
-            console.log('============ PRINTING SETTINGS =============');
-            // 방 정보
-            // 사용자 정보
-            // 선택한 운동 정보 묶어서 보여주기
-            console.log(roomSet);
-            console.log(me);
-            console.log(exerciseSet);
+            // console.log('============ PRINTING SETTINGS =============');
+            // // 방 정보
+            // // 사용자 정보
+            // // 선택한 운동 정보 묶어서 보여주기
+            // console.log(roomSet);
+            // console.log(me);
+            // console.log(exerciseSet);
 
             axios.post(SERVER_URL+'/api/raidu/rooms/sessions', {roomName}, {
                 headers: {
@@ -469,11 +462,11 @@ const RaidWaitRoom = () => {
         const userInfo = me;
         const exerciseInfo = exerciseSet;
 
-        console.log('=========TEST=========')
-        console.log(roomInfo);
-        console.log(userInfo);
-        console.log(exerciseInfo);
-        console.log(sessionId)
+        // console.log('=========TEST=========')
+        // console.log(roomInfo);
+        // console.log(userInfo);
+        // console.log(exerciseInfo);
+        // console.log(sessionId)
 
         navigate("/trainingTest", { // roomPk 주고 / userEmail 주고
             state: {
@@ -484,6 +477,18 @@ const RaidWaitRoom = () => {
                 roomPk: roomName
             },
         });
+    }
+
+    const copyLink = () => {
+        const currentUrl = window.location.href;
+        navigator.clipboard.writeText(currentUrl).then(
+        () => {
+            alert('운동방 주소가 클립보드에 복사되었습니다!');
+        },
+        (err) => {
+            console.error('링크 복사에 실패했습니다: ', err);
+        }
+    );
     }
 
     // 0808 checkReadyState() 로직 제대로 작동하지 않아 확인 필요합니다. 
@@ -542,14 +547,14 @@ const RaidWaitRoom = () => {
                                         </Grid>
                                     ) : me.readyState ? (
                                         <Grid item xs={5}>
-                                            <div className='raidWaitRoom-startButton' onClick={sendTest2}>
+                                            <div className='raidWaitRoom-startButton' onClick={() => sendTest2(false)}>
                                                 <span className='raidWaitRoom-buttonText'>준비 취소</span>
                                             </div>
                                         </Grid>
 
                                     ) : (
                                         <Grid item xs={5}>
-                                            <div className='raidWaitRoom-startButton' onClick={sendTest2}>
+                                            <div className='raidWaitRoom-startButton' onClick={() => sendTest2(true)}>
                                                 <span className='raidWaitRoom-buttonText'>준비하기</span>
                                             </div>
                                         </Grid>
@@ -557,7 +562,7 @@ const RaidWaitRoom = () => {
                                 }
 
                                 <Grid item xs={5}>
-                                    <div className='raidWaitRoom-shareButton' >
+                                    <div className='raidWaitRoom-shareButton' onClick={copyLink} >
                                         <span className='raidWaitRoom-buttonText'>링크 공유</span>
                                     </div>
                                 </Grid>
