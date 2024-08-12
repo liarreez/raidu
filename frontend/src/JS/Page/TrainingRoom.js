@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useLocation } from 'react-router-dom';
-
 // 대기방 고유 Id 생성 컴포넌트
 import CreateWaitingRoom from '../Component/CreateWaitingRoom';
 // 운동방 참석 및 퇴장 가능한 컴포넌트
@@ -25,6 +24,7 @@ const TrainingRoom = () => {
 
   return (
     <div>
+      <div id="training-background-img"></div>
       {/* <CreateWaitingRoom setWaitingRoomId={setWaitingRoomId} /> */}
       <TrainingRoomManager roomData={roomData} />
     </div>
