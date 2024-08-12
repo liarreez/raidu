@@ -145,7 +145,45 @@ const TrainingRoomManager = ({ roomData }) => {
   // const myCombatPower = [];
   const [myCombatPower, setMyCombatPower] = useState([]);
   // 자신의 전투력
-  const [myTotalCombatPower, setMyTotalCombatPower] = useState(300);
+  const [myTotalCombatPower, setMyTotalCombatPower] = useState(0);
+
+  // 종료 시간 useState 저장
+  const [endTime, setEndTime] = useState();
+
+  // 종료 시간을 받아주는 함수
+  const getEndTime = () => {
+    setEndTime(prevTime => {
+      // 현재 시간 받아주기
+      const nowDate = Date.now()
+      // 한국 시간으로 로컬라이징 + 저장 포멧
+      const newEndTime = new Date(nowDate + (9 * 60 * 60 * 1000)).toISOString().slice(0, 19);
+  
+      console.log('-------------------시간---------------------')
+      console.log(nowDate, endTime)
+
+      return newEndTime;
+    });
+  }
+
+  // API로 줄 roundRecordList 만들기
+  const roundRecordList = [];
+
+  // roundRecordList 가 잘 저장되었는지 확인해주는 boolean
+  const [isRoundRecordListExist, setIsRoundRecordListExist] = useState(false);
+
+  // isRoundRecordListExist 가 바로 반영될 수 있도록 해주는 함수
+  const ChangeStateOfRoundRecordListExist = () => {
+
+    console.log(endTime);
+    console.log('제대로 된 레코드 리스트가 나오나요?')
+    console.log(roundRecordList);
+
+    setIsRoundRecordListExist(prevCheck => {
+      const nowState = true;
+      return nowState;
+    });
+  };
+
 
   // 자식 컴포넌트(selfVideo) 에서 라운드 별 운동 횟수 변경을 위해 함수 선언
   const updateEachRoundCount = (roundIndex, newCount) => {
@@ -630,18 +668,8 @@ const TrainingRoomManager = ({ roomData }) => {
 
       // 정산 전 마지막 모션 때 API 보내주기
       if (currentStep === 'lastMotion') {
-        // 마지막 라운드 저장을 위해서 현재 라운드 + 1 해주기
-        // setCurrentRound(currentRound + 1);
-        // 현재 시간 받아주기
-        const nowDate = Date.now()
-        // 한국 시간으로 로컬라이징 + 저장 포멧
-        const endTime = new Date(nowDate + (9 * 60 * 60 * 1000)).toISOString().slice(0, 19);
 
-        console.log('-------------------시간---------------------')
-        console.log(nowDate, endTime)
-
-        // API로 줄 roundRecordList 만들기
-        const roundRecordList = [];
+        getEndTime();
 
         for (let i = 0; i < exerciseForRound.length; i++) {
           const roundRecord = {
@@ -652,27 +680,9 @@ const TrainingRoomManager = ({ roomData }) => {
           roundRecordList[i] = roundRecord
         }
 
-        // 라운드별 자신의 전투력으로 총 전투력 만들기
-        // myCombatPower.forEach(power => {
-        //   setMyTotalCombatPower(myTotalCombatPower + power);
-        // })
-        // myCombatPower.forEach(power => {
-        //   setMyTotalCombatPower(myTotalCombatPower + power);
-        // })
+        
 
-        // 기록 저장
-        record(roomData.roomPk, endTime, roundRecordList, myTotalCombatPower).then(data => {
-          console.log("기록 후 데이터:", data);
-          setUpdatedExp(data.data.updatedExp)
-          setUpdatedLevel(data.data.updatedLevel)
-          setIsLevelUp(data.data.isLevelUp)
-          setRegionName(data.data.region.name)
-          setUpdatedExpPercentage((data.data.updatedExp/750)*100);
-          
-          UpdateRegionScore(data.data.updatedRegionScore, data.data.totalContribute)
-        }).catch(error => {
-          console.error("기록 저장 실패:", error);
-        })
+        ChangeStateOfRoundRecordListExist();
 
         // 잡은 몬스터 정보 불러오기
         getMonster()
@@ -695,6 +705,27 @@ const TrainingRoomManager = ({ roomData }) => {
     }
   }, [currentStep]);
 
+
+  useEffect(() => {
+    if (isRoundRecordListExist === true) {
+      // 기록 저장
+      record(roomData.roomPk, endTime, roundRecordList, myTotalCombatPower).then(data => {
+        console.log("기록 후 데이터:", data);
+        setUpdatedExp(data.data.updatedExp)
+        setUpdatedLevel(data.data.updatedLevel)
+        setIsLevelUp(data.data.isLevelUp)
+        setRegionName(data.data.region.name)
+        setUpdatedExpPercentage((data.data.updatedExp/750)*100);
+        
+        UpdateRegionScore(data.data.updatedRegionScore, data.data.totalContribute)
+      }).catch(error => {
+        console.error("기록 저장 실패:", error);
+      })
+    }
+  }, [isRoundRecordListExist])
+
+
+
   // 기록 저장을 위한 API
 const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
   try {
@@ -705,7 +736,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
         endTime: endTime,
         personalCombatPower: myTotalCombatPower,
         totalCombatPower: totalCombatPower,
-        participantsCount: subscribers.length,
+        participantsCount: (subscribers.length + 1),
         stage: totalCombatLevel,
         roundRecordList: roundRecordList,
       },
@@ -838,22 +869,6 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                     
                   />}
                 </div>
-              {/* <div className="my-video">{publisher &&
-                <SelfVideo streamManager={publisher}
-                  countPower={countPower}
-                  ChangeCount={ChangeCount}
-                  sendTest2={sendTest2}
-                  currentRound={currentRound} exerciseForRound={exerciseForRound}
-                  myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
-                  roundWeight={roundWeight} isExercise={isExercise}
-                  addMyCombatPower={addMyCombatPower}
-                  updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
-                // setEachRoundCount={setEachRoundCount}
-                // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
-                // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
-
-                />}
-              </div> */}
             </div>
             <div className='progress-box'>
               {/* <h3>총 전투력 넣을 예정</h3> */}
