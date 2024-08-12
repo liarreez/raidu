@@ -721,7 +721,7 @@ const TrainingRoomManager = ({ roomData }) => {
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
-              {firstClick && isCaptain &&
+              {isCaptain && firstClick &&
                 <button onClick={sendTest1}>타이머 시작</button>
               }
             </div>
