@@ -1,10 +1,8 @@
 package com.sixstar.raidu.domain.rooms.controller;
 
-import com.sixstar.raidu.domain.rooms.dto.MonsterCaptureRequest;
-import com.sixstar.raidu.domain.rooms.dto.RoomCompleteRequest;
-import com.sixstar.raidu.domain.rooms.dto.RoomCreateRequest;
-import com.sixstar.raidu.domain.rooms.dto.UpdateRoomSettingsRequest;
+import com.sixstar.raidu.domain.rooms.dto.*;
 import com.sixstar.raidu.domain.rooms.entity.Room;
+import com.sixstar.raidu.domain.rooms.entity.RoundRecord;
 import com.sixstar.raidu.domain.rooms.service.RoomService;
 import com.sixstar.raidu.global.response.BaseResponse;
 import com.sixstar.raidu.global.response.BaseResponseService;
@@ -91,6 +89,14 @@ public class RoomController {
     @PostMapping("/{roomId}/complete")
     public ResponseEntity<BaseResponse<?>> completeRoom(@PathVariable(name="roomId", required=true) Long roomId, @RequestBody RoomCompleteRequest roomCompleteRequest){
         Map<String, Object> response = roomService.completeRoom(roomId, roomCompleteRequest);
+        System.out.println("컨트롤러   "+ roomCompleteRequest.getRoundRecordList());
+        for(RoundRecordSaveRequest request : roomCompleteRequest.getRoundRecordList()){
+            System.out.println(request.getRoundNumber());
+            System.out.println(request.getDictionaryName());
+            System.out.println(request.getExerciseCount());
+
+        }
+
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.COMPLETE_ROOM_SUCCESS, response);
     }
 
