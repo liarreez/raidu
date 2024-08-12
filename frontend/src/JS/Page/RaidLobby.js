@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Box, Button, Typography, Modal } from "@mui/material";
+import { Box, Button, Typography, Modal, Hidden } from "@mui/material";
 import axios from "axios";
 
 import FadeAnime from "../Component/FadeAnime";
@@ -36,11 +36,12 @@ const RoomCreationModal = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
+    width: 300,
+    height: 400,
     bgcolor: "background.paper",
-    border: "2px solid #000",
     borderRadius: "35px",
     boxShadow: 24,
+    borderRadius:4 ,
     p: 4,
   };
 
@@ -52,18 +53,18 @@ const RoomCreationModal = ({
       aria-describedby="modal-modal-description"
     >
       <Box sx={modalStyle}>
-        <Typography id="modal-modal-title" variant="h5" component="h2">
-          방 만들기
-        </Typography>
+        <div>
+        방 만들기
+        </div>
 
         <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="title">방 제목:</label>
+          <div className="lobby-modal-section">
+            <label htmlFor="title">방 제목</label>
             <input type="text" id="title" name="title" value={title} onChange={handleChange} />
           </div>
 
-          <div>
-            <label htmlFor="maxParticipants">인원:</label>
+          <div className="lobby-modal-section">
+            <label htmlFor="maxParticipants">인원</label>
             <select
               id="maxParticipants"
               name="maxParticipants"
@@ -78,33 +79,33 @@ const RoomCreationModal = ({
             </select>
           </div>
 
-          <div>
-            <label htmlFor="roundTime">라운드별 시간 (초):</label>
+          <div className="lobby-modal-section">
+            <label htmlFor="roundTime">라운드별 시간 (초)</label>
             <select id="roundTime" name="roundTime" value={roundTime} onChange={handleChange}>
-              <option value="">15 ~ 180초 선택</option>
-              {[...Array(10).keys()].map((i) => (
-                <option key={i} value={(i + 1) * 15}>
-                  {(i + 1) * 15}
+              <option value="">30 ~ 180초 선택</option>
+              {[...Array(6).keys()].map((i) => (
+                <option key={i} value={(i + 1) * 30}>
+                  {(i + 1) * 30}
                 </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label htmlFor="restTime">휴식 시간 (초):</label>
+            <label htmlFor="restTime">휴식 시간 (초)</label>
 
             <select id="restTime" name="restTime" value={restTime} onChange={handleChange}>
-              <option value="">15 ~ 180초 선택</option>
-              {[...Array(10).keys()].map((i) => (
-                <option key={i} value={(i + 1) * 15}>
-                  {(i + 1) * 15}
+              <option value="">30 ~ 180초 선택</option>
+              {[...Array(6).keys()].map((i) => (
+                <option key={i} value={(i + 1) * 30}>
+                  {(i + 1) * 30}
                 </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label htmlFor="totalRounds">라운드 수:</label>
+            <label htmlFor="totalRounds">라운드 수</label>
             <select id="totalRounds" name="totalRounds" value={totalRounds} onChange={handleChange}>
               <option value="">1 ~ 3라운드 선택</option>
               <option value="1">1라운드</option>
@@ -114,7 +115,7 @@ const RoomCreationModal = ({
           </div>
 
           <div>
-            <label htmlFor="isPublic">비밀방 여부:</label>
+            <label htmlFor="isPublic">비밀방 여부</label>
             <input type="checkbox" id="isPublic" name="isPublic" onChange={handleChange} />
           </div>
 
@@ -145,15 +146,28 @@ const RaidLobby = () => {
         },
       })
       .then((res) => setRoomList(res.data.data.waitingRoomList))
-      .then(
-        axios
-          .get(SERVER_URL + "/api/raidu/userpage", {
-            headers: {
-              Authorization: `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
-            },
-          })
-          .then((res) => setMe(res.data.data.userProfile))
-      );
+      .catch((error) => {
+        console.error("방 정보 받아오기 실패!", error);
+        if(error.response.data.message === "액세스 토큰이 만료되었습니다!") {
+          alert("토큰 만료! 다시 로그인 해주세요.");
+          navigate("/login");
+        }
+      });
+  
+    axios
+      .get(SERVER_URL + "/api/raidu/userpage", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
+        },
+      })
+      .then((res) => setMe(res.data.data.userProfile))
+      .catch((error) => {
+        console.error("유저 정보 가져오기 실패!", error);
+        if(error.response.data.message === "액세스 토큰이 만료되었습니다!") {
+          alert("토큰 만료! 다시 로그인 해주세요.");
+          navigate("/login");
+        }
+      });
   }, []);
 
   useEffect(() => {

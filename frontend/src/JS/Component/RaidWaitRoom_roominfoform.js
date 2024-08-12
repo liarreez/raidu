@@ -50,7 +50,7 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain, rounds, roomSetSetter, e
         
         // 15~180초 선택지 설정
         const newOptions = [];
-        for (let i = 15; i <= 180; i += 15) { // 15초 간격의 옵션 설정
+        for (let i = 30; i <= 180; i += 30) { // 15초 간격의 옵션 설정
             newOptions.push(i);
         }
         setSecondOption(newOptions);

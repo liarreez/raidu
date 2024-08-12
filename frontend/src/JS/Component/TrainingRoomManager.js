@@ -104,6 +104,10 @@ const TrainingRoomManager = ({ roomData }) => {
   const waitingRoomId = roomData.roomId;
   // 유저 닉네임
   const myUserName = roomData.userInfo.nickname;
+
+  // 방장 유무
+  const isCaptain = roomData.userInfo.isCaptain;
+
   const myUserEmail = roomData.userInfo.email;
   
   // 타이머 시작 한번만 하기 위해서 만든 상태
@@ -175,6 +179,15 @@ const TrainingRoomManager = ({ roomData }) => {
   //     return updatedPower;
   //   });
   // };
+
+  // 자식 컴포넌트(selfVideo) 에서 자신의 전투력 변경을 위해 함수 선언
+  // 가중치를 받아온다.
+  const UpdateMyTotalCombatPower = (weight) => {
+    setMyTotalCombatPower(prevPower => {
+      const updatePower = prevPower + weight;
+      return updatePower;
+    })
+  }
 
   // 실험용(바로바로 누적되는 자신의 전투력)
   // let addMyCombatPower = 0;
@@ -643,6 +656,9 @@ const TrainingRoomManager = ({ roomData }) => {
         // myCombatPower.forEach(power => {
         //   setMyTotalCombatPower(myTotalCombatPower + power);
         // })
+        // myCombatPower.forEach(power => {
+        //   setMyTotalCombatPower(myTotalCombatPower + power);
+        // })
 
         // 기록 저장
         record(roomData.roomPk, endTime, roundRecordList, myTotalCombatPower).then(data => {
@@ -789,6 +805,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
+              {isCaptain && firstClick &&
               {firstClick &&
                 <button onClick={sendTest1}>타이머 시작</button>
               }
@@ -805,6 +822,23 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                   </>
                 ))}
               </div>
+                <div className="my-video">{publisher &&
+                  <SelfVideo streamManager={publisher}
+                    countPower={countPower}
+                    ChangeCount={ChangeCount}
+                    sendTest2={sendTest2}
+                    currentRound={currentRound} exerciseForRound={exerciseForRound}
+                    myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
+                    roundWeight={roundWeight} isExercise={isExercise}
+                    UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
+                    addMyCombatPower={addMyCombatPower}
+                    updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
+                    // setEachRoundCount={setEachRoundCount}
+                    // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
+                    // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
+                    
+                  />}
+                </div>
               <div className="my-video">{publisher &&
                 <SelfVideo streamManager={publisher}
                   countPower={countPower}
