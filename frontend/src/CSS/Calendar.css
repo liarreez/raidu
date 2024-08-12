@@ -1,0 +1,102 @@
+.calendar-component {
+    width: 100%;
+    max-width: 350px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
+  .react-calendar {
+    width: 100%;
+    border: none;
+  }
+  
+  .react-calendar__tile {
+    height: 60px; /* 날짜 칸의 높이를 고정 */
+    min-width: 50px; /* 날짜 칸의 최소 너비 설정 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    border: 1px solid #ddd; /* 버튼 사이에 선을 추가하여 표처럼 만듦 */
+    background-color: white; /* 배경색 제거 */
+    box-sizing: border-box; /* 선이 버튼 크기에 포함되도록 설정 */
+    margin-top: 5px; /* 버튼을 살짝 위로 띄움 */
+  }
+  
+  .react-calendar__month-view__weekdays__weekday {
+    text-align: center; /* 요일 이름을 중앙에 정렬 */
+    font-weight: bold;
+    height: 60px; /* 요일 이름의 높이를 날짜 칸과 동일하게 설정 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none; /* 요일 이름에 들어가는 밑줄 제거 */
+    background-color: white; /* 배경색을 흰색으로 유지 */
+    text-decoration: none; /* 텍스트 밑줄 제거 */
+    outline: none; /* 테이블 헤더에 생길 수 있는 아웃라인 제거 */
+  }
+  
+  .react-calendar__month-view__weekdays__weekday > abbr {
+    text-decoration: none; /* 요일 이름이 포함된 <abbr> 요소의 밑줄 제거 */
+    border-bottom: none; /* 기본적으로 적용된 밑줄 제거 */
+  }
+  
+
+  .react-calendar__tile--active {
+    background-color: #007bff; /* 선택된 날짜는 파란색 */
+    color: white;
+    border: 2px solid #007bff; /* 선택된 날짜 경계선도 파란색으로 강조 */
+  }
+  
+  .react-calendar__tile--now {
+    background-color: white; /* 오늘 날짜는 기본적으로 흰색 */
+    color: black;
+    border: 2px solid #6c757d; /* 오늘 날짜에 회색 박스 처리 */
+  }
+  
+  .react-calendar__tile--now.react-calendar__tile--active {
+    background-color: #007bff; /* 오늘 날짜가 선택되었을 때 파란색 배경 */
+    color: white;
+    border: 2px solid #007bff; /* 선택된 날짜의 테두리도 파란색 */
+  }
+  
+  .react-calendar__tile--neighboringMonth {
+    color: rgba(0, 0, 0, 0.5); /* 글자 색을 희미하게 */
+    filter: blur(1px); /* 블러 처리 */
+  }
+  
+  .react-calendar__month-view__days__day--neighboringMonth {
+    opacity: 0.5; /* 이웃 달 날짜의 투명도 조정 */
+  }
+  
+  .react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .react-calendar__navigation button {
+    background: none; /* 버튼의 배경색 제거 */
+    border: none; /* 버튼의 테두리 제거 */
+    font-size: 1.2rem; /* 버튼 글자 크기 키움 */
+    font-weight: bold; /* 글자 두께를 조금 두껍게 */
+    cursor: pointer;
+  }
+  
+  .react-calendar__navigation button:disabled {
+    color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .react-calendar__navigation button:enabled:hover {
+    color: #007bff; /* 활성화된 버튼에 파란색 강조 */
+  }
+  
+  .react-calendar__navigation .react-calendar__navigation__label {
+    font-size: 1rem; /* 가운데 년도와 달 표시의 글자 크기 */
+    font-weight: normal; /* 가운데 텍스트는 두껍지 않음 */
+  }
+  

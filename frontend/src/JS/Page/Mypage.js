@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import TopNav from "../Component/TopNav";
 import FadeAnime from "../Component/FadeAnime";
 import SpringAnime from "../Component/SpringAnime";
+import Calender from "../Component/Calender";
+import ExerciseRecord from "../Component/ExerciseRecord";
 import "react-step-progress-bar/styles.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
 import axios from "axios";
@@ -14,6 +16,8 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
 import "../../CSS/Mypage.css";
+import "../../CSS/Calendar.css";
+import "../../CSS/ExerciseRecord.css";
 
 import test from "../../Imgs/test.png";
 import burgerking from "../../Imgs/burgerking.png";
@@ -59,6 +63,17 @@ function Mypage() {
   const [activeTab, setActiveTab] = useState("history");
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [dayRecords, setDayRecords] = useState([]); // 기록 데이터를 상태로 관리
+
+  // 기록 데이터 setRecords 를 바꾸고, 그 상태를 바로 보여주기 위한 함수
+  const changeRecord = (exerciseRoomRecordResponseDtos) => {
+    setDayRecords(prevRecord => {
+      const nowDateReord = exerciseRoomRecordResponseDtos;
+
+      console.log('제대로 레코드에 넣어줬는가?', nowDateReord);
+      return nowDateReord;
+    })
+  }
 
   
   const navigate = useNavigate();
@@ -84,6 +99,21 @@ function Mypage() {
 
     fetchData();
   }, [id]);
+
+  const fetchRecordData = async (selectedDate) => {
+    try {
+      console.log(selectedDate);
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await axios.get(
+        `${SERVERURL}/api/raidu/userpage/recordcheck/${id}?time=${selectedDate}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      console.log("Record data:", response.data.data.data.exerciseRoomRecordResponseDtos);
+      changeRecord(response.data.data.data.exerciseRoomRecordResponseDtos);
+    } catch (error) {
+      console.error("Error fetching record data:", error);
+    }
+  };
 
   const renderMonsterCards = () => {
     const monsters = [
@@ -142,7 +172,7 @@ function Mypage() {
     const records = [];
     return (
       <div style={{ display: "flex", width: "100%", height: "490px" }}>
-        <div
+        <div className="calendar-container"
           style={{
             display: "flex",
             alignItems: "center",
@@ -150,17 +180,29 @@ function Mypage() {
             flex: 3,
             padding: "10px",
           }}
-        >그래프 자리</div>
+        >
+          <Calender onDateChange={fetchRecordData} /> {/* Calender 컴포넌트에 날짜 변경 핸들러 전달 */}        </div>
         <div
           style={{
             display: "flex",
+            flexDirection: "column", // 자식 요소들을 세로로 배치
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "flex-start", // 스크롤이 위에서부터 시작하게 설정
             flex: 2,
             backgroundColor: "gray",
             padding: "10px",
+            overflowY: "auto", // 스크롤을 추가
+            maxHeight: "470px" // 최대 높이를 지정하여 스크롤 영역 설정
           }}
-        >표 자리</div>
+        > 
+        {dayRecords.length > 0 ? (
+          dayRecords.map((record, index) => (
+            <ExerciseRecord key={index} record={record} />
+          ))
+        ) : (
+          <div>데이터가 없습니다</div>
+        )}
+      </div>
       </div>
     );
   };
