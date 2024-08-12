@@ -172,8 +172,20 @@ const TrainingRoomManager = ({ roomData }) => {
   // roundRecordList 가 잘 저장되었는지 확인해주는 boolean
   const [isRoundRecordListExist, setIsRoundRecordListExist] = useState(false);
 
+  // EachRoundCount 배열이 다 저장되었는지 확인해주는 boolean
+  const [isEachRoundCountExist, setIsEachRoundCountExist] = useState(false);
+
   // isRoundRecordListExist 가 바로 반영될 수 있도록 해주는 함수
   const ChangeStateOfRoundRecordListExist = () => {
+
+    for (let i = 0; i < exerciseForRound.length; i++) {
+      const roundRecord = {
+        roundNumber: (i + 1),
+        dictionaryName: exerciseForRound[i],
+        exerciseCount: eachRoundCount[i]
+      }
+      roundRecordList[i] = roundRecord
+    }
 
     console.log(endTime);
     console.log('제대로 된 레코드 리스트가 나오나요?')
@@ -184,6 +196,23 @@ const TrainingRoomManager = ({ roomData }) => {
       return nowState;
     });
   };
+
+  // eachRoundCount 배열이 다 완성되었는지 확인하는 useEffect
+  useEffect(() => {
+    if (eachRoundCount.length === roundCount) {
+      setIsEachRoundCountExist(prevCheck => {
+        const nowState = true;
+        return nowState;
+      });
+    };
+  }, [eachRoundCount])
+
+  // isEachRoundCountExist 이 true면 ChangeStateOfRoundRecordListExist 실행
+  useEffect(() => {
+    if (isEachRoundCountExist === true) {
+      ChangeStateOfRoundRecordListExist();
+    }
+  }, [isEachRoundCountExist])
 
 
   // 자식 컴포넌트(selfVideo) 에서 라운드 별 운동 횟수 변경을 위해 함수 선언
@@ -225,8 +254,8 @@ const TrainingRoomManager = ({ roomData }) => {
     setMyTotalCombatPower(prevPower => {
       const updatePower = prevPower + weight;
       return updatePower;
-    })
-  }
+    });
+  };
 
   // 실험용(바로바로 누적되는 자신의 전투력)
   // let addMyCombatPower = 0;
@@ -672,18 +701,18 @@ const TrainingRoomManager = ({ roomData }) => {
 
         getEndTime();
 
-        for (let i = 0; i < exerciseForRound.length; i++) {
-          const roundRecord = {
-            roundNumber: (i + 1),
-            dictionaryName: exerciseForRound[i],
-            exerciseCount: eachRoundCount[i]
-          }
-          roundRecordList[i] = roundRecord
-        }
+        // for (let i = 0; i < exerciseForRound.length; i++) {
+        //   const roundRecord = {
+        //     roundNumber: (i + 1),
+        //     dictionaryName: exerciseForRound[i],
+        //     exerciseCount: eachRoundCount[i]
+        //   }
+        //   roundRecordList[i] = roundRecord
+        // }
 
         
 
-        ChangeStateOfRoundRecordListExist();
+        // ChangeStateOfRoundRecordListExist();
 
         // 잡은 몬스터 정보 불러오기
         getMonster()
