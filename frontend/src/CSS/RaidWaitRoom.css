@@ -1,141 +1,258 @@
 /* 전체 페이지를 뷰포트의 크기에 맞추기 위한 스타일 */
-.raidWaitRoom-html, .raidWaitRoom-body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-}
+@import url('./KeyColor.css');
 
-#raidWaitRoom-root {
-    height: 100%;
-    width: 100%;
-}
-
-.raidWaitRoom-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* 뷰포트의 전체 높이 */
-}
-
-.raidWaitRoom-header {
-    width: 100%;
-    background-color: #12D20E;
-    padding: 1rem;
+.waitroom-page-wrapper {
+    width: 100vw;
+    min-width: 1050px;
+    height: 100vh;
+    /* height 값은 이미지 에셋 추가후 생각하자 */
+    background-size: cover;
+    background-position: bottom;
     box-sizing: border-box;
-    margin: 0.5% 0;
+}
+
+.waitroom-banner-top {
+    width: 100vw;
+    min-width: 1050px;
+    position: fixed;
+    z-index: 10;
+
     display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    background-color: var(--hard-color-black);
 }
 
-.raidWaitRoom-logoArea {
-    flex: 3;
+.waitroom-banner-logo {
+    background-color: white;
 }
 
-/* Grid 아이템의 높이와 패딩 설정 */
-.raidWaitRoom-gridItems {
-    padding: 0 2%;
-    box-sizing: border-box;
-    height: 100%; /* 각 아이템이 Grid 컨테이너의 높이 전체를 차지하도록 설정 */
+.waitroom-banner-logo img{
+    width: 200px;
 }
 
-.raidWaitRoom-gridItemsDiv {
-    background-color: #c0c0c0;
-    height: 100%;
+.waitroom-banner-info-wrapper {
+    display: flex;
+    flex-direction: row;
+
+    background-color: var(--hard-color-grey);
+    padding: 15px 50px;
+    border-radius: 8px;
+    position: relative;
+    left: 50%;
 }
 
-.raidWaitRoom-logo {
-    width: 15%;   /* 부모 요소의 너비의 6% */
-    height: auto; /* 비율을 유지하면서 높이 자동 조정 */
-    max-width: 100%; /* 부모 요소의 최대 너비를 초과하지 않도록 설정 */
-}
-
-.raidWaitRoom-lock {
-    width: 3%;
-    height: auto;
-    max-width: 100%;
-}
-
-.raidWaitRoom-roomName {
-    padding: 0 3%;
-    font-size: 1.75rem;
-    vertical-align: middle;
-}
-
-.raidWaitRoom-roomSetting {
-    font-size: 1.5rem;
-}
-
-.raidWaitRoom-headerContent {
-    background-color: #ffffff;
-    padding: 1.5% 1.5%;
-    border-radius: 35px;
+.waitroom-banner-lock{
+    width: 35px;
+    height: 35px;
+    background-color: var(--hard-color-white);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    flex: 7;
+    justify-content: center;
+
+    border-radius: 8px;
 }
 
-.raidWaitRoom-roomName, .raidWaitRoom-lock, .raidWaitRoom-roomSetting {
-    display: inline-block;
-    vertical-align: middle;
+.waitroom-banner-lock img {
+    width: 70%;
+    height: 70%;
 }
 
-.raidWaitRoom-subGridContainer {
+.waitroom-content-wrapper {
+    display: flex;
+    /* position: absolute; */
+    width: 100vw;
+    min-width: 1050px;
+    height: 100vh;
+    overflow: hidden;
+    /* margin-top: 140px; */
+}
+
+.waitroom-content {
+    /* 사이징, 양식 */
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    min-width: 1050px;
+    height: calc(100vh + 400px);
+    background-color: white;
+    box-sizing: border-box;
+    overflow: hidden;
+    /* 그림자 */
+    box-shadow: 0px 18px 15px 5px rgba(0,0,0,0.3);
+    /* 위치 포지셔닝 */
+    top: -400px;
+    padding-top: 500px;
+    box-sizing: border-box;
+    position: relative;
+    gap: 10px;
+    padding-right: 10px; padding-left: 10px;
+}
+
+.waitroom-content-left-wrapper {
+    flex: 2;
+    height: 580px;
+    min-width: 600px;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 8px;
+
+    box-shadow: 0px 0px 8px 5px rgba(0,0,0,0.1);
+}
+
+.waitroom-left-user-wrapper {
     display: flex;
     flex-direction: column;
-    height: 100%; /* 부모 컨테이너의 높이를 채우도록 설정 */
+    padding: 10px;
+    gap: 10px;
+    border-radius: 8px;
+    height: 400px;
+    box-sizing: border-box;
+    align-items: center;
+    overflow: hidden;
+    
+    border: 3px dashed rgb(232, 232, 232);
 }
 
-.raidWaitRoom-subGridItemsDiv {
-    background-color: #f2f2f2;
-    height: 100%;
-    border-radius: 35px;
-}
-
-#raidWaitRoom-participantsList {
-    background-color: #ffffff;
-}
-
-.raidWaitRoom-out { /* 나가기 이미지 */
-    width: 50%;
-    height: auto;
-    max-width: 100%;
-    padding-left: 35%;
-    padding-top: 10%; /*
-    padding-top: 10px;
-    padding-left: 20px;
-    width: 50%;
-    height: auto;
-    */
-}
-
-.raidWaitRoom-outarea { /* 나가기 이미지, a 태그 포함하는 div 태그 */
-    border-radius: 35px;
-}
-
-.raidWaitRoom-startButton, .raidWaitRoom-shareButton {
+.waitroom-left-user-card {
+    box-sizing: border-box;
+    height: 90px;
+    width: 85%;
+    border-radius: 4px;
     display: flex;
-    align-items: center; /* 수직 가운데 정렬 */
-    justify-content: center; /* 수평 가운데 정렬 */
-    height: 100%;
-    border-radius: 35px;
-    cursor: pointer;
+    overflow: hidden;
+
+    box-shadow: 0px 5px 8px 2px rgba(0,0,0,0.2);
 }
 
-.raidWaitRoom-startButton {
-    background-color: mistyrose;
+.waitroom-card-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 40px;
+    width: 90px;
+    height: 90px;
+    background-color: var(--hard-color-grey);
+    color: var(--hard-color-black);
+
+    box-sizing: border-box;
 }
 
-.raidWaitRoom-shareButton {
-    background-color: lightcyan;
+.waitroom-card-info-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-.raidWaitRoom-startButton:hover, .raidWaitRoom-shareButton:hover, .raidWaitRoom-outarea:hover {
-    background-color: #12D20E;
-    cursor: pointer;
+.waitroom-card-info-nickname {
+    background-color: var(--hard-color-black);
+    height: 30px;
+    width: 100%;
+    color: var(--hard-color-white);
+    font-weight: bold;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    padding-right: 50px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.raidWaitRoom-buttonText {
-    font-size: 2rem; /* 버튼 텍스트 크기 조정 */
-    color: #000; /* 버튼 텍스트 색상 */
+.waitroom-card-icon-wrapper {
+    display: flex;
+    padding-left: 15px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.waitroom-card-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.waitroom-card-icon p {
+    color: var(--hard-color-black);
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.waitroom-card-icon img{
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    padding: 5px;
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.2);
+}
+
+/* 입장하기 버튼 hover 시 스타일 변경 */
+.waitroom-card-title, .waitroom-card-number {
+    transition: 0.3s ease-in-out;
+}
+
+.waitroom-card-number {
+    background-color: var(--hard-color-grey);
+}
+.waitroom-card-number.waitroom-ready-number {
+    color: var(--hard-color-green);
+    color: #fff;
+    text-shadow:
+        0 0 3px #b6b6b6,   /* 기본 그림자 */
+        0 0 5px #b6b6b6,      /* 작은 범위의 첫 번째 네온 효과 */
+        0 0 10px #0fa,     /* 작은 범위의 두 번째 네온 효과 */
+        0 0 20px #0fa,     /* 중간 범위의 네온 효과 */
+        0 0 40px #0fa;     /* 가장 큰 범위의 네온 효과 */
+}
+
+.waitroom-ready-indicator {
+    padding: 10px 20px;
+    background-color: var(--hard-color-grey);
+    border-radius: 8px;
+    font-weight: bold;
+    font-family: inherit;
+    color: var(--hard-color-black);
+    transition: 0.3s ease-in-out;
+}
+
+.waitroom-ready-indicator.ready-indicator {
+    color: var(--hard-color-green);
+    color: #fff;
+    text-shadow:
+        0 0 3px #b6b6b6,   /* 기본 그림자 */
+        0 0 5px #b6b6b6,      /* 작은 범위의 첫 번째 네온 효과 */
+        0 0 10px #0fa,     /* 작은 범위의 두 번째 네온 효과 */
+        0 0 20px #0fa,     /* 중간 범위의 네온 효과 */
+        0 0 40px #0fa;     /* 가장 큰 범위의 네온 효과 */
+}
+
+.waitroom-content-right-wrapper {
+    flex: 1;
+    min-width: 300px;
+    height: 580px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding: 20px;
+    box-shadow: 0px 0px 8px 5px rgba(0,0,0,0.1);
+}
+
+.waitroom-button-leave {
+    width: 60px;
+    height: 60px;
+}
+
+.waitroom-button-leave img {
+    width: inherit;
+    height: inherit;
+    object-fit: cover;
 }
