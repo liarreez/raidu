@@ -8,6 +8,7 @@ import com.sixstar.raidu.domain.main.entity.Season;
 import com.sixstar.raidu.domain.main.entity.SeasonRegionScore;
 import com.sixstar.raidu.domain.main.repository.SeasonRegionScoreRepository;
 import com.sixstar.raidu.domain.main.repository.SeasonRepository;
+import com.sixstar.raidu.domain.main.service.MainpageServiceImpl;
 import com.sixstar.raidu.domain.rooms.dto.*;
 import com.sixstar.raidu.domain.rooms.entity.*;
 import com.sixstar.raidu.domain.rooms.repository.*;
@@ -46,6 +47,8 @@ import io.openvidu.java.client.ConnectionProperties;
 @Service
 public class RoomServiceImpl implements RoomService{
 
+    private MainpageServiceImpl mainpageService;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -57,13 +60,14 @@ public class RoomServiceImpl implements RoomService{
 
     private OpenVidu openvidu;
 
-    public RoomServiceImpl(RoomRepository roomRepository,
+    public RoomServiceImpl(MainpageServiceImpl mainpageService, RoomRepository roomRepository,
         UserProfileRepository userProfileRepository, RoomUserRepository roomUserRepository,
         SeasonRepository seasonRepository, SeasonRegionScoreRepository seasonRegionScoreRepository,
         SeasonUserScoreRepository seasonUserScoreRepository,
         ExerciseRoomRecordRepository exerciseRoomRecordRepository,
         RoundRecordRepository roundRecordRepository, DictionaryRepository dictionaryRepository,
         MonsterRepository monsterRepository, UserMonsterRepository userMonsterRepository) {
+        this.mainpageService = mainpageService;
         this.roomRepository = roomRepository;
         this.userProfileRepository = userProfileRepository;
         this.roomUserRepository = roomUserRepository;
@@ -267,6 +271,7 @@ public class RoomServiceImpl implements RoomService{
     @Transactional
     @Override
     public Map<String, Object> completeRoom(Long roomId, RoomCompleteRequest request) {
+        System.out.println(request.getTotalCombatPower());
         // 방 상태 업데이트
         Room room = findRoomByIdOrThrow(roomId);
         room.update("completed");
@@ -310,14 +315,18 @@ public class RoomServiceImpl implements RoomService{
                 }).toList();
         roundRecordRepository.saveAll(roundRecordList);
 
+        Long totalContribute = mainpageService.getTotalContribute(season);
+        System.out.println("토탈토탈토탈    "+totalContribute);
+
         // 업데이트된 레벨, 경험치 반환
         Map<String, Object> map = new HashMap<>();
         map.put("region", RegionResponseDto.fromEntity(updatedSeasonRegionScore.getRegion()));
-        map.put("updatedSeasonScore", updatedSeasonRegionScore.getScore());
+        map.put("updatedRegionScore", updatedSeasonRegionScore.getScore());
         map.put("updatedLevel", userProfile.getLevel());
         map.put("updatedExp", userProfile.getExp());
         map.put("isLevelUp", isLevelUp);
         map.put("isBestScoreUpdated", isBestScoreUpdated);
+        map.put("totalContribute", totalContribute);
 
         return map;
     }
@@ -333,7 +342,9 @@ public class RoomServiceImpl implements RoomService{
 
     @Override
     public Map<String, Object> getCapturedMonster(MonsterCaptureRequest request) {
-        List<Monster> monsterList = monsterRepository.findByStageLessThan(request.getStage());
+        List<Monster> monsterList = monsterRepository.findByStageLessThanEqual(request.getStage());
+        System.out.println("EMAIL           "+ request.getEmail() );
+        System.out.println("STAGee          "+ request.getStage());
         Monster capturedMonster = getRandomMonster(monsterList);
         UserProfile userProfile = findUserProfileByEmailOrThrow(request.getEmail());
 
