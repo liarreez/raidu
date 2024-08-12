@@ -838,7 +838,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                     
                   />}
                 </div>
-              <div className="my-video">{publisher &&
+              {/* <div className="my-video">{publisher &&
                 <SelfVideo streamManager={publisher}
                   countPower={countPower}
                   ChangeCount={ChangeCount}
@@ -853,7 +853,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                 // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
 
                 />}
-              </div>
+              </div> */}
             </div>
             <div className='progress-box'>
               {/* <h3>총 전투력 넣을 예정</h3> */}
