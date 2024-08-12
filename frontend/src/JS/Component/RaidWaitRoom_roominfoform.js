@@ -106,7 +106,7 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain, rounds, roomSetSetter, e
                     <div style={formStyle}>
                         <div style={interFormStyle}>
                             <span style={spanStyle}>라운드별 시간</span>
-                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
+                            <FormControl variant="filled" sx={{ minWidth: '50%' }} disabled>
                                 <InputLabel id="round-time-label">15 ~ 180초 선택 가능</InputLabel>
                                 <Select
                                     labelId="round-time-label"
@@ -123,7 +123,7 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain, rounds, roomSetSetter, e
                         </div>
                         <div style={interFormStyle}>
                             <span style={spanStyle}>휴식 시간</span>
-                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
+                            <FormControl variant="filled" sx={{ minWidth: '50%' }} disabled>
                                 <InputLabel id="rest-time-label">15 ~ 180초 선택 가능</InputLabel>
                                 <Select
                                     labelId="rest-time-label"
@@ -140,7 +140,7 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain, rounds, roomSetSetter, e
                         </div>
                         <div style={interFormStyle}>
                             <span style={spanStyle}>라운드 수</span>
-                            <FormControl variant="filled" sx={{ minWidth: '50%' }}>
+                            <FormControl variant="filled" sx={{ minWidth: '50%' }} disabled>
                                 <InputLabel id="round-count-label">1 ~ 3회 선택 가능</InputLabel>
                                 <Select
                                     labelId="round-count-label"
