@@ -3,14 +3,20 @@ package com.sixstar.raidu.domain.userpage.controller;
 import com.sixstar.raidu.domain.userpage.dto.CheckNicknameDto;
 import com.sixstar.raidu.domain.userpage.dto.CheckPasswordDto;
 import com.sixstar.raidu.domain.userpage.dto.UserInfoModifyDto;
+import com.sixstar.raidu.domain.userpage.dto.UserRecordResponseDto;
 import com.sixstar.raidu.domain.userpage.dto.UserprofileRegisterDto;
+import com.sixstar.raidu.domain.userpage.service.UserRecordService;
 import com.sixstar.raidu.domain.userpage.service.UserpageService;
 import com.sixstar.raidu.global.response.BaseResponse;
 import com.sixstar.raidu.global.response.BaseResponseService;
 import com.sixstar.raidu.global.response.BaseSuccessResponse;
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserpageController {
   private final UserpageService userpageService;
   private final BaseResponseService baseResponseService;
+  private final UserRecordService userRecordService;
+
 
   @GetMapping("")
   public ResponseEntity<BaseResponse<?>> searchUserInfo(@RequestHeader("Authorization") String authorization) {
@@ -75,5 +83,11 @@ public class UserpageController {
   public ResponseEntity<BaseResponse<?>> checkPassword(@RequestHeader("Authorization") String authorization, @RequestBody CheckPasswordDto checkPasswordDto) {
     userpageService.checkPassword(authorization, checkPasswordDto.getPassword());
     return baseResponseService.getSuccessResponse(BaseSuccessResponse.PASSWORD_CHECK_SUCCESS);
+  }
+
+  @GetMapping("/recordcheck/{id}")
+  public ResponseEntity<BaseResponse<?>> getUserRecords(@PathVariable("id") Long id, @RequestParam("time") String time) {
+      Map<String, Object> response = userRecordService.getUserRecords(id, time);
+      return baseResponseService.getSuccessResponse(BaseSuccessResponse.OK, response);
   }
 }
