@@ -69,12 +69,21 @@ const TrainingRoomManager = ({ roomData }) => {
   const [isLevelUp, setIsLevelUp] = useState(false);
   const [updatedExp, setUpdatedExp] = useState(0);
   const [updatedLevel, setUpdatedLevel] = useState(0);
-  const [updatedRegionScore, setUpdatedRegionScore] = useState(0);
 
   const [regionName, setRegionName] = useState(false);
 
   const [updatedExpPercentage, setUpdatedExpPercentage] = useState(0);
   const [updatedRegionScorePercentage, setUpdatedRegionScorePercentage] = useState(0);
+
+  // 지역 기여도 업데이트 함수
+  const UpdateRegionScore = (updatedRegionScore, totalContribute) => {
+    setUpdatedRegionScorePercentage((prevPercent) => {
+      const newPercentage = (updatedRegionScore/totalContribute) * 100
+
+      console.log("NEWPERCE#NTAGE    ",newPercentage);
+      return newPercentage
+    })
+  }
 
   // 운동방이 시작했는가? (joinTrainingRoom을 한번만 하기 위해 넣은 확인용)
   const [hasJoined, setHasJoined] = useState(false);
@@ -112,11 +121,9 @@ const TrainingRoomManager = ({ roomData }) => {
   // 정해둔 셋팅 시간(준비시간)
   const setupTime = 3;
   // 정해둔 운동시간
-  // const exerciseTime = roomData.roomInfo.roundTime;
-  const exerciseTime = 1;
+  const exerciseTime = roomData.roomInfo.roundTime;
   // 정해둔 쉬는시간
-  // const restTime = roomData.roomInfo.restTime;
-  const restTime = 1;
+  const restTime = roomData.roomInfo.restTime;
   // 정해둔 라운드(운동 횟수)
   const roundCount = roomData.roomInfo.roundCount;
   // 라운드 별 운동 배열
@@ -361,8 +368,6 @@ const TrainingRoomManager = ({ roomData }) => {
   const [inputWaitingRoomId, setInputWaitingRoomId] = useState(waitingRoomId || "");
   // 유효성 토큰 (로그인이 되었는가 // 나중에 다른 곳에서 받아와야 할 듯!)
   const acessToken = localStorage.getItem('accessToken');
-  // const token =
-  //   "eyJhbGciOiJIUzUxMiJ9.eyJjYXRlZ29yeSI6IkFDQ0VTUyIsImVtYWlsIjoic3NhZnlAc3NhZnkuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MjI1MDAwMTgsImV4cCI6MTcyMzEwNDgxOH0.GAMSTSsS33cmxkty2r_ls4pY1xYDkvgflAhMUljGYOvBvOuHjRWZ9DKOCmVj0cwSvUmwwUMcqEadH-NPDVDsGQ";
 
   // 전투력 총합치 << 현재는 확인을 위해 넣은 것으로, 나중에는 모든 사람들 전투력 합산을 가져올 예정
   // const [CombatPower, setCombatPower] = useState(0);
@@ -635,23 +640,20 @@ const TrainingRoomManager = ({ roomData }) => {
         }
 
         // 라운드별 자신의 전투력으로 총 전투력 만들기
-        myCombatPower.forEach(power => {
-          setMyTotalCombatPower(myTotalCombatPower + power);
-        })
+        // myCombatPower.forEach(power => {
+        //   setMyTotalCombatPower(myTotalCombatPower + power);
+        // })
 
         // 기록 저장
-        record(roomData.roomPk, endTime, roundRecordList).then(data => {
+        record(roomData.roomPk, endTime, roundRecordList, myTotalCombatPower).then(data => {
           console.log("기록 후 데이터:", data);
           setUpdatedExp(data.data.updatedExp)
           setUpdatedLevel(data.data.updatedLevel)
-          setUpdatedRegionScore(data.data.updatedRegionScore)
           setIsLevelUp(data.data.isLevelUp)
-
           setRegionName(data.data.region.name)
-
           setUpdatedExpPercentage((data.data.updatedExp/750)*100);
-          setUpdatedRegionScorePercentage((data.data.updatedRegionScore/1000)*100)
-
+          
+          UpdateRegionScore(data.data.updatedRegionScore, data.data.totalContribute)
         }).catch(error => {
           console.error("기록 저장 실패:", error);
         })
@@ -678,7 +680,7 @@ const TrainingRoomManager = ({ roomData }) => {
   }, [currentStep]);
 
   // 기록 저장을 위한 API
-const record = async (roomId, endTime, roundRecordList) => {
+const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
   try {
     const response = await axios.post(
       `${APPLICATION_SERVER_URL}/${roomId}/complete`,
@@ -1085,7 +1087,7 @@ const record = async (roomId, endTime, roundRecordList) => {
                       fontSize: "25px", 
                       fontFamily: 'WarhavenR',
                       marginBottom: '5px' }}>
-                      LV. {updatedLevel}
+                      LV. {updatedLevel} {isLevelUp ? '↑' : ''}
                     </div>
                     <StepProgressBar expPercentage={updatedExpPercentage}></StepProgressBar>
                     <div style={{ display: "flex", justifyContent: "flex-end" }}>
