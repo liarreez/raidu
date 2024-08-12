@@ -7,6 +7,7 @@ import SelfRestVideo from './SelfRestVideo';
 import "../../CSS/TrainingRoomManager.css";
 import TotalCombatPower from './TotalCombatPower';
 
+import exerciseSoldier from '../../Imgs/exerciseSoldier.gif'
 import restSoldier from '../../Imgs/restSoldier.gif'
 import standSoldier from '../../Imgs/standSoldier.png'
 
@@ -17,7 +18,7 @@ import TimerRest from './TimerRest';
 
 import { Socketest } from './Socketest';
 
-import { Modal, Box } from '@mui/material';
+import { Modal, Box, Paper } from '@mui/material';
 
 import { Navigate, useNavigate } from 'react-router-dom';
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
@@ -78,9 +79,9 @@ const TrainingRoomManager = ({ roomData }) => {
   // 지역 기여도 업데이트 함수
   const UpdateRegionScore = (updatedRegionScore, totalContribute) => {
     setUpdatedRegionScorePercentage((prevPercent) => {
-      const newPercentage = (updatedRegionScore/totalContribute) * 100
+      const newPercentage = (updatedRegionScore / totalContribute) * 100
 
-      console.log("NEWPERCE#NTAGE    ",newPercentage);
+      console.log("NEWPERCE#NTAGE    ", newPercentage);
       return newPercentage
     })
   }
@@ -109,7 +110,7 @@ const TrainingRoomManager = ({ roomData }) => {
   const isCaptain = roomData.userInfo.isCaptain;
 
   const myUserEmail = roomData.userInfo.email;
-  
+
   // 타이머 시작 한번만 하기 위해서 만든 상태
   const [firstClick, setFirstClick] = useState(true);
 
@@ -132,8 +133,8 @@ const TrainingRoomManager = ({ roomData }) => {
   const roundCount = roomData.roomInfo.roundCount;
   // 라운드 별 운동 배열
   const exerciseForRound = roomData.exerciseInfo;
-  
-  const gainedExp = (exerciseTime/60)*roundCount*50;
+
+  const gainedExp = (exerciseTime / 60) * roundCount * 50;
 
 
   // 라운드 별 운동 가중치(운동에 따라 저장)
@@ -746,13 +747,13 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
           Authorization: `Bearer ${acessToken}`,
         }
       }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("기록 저장에 실패하였습니다.", error);
-    throw error;
-  }
-};
+      );
+      return response.data;
+    } catch (error) {
+      console.error("기록 저장에 실패하였습니다.", error);
+      throw error;
+    }
+  };
 
   // 몬스터 정보를 가져오는 API
   const getMonster = async () => {
@@ -820,7 +821,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
         </div>
       ) : (
         <div id="session" className="training">
-          <div id="session-header" className="training-header">
+          <div className="training-header">
             {/* <div>
               <h1 id="session-title">운동방입니다.</h1>
               <button className="btn btn-large btn-danger" onClick={leaveSession}>
@@ -829,21 +830,34 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
               <progress vlaue={null} />
             </div> */}
             <div>
-              <h2>현재 단계 : {currentStep}</h2>
+              {/* <h2>현재 단계 : {currentStep}</h2> */}
               {/* <input
                 type='number'
                 vlaue={initialTime}
                 onChange={(e) => setInitialTime(Number(e.target.value))}
                 min='0'
               /> */}
-              {isCaptain && firstClick &&
-                <button onClick={sendTest1}>타이머 시작</button>
-              }
             </div>
             <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} />
           </div>
           <div className="training-frame">
             <div className="video-frame">
+              <div className="my-video">{publisher &&
+                <SelfVideo streamManager={publisher}
+                  countPower={countPower}
+                  ChangeCount={ChangeCount}
+                  sendTest2={sendTest2}
+                  currentRound={currentRound} exerciseForRound={exerciseForRound}
+                  myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
+                  roundWeight={roundWeight} isExercise={isExercise}
+                  addMyCombatPower={addMyCombatPower}
+                  updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
+                // setEachRoundCount={setEachRoundCount}
+                // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
+                // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
+
+                />}
+              </div>
               <div className="other-video">
                 {subscribers.map((sub, i) => (
                   <>
@@ -852,35 +866,22 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                   </>
                 ))}
               </div>
-                <div className="my-video">{publisher &&
-                  <SelfVideo streamManager={publisher}
-                    countPower={countPower}
-                    ChangeCount={ChangeCount}
-                    sendTest2={sendTest2}
-                    currentRound={currentRound} exerciseForRound={exerciseForRound}
-                    myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
-                    roundWeight={roundWeight} isExercise={isExercise}
-                    UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
-                    addMyCombatPower={addMyCombatPower}
-                    updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
-                    // setEachRoundCount={setEachRoundCount}
-                    // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
-                    // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
-                    
-                  />}
-                </div>
+              <div className="my-video">{publisher &&
+                <SelfVideo streamManager={publisher}
+                  countPower={countPower}
+                  ChangeCount={ChangeCount}
+                  sendTest2={sendTest2}
+                  currentRound={currentRound} exerciseForRound={exerciseForRound}
+                  myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
+                  roundWeight={roundWeight} isExercise={isExercise}
+                  UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
+                  addMyCombatPower={addMyCombatPower}
+                  updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
+
+                />}
+              </div>
             </div>
             <div className='progress-box'>
-              {/* <h3>총 전투력 넣을 예정</h3> */}
-              {/* <div>
-                <input
-                  type="number"
-                  value={combatGauge}
-                  // onChange={(e) => setCombatPower(e.target.value)}
-                  min='0'
-                  max='100'
-                />
-              </div> */}
               <h3>현재 점수 {totalCombatPower}</h3>
               <TotalCombatPower
                 visualParts={[
@@ -893,11 +894,27 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
               <p style={{
                 fontSize: '40px',
                 fontWeight: 'bold',
-              }}>단계 : {totalCombatLevel}</p>
+              }}>Level {totalCombatLevel}</p>
             </div>
             <div className='soldier-box'>
+              <div className='round-box-frame'>
+                <div>
+                  {Array.from({ length: roundCount }, (_, index) => (
+                    <div
+                      key={index}
+                      className={`round-box ${currentRound === index ? 'active' : ''}`}
+                    >
+                      Round{index + 1} : {exerciseForRound[index]}
+                    </div>
+
+                  ))}
+                  {isCaptain && firstClick &&
+                    <button className="start-button" onClick={sendTest1}>타이머 시작</button>
+                  }
+                </div>
+              </div>
               {/* <h1>용사 gif</h1> */}
-              <img className='soldier-gif' src={restSoldier} alt="휴식용사" />
+              <img className='soldier-gif' src={exerciseSoldier} alt="운동용사" />
             </div>
           </div>
         </div>
@@ -917,9 +934,10 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
           transform: 'translate(-50%,0)',
           width: '80%',
           height: '70%',
-          // bgcolor: 'background.paper',
+          bgcolor: "white",
           // boxShadow: 24,
           p: 4,
+          bgcolor: currentStep === 'rest' ? "white" : "background.Paper",
           backgroundImage: currentStep === 'ending' ? `url(${completeScroll})` : 'none',
           backgroundSize: 'auto 100%',
           backgroundPosition: 'center',
@@ -975,36 +993,15 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
           }
           {/* 휴식 시간 화면 */}
           {currentStep === 'rest' &&
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              height: '100%',
-              border: '3px solid red'
-            }}>
+            <div className="restTime">
               {/* 타이머 넣을 div */}
-              <div style={{
-                width: '100%',
-                height: '20%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-                // backgroundColor:'coral',
-              }}>
+              <div className="restTime-header">
                 <TimerRest currentTime={currentTime} timerActive={timerActive} />
               </div>
               {/* 자기 화면 및 운동 선택 div */}
-              <div style={{
-                display: 'flex',
-                width: '100%',
-                height: '80%',
-              }}>
+              <div className="restTime-frame">
                 {/* 자기 화면 div */}
-                <div style={{
-                  width: '50%',
-                  height: '100%',
-                  border: '2px solid purple'
-                }}>
+                <div className="restTime-video">
                   {publisher &&
                     <SelfRestVideo
                       streamManager={publisher}
@@ -1012,39 +1009,22 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                     />}
                 </div>
                 {/* 운동 선택 div */}
-                <div style={{
-                  width: '50%',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  border: '2px solid blue'
-                }}>
-                  <div style={{
-                    width: '100%',
-                    height: '20%',
-                    fontSize: '40px',
-                    backgroundColor: 'lavender',
-                  }}>
-                    <p>휴식 시간</p>
+                <div className="restTime-box">
+                  <div className="restTime-message">
+                    {exerciseForRound[currentRound] === "jumpingJack" ? (
+                      <>
+                        다음 운동은 {exerciseForRound[currentRound]}입니다.<br />
+                        카메라를 기준으로 정면을 바라봐 주세요
+                      </>
+                    ) : (
+                      <>
+                        다음 운동은 {exerciseForRound[currentRound]}입니다.<br />
+                        카메라를 기준으로 왼쪽을 바라봐 주세요
+                      </>
+                    )}
                   </div>
-                  <div style={{
-                    width: '100%',
-                    height: '40%',
-                    fontSize: '30px',
-                    backgroundColor: 'lightcyan',
-                  }}>
-                    <p>운동 선택 넣을 예정</p>
-                  </div>
-                  <div style={{
-                    width: '100%',
-                    height: '40%',
-                    fontSize: '30px',
-                    backgroundColor: 'lightpink',
-                  }}>
-                    <p>쉬는 용사 넣을 예정</p>
-                  </div>
+                  <img className='rest-gif' src={restSoldier} alt="휴식용사" />
                 </div>
-
               </div>
             </div>
           }
@@ -1054,7 +1034,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
 
             </div>
           }
-          
+
           {/* 마지막 정산 화면 =================================================이슬 */}
           {currentStep === 'ending' &&
             <div style={{
@@ -1062,7 +1042,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
               paddingBottom: "100px",
               paddingLeft: "190px",
               paddingRight: "180px"
-          }}>
+            }}>
               <div style={{
                 width: '100%',
                 height: '90%',
@@ -1075,14 +1055,14 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                   display: 'flex',
                   flexDirection: 'column', /* 세로 방향으로 자식 요소를 배치 */
                   justifyContent: 'space-between', /* 자식 요소들 사이에 공간을 분배 */
-                  
+
                   padding: '10px', /* 여백 설정 (필요에 따라 조정) */
                   boxSizing: 'border-box' /* 여백과 테두리를 포함하여 전체 너비와 높이 계산 */
                 }}>
                   <div style={{
                     color: 'black',
                     fontSize: '18px',
-                    fontFamily: 'WarhavenR'                    
+                    fontFamily: 'WarhavenR'
                   }}>
                     {isNewMonster ? 'NEW!' : ''}
                   </div>
@@ -1103,7 +1083,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                     fontSize: '20px',
                     marginTop: 'auto', /* 위쪽의 여백을 자동으로 채워서 아래쪽으로 이동 */
                     alignSelf: 'flex-end', /* 자식 요소를 오른쪽 끝으로 정렬 */
-                    fontFamily: 'WarhavenB'                    
+                    fontFamily: 'WarhavenB'
                   }}>
                     {monsterName}
                   </div>
@@ -1121,20 +1101,21 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                   <div className='training-complete-stage'>
                     <div style={{
                       color: "black",
-                      marginBottom: "20px", 
-                      fontSize: "37px", 
-                      fontFamily: 'WarhavenB' 
-                      }}>
+                      marginBottom: "20px",
+                      fontSize: "37px",
+                      fontFamily: 'WarhavenB'
+                    }}>
                       {totalCombatLevel} STAGE CLEAR!
                     </div>
                   </div>
 
                   <div className='training-complte-level'>
-                    <div style={{ 
-                      color: "black", 
-                      fontSize: "25px", 
+                    <div style={{
+                      color: "black",
+                      fontSize: "25px",
                       fontFamily: 'WarhavenR',
-                      marginBottom: '5px' }}>
+                      marginBottom: '5px'
+                    }}>
                       LV. {updatedLevel} {isLevelUp ? '↑' : ''}
                     </div>
                     <StepProgressBar expPercentage={updatedExpPercentage}></StepProgressBar>
@@ -1146,12 +1127,12 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                   </div>
 
                   <div className='training-complte-season-region-score-text'>
-                    <div style={{ 
-                      color: "black", 
-                      fontSize: "20px", 
+                    <div style={{
+                      color: "black",
+                      fontSize: "20px",
                       fontFamily: 'WarhavenR',
-                      marginBottom: '5px' 
-                      }}>
+                      marginBottom: '5px'
+                    }}>
                       {regionName} 기여도
                     </div>
                     <StepProgressBar expPercentage={updatedRegionScorePercentage}></StepProgressBar>
