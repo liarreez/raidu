@@ -81,10 +81,10 @@ const RoomCreationModal = ({
           <div>
             <label htmlFor="roundTime">라운드별 시간 (초):</label>
             <select id="roundTime" name="roundTime" value={roundTime} onChange={handleChange}>
-              <option value="">15 ~ 180초 선택</option>
-              {[...Array(10).keys()].map((i) => (
-                <option key={i} value={(i + 1) * 15}>
-                  {(i + 1) * 15}
+              <option value="">30 ~ 180초 선택</option>
+              {[...Array(6).keys()].map((i) => (
+                <option key={i} value={(i + 1) * 30}>
+                  {(i + 1) * 30}
                 </option>
               ))}
             </select>
@@ -94,10 +94,10 @@ const RoomCreationModal = ({
             <label htmlFor="restTime">휴식 시간 (초):</label>
 
             <select id="restTime" name="restTime" value={restTime} onChange={handleChange}>
-              <option value="">15 ~ 180초 선택</option>
-              {[...Array(10).keys()].map((i) => (
-                <option key={i} value={(i + 1) * 15}>
-                  {(i + 1) * 15}
+              <option value="">30 ~ 180초 선택</option>
+              {[...Array(6).keys()].map((i) => (
+                <option key={i} value={(i + 1) * 30}>
+                  {(i + 1) * 30}
                 </option>
               ))}
             </select>
