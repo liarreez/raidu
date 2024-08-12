@@ -169,6 +169,9 @@ const TrainingRoomManager = ({ roomData }) => {
   // API로 줄 roundRecordList 만들기
   const roundRecordList = [];
 
+  // 다시 저장할 레코드 리스트
+  const [finishRoundRecordList, setFinishRoundRecordList] = useState([]);
+
   // roundRecordList 가 잘 저장되었는지 확인해주는 boolean
   const [isRoundRecordListExist, setIsRoundRecordListExist] = useState(false);
 
@@ -190,6 +193,11 @@ const TrainingRoomManager = ({ roomData }) => {
     console.log(endTime);
     console.log('제대로 된 레코드 리스트가 나오나요?')
     console.log(roundRecordList);
+
+    setFinishRoundRecordList(prevList => {
+      const newRecord = roundRecordList;
+      return newRecord;
+    })
 
     setIsRoundRecordListExist(prevCheck => {
       const nowState = true;
@@ -631,15 +639,15 @@ const TrainingRoomManager = ({ roomData }) => {
       setTimerActive(true);
     } else if (currentStep === 'setup') { // 셋팅 단계 후 운동 시작
       setCurrentStep('exercise');
-      setInitialTime(exerciseTime);
-      setCurrentTime(exerciseTime);
+      setInitialTime(3);
+      setCurrentTime(3);
       setIsExercise(true);
       setTimerActive(true);
     } else if (currentStep === 'exercise') { // 라운드에 따라 운동 후 휴식 or 마지막 화면 나오기
       if (currentRound < roundCount - 1) {
         setCurrentStep('rest');
-        setInitialTime(restTime);
-        setCurrentTime(restTime);
+        setInitialTime(2);
+        setCurrentTime(2);
         setIsExercise(false);
         setTimerActive(true);
         setCurrentRound(currentRound + 1);
@@ -659,8 +667,8 @@ const TrainingRoomManager = ({ roomData }) => {
     } else if (currentStep === 'rest') {
       // setCurrentRound(currentRound + 1);
       setCurrentStep('exercise');
-      setInitialTime(exerciseTime);
-      setCurrentTime(exerciseTime);
+      setInitialTime(3);
+      setCurrentTime(3);
       setIsExercise(true);
       setTimerActive(true);
     } else if (currentStep === 'lastMotion') {
@@ -738,8 +746,10 @@ const TrainingRoomManager = ({ roomData }) => {
 
   useEffect(() => {
     if (isRoundRecordListExist === true) {
+      console.log('기록을 저장합니당1');
+      console.log(finishRoundRecordList);
       // 기록 저장
-      record(roomData.roomPk, endTime, roundRecordList, myTotalCombatPower).then(data => {
+      record(roomData.roomPk, endTime, finishRoundRecordList, myTotalCombatPower).then(data => {
         console.log("기록 후 데이터:", data);
         setUpdatedExp(data.data.updatedExp)
         setUpdatedLevel(data.data.updatedLevel)
@@ -757,8 +767,10 @@ const TrainingRoomManager = ({ roomData }) => {
 
 
   // 기록 저장을 위한 API
-const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
+const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower) => {
   try {
+    console.log('기록을 저장합니당2');
+    console.log(finishRoundRecordList);
     const response = await axios.post(
       `${APPLICATION_SERVER_URL}/${roomId}/complete`,
       {
@@ -768,7 +780,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
         totalCombatPower: totalCombatPower,
         participantsCount: (subscribers.length + 1),
         stage: totalCombatLevel,
-        roundRecordList: roundRecordList,
+        roundRecordList: finishRoundRecordList,
       },
       {
         headers: {

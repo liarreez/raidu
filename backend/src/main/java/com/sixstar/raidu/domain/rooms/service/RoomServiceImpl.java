@@ -302,21 +302,22 @@ public class RoomServiceImpl implements RoomService{
         // exerciseRoom 저장
         ExerciseRoomRecord exerciseRoomRecord = ExerciseRoomRecordSaveRequest.toEntity(userProfile, room, request);
         ExerciseRoomRecord savedExerciseRoomRecord = exerciseRoomRecordRepository.save(exerciseRoomRecord);
-
-        // roundRecord 저장
-        if(request.getRoundRecordList() == null){
-            throw new BaseException(BaseFailureResponse.ROUND_RECORD_NOT_FOUND);
-        }
+        System.out.println("EXERCISE ROOM RECORD완");
 
         List<RoundRecord> roundRecordList = request.getRoundRecordList().stream()
                 .map(roundRecordSaveRequest -> {
+                    System.out.println("ROUNDRECORDSAVEREQUEST");
                     Dictionary dictionary = dictionaryRepository.findByName(roundRecordSaveRequest.getDictionaryName());
+                    System.out.println("라운드   "+roundRecordSaveRequest.getRoundNumber());
+                    System.out.println("운동   "+roundRecordSaveRequest.getDictionaryName());
+                    System.out.println("횟수   "+roundRecordSaveRequest.getExerciseCount());
                     return RoundRecordSaveRequest.toEntity(savedExerciseRoomRecord, dictionary, roundRecordSaveRequest);
                 }).toList();
         roundRecordRepository.saveAll(roundRecordList);
         for(RoundRecord roundRecord: roundRecordList){
             System.out.println("CNT    "+roundRecord.getExerciseCount());
         }
+
 
         Long totalContribute = mainpageService.getTotalContribute(season);
         System.out.println("토탈토탈토탈    "+totalContribute);
