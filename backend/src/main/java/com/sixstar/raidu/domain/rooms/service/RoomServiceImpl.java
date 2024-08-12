@@ -314,6 +314,9 @@ public class RoomServiceImpl implements RoomService{
                     return RoundRecordSaveRequest.toEntity(savedExerciseRoomRecord, dictionary, roundRecordSaveRequest);
                 }).toList();
         roundRecordRepository.saveAll(roundRecordList);
+        for(RoundRecord roundRecord: roundRecordList){
+            System.out.println("CNT    "+roundRecord.getExerciseCount());
+        }
 
         Long totalContribute = mainpageService.getTotalContribute(season);
         System.out.println("토탈토탈토탈    "+totalContribute);

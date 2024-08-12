@@ -215,7 +215,7 @@ const SelfVideo = (props) => {
     console.log(props.roundWeight[nowRound]);
 
     // 자신의 현재 점수에서 가중치를 더해준다.
-    props.UpdateMyTotalCombatPower(props.roundWeight[nowRound])
+    props.UpdateMyTotalCombatPower(props.roundWeight[nowRound]);
 
     // 카운트가 올라간걸 웹소켓으로 뿌린다.
     // (보내주는건 운동 가중치 => 해당 운동 가중치를 카운트가 오를 때마다 보내줌)
@@ -487,8 +487,9 @@ const SelfVideo = (props) => {
         <div className="streamcomponent-self" id="myVideo">
           <OpenViduVideo streamManager={props.streamManager} />
           <div className='self-name'>
-            <p>닉네임 : {getNicknameTag()}</p>
-            <p>현재 운동 : { props.exerciseForRound[props.currentRound] }</p>
+            <p>{getNicknameTag()}</p>
+            {/* <p>닉네임 : {getNicknameTag()}</p> */}
+            {/* <p>현재 운동 : { props.exerciseForRound[props.currentRound] }</p> */}
           </div>
           <div className="count-box">
             {/* <p> Count: {count}</p> */}

@@ -143,9 +143,13 @@ const RaidLobby = () => {
           Authorization: `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
         },
       })
-      .then((res) => setRoomList(res.data.data.waitingRoomList))
+      .then((res) => {
+        res.status === 204 ? setRoomList([]) : setRoomList(res.data.data.waitingRoomList)
+      
+      })
       .catch((error) => {
         console.error("방 정보 받아오기 실패!", error);
+
         if (error.response.data.message === "액세스 토큰이 만료되었습니다!") {
           alert("토큰 만료! 다시 로그인 해주세요.");
           navigate("/login");
@@ -270,6 +274,15 @@ const RaidLobby = () => {
               <div className="lobby-content">
                 {/* 방 리스트 */}
                 <div className="lobby-list-wrapper">
+
+                  { 
+                    // 대기방에 표시할 방이 없다면 노출됨 
+                    roomList.length === 0 &&
+                    <div className="lobby-list-empty">
+                      <span>게임을 진행 중인 방이 없어요.</span>
+                    </div>
+                  } 
+                  
                   {roomList.map((each, index) => (
                     <div className="lobby-list-card" key={index}>
                       {/* <Typography

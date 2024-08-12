@@ -18,7 +18,7 @@ const UserVideo = ({ streamManager, num }) => {
             <p>{getNicknameTag()}</p>
           </div>
           <div className="user-name">
-            <p>{ num }</p>
+            {/* <p>{ num }</p> */}
           </div>
         </div>
       ) : null}
