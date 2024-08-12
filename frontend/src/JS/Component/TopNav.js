@@ -70,6 +70,10 @@ function ResponsiveAppBar() {
           console.log("첫 방문임...");
           navigate("/firstvisit");
         }
+        if(error.response.data.message === "액세스 토큰이 만료되었습니다!") {
+          alert("토큰 만료! 다시 로그인 해주세요.");
+          navigate("/login");
+        }
       }
     };
 
