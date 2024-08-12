@@ -215,7 +215,7 @@ const SelfVideo = (props) => {
     console.log(props.roundWeight[nowRound]);
 
     // 자신의 현재 점수에서 가중치를 더해준다.
-    props.UpdateMyTotalCombatPower(props.roundWeight[nowRound])
+    props.UpdateMyTotalCombatPower(props.roundWeight[nowRound]);
 
     // 카운트가 올라간걸 웹소켓으로 뿌린다.
     // (보내주는건 운동 가중치 => 해당 운동 가중치를 카운트가 오를 때마다 보내줌)
