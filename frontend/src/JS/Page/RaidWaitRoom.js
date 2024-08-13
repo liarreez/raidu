@@ -100,10 +100,6 @@ const RaidWaitRoom = () => {
 
   // },[]) // 컴포넌트 언마운트 시 실행됨
 
-  useEffect(() => {
-    console.log("RaidWaitRoom line 60 ", exerciseSet);
-  }, [exerciseSet]);
-
   const [roomNamed, setRoomNamed] = useState("");
   const [isRoomLocked, setIsRoomLocked] = useState(false);
 
@@ -148,12 +144,10 @@ const RaidWaitRoom = () => {
 
         // 두 번째 요청 : 받아온 user 정보의 이메일과 room PK 가지고 방 입장 처리하기
         if (location.state !== null && location.state !== undefined) {
-          console.log("난 방장이다 그래서 방에 입장할 필요가 없지");
           // 빈 Promise 반환(아래의 .then이 실행되도록 함)
           return Promise.resolve();
         } else {
           // location.state가 존재할 때만 실행
-          console.log("난 방장이 아니다 그래서 입장 처리를 따로 해 줘야 함 ㅋㅋ");
           return axios.post(
             SERVER_URL + "/api/raidu/rooms/" + roomName + "/" + data.email,
             {},
@@ -180,7 +174,6 @@ const RaidWaitRoom = () => {
         }
       });
 
-    setIsRoomLocked(false);
   }, [token]); // onMount
 
   const refreshParticipants = () => {
@@ -195,17 +188,17 @@ const RaidWaitRoom = () => {
         },
       })
       .then((res) => {
-        console.log(res);
         const roomInfo = res.data.data.room;
         const hostInfo = res.data.data.host;
         const guestInfo = res.data.data.guestList;
         setRoomNamed(roomInfo.title);
         setRoomSet(new Room(roomInfo.roundTime, roomInfo.restTime, roomInfo.totalRounds));
-        console.log(roomInfo);
-        console.log("방장 정보 ==========");
-        console.log(hostInfo);
-        console.log("참가자 정보 ==========");
-        console.log(guestInfo);
+        setIsRoomLocked(!roomInfo.public);
+        // console.log(roomInfo);
+        // console.log("방장 정보 ==========");
+        // console.log(hostInfo);
+        // console.log("참가자 정보 ==========");
+        // console.log(guestInfo);
 
         // 방장과 참가자 정보를 업데이트합니다.
         setParticipantsList(() => [
@@ -262,7 +255,7 @@ const RaidWaitRoom = () => {
         client.disconnect();
       }
     };
-  }, [roomNamed]);
+  }, [roomName]);
 
   useEffect(() => {
     // 소켓 클라이언트가 생성되면 서버 웹소켓과 연결합니다. /sub/message/ 구독을 시작합니다.
@@ -293,7 +286,7 @@ const RaidWaitRoom = () => {
               gameStart(parsedMessage.sessionId);
               break;
             default:
-              console.log("?");
+              console.log('UNKNOWN MESSAGE');
           }
           setMessages((prevMessages) => [...prevMessages, parsedMessage]);
         });
@@ -318,22 +311,22 @@ const RaidWaitRoom = () => {
 
   // WATCHING USESTATES
 
-  useEffect(() => {
-    console.log("participants updated ... ");
-    console.log(participantsList);
-  }, [participantsList]);
+  // useEffect(() => {
+  //   console.log("participants updated ... ");
+  //   console.log(participantsList);
+  // }, [participantsList]);
+
+  // useEffect(() => {
+  //   console.log("rendering finished ... ");
+  //   console.log(participantsList);
+  //   console.log(me);
+
+  //   //  rendered == true && sendTest1(true); // 내가 입장하면 다른 사람에게도 입장 알림 전송
+  //   console.log("I sent entered alert");
+  // }, [rendered]);
 
   useEffect(() => {
-    console.log("rendering finished ... ");
-    console.log(participantsList);
-    console.log(me);
-
-    //  rendered == true && sendTest1(true); // 내가 입장하면 다른 사람에게도 입장 알림 전송
-    console.log("I sent entered alert");
-  }, [rendered]);
-
-  useEffect(() => {
-    console.log(`webSocketReady value = ${webSocketReady}`);
+    // console.log(`webSocketReady value = ${webSocketReady}`);
     sendTest1(true);
     //    if(rendered === true && webSocketReady === 5) sendTest1(true)
     // webSocketReady가 1씩 증가하는 로직을 가지고 있고, 이 값이 1이어야 최초 초기화
@@ -386,16 +379,14 @@ const RaidWaitRoom = () => {
         isCaptain: me.isCaptain,
       });
       websocketClient.send(DESTINATION, message);
-      console.log("Message sent successfully");
     } catch (e) {
       console.error("Error sending message:", e);
     }
   };
 
-  const sendTest2 = () => {
+  const sendTest2 = (readyType) => {
     // 사용자 준비 상태 관련 웹소켓 메서드
     if (checkExerciseOption) {
-      const readyType = !me.readyState;
       if (websocketClient) {
         const message = JSON.stringify({
           ...COMMONFORM,
@@ -454,20 +445,32 @@ const RaidWaitRoom = () => {
   const updateUserReadyState = (name, readyType) => {
     const updatedParticipants = participantsList.map((user) => {
       if (user.nickname === name) {
-        return new User(
-          user.nickname,
-          user.badge,
-          user.profileImage,
-          user.level,
-          user.highestScore,
-          readyType,
-          user.isCaptain,
-          user.email
+        // return new User(
+        //   user.nickname,
+        //   user.badge,
+        //   user.profileImage,
+        //   user.level,
+        //   user.highestScore,
+        //   readyType,
+        //   user.isCaptain,
+        //   user.email
+        // );
+        const nu = new User(
+            user.nickname,
+            user.badge,
+            user.profileImage,
+            user.level,
+            user.highestScore,
+            readyType,
+            user.isCaptain,
+            user.email
         );
+        console.log(nu);
+        return nu;
       }
       return user;
     });
-
+    console.log(updatedParticipants);
     setParticipantsList(updatedParticipants);
 
     if (name === me.nickname) {
@@ -510,13 +513,13 @@ const RaidWaitRoom = () => {
 
   const tryGameStart = () => {
     if (checkReadyState()) {
-      console.log("============ PRINTING SETTINGS =============");
+      // console.log("============ PRINTING SETTINGS =============");
       // 방 정보
       // 사용자 정보
       // 선택한 운동 정보 묶어서 보여주기
-      console.log(roomSet);
-      console.log(me);
-      console.log(exerciseSet);
+      // console.log(roomSet);
+      // console.log(me);
+      // console.log(exerciseSet);
 
       axios
         .post(
@@ -545,11 +548,11 @@ const RaidWaitRoom = () => {
     const userInfo = me;
     const exerciseInfo = exerciseSet;
 
-    console.log("=========TEST=========");
-    console.log(roomInfo);
-    console.log(userInfo);
-    console.log(exerciseInfo);
-    console.log(sessionId);
+    // console.log("=========TEST=========");
+    // console.log(roomInfo);
+    // console.log(userInfo);
+    // console.log(exerciseInfo);
+    // console.log(sessionId);
 
     navigate("/trainingTest", {
       // roomPk 주고 / userEmail 주고
@@ -563,6 +566,16 @@ const RaidWaitRoom = () => {
     });
   };
 
+  const copyLink = () => {
+    const currentUrl = window.location.href;
+    navigator.clipboard.writeText(currentUrl).then(
+    () => {
+        alert('운동방 주소가 클립보드에 복사되었습니다!');
+    },
+    (err) => {
+        console.error('링크 복사에 실패했습니다: ', err);
+    });
+  }
   // 0808 checkReadyState() 로직 제대로 작동하지 않아 확인 필요합니다.
   // 발생하고 있는 버그 : 모든 운동 라운드에 대한 종목 선택이 진행되지 않아도 게임이 시작되거나 준비가 진행됩니다.
   //
@@ -677,17 +690,17 @@ const RaidWaitRoom = () => {
                             <span className="raidWaitRoom-buttonText">시작하기</span>
                           </div>
                         ) : me.readyState ? (
-                          <div className="raidWaitRoom-startButton" onClick={sendTest2}>
+                          <div className="raidWaitRoom-startButton" onClick={() => sendTest2(false)}>
                             <span className="raidWaitRoom-buttonText">준비 취소</span>
                           </div>
                         ) : (
-                          <div className="raidWaitRoom-startButton" onClick={sendTest2}>
+                          <div className="raidWaitRoom-startButton" onClick={() => sendTest2(true)}>
                             <span className="raidWaitRoom-buttonText">준비하기</span>
                           </div>
                         )
                       }
                       {/* 공유, 나가기 */}
-                      <div className="raidWaitRoom-shareButton">
+                      <div className="raidWaitRoom-shareButton" onClick={copyLink}>
                         <span className="raidWaitRoom-buttonText">링크 공유</span>
                       </div>
                       <div className="waitroom-button-leave" onClick={exit}>
