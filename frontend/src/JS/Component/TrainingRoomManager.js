@@ -330,11 +330,11 @@ const TrainingRoomManager = ({ roomData }) => {
 
   // 운동별 가중치(운동 종목 : 가중치)
   const exerciseScore = {
-    'jumpingJack': 30,
+    'jumpingJack': 20,
     'lunge': 50,
-    'sitUp': 20,
-    'pushUp': 40,
-    'squat' : 70,
+    'sitUp': 40,
+    'pushUp': 60,
+    'squat' : 50,
   }
 
   // 운동 가중치에 따라 라운드 별 운동 가중치 설정
