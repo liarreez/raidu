@@ -41,21 +41,21 @@ const RaidWaitRoom_participants = ({ user }) => {
 
     return(
         <div style={compoStyle}>
-            <Grid container spacing={0} style={{ flexGrow: 1 }}>
-                <Grid item xs={3}>
-                    <span><img src={logo} style={profileImageStyle} alt="logoImg"/></span>             
-                </Grid>
-                <Grid item xs={3} style={thirdGridStyle}>
+            <div>
+                <div>
+                    
+                </div>
+                <div item xs={3} style={thirdGridStyle}>
                     <span>{user.nickname}</span>
-                </Grid>
-                <Grid item xs={6} style={thirdGridStyle}>
+                </div>
+                <div item xs={6} style={thirdGridStyle}>
                     <span>Lv.{user.level}</span>
                     <span>{user.highestScore}점</span>
                     <span style={readyStateStyle}>
                         <span>{user.readyState ? "Ready" : "Wait"}</span>    
                     </span>
-                </Grid>
-            </Grid>
+                </div>
+            </div>
         </div>
     );
 

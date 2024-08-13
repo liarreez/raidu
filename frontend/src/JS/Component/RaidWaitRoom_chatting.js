@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { TextField, Button, Paper, Typography} from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+import '../../CSS/Chatting.css';
+
 // STRUCTURE ======================================
 
   // making timestamp
