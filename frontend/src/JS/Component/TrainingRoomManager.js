@@ -909,6 +909,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
                   addMyCombatPower={addMyCombatPower}
                   updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
+                  changeIsPoseDetect={changeIsPoseDetect}
 
                 />}
               </div>
@@ -964,7 +965,7 @@ const TrainingRoomManager = ({ roomData }) => {
                         </>
                       ) : (
                         <>
-                          다음 운동 : {exerciseName[exerciseForRound[currentRound]]}<br />
+                          Next : {exerciseName[exerciseForRound[currentRound]]}<br />
                           왼쪽을 바라봐 주세요
                         </>
                       )}
@@ -974,7 +975,7 @@ const TrainingRoomManager = ({ roomData }) => {
                 ) : (
                   <>
                     {isCaptain && firstClick && (
-                      <button className="start-button" onClick={sendTest1}>Start</button>
+                      <button className="start-button" onClick={sendTest1} disabled={!isPoseDetect}>Start</button>
                     )}
                     <img className='soldier-gif' src={exerciseSoldier} alt="운동용사" />
                   </>
