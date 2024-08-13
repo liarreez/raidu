@@ -634,25 +634,6 @@ const RaidWaitRoom = () => {
                           </div>
                         </div>
                       </div>
-
-                      {/* <Participants key={index} user={each} /> */}
-                      {/* <div style={compoStyle}>
-                            <div>
-                                <div>
-                                    
-                                </div>
-                                <div item xs={3} style={thirdGridStyle}>
-                                    <span>{user.nickname}</span>
-                                </div>
-                                <div item xs={6} style={thirdGridStyle}>
-                                    <span>Lv.{user.level}</span>
-                                    <span>{user.highestScore}점</span>
-                                    <span style={readyStateStyle}>
-                                        <span>{user.readyState ? "Ready" : "Wait"}</span>    
-                                    </span>
-                                </div>
-                            </div>
-                        </div> */}
                     </div>
                   ))}
                 </div>

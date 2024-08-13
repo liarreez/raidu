@@ -144,6 +144,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .waitroom-card-info-nickname {
@@ -223,6 +224,9 @@
     font-family: inherit;
     color: var(--hard-color-black);
     transition: 0.3s ease-in-out;
+
+    position: absolute;
+    right: 10px;
 }
 
 .waitroom-ready-indicator.ready-indicator {
