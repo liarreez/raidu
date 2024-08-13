@@ -111,6 +111,18 @@ const TrainingRoomManager = ({ roomData }) => {
 
   const myUserEmail = roomData.userInfo.email;
 
+  // 포즈가 감지 되었는가? (포즈 감지 후 버튼 활성화 예정)
+  const [isPoseDetect, setIsPoseDetect] = useState(false)
+
+  // 아래에서 포즈 감지가 되는지 확인을 위한 함수
+  const changeIsPoseDetect = () => {
+    setIsPoseDetect(prevstate => {
+      const newState = true;
+
+      return true;
+    })
+  }
+
   // 타이머 시작 한번만 하기 위해서 만든 상태
   const [firstClick, setFirstClick] = useState(true);
 
@@ -320,6 +332,9 @@ const TrainingRoomManager = ({ roomData }) => {
   const exerciseScore = {
     'jumpingJack': 30,
     'lunge': 50,
+    'sitUp': 20,
+    'pushUp': 40,
+    'squat' : 70,
   }
 
   // 운동 가중치에 따라 라운드 별 운동 가중치 설정
@@ -639,15 +654,15 @@ const TrainingRoomManager = ({ roomData }) => {
       setTimerActive(true);
     } else if (currentStep === 'setup') { // 셋팅 단계 후 운동 시작
       setCurrentStep('exercise');
-      setInitialTime(3);
-      setCurrentTime(3);
+      setInitialTime(exerciseTime);
+      setCurrentTime(exerciseTime);
       setIsExercise(true);
       setTimerActive(true);
     } else if (currentStep === 'exercise') { // 라운드에 따라 운동 후 휴식 or 마지막 화면 나오기
       if (currentRound < roundCount - 1) {
         setCurrentStep('rest');
-        setInitialTime(2);
-        setCurrentTime(2);
+        setInitialTime(restTime);
+        setCurrentTime(restTime);
         setIsExercise(false);
         setTimerActive(true);
         setCurrentRound(currentRound + 1);
@@ -667,8 +682,8 @@ const TrainingRoomManager = ({ roomData }) => {
     } else if (currentStep === 'rest') {
       // setCurrentRound(currentRound + 1);
       setCurrentStep('exercise');
-      setInitialTime(3);
-      setCurrentTime(3);
+      setInitialTime(exerciseTime);
+      setCurrentTime(exerciseTime);
       setIsExercise(true);
       setTimerActive(true);
     } else if (currentStep === 'lastMotion') {
@@ -891,8 +906,10 @@ const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower
                   currentRound={currentRound} exerciseForRound={exerciseForRound}
                   myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
                   roundWeight={roundWeight} isExercise={isExercise}
+                  UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
                   addMyCombatPower={addMyCombatPower}
                   updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
+                  changeIsPoseDetect={changeIsPoseDetect}
                 // setEachRoundCount={setEachRoundCount}
                 // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
                 // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
@@ -907,7 +924,7 @@ const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower
                   </>
                 ))}
               </div>
-              <div className="my-video">{publisher &&
+              {/* <div className="my-video">{publisher &&
                 <SelfVideo streamManager={publisher}
                   countPower={countPower}
                   ChangeCount={ChangeCount}
@@ -920,7 +937,7 @@ const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower
                   updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
 
                 />}
-              </div>
+              </div> */}
             </div>
             <div className='progress-box'>
               <h3>현재 점수 {totalCombatPower}</h3>
@@ -950,7 +967,7 @@ const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower
 
                   ))}
                   {isCaptain && firstClick &&
-                    <button className="start-button" onClick={sendTest1}>타이머 시작</button>
+                    <button className="start-button" onClick={sendTest1} disabled={!isPoseDetect}>타이머 시작</button>
                   }
                 </div>
               </div>
