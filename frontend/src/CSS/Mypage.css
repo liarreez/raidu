@@ -203,6 +203,7 @@
 .tab.active {
     background-color: var(--hard-color-black);
     color: var(--hard-color-white);
+    border-bottom: 2px dashed var(--hard-color-grey);
 }
 
 .tab-content-wrapper {

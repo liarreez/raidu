@@ -24,8 +24,7 @@ import burgerking from "../../Imgs/burgerking.png";
 import turtleneck from "../../Imgs/turtleneck.png";
 import { useParams } from "react-router-dom";
 import AnimatedNumber from "../Component/AnimatedNumber";
-import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
-
+import { API_URL } from "../../config"; // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
 const SERVERURL = API_URL;
 
@@ -67,15 +66,14 @@ function Mypage() {
 
   // 기록 데이터 setRecords 를 바꾸고, 그 상태를 바로 보여주기 위한 함수
   const changeRecord = (exerciseRoomRecordResponseDtos) => {
-    setDayRecords(prevRecord => {
+    setDayRecords((prevRecord) => {
       const nowDateReord = exerciseRoomRecordResponseDtos;
 
-      console.log('제대로 레코드에 넣어줬는가?', nowDateReord);
+      console.log("제대로 레코드에 넣어줬는가?", nowDateReord);
       return nowDateReord;
-    })
-  }
+    });
+  };
 
-  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -84,10 +82,9 @@ function Mypage() {
         console.log("fetchData 함수 실행 중... id값은 : " + id);
         const accessToken = localStorage.getItem("accessToken");
         console.log(accessToken);
-        const response = await axios.get(
-          SERVERURL + `/api/raidu/userpage/profile/${id}`,
-          { headers: { Authorization: `Bearer ${accessToken}` } }
-        );
+        const response = await axios.get(SERVERURL + `/api/raidu/userpage/profile/${id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
         console.log("데이터 수신...");
         console.log(response);
         setUserData(response.data.data.userProfile);
@@ -172,7 +169,8 @@ function Mypage() {
     const records = [];
     return (
       <div style={{ display: "flex", width: "100%", height: "490px" }}>
-        <div className="calendar-container"
+        <div
+          className="calendar-container"
           style={{
             display: "flex",
             alignItems: "center",
@@ -181,7 +179,9 @@ function Mypage() {
             padding: "10px",
           }}
         >
-          <Calender onDateChange={fetchRecordData} /> {/* Calender 컴포넌트에 날짜 변경 핸들러 전달 */}        </div>
+          <Calender onDateChange={fetchRecordData} />{" "}
+          {/* Calender 컴포넌트에 날짜 변경 핸들러 전달 */}{" "}
+        </div>
         <div
           style={{
             display: "flex",
@@ -189,20 +189,25 @@ function Mypage() {
             alignItems: "center",
             justifyContent: "flex-start", // 스크롤이 위에서부터 시작하게 설정
             flex: 2,
-            backgroundColor: "gray",
+            backgroundColor: "#F6F6F6",
             padding: "10px",
             overflowY: "auto", // 스크롤을 추가
-            maxHeight: "470px" // 최대 높이를 지정하여 스크롤 영역 설정
+            maxHeight: "470px", // 최대 높이를 지정하여 스크롤 영역 설정
           }}
-        > 
-        {dayRecords.length > 0 ? (
-          dayRecords.map((record, index) => (
-            <ExerciseRecord key={index} record={record} />
-          ))
-        ) : (
-          <div>데이터가 없습니다</div>
-        )}
-      </div>
+        >
+          {dayRecords.length > 0 ? (
+            dayRecords.map((record, index) => <ExerciseRecord key={index} record={record} />)
+          ) : (
+            <div style={{ margin: "auto", color: "#948B8B", display:"flex", flexDirection: "column", gap: "10px", alignItems: "center", justifyContent: "center" }}>
+              <img
+                style={{ width: "150px", height: "150px", borderRadius: "50%", backgroundColor: "white", border: "2px solid #948B8B" }}
+                src={turtleneck}
+                alt="데이터 없음 이미지"
+              ></img>
+              <div>- 데이터가 없습니다 -</div>
+            </div>
+          )}
+        </div>
       </div>
     );
   };
@@ -257,8 +262,17 @@ function Mypage() {
                   <div className="profile-text-wrapper">
                     <div className="profile-text-name">{userData.nickname}</div>
                     <div className="profile-text-level">
-                      <div style={{ display: "flex", alignItems: "end", marginTop: "10px", marginBottom: "20px" }}>
-                        <div style={{ display: "inline", fontWeight: "bold", fontSize: "16px" }}>LV</div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "end",
+                          marginTop: "10px",
+                          marginBottom: "20px",
+                        }}
+                      >
+                        <div style={{ display: "inline", fontWeight: "bold", fontSize: "16px" }}>
+                          LV
+                        </div>
                         <h2 style={{ margin: "0", padding: "0" }}>&nbsp; {`${userData.level}`}</h2>
                         <div style={{ color: "gray", marginLeft: "20px", fontSize: "14px" }}>
                           <AnimatedNumber targetNumber={userData.exp} /> / 750
@@ -272,7 +286,7 @@ function Mypage() {
                     </div>
                   </div>
                   <div className="profile-button-wrapper">
-                    <button onClick={()=>navigate("/editprofile")}>정보 수정</button>
+                    <button onClick={() => navigate("/editprofile")}>정보 수정</button>
                   </div>
                 </div>
               </div>
