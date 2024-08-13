@@ -129,25 +129,26 @@ const RaidWaitRoom = () => {
       .then((res) => {
         const data = res.data.data.userProfile;
         console.log(data);
-        setMe(prevMe => {
-            console.log('이용자 정보 초기화')
+        setMe(
+          (prevMe) => {
+            console.log("이용자 정보 초기화");
             console.log(prevMe);
             const nu = new User(
-            data.nickname,
-            data.monsterBadgeUrl,
-            data.profileImageUrl,
-            data.level,
-            data.bestScore,
-            location.state !== null && location.state !== undefined, // 방장이면 readyState는 무조건 true
-            location.state !== null && location.state !== undefined
-              ? location.state.isCaptain
-              : false,
-            data.email
-          )
-          console.log(nu);
-          return nu;
-        }
-         // me update 제대로 안 되는 문제 있음 
+              data.nickname,
+              data.monsterBadgeUrl,
+              data.profileImageUrl,
+              data.level,
+              data.bestScore,
+              location.state !== null && location.state !== undefined, // 방장이면 readyState는 무조건 true
+              location.state !== null && location.state !== undefined
+                ? location.state.isCaptain
+                : false,
+              data.email
+            );
+            console.log(nu);
+            return nu;
+          }
+          // me update 제대로 안 되는 문제 있음
         );
 
         // 두 번째 요청 : 받아온 user 정보의 이메일과 room PK 가지고 방 입장 처리하기
@@ -172,7 +173,6 @@ const RaidWaitRoom = () => {
       })
       .then((res) => {
         setRoomNamed(roomName); // 방 이름 변경 가능하게 하려면 이 부분 수정해야 함. 지금은 pathVal에서 가져온다
-
       })
       .catch((error) => {
         console.error("유저 정보 받아오기 실패!", error);
@@ -181,7 +181,6 @@ const RaidWaitRoom = () => {
           navigate("/login");
         }
       });
-
   }, [token]); // onMount
 
   const refreshParticipants = () => {
@@ -243,9 +242,9 @@ const RaidWaitRoom = () => {
   };
 
   const exerciseSetSetter = (list) => {
-    console.log(list)
-    setExerciseSet(prevList => {
-      console.log(prevList)
+    console.log(list);
+    setExerciseSet((prevList) => {
+      console.log(prevList);
       exerciseSetRef.current = list;
       return list;
     });
@@ -259,7 +258,6 @@ const RaidWaitRoom = () => {
   const [websocketClient, setWebsocketClient] = useState(null);
   const [messages, setMessages] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
-
 
   useEffect(() => {
     // 페이지 진입 시 room PK를 가지고 소켓 클라이언트 객체를 생성합니다.
@@ -301,7 +299,7 @@ const RaidWaitRoom = () => {
               gameStart(parsedMessage.sessionId);
               break;
             default:
-              console.log('UNKNOWN MESSAGE');
+              console.log("UNKNOWN MESSAGE");
           }
           setMessages((prevMessages) => [...prevMessages, parsedMessage]);
         });
@@ -462,52 +460,50 @@ const RaidWaitRoom = () => {
   // 레디부터 작업하기
   const updateUserReadyState = (name, readyType) => {
     // 함수형 업데이트를 사용하여 상태 업데이트
-    console.log('before ready')
-    console.log(participantsList)
-    setParticipantsList(prevParticipantsList => {
-        const updatedParticipants = prevParticipantsList.map(user => {
-            if (user.nickname === name) {
-                // 새 User 객체 생성
-                return new User(
-                    user.nickname,
-                    user.badge,
-                    user.profileImage,
-                    user.level,
-                    user.highestScore,
-                    readyType,
-                    user.isCaptain,
-                    user.email
-                );
-            }
-            return user;
-        });
+    console.log("before ready");
+    console.log(participantsList);
+    setParticipantsList((prevParticipantsList) => {
+      const updatedParticipants = prevParticipantsList.map((user) => {
+        if (user.nickname === name) {
+          // 새 User 객체 생성
+          return new User(
+            user.nickname,
+            user.badge,
+            user.profileImage,
+            user.level,
+            user.highestScore,
+            readyType,
+            user.isCaptain,
+            user.email
+          );
+        }
+        return user;
+      });
 
-        console.log(updatedParticipants); // 업데이트된 참가자 목록을 로그로 출력
+      console.log(updatedParticipants); // 업데이트된 참가자 목록을 로그로 출력
 
-        // 상태 업데이트 후 추가 작업을 처리할 수 있습니다.
-        return updatedParticipants; // 새 상태 반환
+      // 상태 업데이트 후 추가 작업을 처리할 수 있습니다.
+      return updatedParticipants; // 새 상태 반환
     });
 
     // `me` 상태를 업데이트
-    console.log(name)
-    console.log(me.nickname)
-    console.log(me)
+    console.log(name);
+    console.log(me.nickname);
+    console.log(me);
     if (name === me.nickname) {
-        setMe(prevMe =>{
-          console.log(prevMe)
-          return new User(
-            prevMe.nickname,
-            prevMe.badge,
-            prevMe.profileImage,
-            prevMe.level,
-            prevMe.highestScore,
-            readyType,
-            prevMe.isCaptain,
-            prevMe.email
-          )
-        }
-            
+      setMe((prevMe) => {
+        console.log(prevMe);
+        return new User(
+          prevMe.nickname,
+          prevMe.badge,
+          prevMe.profileImage,
+          prevMe.level,
+          prevMe.highestScore,
+          readyType,
+          prevMe.isCaptain,
+          prevMe.email
         );
+      });
     }
   };
 
@@ -591,13 +587,14 @@ const RaidWaitRoom = () => {
   const copyLink = () => {
     const currentUrl = window.location.href;
     navigator.clipboard.writeText(currentUrl).then(
-    () => {
-        alert('운동방 주소가 클립보드에 복사되었습니다!');
-    },
-    (err) => {
-        console.error('링크 복사에 실패했습니다: ', err);
-    });
-  }
+      () => {
+        alert("운동방 주소가 클립보드에 복사되었습니다!");
+      },
+      (err) => {
+        console.error("링크 복사에 실패했습니다: ", err);
+      }
+    );
+  };
   // 0808 checkReadyState() 로직 제대로 작동하지 않아 확인 필요합니다.
   // 발생하고 있는 버그 : 모든 운동 라운드에 대한 종목 선택이 진행되지 않아도 게임이 시작되거나 준비가 진행됩니다.
   //
@@ -703,33 +700,31 @@ const RaidWaitRoom = () => {
                     </div>
                     {/* 방정보 끝 */}
                   </div>
-                  <div>
-                    <div>
-                      {
-                        // true 부분 onClick 구현 완료 시 수정 필요 !!
-                        me.isCaptain ? (
-                          <div className="raidWaitRoom-startButton" onClick={tryGameStart}>
-                            <span className="raidWaitRoom-buttonText">시작하기</span>
-                          </div>
-                        ) : me.readyState ? (
-                          <div className="raidWaitRoom-startButton" onClick={() => sendTest2(false)}>
-                            <span className="raidWaitRoom-buttonText">준비 취소</span>
-                          </div>
-                        ) : (
-                          <div className="raidWaitRoom-startButton" onClick={() => sendTest2(true)}>
-                            <span className="raidWaitRoom-buttonText">준비하기</span>
-                          </div>
-                        )
-                      }
-                      {/* 공유, 나가기 */}
-                      <div className="raidWaitRoom-shareButton" onClick={copyLink}>
-                        <span className="raidWaitRoom-buttonText">링크 공유</span>
-                      </div>
-                      <div className="waitroom-button-leave" onClick={exit}>
-                        <img src={out} alt="way out" className="raidWaitRoom-out" />
-                      </div>
-                      {/* 공유, 나가기 */}
+                  <div className="waitroom-button-group">
+                    {
+                      // true 부분 onClick 구현 완료 시 수정 필요 !!
+                      me.isCaptain ? (
+                        <div className="raidWaitRoom-startButton" onClick={tryGameStart}>
+                          <span className="raidWaitRoom-buttonText">시작하기</span>
+                        </div>
+                      ) : me.readyState ? (
+                        <div className="raidWaitRoom-startButton" onClick={() => sendTest2(false)}>
+                          <span className="raidWaitRoom-buttonText">준비 취소</span>
+                        </div>
+                      ) : (
+                        <div className="raidWaitRoom-startButton" onClick={() => sendTest2(true)}>
+                          <span className="raidWaitRoom-buttonText">준비하기</span>
+                        </div>
+                      )
+                    }
+                    {/* 공유, 나가기 */}
+                    <div className="raidWaitRoom-shareButton" onClick={copyLink}>
+                      <span className="raidWaitRoom-buttonText">링크 공유</span>
                     </div>
+                    <div className="waitroom-button-leave" onClick={exit}>
+                      <img src={out} alt="way out" className="raidWaitRoom-out" />
+                    </div>
+                    {/* 공유, 나가기 */}
                   </div>
                 </div>
               </div>
