@@ -93,7 +93,6 @@ const SelfVideo = (props) => {
 
 
 
-  // let count = 0;
   let stageOfJumpingJack = "down";
   let stageOfLunge = "up";
 
@@ -134,11 +133,8 @@ const SelfVideo = (props) => {
   const detectModel = async (detector, video) => {
     const poses = await detector.estimatePoses(video);
     if (poses && poses.length > 0) {
-      // console.log(poses);
-      // console.log('현재 운동이 잘 바뀌었나요?')
-      console.log(selectExerciseRef.current);
       const pose = poses[0];
-      processPose(pose, selectExerciseRef.current);
+      processPose(pose, selectExerciseRef.current)
     }
     setTimeout(() => detectModel(detector, video), 100);
   };
@@ -195,7 +191,6 @@ const SelfVideo = (props) => {
   const updateCount = () => {
 
     // 운동 시간에만 카운트가 올라갈 수 있도록 만들기
-    // count++;
     console.log('카운트가 증가합니당');
     console.log(count);
     const newCount = count + 1;
@@ -265,7 +260,6 @@ const SelfVideo = (props) => {
 
     if (angle1 < 30 && angle2 < 30 && angle3 > 150 && angle4 > 150 && stageOfJumpingJack === "up") {
       stageOfJumpingJack = "down";
-      console.log("했다했다");
       updateCount();
     }
     if (
@@ -355,18 +349,14 @@ const SelfVideo = (props) => {
     ) {
       stageOfSitUp = "up";
       updateCount();
-      console.log("UP");
     }
     if (bodyAngle > 90 && stageOfSitUp === "up") {
       stageOfSitUp = "down";
-      console.log("DOWN");
     }
   };
 
   // 팔굽혀펴기
   let stageOfPushUp = "up";
-  let isBackStraight = false;
-  let elbowAboveNose = false;
   const countingPushUp = (pose) => {
     const rightWrist = pose.keypoints[RIGHT_WRIST];
     const rightElbow = pose.keypoints[RIGHT_ELBOW];
@@ -378,22 +368,13 @@ const SelfVideo = (props) => {
     const elbowAngle = calculateAngle(rightWrist, rightElbow, rightShoulder);
     const backAngle = calculateAngle(rightShoulder, rightHip, rightKnee);
 
-    // if (backAngle < 35 || backAngle > 140) {
-    //   isBackStraight = true;
-    // } else {
-    //   isBackStraight = false;
-    // }
-    // if (pose.keypoints[NOSE].y > pose.keypoints[RIGHT_ELBOW].y) {
-    //   elbowAboveNose = true;
-    // }
-
     if (elbowAngle > 130 && elbowAngle < 230) {
       if (stageOfPushUp === "down") {
         updateCount();
       }
       stageOfPushUp = "up";
     }
-    if (abs(elbowAngle) > 70 && abs(elbowAngle) < 120) {
+    if (elbowAngle > 70 && elbowAngle < 120) {
       stageOfPushUp = "down";
     }
   };
@@ -408,63 +389,21 @@ const squatStageTracker = {
   let threshNormal = [0, 32];
   let threshTrans = [35, 65];
   let threshPass = [70, 95];
-  let threshHip = [10, 50];
-  let threshAnkle = 45;
-  let threshKnee = [50, 70, 95];
 
   const countingSquat = (pose) => {
     const rightHip = pose.keypoints[RIGHT_HIP];
     const rightKnee = pose.keypoints[RIGHT_KNEE];
-    const rightShoulder = pose.keypoints[RIGHT_SHOULDER];
-    const rightAnkle = pose.keypoints[RIGHT_ANKLE];
 
-    let hipVert = { x: rightHip.x, y: 0 };
     let kneeVert = { x: rightKnee.x, y: 0 };
-    let ankleVert = { x: rightAnkle.x, y: 0 };
 
-    const hipVertAngle = calculateAngle(rightShoulder, rightHip, hipVert);
     const kneeVertAngle = calculateAngle(kneeVert, rightKnee, rightHip);
-    const ankleVertAngle = calculateAngle(rightKnee, rightAnkle, ankleVert);
-
     const currentStageOfSquat = determineSquatStage(kneeVertAngle);
 
-    console.log(kneeVertAngle)
-    updateSquatSequence(currentStageOfSquat);
-
+    updateSquatSequence(currentStageOfSquat)
     if (currentStageOfSquat === "s1") {
       handleSquatStage(currentStageOfSquat);
-    } else {
-      squatFeedback(hipVertAngle, kneeVertAngle, ankleVertAngle)
     }
   };
-
-
-  function squatFeedback(hipVertAngle, kneeVertAngle, ankleVertAngle){
-    const seq = squatStageTracker.seq;
-  // 0 --> Bend Backwards, 1 --> Bend Forward, 2 --> Keep shin straight, 3 --> Deep squat
-    if(hipVertAngle>threshHip[1]){
-        console.log(0)
-    }else if(hipVertAngle < threshHip[0]
-      && seq.filter((s) => s === "s2").length === 1){
-        console.log(1)
-      }
-    if(threshKnee[0]<kneeVertAngle
-      && kneeVertAngle<threshKnee[1]
-      && seq.filter((s) => s === "s2").length ===1){
-        console.log("더 깊게 앉으세요")
-      }
-      else if(kneeVertAngle > threshKnee[2]){
-        console.log(3)
-        squatStageTracker.INCORRECT_POSTURE = true;
-        console.log("틀림")
-      }
-      if(ankleVertAngle > threshAnkle){
-        console.log(2)
-        squatStageTracker.INCORRECT_POSTURE = true;
-        console.log("틀림")
-      }
-  }
-
   
 // 상태에 따라 현재 상태 결정하는 함수
 function determineSquatStage(kneeVertAngle) {
@@ -503,21 +442,16 @@ function updateSquatSequence(stage) {
 // 상태를 처리하는 함수
 function handleSquatStage(currentSquatStage) {
   const seq = squatStageTracker.seq;
-
     if (seq.length === 3 && !squatStageTracker.INCORRECT_POSTURE) {
       squatStageTracker.SQUAT_COUNT++;
       updateCount();
-      console.log("==============================CORRECT")
     } else if (seq.includes("s2") && seq.length === 1) {
       squatStageTracker.IMPROPER_SQUAT++;
-      incorrect += 1;
-      console.log("INCORRECT");
+      // incorrect += 1;
     } else if (squatStageTracker.INCORRECT_POSTURE) {
       squatStageTracker.IMPROPER_SQUAT++;
-      incorrect += 1;
-      console.log("INCORRECT");
+      // incorrect += 1;
     }
-
     squatStageTracker.seq = [];
     squatStageTracker.INCORRECT_POSTURE = false;
 }
