@@ -93,7 +93,6 @@ const SelfVideo = (props) => {
 
 
 
-  // let count = 0;
   let stageOfJumpingJack = "down";
   let stageOfLunge = "up";
 
@@ -134,11 +133,8 @@ const SelfVideo = (props) => {
   const detectModel = async (detector, video) => {
     const poses = await detector.estimatePoses(video);
     if (poses && poses.length > 0) {
-      // console.log(poses);
-      // console.log('현재 운동이 잘 바뀌었나요?')
-      console.log(selectExerciseRef.current);
       const pose = poses[0];
-      processPose(pose, selectExerciseRef.current);
+      processPose(pose, selectExerciseRef.current)
     }
     setTimeout(() => detectModel(detector, video), 100);
   };
@@ -165,11 +161,15 @@ const SelfVideo = (props) => {
       setBodyState(true);
 
       if (currentExercise === "jumpingJack") {
-        //   console.log(selectedExercise);
         countingJumpingJack(pose);
       } else if (currentExercise === "lunge") {
-        //   console.log(selectedExercise);
         countingLunge(pose);
+      } else if(currentExercise === "sitUp"){
+        countingSitUp(pose);
+      } else if(currentExercise === "pushUp"){
+        countingPushUp(pose);
+      } else if(currentExercise === "squat"){
+        countingSquat(pose);
       }
     } else {
       setBodyState(false);
@@ -191,7 +191,6 @@ const SelfVideo = (props) => {
   const updateCount = () => {
 
     // 운동 시간에만 카운트가 올라갈 수 있도록 만들기
-    // count++;
     console.log('카운트가 증가합니당');
     console.log(count);
     const newCount = count + 1;
@@ -201,7 +200,7 @@ const SelfVideo = (props) => {
 
     // props.eachRoundCount[props.currentRound] = newCount
     // props.ChangeEachRoundCount(props.currentRound, newCount);
-    
+
 
 
 
@@ -236,7 +235,7 @@ const SelfVideo = (props) => {
     // document.querySelector(".count-box > p").innerText = `전투력 : ${selfCombatPower}`;
     // document.querySelector(".count-box > span").innerText = `숫자 : ${count}`;
 
-    
+
     // console.log(`Current count: ${count}`);
     if (props.isExercise === true) {
     }
@@ -261,7 +260,6 @@ const SelfVideo = (props) => {
 
     if (angle1 < 30 && angle2 < 30 && angle3 > 150 && angle4 > 150 && stageOfJumpingJack === "up") {
       stageOfJumpingJack = "down";
-      console.log("했다했다");
       updateCount();
     }
     if (
@@ -330,10 +328,136 @@ const SelfVideo = (props) => {
     }
   };
 
+  // 윗몸일으키기
+  let stageOfSitUp = "up";
+  const countingSitUp = (pose) => {
+    const rightShoulder = pose.keypoints[RIGHT_SHOULDER];
+    const rightHip = pose.keypoints[RIGHT_HIP];
+    const rightKnee = pose.keypoints[RIGHT_KNEE];
+    const rightElbow = pose.keypoints[RIGHT_ELBOW];
+    const rightWrist = pose.keypoints[RIGHT_WRIST];
+
+    const bodyAngle = calculateAngle(rightShoulder, rightHip, rightKnee);
+    const armAngle = calculateAngle(rightShoulder, rightElbow, rightWrist);
+
+    if (
+      armAngle < 90 &&
+      bodyAngle < 65 &&
+      rightShoulder.y < rightHip.y &&
+      rightKnee.y < rightHip.y &&
+      stageOfSitUp === "down"
+    ) {
+      stageOfSitUp = "up";
+      updateCount();
+    }
+    if (bodyAngle > 90 && stageOfSitUp === "up") {
+      stageOfSitUp = "down";
+    }
+  };
+
+  // 팔굽혀펴기
+  let stageOfPushUp = "up";
+  const countingPushUp = (pose) => {
+    const rightWrist = pose.keypoints[RIGHT_WRIST];
+    const rightElbow = pose.keypoints[RIGHT_ELBOW];
+    const rightShoulder = pose.keypoints[RIGHT_SHOULDER];
+
+    const rightHip = pose.keypoints[RIGHT_HIP];
+    const rightKnee = pose.keypoints[RIGHT_KNEE];
+
+    const elbowAngle = calculateAngle(rightWrist, rightElbow, rightShoulder);
+    const backAngle = calculateAngle(rightShoulder, rightHip, rightKnee);
+
+    if (elbowAngle > 130 && elbowAngle < 230) {
+      if (stageOfPushUp === "down") {
+        updateCount();
+      }
+      stageOfPushUp = "up";
+    }
+    if (elbowAngle > 70 && elbowAngle < 120) {
+      stageOfPushUp = "down";
+    }
+  };
+
+// 스쿼트
+const squatStageTracker = {
+  seq: [],
+  SQUAT_COUNT: 0,
+  IMPROPER_SQUAT: 0,
+  INCORRECT_POSTURE: false,
+};
+  let threshNormal = [0, 32];
+  let threshTrans = [35, 65];
+  let threshPass = [70, 95];
+
+  const countingSquat = (pose) => {
+    const rightHip = pose.keypoints[RIGHT_HIP];
+    const rightKnee = pose.keypoints[RIGHT_KNEE];
+
+    let kneeVert = { x: rightKnee.x, y: 0 };
+
+    const kneeVertAngle = calculateAngle(kneeVert, rightKnee, rightHip);
+    const currentStageOfSquat = determineSquatStage(kneeVertAngle);
+
+    updateSquatSequence(currentStageOfSquat)
+    if (currentStageOfSquat === "s1") {
+      handleSquatStage(currentStageOfSquat);
+    }
+  };
+  
+// 상태에 따라 현재 상태 결정하는 함수
+function determineSquatStage(kneeVertAngle) {
+  let stageOfSquat = "";
+  if (threshNormal[0] <= kneeVertAngle && kneeVertAngle <= threshNormal[1]) {
+    stageOfSquat = "s1";
+  } else if (
+    threshTrans[0] <= kneeVertAngle &&
+    kneeVertAngle <= threshTrans[1]
+  ) {
+    stageOfSquat = "s2";
+  } else if (threshPass[0] <= kneeVertAngle && kneeVertAngle <= threshPass[1]) {
+    stageOfSquat = "s3";
+  }
+  return stageOfSquat;
+}
 
 
-  
-  
+// 상태 시퀀스를 업데이트하는 함수
+function updateSquatSequence(stage) {
+  const seq = squatStageTracker.seq;
+  if (stage === "s2") {
+    if (
+      (!seq.includes("s3") && seq.filter((s) => s === "s2").length === 0) ||
+      (seq.includes("s3") && seq.filter((s) => s === "s2").length === 1)
+    ) {
+      seq.push(stage);
+    }
+  } else if (stage === "s3") {
+    if (!seq.includes("s3") && seq.includes("s2")) {
+      seq.push(stage);
+    }
+  }
+}
+
+// 상태를 처리하는 함수
+function handleSquatStage(currentSquatStage) {
+  const seq = squatStageTracker.seq;
+    if (seq.length === 3 && !squatStageTracker.INCORRECT_POSTURE) {
+      squatStageTracker.SQUAT_COUNT++;
+      updateCount();
+    } else if (seq.includes("s2") && seq.length === 1) {
+      squatStageTracker.IMPROPER_SQUAT++;
+      // incorrect += 1;
+    } else if (squatStageTracker.INCORRECT_POSTURE) {
+      squatStageTracker.IMPROPER_SQUAT++;
+      // incorrect += 1;
+    }
+    squatStageTracker.seq = [];
+    squatStageTracker.INCORRECT_POSTURE = false;
+}
+
+
+
 
   // 라운드 바뀔 시 운동이 바뀌는 이벤트 // 운동이 바뀐 후에는, 포즈 모델이 불러와져야 한다.
   useEffect(() => {
@@ -350,7 +474,7 @@ const SelfVideo = (props) => {
       // 해당 라운드 운동으로 포즈모델 불러오기
       initializeModel();
 
-    } else if (nowRound !== 0 && nowRound < props.roundWeight.length ) {
+    } else if (nowRound !== 0 && nowRound < props.roundWeight.length) {
       // 처음 라운드가 아닐 때에 & 라운드가 남아있을 때 실행
       console.log('라운드 변경!');
       console.log(nowRound);
@@ -362,10 +486,10 @@ const SelfVideo = (props) => {
 
       // props.eachRoundCount[(nowRound) - 1] = count;
       // props.myCombatPower[(nowRound) - 1] = count * props.roundWeight[(nowRound) - 1];
-      
+
       setCount(0);
       props.ChangeCount(0);
-      
+
       console.log('카운트는 그대로 남아있나용?');
       console.log(props.eachRoundCount);
 
@@ -405,7 +529,7 @@ const SelfVideo = (props) => {
     console.log(count);
     console.log('이건 위쪽 카운트');
     console.log(props.countPower);
-    props.updateEachRoundCount(props.currentRound -1, props.countPower);
+    props.updateEachRoundCount(props.currentRound - 1, props.countPower);
     // props.updateMyCombatPower(props.currentRound, count, props.roundWeight[(props.currentRound) - 1])
 
     changeSelectedExercise(props.currentRound);
@@ -501,7 +625,7 @@ const SelfVideo = (props) => {
           <div className="count-box">
             {/* <p> Count: {count}</p> */}
             <p> 전투력 : {props.myTotalCombatPower} </p>
-            <span>숫자 : { props.eachRoundCount[props.currentRound] }</span>
+            <span>숫자 : {props.eachRoundCount[props.currentRound]}</span>
           </div>
           {!bodyState && (
             <div className="warning">
