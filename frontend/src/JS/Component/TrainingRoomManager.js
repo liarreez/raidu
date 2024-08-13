@@ -39,7 +39,7 @@ const exerciseImages = {
   lunge: lunge,
   pushUp: pushUp,
   squat: squat,
-  situp: situp,
+  sitUp: situp,
 };
 
 const exerciseName = {
@@ -47,7 +47,7 @@ const exerciseName = {
   lunge: "런지",
   pushUp: "팔굽혀펴기",
   squat: "스쿼트",
-  situp: "윗몸일으키기",
+  sitUp: "윗몸일으키기",
 }
 
 
@@ -919,20 +919,6 @@ const TrainingRoomManager = ({ roomData }) => {
                   </>
                 ))}
               </div>
-              {/* <div className="my-video">{publisher &&
-                <SelfVideo streamManager={publisher}
-                  countPower={countPower}
-                  ChangeCount={ChangeCount}
-                  sendTest2={sendTest2}
-                  currentRound={currentRound} exerciseForRound={exerciseForRound}
-                  myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
-                  roundWeight={roundWeight} isExercise={isExercise}
-                  UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
-                  addMyCombatPower={addMyCombatPower}
-                  updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
-
-                />}
-              </div> */}
             </div>
             <div className='progress-box'>
               <TotalCombatPower
@@ -944,7 +930,7 @@ const TrainingRoomManager = ({ roomData }) => {
                 ]}
               />
               <p style={{
-                fontSize: '40px',
+                fontSize: '24px',
                 fontWeight: 'bold',
                 fontFamily: 'inherit'
               }}>Stage {totalCombatLevel}</p>
@@ -958,7 +944,7 @@ const TrainingRoomManager = ({ roomData }) => {
                       className={`round-box ${currentRound === index ? 'active' : ''}`}
                     >
                       <img
-                        src={exerciseImages[exerciseForRound[index]] || test}
+                        src={exerciseImages[exerciseForRound[index]]}
                         alt={exerciseName[exerciseForRound[index]]}
                         className="training-exercise-image"
                       />
@@ -973,13 +959,13 @@ const TrainingRoomManager = ({ roomData }) => {
                     <p className="training-message" align="center">
                       {exerciseForRound[currentRound] === "jumpingJack" ? (
                         <>
-                          다음 운동은 {exerciseForRound[currentRound]}입니다.<br />
-                          카메라를 기준으로 정면을 바라봐 주세요.
+                          Next : {exerciseName[exerciseForRound[currentRound]]}<br />
+                          정면을 바라봐 주세요
                         </>
                       ) : (
                         <>
-                          다음 운동은 {exerciseForRound[currentRound]}입니다.<br />
-                          카메라를 기준으로 왼쪽을 바라봐 주세요.
+                          다음 운동 : {exerciseName[exerciseForRound[currentRound]]}<br />
+                          왼쪽을 바라봐 주세요
                         </>
                       )}
                     </p>
@@ -987,17 +973,14 @@ const TrainingRoomManager = ({ roomData }) => {
                   </>
                 ) : (
                   <>
-                    <p className="training-message" align="center">
-                      현재 운동은 {exerciseForRound[currentRound]}입니다.<br />
-                      Fighting!!!
-                    </p>
+                    {isCaptain && firstClick && (
+                      <button className="start-button" onClick={sendTest1}>Start</button>
+                    )}
                     <img className='soldier-gif' src={exerciseSoldier} alt="운동용사" />
                   </>
                 )}
-                {isCaptain && firstClick &&
-                  <button className="start-button" onClick={sendTest1}>Start</button>
-                }
               </div>
+
             </div>
           </div>
         </div>

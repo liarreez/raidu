@@ -35,7 +35,7 @@ const Timer = ({ currentTime, timerActive, ChangeCurrentTime }) => {
       ChangeCurrentTime(0)
     }
   }, [count, timerActive])
-  
+
   const progress = (currentTime > 0) ? (count / currentTime) * 100 : 0;
 
   return (
@@ -45,7 +45,8 @@ const Timer = ({ currentTime, timerActive, ChangeCurrentTime }) => {
           style={{
             height: "100%",
             width: `${progress}%`,
-            backgroundColor: '#12D20E',
+            background: "linear-gradient(to right, #fefb72, #f0bb31)",
+            transition: "1s linear"
           }}
         />
       </div>

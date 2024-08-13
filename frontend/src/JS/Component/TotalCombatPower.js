@@ -44,7 +44,8 @@ const TotalCombatPower = ({
               key={index}
               style={{
                 height: heights[index],
-                backgroundColor: item.color
+                backgroundColor: item.color,
+                background: "linear-gradient(to right, #fefb72, #f0bb31)",
               }}
               className='total-combat-power'
             />
