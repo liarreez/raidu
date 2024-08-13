@@ -126,6 +126,7 @@ const SelfVideo = (props) => {
     );
 
     console.log("포즈 감지 시작");
+    props.changeIsPoseDetect();
     await detectModel(detector, video);
   };
 
@@ -416,6 +417,7 @@ const SelfVideo = (props) => {
 
   // 포즈 모델을 부르는 함수
   const initializeModel = async () => {
+    console.log('포즈 모델을 불러옵니다.');
     if (OpenViduVideo) {
       await tf.setBackend("webgl");
       await tf.ready();
@@ -423,6 +425,11 @@ const SelfVideo = (props) => {
       if (videoElement) {
         if (videoElement && videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
           await makeModel(videoElement);
+        } else {
+          // 비디오 메타데이터가 아직 로드되지 않은 경우, 메타데이터가 로드될 때까지 기다림
+          videoElement.addEventListener('loadedmetadata', async () => {
+            await makeModel(videoElement);
+          });
         }
       }
     }
