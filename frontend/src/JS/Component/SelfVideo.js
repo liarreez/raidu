@@ -624,12 +624,13 @@ function handleSquatStage(currentSquatStage) {
           </div>
           <div className="count-box">
             {/* <p> Count: {count}</p> */}
-            <p> 전투력 : {props.myTotalCombatPower} </p>
-            <span>숫자 : {props.eachRoundCount[props.currentRound]}</span>
+            <p> ⚔️ {props.myTotalCombatPower} </p>
+            {/* <span>숫자 : { props.eachRoundCount[props.currentRound] }</span> */}
           </div>
           {!bodyState && (
             <div className="warning">
-              <p>전신이 다 보이도록 멀리 떨어져주세요!</p>
+              <p>전신이 다 보이도록 <br />
+                멀리 떨어져주세요!</p>
             </div>
           )}
         </div>

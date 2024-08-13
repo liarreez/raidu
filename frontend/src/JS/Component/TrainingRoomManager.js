@@ -27,6 +27,29 @@ import completeScroll from "../../Imgs/complete_scroll.png"
 
 import { ProgressBar, Step } from "react-step-progress-bar";
 
+import jumpingJack from "../../Imgs/jumpingJack.png"; // 운동 이미지 예시
+import lunge from "../../Imgs/lunge.png";
+import pushUp from "../../Imgs/pushUp.png";
+import squat from "../../Imgs/squat.png";
+import situp from "../../Imgs/situp.png";
+
+// 운동명에 따른 이미지 매핑 객체
+const exerciseImages = {
+  jumpingJack: jumpingJack,
+  lunge: lunge,
+  pushUp: pushUp,
+  squat: squat,
+  sitUp: situp,
+};
+
+const exerciseName = {
+  jumpingJack: "팔벌려뛰기",
+  lunge: "런지",
+  pushUp: "팔굽혀펴기",
+  squat: "스쿼트",
+  sitUp: "윗몸일으키기",
+}
+
 
 function StepProgressBar({ expPercentage }) {
   const [percent, setPercent] = useState(0);
@@ -170,7 +193,7 @@ const TrainingRoomManager = ({ roomData }) => {
       const nowDate = Date.now()
       // 한국 시간으로 로컬라이징 + 저장 포멧
       const newEndTime = new Date(nowDate + (9 * 60 * 60 * 1000)).toISOString().slice(0, 19);
-  
+
       console.log('-------------------시간---------------------')
       console.log(nowDate, endTime)
 
@@ -334,7 +357,7 @@ const TrainingRoomManager = ({ roomData }) => {
     'lunge': 50,
     'sitUp': 40,
     'pushUp': 60,
-    'squat' : 50,
+    'squat': 50,
   }
 
   // 운동 가중치에 따라 라운드 별 운동 가중치 설정
@@ -717,7 +740,7 @@ const TrainingRoomManager = ({ roomData }) => {
 
   // 특정 상태일 때(중간정산, 휴식, 마지막 모션 및 정산) 모달 나오도록
   useEffect(() => {
-    if (['middleMotion', 'rest', 'lastMotion', 'ending'].includes(currentStep)) {
+    if (['middleMotion', 'lastMotion', 'ending'].includes(currentStep)) {
 
       // 정산 전 마지막 모션 때 API 보내주기
       if (currentStep === 'lastMotion') {
@@ -733,7 +756,7 @@ const TrainingRoomManager = ({ roomData }) => {
         //   roundRecordList[i] = roundRecord
         // }
 
-        
+
 
         // ChangeStateOfRoundRecordListExist();
 
@@ -770,8 +793,8 @@ const TrainingRoomManager = ({ roomData }) => {
         setUpdatedLevel(data.data.updatedLevel)
         setIsLevelUp(data.data.isLevelUp)
         setRegionName(data.data.region.name)
-        setUpdatedExpPercentage((data.data.updatedExp/750)*100);
-        
+        setUpdatedExpPercentage((data.data.updatedExp / 750) * 100);
+
         UpdateRegionScore(data.data.updatedRegionScore, data.data.totalContribute)
       }).catch(error => {
         console.error("기록 저장 실패:", error);
@@ -782,27 +805,27 @@ const TrainingRoomManager = ({ roomData }) => {
 
 
   // 기록 저장을 위한 API
-const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower) => {
-  try {
-    console.log('기록을 저장합니당2');
-    console.log(finishRoundRecordList);
-    const response = await axios.post(
-      `${APPLICATION_SERVER_URL}/${roomId}/complete`,
-      {
-        email: myUserEmail,
-        endTime: endTime,
-        personalCombatPower: myTotalCombatPower,
-        totalCombatPower: totalCombatPower,
-        participantsCount: (subscribers.length + 1),
-        stage: totalCombatLevel,
-        roundRecordList: finishRoundRecordList,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${acessToken}`,
+  const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower) => {
+    try {
+      console.log('기록을 저장합니당2');
+      console.log(finishRoundRecordList);
+      const response = await axios.post(
+        `${APPLICATION_SERVER_URL}/${roomId}/complete`,
+        {
+          email: myUserEmail,
+          endTime: endTime,
+          personalCombatPower: myTotalCombatPower,
+          totalCombatPower: totalCombatPower,
+          participantsCount: (subscribers.length + 1),
+          stage: totalCombatLevel,
+          roundRecordList: finishRoundRecordList,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${acessToken}`,
+          }
         }
-      }
       );
       return response.data;
     } catch (error) {
@@ -850,13 +873,6 @@ const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower
           >
             <p>
               <label>닉네임: </label>
-              {/* <input
-                className="form-control"
-                type="text"
-                value={myUserName}
-                // onChange={(e) => setMyUserName(e.target.value)}
-                required
-              /> */}
             </p>
             <p>
               <label>세션 아이디 (선택 사항): </label>
@@ -878,22 +894,6 @@ const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower
       ) : (
         <div id="session" className="training">
           <div className="training-header">
-            {/* <div>
-              <h1 id="session-title">운동방입니다.</h1>
-              <button className="btn btn-large btn-danger" onClick={leaveSession}>
-                운동방 나가기
-              </button>
-              <progress vlaue={null} />
-            </div> */}
-            <div>
-              {/* <h2>현재 단계 : {currentStep}</h2> */}
-              {/* <input
-                type='number'
-                vlaue={initialTime}
-                onChange={(e) => setInitialTime(Number(e.target.value))}
-                min='0'
-              /> */}
-            </div>
             <Timer currentTime={currentTime} timerActive={timerActive} ChangeCurrentTime={ChangeCurrentTime} />
           </div>
           <div className="training-frame">
@@ -909,10 +909,6 @@ const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower
                   UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
                   addMyCombatPower={addMyCombatPower}
                   updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
-                  changeIsPoseDetect={changeIsPoseDetect}
-                // setEachRoundCount={setEachRoundCount}
-                // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
-                // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
 
                 />}
               </div>
@@ -920,41 +916,26 @@ const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower
                 {subscribers.map((sub, i) => (
                   <>
                     <UserVideo key={i} num={i} streamManager={sub} />
-                    <p>{JSON.parse(sub.stream.connection.data).clientData}</p>
                   </>
                 ))}
               </div>
-              {/* <div className="my-video">{publisher &&
-                <SelfVideo streamManager={publisher}
-                  countPower={countPower}
-                  ChangeCount={ChangeCount}
-                  sendTest2={sendTest2}
-                  currentRound={currentRound} exerciseForRound={exerciseForRound}
-                  myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
-                  roundWeight={roundWeight} isExercise={isExercise}
-                  UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
-                  addMyCombatPower={addMyCombatPower}
-                  updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
-
-                />}
-              </div> */}
             </div>
             <div className='progress-box'>
-              <h3>현재 점수 {totalCombatPower}</h3>
               <TotalCombatPower
                 visualParts={[
                   {
                     percentage: `${(totalCombatGauge / 750) * 100}%`,
-                    color: "orange"
+                    color: "#12D20E"
                   }
                 ]}
               />
               <p style={{
-                fontSize: '40px',
+                fontSize: '24px',
                 fontWeight: 'bold',
-              }}>Level {totalCombatLevel}</p>
+                fontFamily: 'inherit'
+              }}>Stage {totalCombatLevel}</p>
             </div>
-            <div className='soldier-box'>
+            <div className='training-aside'>
               <div className='round-box-frame'>
                 <div>
                   {Array.from({ length: roundCount }, (_, index) => (
@@ -962,17 +943,44 @@ const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower
                       key={index}
                       className={`round-box ${currentRound === index ? 'active' : ''}`}
                     >
-                      Round{index + 1} : {exerciseForRound[index]}
+                      <img
+                        src={exerciseImages[exerciseForRound[index]]}
+                        alt={exerciseName[exerciseForRound[index]]}
+                        className="training-exercise-image"
+                      />
+                      {exerciseName[exerciseForRound[index]]}
                     </div>
-
                   ))}
-                  {isCaptain && firstClick &&
-                    <button className="start-button" onClick={sendTest1} disabled={!isPoseDetect}>타이머 시작</button>
-                  }
                 </div>
               </div>
-              {/* <h1>용사 gif</h1> */}
-              <img className='soldier-gif' src={exerciseSoldier} alt="운동용사" />
+              <div className='soldier-box'>
+                {currentStep === 'rest' ? (
+                  <>
+                    <p className="training-message" align="center">
+                      {exerciseForRound[currentRound] === "jumpingJack" ? (
+                        <>
+                          Next : {exerciseName[exerciseForRound[currentRound]]}<br />
+                          정면을 바라봐 주세요
+                        </>
+                      ) : (
+                        <>
+                          다음 운동 : {exerciseName[exerciseForRound[currentRound]]}<br />
+                          왼쪽을 바라봐 주세요
+                        </>
+                      )}
+                    </p>
+                    <img className='soldier-gif' src={restSoldier} alt="휴식용사" />
+                  </>
+                ) : (
+                  <>
+                    {isCaptain && firstClick && (
+                      <button className="start-button" onClick={sendTest1}>Start</button>
+                    )}
+                    <img className='soldier-gif' src={exerciseSoldier} alt="운동용사" />
+                  </>
+                )}
+              </div>
+
             </div>
           </div>
         </div>
@@ -995,7 +1003,7 @@ const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower
           bgcolor: "white",
           // boxShadow: 24,
           p: 4,
-          bgcolor: currentStep === 'rest' ? "white" : "background.Paper",
+          bgcolor: "background.Paper",
           backgroundImage: currentStep === 'ending' ? `url(${completeScroll})` : 'none',
           backgroundSize: 'auto 100%',
           backgroundPosition: 'center',
@@ -1045,43 +1053,6 @@ const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower
                   backgroundColor: 'lightgray',
                 }}>
                   <p>이 아래에는 그 뭐냐 프로그레스 바</p>
-                </div>
-              </div>
-            </div>
-          }
-          {/* 휴식 시간 화면 */}
-          {currentStep === 'rest' &&
-            <div className="restTime">
-              {/* 타이머 넣을 div */}
-              <div className="restTime-header">
-                <TimerRest currentTime={currentTime} timerActive={timerActive} />
-              </div>
-              {/* 자기 화면 및 운동 선택 div */}
-              <div className="restTime-frame">
-                {/* 자기 화면 div */}
-                <div className="restTime-video">
-                  {publisher &&
-                    <SelfRestVideo
-                      streamManager={publisher}
-                    // ChangeCount={ChangeCount}
-                    />}
-                </div>
-                {/* 운동 선택 div */}
-                <div className="restTime-box">
-                  <div className="restTime-message">
-                    {exerciseForRound[currentRound] === "jumpingJack" ? (
-                      <>
-                        다음 운동은 {exerciseForRound[currentRound]}입니다.<br />
-                        카메라를 기준으로 정면을 바라봐 주세요
-                      </>
-                    ) : (
-                      <>
-                        다음 운동은 {exerciseForRound[currentRound]}입니다.<br />
-                        카메라를 기준으로 왼쪽을 바라봐 주세요
-                      </>
-                    )}
-                  </div>
-                  <img className='rest-gif' src={restSoldier} alt="휴식용사" />
                 </div>
               </div>
             </div>

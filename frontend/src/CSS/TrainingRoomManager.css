@@ -2,26 +2,37 @@
 /* 운동방 전체 틀 */
 .training {
     width: 100vw;
+    min-width: 1150px;
     height: 100vh;
+    min-height: 750px;
     display: grid;
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: repeat(11, 1fr);
     grid-template-columns: repeat(6, 1fr);
-    grid-template-areas: 
-        "header header header header header header"
+    grid-template-areas:
+        ". . . . . ."
+        ". header header header header ."
         "training-frame training-frame training-frame training-frame training-frame training-frame"
         "training-frame training-frame training-frame training-frame training-frame training-frame"
         "training-frame training-frame training-frame training-frame training-frame training-frame"
         "training-frame training-frame training-frame training-frame training-frame training-frame"
         "training-frame training-frame training-frame training-frame training-frame training-frame"
-        ;
-    /* margin: 10px;
-    min-width: 1200px; */
-    /* background-color: aquamarine; */
-    /* border: 5px solid black; */
-    /* min-height: 1200px; */
+        "training-frame training-frame training-frame training-frame training-frame training-frame"
+        "training-frame training-frame training-frame training-frame training-frame training-frame"
+        "training-frame training-frame training-frame training-frame training-frame training-frame"
+        ". . . . . ."
+    ;
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+        url("../../src/Imgs/back.jpg");
+    background-size: 
+        75% 90%,
+        cover;
+    background-position: 
+        center center,
+        bottom;
+    background-repeat: no-repeat;
 }
 
-/* 위쪽 배치(타이머 있을 예정) */
 .training-header {
     grid-area: header;
     display: flex;
@@ -30,40 +41,31 @@
     align-items: center;
     height: 100px;
     width: 100%;
-    /* background-color: azure; */
 }
 
 /* 비디오, 전체 전투력, 용사 gif */
 .training-frame {
     grid-area: training-frame;
-    /* box-sizing: border-box; */
     display: grid;
-    grid-template-rows: repeat(5, 1fr);
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-areas: 
-        "video-frame video-frame video-frame progress-bar soldier-box soldier-box"
-        "video-frame video-frame video-frame progress-bar soldier-box soldier-box"
-        "video-frame video-frame video-frame progress-bar soldier-box soldier-box "
-        "video-frame video-frame video-frame progress-bar soldier-box soldier-box"
-        "video-frame video-frame video-frame progress-bar soldier-box soldier-box "
-        ;
-    /* width: 100%;
-    height: 80%; */
-    /* flex-direction: column; */
-    /* border: 10px solid green; */
+    grid-template-rows: repeat(8, 1fr);
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-areas:
+        ". . video-frame video-frame video-frame progress-bar training-aside training-aside ."
+        ". . video-frame video-frame video-frame progress-bar training-aside training-aside ."
+        ". . video-frame video-frame video-frame progress-bar training-aside training-aside ."
+        ". . video-frame video-frame video-frame progress-bar training-aside training-aside ."
+        ". . video-frame video-frame video-frame progress-bar training-aside training-aside ."
+        ". . video-frame video-frame video-frame progress-bar training-aside training-aside ."
+        ". . video-frame video-frame video-frame progress-bar training-aside training-aside ."
+        ". . video-frame video-frame video-frame progress-bar training-aside training-aside ."
+    ;
 }
 
-/* 휴식시간, 정산시간 때 사용할  */
-.background {
-
-}
-
-/* 비디오 프레임 */
 .video-frame {
     grid-area: video-frame;
     display: grid;
-    grid-template-rows: 3fr 2fr;
-    grid-template-areas: 
+    grid-template-rows: 5fr 3fr;
+    grid-template-areas:
         "my-video"
         "other-video";
     gap: 10px;
@@ -78,14 +80,9 @@
     height: 100%;
 }
 
-.other-video > div {
-    /* border: 5px blue solid; */
-    /* width: 200px; */
-}
-
 .my-video {
     grid-area: my-video;
-    width: 100%;
+    max-width: 500px;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -99,123 +96,108 @@
     flex: 1;
     justify-content: center;
     align-items: center;
-    /* width: 10%; */
-    /* background-color: lightslategray; */
 }
 
-.soldier-box {
-    grid-area: soldier-box;
+.training-aside {
+    grid-area: training-aside;
     display: grid;
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(8, 1fr);
     grid-template-columns: repeat(2, 1fr);
-    grid-template-areas: 
-    "round-box-frame round-box-frame"
-    "round-box-frame round-box-frame"
-    "round-box-frame round-box-frame"
-    "soldier-gif soldier-gif"
-    "soldier-gif soldier-gif"
+    grid-template-areas:
+        "round-box-frame round-box-frame"
+        "round-box-frame round-box-frame"
+        "round-box-frame round-box-frame"
+        "round-box-frame round-box-frame"
+        "round-box-frame round-box-frame"
+        "round-box-frame round-box-frame"
+        "soldier-box soldier-box"
+        "soldier-box soldier-box"
     ;
     justify-content: center;
     align-items: center;
-    padding-bottom: 60px;
-    /* width: 30%; */
-    /* background-color: goldenrod; */
+    margin-top: 10%;
 }
 
 .round-box-frame {
     grid-area: round-box-frame;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
-    padding-top: 20%;
 }
 
 .round-box {
-    width: 120%;
-    height: 40px;
-    background-color: #3f4c6b; /* 기본 배경 색상 */
+    width: 150px;
+    height: 50px;
+    background-color: #3E3A3A;
     color: white;
-    margin-top : 10px;
-    margin-bottom: 10px;
+    padding: 0% 10%;
+    margin-bottom: 10%;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-family: inherit;
+    font-size: 16px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     border-radius: 8px;
     transition: background-color 0.3s;
+}
+
+.round-box.active {
+    background-color: #12D20E;
+}
+
+.training-exercise-image {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #F6F6F6;;
+    box-sizing: border-box;
+    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.2);
+    margin-right: 10%;
   }
-  
-  .round-box.active {
-    background-color: #028d02; /* 현재 라운드의 운동을 초록색으로 표시 */
-  }
+
+.soldier-box {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+        "soldier-content soldier-content"
+        "soldier-gif soldier-gif"
+        "soldier-gif soldier-gif"
+    ;
+    margin-top: 10%;
+}
+
+.training-message {
+    grid-area: soldier-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-family: inherit;
+    font-size: 18px;
+}
 
 .soldier-gif {
     grid-area: soldier-gif;
     width: 100%;
-    height: 60%;
-    padding-top: 20%;
-    object-fit: contain;
+    height: 100%;
+    margin-top: 10%;
 }
 
 .start-button {
-    width: 120%;
+    grid-area: soldier-content;
+    width: 180px;
     height: 40px;
-    margin: 10px 0;
-    background-color: #ffbf00;
+    background-color: #12D20E;
     color: white;
     border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-/* 휴식 시간 css */
-.restTime {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-}
-
-.restTime-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 20%;
-}
-
-.restTime-frame {
-    display: flex;
-    flex-direction: row;
-    flex: 1;
-}
-
-.restTime-video {
-    flex: 2;
-    max-width: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.restTime-box {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.restTime-message {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding-bottom: 10%;
-    font-size: 20px;
+    border-radius: 4px;
     font-weight: bold;
-}
-
-.rest-gif {
-    width: 100%;
-    max-width: 200px;
-    object-fit: contain;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10%;
 }
