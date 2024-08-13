@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { TextField, Button, Paper, Typography} from '@mui/material';
+import { TextField, Button, Paper, Typography, bottomNavigationActionClasses} from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 import '../../CSS/Chatting.css';
@@ -38,23 +38,39 @@ const CustomTextField = styled(TextField)({
 
 const contItemStyle = {
     display: 'flex',
-    flexDirection: 'column',
     backgroundColor: 'white',
-    height: '100%',
+    height: '130px',
     padding: '10px',
 };
 
-const chatAreaStyle = {
-    flexGrow: 1,
-    overflowY: 'auto',
+// const chatAreaStyle = {
+//     flexGrow: 1,
+//     overflowY: 'auto',
+//     padding: '10px',
+//     backgroundColor: '#f0f0f0',
+//     // height: '10px', // 말도 안 되는 값을 준다(flexGrow가 있기 때문에 알아서 들어감)
+//     display: 'flex',
+//     flexDirection: 'column',
+//     alignItems: 'flex-end', // right-side
+//     borderRadius: '25px'
+// };
+
+const chatAreaStyle = (isFocused) => ({
+    width: "100%",
+    margin: 'auto',
+    overflowY: 'scroll', // 스크롤을 가능하게 설정
     padding: '10px',
     backgroundColor: '#f0f0f0',
-    height: '10px', // 말도 안 되는 값을 준다(flexGrow가 있기 때문에 알아서 들어감)
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-end', // right-side
-    borderRadius: '25px'
-};
+    alignItems: 'flex-end',
+    borderRadius: '10px',
+    height: isFocused ? '300px' : '100px', // Adjust height on focus
+    transition: 'height 0.3s ease-in-out', // Smooth transition for height change
+    position: isFocused ? 'relative' : 'static', // Relative positioning to overlay other elements
+    bottom: isFocused ? '200px' : 'auto', // Apply bottom only when focused
+    zIndex: 10, // Ensure it's above other content
+});
 
 const messageStyle = {
     maxWidth: '80%', // 메시지의 최대 너비를 설정
@@ -80,15 +96,18 @@ const inputAreaStyle = {
     alignItems: 'center',
     padding: '10px',
     backgroundColor: '#fff',
+    flex: 2,
 };
 
 // Btn hover / no-hover style
 const sendBtnStyle = {
     marginLeft: '10px', 
-    backgroundColor: "#96ef95", 
-    color: 'black',
+    backgroundColor: "#12d20e", 
+    color: 'white',
     fontWeight: 'bold',
-    height: '100%'
+    fontFamily: "inherit",
+    height: '100px',
+    width: "80px"
 }
 
 const sendBtnHoverStyle = {
@@ -97,7 +116,7 @@ const sendBtnHoverStyle = {
 }
 
 const textFieldStyle = {
-    minWidth: '84%'
+    flex: 1
 }
 
 const timestampStyle = {
@@ -118,6 +137,7 @@ const RaidWaitRoom_chatting = ({me, chatMessages, sendTest3}) => {
 
     // hover(mouseEnter / mouseLeave) 이벤트 여부
     const [isHover, setIsHover] = useState(false); // button hover 이벤트를 케어한다.
+    const [isFocused, setIsFocused] = useState(false);
 
     // hover event care 
     const handleBtnHover = (num) => {
@@ -150,7 +170,8 @@ const RaidWaitRoom_chatting = ({me, chatMessages, sendTest3}) => {
 
     return (
         <div style={contItemStyle}>
-            <div style={chatAreaStyle}>
+            <div style={{display: 'flex', justifyContent: 'end', flex: 3, height: '100%', position: 'relative'}}>
+            <div style={chatAreaStyle(isFocused)}>
                 {chatMessages.map((msg, index) => (
                 <Paper
                     key={index}
@@ -164,6 +185,8 @@ const RaidWaitRoom_chatting = ({me, chatMessages, sendTest3}) => {
                 ))}
                 <div ref={chatEndRef}/>
             </div>
+            </div>
+
             <div style={inputAreaStyle}>
                 <CustomTextField
                     value={input}
@@ -172,6 +195,19 @@ const RaidWaitRoom_chatting = ({me, chatMessages, sendTest3}) => {
                     style={textFieldStyle}
                     variant="outlined"
                     placeholder="채팅을 입력해 보세요!"
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    sx={{
+                        '& .MuiInputBase-input': {
+                          height: '100px', // 입력 필드의 높이를 300px로 설정
+                          boxSizing: 'border-box', // 패딩 및 보더 포함
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderRadius: '4px', // 필요에 따라 테두리 반경 설정
+                          },
+                        },
+                      }}
                 />
                 <Button variant="contained" onClick={handleSendMessage} onMouseEnter={() => handleBtnHover(0)} onMouseLeave={() => handleBtnHover(1)} style={ isHover ? sendBtnHoverStyle : sendBtnStyle }>
                     보내기
