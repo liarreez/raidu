@@ -9,10 +9,8 @@
 .time-progress {
   width: 80%;
   height: 30px;
-  background-color: #383a52;
+  background-color: #3E3A3A;
   display: flex;
-  /* flex-direction: column-reverse; */
-  /* align-items: center; */
   border-radius: 20px;
   overflow: hidden;
   position: relative;

@@ -493,8 +493,8 @@ const SelfVideo = (props) => {
           </div>
           <div className="count-box">
             {/* <p> Count: {count}</p> */}
-            <p> 전투력 : {props.myTotalCombatPower} </p>
-            <span>숫자 : { props.eachRoundCount[props.currentRound] }</span>
+            <p> ⚔️ {props.myTotalCombatPower} </p>
+            {/* <span>숫자 : { props.eachRoundCount[props.currentRound] }</span> */}
           </div>
           {!bodyState && (
             <div className="warning">

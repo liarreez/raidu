@@ -45,7 +45,7 @@ const Timer = ({ currentTime, timerActive, ChangeCurrentTime }) => {
           style={{
             height: "100%",
             width: `${progress}%`,
-            backgroundColor: 'orange',
+            backgroundColor: '#12D20E',
           }}
         />
       </div>
