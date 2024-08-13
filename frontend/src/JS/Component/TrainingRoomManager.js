@@ -27,6 +27,29 @@ import completeScroll from "../../Imgs/complete_scroll.png"
 
 import { ProgressBar, Step } from "react-step-progress-bar";
 
+import jumpingJack from "../../Imgs/jumpingJack.png"; // 운동 이미지 예시
+import lunge from "../../Imgs/lunge.png";
+import pushUp from "../../Imgs/pushUp.png";
+import squat from "../../Imgs/squat.png";
+import situp from "../../Imgs/situp.png";
+
+// 운동명에 따른 이미지 매핑 객체
+const exerciseImages = {
+  jumpingJack: jumpingJack,
+  lunge: lunge,
+  pushUp: pushUp,
+  squat: squat,
+  situp: situp,
+};
+
+const exerciseName = {
+  jumpingJack: "팔벌려뛰기",
+  lunge: "런지",
+  pushUp: "팔굽혀펴기",
+  squat: "스쿼트",
+  situp: "윗몸일으키기",
+}
+
 
 function StepProgressBar({ expPercentage }) {
   const [percent, setPercent] = useState(0);
@@ -110,6 +133,18 @@ const TrainingRoomManager = ({ roomData }) => {
   const isCaptain = roomData.userInfo.isCaptain;
 
   const myUserEmail = roomData.userInfo.email;
+
+  // 포즈가 감지 되었는가? (포즈 감지 후 버튼 활성화 예정)
+  const [isPoseDetect, setIsPoseDetect] = useState(false)
+
+  // 아래에서 포즈 감지가 되는지 확인을 위한 함수
+  const changeIsPoseDetect = () => {
+    setIsPoseDetect(prevstate => {
+      const newState = true;
+
+      return true;
+    })
+  }
 
   // 타이머 시작 한번만 하기 위해서 만든 상태
   const [firstClick, setFirstClick] = useState(true);
@@ -320,6 +355,9 @@ const TrainingRoomManager = ({ roomData }) => {
   const exerciseScore = {
     'jumpingJack': 30,
     'lunge': 50,
+    'sitUp': 20,
+    'pushUp': 40,
+    'squat': 70,
   }
 
   // 운동 가중치에 따라 라운드 별 운동 가중치 설정
@@ -639,15 +677,15 @@ const TrainingRoomManager = ({ roomData }) => {
       setTimerActive(true);
     } else if (currentStep === 'setup') { // 셋팅 단계 후 운동 시작
       setCurrentStep('exercise');
-      setInitialTime(3);
-      setCurrentTime(3);
+      setInitialTime(exerciseTime);
+      setCurrentTime(exerciseTime);
       setIsExercise(true);
       setTimerActive(true);
     } else if (currentStep === 'exercise') { // 라운드에 따라 운동 후 휴식 or 마지막 화면 나오기
       if (currentRound < roundCount - 1) {
         setCurrentStep('rest');
-        setInitialTime(2);
-        setCurrentTime(2);
+        setInitialTime(restTime);
+        setCurrentTime(restTime);
         setIsExercise(false);
         setTimerActive(true);
         setCurrentRound(currentRound + 1);
@@ -667,8 +705,8 @@ const TrainingRoomManager = ({ roomData }) => {
     } else if (currentStep === 'rest') {
       // setCurrentRound(currentRound + 1);
       setCurrentStep('exercise');
-      setInitialTime(3);
-      setCurrentTime(3);
+      setInitialTime(exerciseTime);
+      setCurrentTime(exerciseTime);
       setIsExercise(true);
       setTimerActive(true);
     } else if (currentStep === 'lastMotion') {
@@ -868,6 +906,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   currentRound={currentRound} exerciseForRound={exerciseForRound}
                   myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
                   roundWeight={roundWeight} isExercise={isExercise}
+                  UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
                   addMyCombatPower={addMyCombatPower}
                   updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
 
@@ -880,7 +919,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   </>
                 ))}
               </div>
-              <div className="my-video">{publisher &&
+              {/* <div className="my-video">{publisher &&
                 <SelfVideo streamManager={publisher}
                   countPower={countPower}
                   ChangeCount={ChangeCount}
@@ -893,7 +932,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
 
                 />}
-              </div>
+              </div> */}
             </div>
             <div className='progress-box'>
               <TotalCombatPower
@@ -907,6 +946,7 @@ const TrainingRoomManager = ({ roomData }) => {
               <p style={{
                 fontSize: '40px',
                 fontWeight: 'bold',
+                fontFamily: 'inherit'
               }}>Stage {totalCombatLevel}</p>
             </div>
             <div className='training-aside'>
@@ -917,16 +957,20 @@ const TrainingRoomManager = ({ roomData }) => {
                       key={index}
                       className={`round-box ${currentRound === index ? 'active' : ''}`}
                     >
-                      Round{index + 1} : {exerciseForRound[index]}
+                      <img
+                        src={exerciseImages[exerciseForRound[index]] || test}
+                        alt={exerciseName[exerciseForRound[index]]}
+                        className="training-exercise-image"
+                      />
+                      {exerciseName[exerciseForRound[index]]}
                     </div>
-
                   ))}
                 </div>
               </div>
               <div className='soldier-box'>
                 {currentStep === 'rest' ? (
                   <>
-                    <p>
+                    <p className="training-message" align="center">
                       {exerciseForRound[currentRound] === "jumpingJack" ? (
                         <>
                           다음 운동은 {exerciseForRound[currentRound]}입니다.<br />
@@ -943,9 +987,9 @@ const TrainingRoomManager = ({ roomData }) => {
                   </>
                 ) : (
                   <>
-                    <p>
+                    <p className="training-message" align="center">
                       현재 운동은 {exerciseForRound[currentRound]}입니다.<br />
-                      끝까지 힘내봅시다!
+                      Fighting!!!
                     </p>
                     <img className='soldier-gif' src={exerciseSoldier} alt="운동용사" />
                   </>

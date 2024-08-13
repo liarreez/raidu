@@ -1,3 +1,8 @@
+.calendar-component * {
+  font-family: inherit;
+  font-weight: bold;
+}
+
 .calendar-component {
     width: 100%;
     max-width: 350px;
@@ -9,7 +14,8 @@
   
   .react-calendar {
     width: 100%;
-    border: none;
+    border-radius: 8px;
+    overflow: hidden;
   }
   
   .react-calendar__tile {
@@ -36,30 +42,37 @@
     background-color: white; /* 배경색을 흰색으로 유지 */
     text-decoration: none; /* 텍스트 밑줄 제거 */
     outline: none; /* 테이블 헤더에 생길 수 있는 아웃라인 제거 */
+    box-sizing: border-box;
+    border-bottom: 2px solid var(--hard-color-green);
   }
   
   .react-calendar__month-view__weekdays__weekday > abbr {
     text-decoration: none; /* 요일 이름이 포함된 <abbr> 요소의 밑줄 제거 */
     border-bottom: none; /* 기본적으로 적용된 밑줄 제거 */
+    padding: 3px 7px;
+    border-radius: 8px;
+    background-color: var(--hard-color-black);
+
+    color: white;
   }
   
 
   .react-calendar__tile--active {
-    background-color: #007bff; /* 선택된 날짜는 파란색 */
+    background-color: var(--hard-color-green); /* 선택된 날짜는 파란색 */
     color: white;
-    border: 2px solid #007bff; /* 선택된 날짜 경계선도 파란색으로 강조 */
+    border: 2px solid var(--hard-color-green); /* 선택된 날짜 경계선도 파란색으로 강조 */
   }
   
   .react-calendar__tile--now {
     background-color: white; /* 오늘 날짜는 기본적으로 흰색 */
     color: black;
-    border: 2px solid #6c757d; /* 오늘 날짜에 회색 박스 처리 */
+    border: 2px dashed var(--hard-color-grey); /* 오늘 날짜에 회색 박스 처리 */
   }
   
   .react-calendar__tile--now.react-calendar__tile--active {
-    background-color: #007bff; /* 오늘 날짜가 선택되었을 때 파란색 배경 */
+    background-color: var(--hard-color-green); /* 오늘 날짜가 선택되었을 때 파란색 배경 */
     color: white;
-    border: 2px solid #007bff; /* 선택된 날짜의 테두리도 파란색 */
+    border: 2px solid var(--hard-color-green); /* 선택된 날짜의 테두리도 파란색 */
   }
   
   .react-calendar__tile--neighboringMonth {
@@ -92,7 +105,7 @@
   }
   
   .react-calendar__navigation button:enabled:hover {
-    color: #007bff; /* 활성화된 버튼에 파란색 강조 */
+    color: var(--hard-color-green); /* 활성화된 버튼에 파란색 강조 */
   }
   
   .react-calendar__navigation .react-calendar__navigation__label {
