@@ -56,6 +56,7 @@ const RaidWaitRoom = () => {
   const location = useLocation();
   const [token, setToken] = useState(localStorage.getItem("accessToken"));
   const [rendered, setRendered] = useState(false); // 초기화 확인
+
   const [webSocketReady, setWebSocketReady] = useState(0);
 
   // 페이지 이동을 위한 네비게이트
@@ -127,8 +128,10 @@ const RaidWaitRoom = () => {
       .then((res) => {
         const data = res.data.data.userProfile;
         console.log(data);
-        setMe(
-          new User(
+        setMe(prevMe => {
+            console.log('이용자 정보 초기화')
+            console.log(prevMe);
+            const nu = new User(
             data.nickname,
             data.monsterBadgeUrl,
             data.profileImageUrl,
@@ -140,6 +143,10 @@ const RaidWaitRoom = () => {
               : false,
             data.email
           )
+          console.log(nu);
+          return nu;
+        }
+         // me update 제대로 안 되는 문제 있음 
         );
 
         // 두 번째 요청 : 받아온 user 정보의 이메일과 room PK 가지고 방 입장 처리하기
@@ -234,7 +241,9 @@ const RaidWaitRoom = () => {
   };
 
   const exerciseSetSetter = (list) => {
-    setExerciseSet(list);
+    setExerciseSet(prevList => {
+      return list;
+    });
   };
 
   // 운동 set은 하위 컴포넌트에서 넘어와야 하는 값임
@@ -245,6 +254,7 @@ const RaidWaitRoom = () => {
   const [websocketClient, setWebsocketClient] = useState(null);
   const [messages, setMessages] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
+
 
   useEffect(() => {
     // 페이지 진입 시 room PK를 가지고 소켓 클라이언트 객체를 생성합니다.
@@ -307,7 +317,7 @@ const RaidWaitRoom = () => {
         websocketClient.disconnect();
       }
     };
-  }, [websocketClient, roomName, exerciseSet]);
+  }, [websocketClient, rendered, roomName]);
 
   // WATCHING USESTATES
 
@@ -316,6 +326,9 @@ const RaidWaitRoom = () => {
   //   console.log(participantsList);
   // }, [participantsList]);
 
+  // useEffect(() => {
+  //   console.log(me)
+  // },[me])
   // useEffect(() => {
   //   console.log("rendering finished ... ");
   //   console.log(participantsList);
@@ -386,7 +399,7 @@ const RaidWaitRoom = () => {
 
   const sendTest2 = (readyType) => {
     // 사용자 준비 상태 관련 웹소켓 메서드
-    if (checkExerciseOption) {
+    if (checkExerciseOption()) {
       if (websocketClient) {
         const message = JSON.stringify({
           ...COMMONFORM,
@@ -443,40 +456,41 @@ const RaidWaitRoom = () => {
 
   // 레디부터 작업하기
   const updateUserReadyState = (name, readyType) => {
-    const updatedParticipants = participantsList.map((user) => {
-      if (user.nickname === name) {
-        // return new User(
-        //   user.nickname,
-        //   user.badge,
-        //   user.profileImage,
-        //   user.level,
-        //   user.highestScore,
-        //   readyType,
-        //   user.isCaptain,
-        //   user.email
-        // );
-        const nu = new User(
-            user.nickname,
-            user.badge,
-            user.profileImage,
-            user.level,
-            user.highestScore,
-            readyType,
-            user.isCaptain,
-            user.email
-        );
-        console.log(nu);
-        return nu;
-      }
-      return user;
-    });
-    console.log(updatedParticipants);
-    setParticipantsList(updatedParticipants);
+    // 함수형 업데이트를 사용하여 상태 업데이트
+    console.log('before ready')
+    console.log(participantsList)
+    setParticipantsList(prevParticipantsList => {
+        const updatedParticipants = prevParticipantsList.map(user => {
+            if (user.nickname === name) {
+                // 새 User 객체 생성
+                return new User(
+                    user.nickname,
+                    user.badge,
+                    user.profileImage,
+                    user.level,
+                    user.highestScore,
+                    readyType,
+                    user.isCaptain,
+                    user.email
+                );
+            }
+            return user;
+        });
 
+        console.log(updatedParticipants); // 업데이트된 참가자 목록을 로그로 출력
+
+        // 상태 업데이트 후 추가 작업을 처리할 수 있습니다.
+        return updatedParticipants; // 새 상태 반환
+    });
+
+    // `me` 상태를 업데이트
+    console.log(name)
+    console.log(me.nickname)
+    console.log(me)
     if (name === me.nickname) {
-      setMe(
-        (prevMe) =>
-          new User(
+        setMe(prevMe =>{
+          console.log(prevMe)
+          return new User(
             prevMe.nickname,
             prevMe.badge,
             prevMe.profileImage,
@@ -486,7 +500,9 @@ const RaidWaitRoom = () => {
             prevMe.isCaptain,
             prevMe.email
           )
-      );
+        }
+            
+        );
     }
   };
 
@@ -498,7 +514,7 @@ const RaidWaitRoom = () => {
   };
 
   const checkReadyState = () => {
-    if (checkExerciseOption) {
+    if (checkExerciseOption()) {
       // 모든 사용자가 준비 상태인지, 모든 라운드별 운동 종목을 선택했는지 확인해 주세요
       if (participantsList.length != 1) {
         // 방에 남은 참가자가 한 명이면 레디 상태와 관련 없이 무조건 시작 가능합니다.
