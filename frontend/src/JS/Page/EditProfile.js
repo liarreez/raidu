@@ -33,7 +33,7 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const accessToken = localStorage.getItem("accessToken");
+        // const accessToken = localStorage.getItem("accessToken");
         console.log("사용한 토큰 : " + accessToken);
         const response = await axios.get(SERVERURL + "/api/raidu/userpage", {
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -90,6 +90,7 @@ const EditProfile = () => {
 
   const handleAuthenticate = async () => {
     try {
+      // const accessToken = localStorage.getItem("accessToken");
       console.log(accessToken);
       console.log("인증 실시... 입력 비번 : " + currentPassword);
       const response = await axios.post(
@@ -118,6 +119,7 @@ const EditProfile = () => {
     }
 
     try {
+      // const accessToken = localStorage.getItem("accessToken");
       const response = await axios.post(
         `${SERVERURL}/api/raidu/userpage/check-nickname`,
         { nickname: nickname },
@@ -147,6 +149,7 @@ const EditProfile = () => {
 
     if (nicknameChecked && isNicknameValid && !error && newPassword && confirmPassword) {
       try {
+        // const accessToken = localStorage.getItem("accessToken");
         const response = await axios.post(
           `${SERVERURL}/api/raidu/userpage/info`,
           { nickname: nickname, password: newPassword },
