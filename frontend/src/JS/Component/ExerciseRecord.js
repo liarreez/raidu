@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import "../../CSS/ExerciseRecord.css"; // CSS 파일 임포트
 import test from "../../Imgs/test.png"; // 기본 이미지
 import jumpingJack from "../../Imgs/jumpingJack.png"; // 운동 이미지 예시
@@ -16,7 +16,6 @@ const exerciseImages = {
   situp: situp,
 };
 
-
 const ExerciseRecord = ({ record }) => {
   return (
     <div className="record-item">
@@ -24,7 +23,7 @@ const ExerciseRecord = ({ record }) => {
         <div>
           <span>{record.endTime.slice(11, 16)}</span> {/* 00:00 포맷으로 시간 표기 */}
         </div>
-        <div>
+        <div className="record-popcount">
           <span>👥 {record.participantsCount}</span>
         </div>
       </div>
@@ -44,10 +43,14 @@ const ExerciseRecord = ({ record }) => {
         </div>
         <div className="record-combat-power">
           <div>
-            <span>🔥 {record.personalCombatPower} / {record.totalCombatPower}</span>
+            <span>
+              ⚔️ {record.personalCombatPower} / {record.totalCombatPower}
+            </span>
           </div>
           <div>
-            <span>({Math.round((record.personalCombatPower / record.totalCombatPower) * 100)}%)</span>
+            <span>
+              ({Math.round((record.personalCombatPower / record.totalCombatPower) * 100)}%)
+            </span>
           </div>
         </div>
       </div>
