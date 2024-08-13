@@ -60,7 +60,7 @@ function ResponsiveAppBar() {
         const response = await axios.get(SERVERURL + "/api/raidu/userpage", {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
-        console.log(response);
+        console.log("내브바  ", response);
         console.log(response.data.data.userProfile.id)
         setUserData(response.data.data.userProfile);
       } catch (error) {
