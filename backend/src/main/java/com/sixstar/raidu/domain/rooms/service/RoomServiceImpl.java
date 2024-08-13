@@ -271,7 +271,6 @@ public class RoomServiceImpl implements RoomService{
     @Transactional
     @Override
     public Map<String, Object> completeRoom(Long roomId, RoomCompleteRequest request) {
-        System.out.println(request.getTotalCombatPower());
         // 방 상태 업데이트
         Room room = findRoomByIdOrThrow(roomId);
         room.update("completed");
@@ -284,7 +283,6 @@ public class RoomServiceImpl implements RoomService{
         if(userProfile.getExp()+gainedExp >= 750){
             isLevelUp = true;
         }
-
         userProfile.updateExp(gainedExp);
 
         boolean isBestScoreUpdated = false;
@@ -303,23 +301,19 @@ public class RoomServiceImpl implements RoomService{
         ExerciseRoomRecord exerciseRoomRecord = ExerciseRoomRecordSaveRequest.toEntity(userProfile, room, request);
         ExerciseRoomRecord savedExerciseRoomRecord = exerciseRoomRecordRepository.save(exerciseRoomRecord);
 
-        // roundRecord 저장
-        if(request.getRoundRecordList() == null){
-            throw new BaseException(BaseFailureResponse.ROUND_RECORD_NOT_FOUND);
-        }
-
         List<RoundRecord> roundRecordList = request.getRoundRecordList().stream()
                 .map(roundRecordSaveRequest -> {
                     Dictionary dictionary = dictionaryRepository.findByName(roundRecordSaveRequest.getDictionaryName());
                     return RoundRecordSaveRequest.toEntity(savedExerciseRoomRecord, dictionary, roundRecordSaveRequest);
                 }).toList();
         roundRecordRepository.saveAll(roundRecordList);
-        for(RoundRecord roundRecord: roundRecordList){
-            System.out.println("CNT    "+roundRecord.getExerciseCount());
+
+        // roundRecord 저장
+        if(request.getRoundRecordList().isEmpty()){
+            throw new BaseException(BaseFailureResponse.ROUND_RECORD_NOT_FOUND);
         }
 
         Long totalContribute = mainpageService.getTotalContribute(season);
-        System.out.println("토탈토탈토탈    "+totalContribute);
 
         // 업데이트된 레벨, 경험치 반환
         Map<String, Object> map = new HashMap<>();
