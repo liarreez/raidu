@@ -303,7 +303,11 @@ public class RoomServiceImpl implements RoomService{
 
         List<RoundRecord> roundRecordList = request.getRoundRecordList().stream()
                 .map(roundRecordSaveRequest -> {
+                    System.out.println("ROUNDRECORDSAVEREQUEST");
                     Dictionary dictionary = dictionaryRepository.findByName(roundRecordSaveRequest.getDictionaryName());
+                    System.out.println("라운드   "+roundRecordSaveRequest.getRoundNumber());
+                    System.out.println("운동   "+roundRecordSaveRequest.getDictionaryName());
+                    System.out.println("횟수   "+roundRecordSaveRequest.getExerciseCount());
                     return RoundRecordSaveRequest.toEntity(savedExerciseRoomRecord, dictionary, roundRecordSaveRequest);
                 }).toList();
         roundRecordRepository.saveAll(roundRecordList);
@@ -312,6 +316,7 @@ public class RoomServiceImpl implements RoomService{
         if(request.getRoundRecordList().isEmpty()){
             throw new BaseException(BaseFailureResponse.ROUND_RECORD_NOT_FOUND);
         }
+
 
         Long totalContribute = mainpageService.getTotalContribute(season);
 

@@ -111,6 +111,18 @@ const TrainingRoomManager = ({ roomData }) => {
 
   const myUserEmail = roomData.userInfo.email;
 
+  // 포즈가 감지 되었는가? (포즈 감지 후 버튼 활성화 예정)
+  const [isPoseDetect, setIsPoseDetect] = useState(false)
+
+  // 아래에서 포즈 감지가 되는지 확인을 위한 함수
+  const changeIsPoseDetect = () => {
+    setIsPoseDetect(prevstate => {
+      const newState = true;
+
+      return true;
+    })
+  }
+
   // 타이머 시작 한번만 하기 위해서 만든 상태
   const [firstClick, setFirstClick] = useState(true);
 
@@ -169,6 +181,9 @@ const TrainingRoomManager = ({ roomData }) => {
   // API로 줄 roundRecordList 만들기
   const roundRecordList = [];
 
+  // 다시 저장할 레코드 리스트
+  const [finishRoundRecordList, setFinishRoundRecordList] = useState([]);
+
   // roundRecordList 가 잘 저장되었는지 확인해주는 boolean
   const [isRoundRecordListExist, setIsRoundRecordListExist] = useState(false);
 
@@ -190,6 +205,11 @@ const TrainingRoomManager = ({ roomData }) => {
     console.log(endTime);
     console.log('제대로 된 레코드 리스트가 나오나요?')
     console.log(roundRecordList);
+
+    setFinishRoundRecordList(prevList => {
+      const newRecord = roundRecordList;
+      return newRecord;
+    })
 
     setIsRoundRecordListExist(prevCheck => {
       const nowState = true;
@@ -312,6 +332,9 @@ const TrainingRoomManager = ({ roomData }) => {
   const exerciseScore = {
     'jumpingJack': 30,
     'lunge': 50,
+    'sitUp': 20,
+    'pushUp': 40,
+    'squat' : 70,
   }
 
   // 운동 가중치에 따라 라운드 별 운동 가중치 설정
@@ -738,8 +761,10 @@ const TrainingRoomManager = ({ roomData }) => {
 
   useEffect(() => {
     if (isRoundRecordListExist === true) {
+      console.log('기록을 저장합니당1');
+      console.log(finishRoundRecordList);
       // 기록 저장
-      record(roomData.roomPk, endTime, roundRecordList, myTotalCombatPower).then(data => {
+      record(roomData.roomPk, endTime, finishRoundRecordList, myTotalCombatPower).then(data => {
         console.log("기록 후 데이터:", data);
         setUpdatedExp(data.data.updatedExp)
         setUpdatedLevel(data.data.updatedLevel)
@@ -757,8 +782,10 @@ const TrainingRoomManager = ({ roomData }) => {
 
 
   // 기록 저장을 위한 API
-const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
+const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower) => {
   try {
+    console.log('기록을 저장합니당2');
+    console.log(finishRoundRecordList);
     const response = await axios.post(
       `${APPLICATION_SERVER_URL}/${roomId}/complete`,
       {
@@ -768,7 +795,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
         totalCombatPower: totalCombatPower,
         participantsCount: (subscribers.length + 1),
         stage: totalCombatLevel,
-        roundRecordList: roundRecordList,
+        roundRecordList: finishRoundRecordList,
       },
       {
         headers: {
@@ -879,8 +906,10 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                   currentRound={currentRound} exerciseForRound={exerciseForRound}
                   myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
                   roundWeight={roundWeight} isExercise={isExercise}
+                  UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
                   addMyCombatPower={addMyCombatPower}
                   updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
+                  changeIsPoseDetect={changeIsPoseDetect}
                 // setEachRoundCount={setEachRoundCount}
                 // ChangeEachRoundCount={ChangeEachRoundCount} ChangeMyCombatPower={ChangeMyCombatPower}
                 // ChangeAddMyCombatPower={ChangeAddMyCombatPower}
@@ -895,7 +924,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                   </>
                 ))}
               </div>
-              <div className="my-video">{publisher &&
+              {/* <div className="my-video">{publisher &&
                 <SelfVideo streamManager={publisher}
                   countPower={countPower}
                   ChangeCount={ChangeCount}
@@ -908,7 +937,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
                   updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
 
                 />}
-              </div>
+              </div> */}
             </div>
             <div className='progress-box'>
               <h3>현재 점수 {totalCombatPower}</h3>
@@ -938,7 +967,7 @@ const record = async (roomId, endTime, roundRecordList, myTotalCombatPower) => {
 
                   ))}
                   {isCaptain && firstClick &&
-                    <button className="start-button" onClick={sendTest1}>타이머 시작</button>
+                    <button className="start-button" onClick={sendTest1} disabled={!isPoseDetect}>타이머 시작</button>
                   }
                 </div>
               </div>
