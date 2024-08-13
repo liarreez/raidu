@@ -42,7 +42,7 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain, rounds, roomSetSetter, e
 
     useEffect(() => { // 사용자가 운동 종목 리스트를 변경할 때마다 상위 컴포넌트에 반영함
         exerciseSetSetter(exerciseOption);
-        console.log(exerciseOption);
+     //   console.log(exerciseOption);
     },[exerciseOption]);
 
     // CALC PART - option values =========================================
@@ -180,6 +180,18 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain, rounds, roomSetSetter, e
                                         >
                                             <MenuItem value={'lunge'}>런지</MenuItem>
                                             <MenuItem value={'jumpingJack'}>팔벌려뛰기</MenuItem>
+                                            <MenuItem value={'sitUp'}>윗몸일으키기</MenuItem>
+                                            <MenuItem value={'pushUp'}>팔굽혀펴기</MenuItem>
+                                            <MenuItem value={'squat'}>스쿼트</MenuItem>
+                                            {
+                                                /*
+                                                팔 벌려 뛰기: jumpingJack
+                                                윗몸일으키기: sitUp
+                                                런지: lunge
+                                                팔굽혀펴기: pushUp
+                                                스쿼트: squat
+                                            */
+                                            }
                                         </Select>
                                     </FormControl>
                                 </div>
