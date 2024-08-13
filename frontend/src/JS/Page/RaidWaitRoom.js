@@ -1,5 +1,5 @@
 //=========== import libraries
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Grid } from "@mui/material";
 import { useLocation, useParams } from "react-router-dom";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -68,6 +68,7 @@ const RaidWaitRoom = () => {
   // 초깃값을 임의의 어떤 값으로 채워주는 것이 좋다. DOM 로드 후 -> useEffect 실행되기 때문
 
   const [exerciseSet, setExerciseSet] = useState([]); // 이 부분은 하위 컴포 roominfoform에서만 세팅합니다.
+  const exerciseSetRef = useRef([]);
 
   // 페이지 이탈 시 로직 (미완)
   // useEffect(() => {
@@ -171,7 +172,7 @@ const RaidWaitRoom = () => {
       })
       .then((res) => {
         setRoomNamed(roomName); // 방 이름 변경 가능하게 하려면 이 부분 수정해야 함. 지금은 pathVal에서 가져온다
-        setRendered(true); // 로드 체크
+
       })
       .catch((error) => {
         console.error("유저 정보 받아오기 실패!", error);
@@ -233,6 +234,7 @@ const RaidWaitRoom = () => {
               )
           ),
         ]);
+        setRendered(true); // 로드 체크
       });
   };
 
@@ -241,7 +243,10 @@ const RaidWaitRoom = () => {
   };
 
   const exerciseSetSetter = (list) => {
+    console.log(list)
     setExerciseSet(prevList => {
+      console.log(prevList)
+      exerciseSetRef.current = list;
       return list;
     });
   };
@@ -529,13 +534,13 @@ const RaidWaitRoom = () => {
 
   const tryGameStart = () => {
     if (checkReadyState()) {
-      // console.log("============ PRINTING SETTINGS =============");
+      console.log("============ PRINTING SETTINGS =============");
       // 방 정보
       // 사용자 정보
       // 선택한 운동 정보 묶어서 보여주기
-      // console.log(roomSet);
-      // console.log(me);
-      // console.log(exerciseSet);
+      console.log(roomSet);
+      console.log(me);
+      console.log(exerciseSet);
 
       axios
         .post(
@@ -562,13 +567,14 @@ const RaidWaitRoom = () => {
   const gameStart = (sessionId) => {
     const roomInfo = roomSet;
     const userInfo = me;
-    const exerciseInfo = exerciseSet;
+    // const exerciseInfo = exerciseSet;
+    const exerciseInfo = exerciseSetRef.current;
 
-    // console.log("=========TEST=========");
-    // console.log(roomInfo);
-    // console.log(userInfo);
-    // console.log(exerciseInfo);
-    // console.log(sessionId);
+    console.log("=========TEST=========");
+    console.log(roomInfo);
+    console.log(userInfo);
+    console.log(exerciseInfo);
+    console.log(sessionId);
 
     navigate("/trainingTest", {
       // roomPk 주고 / userEmail 주고
