@@ -307,7 +307,7 @@ const RaidWaitRoom = () => {
         websocketClient.disconnect();
       }
     };
-  }, [websocketClient, roomNamed, exerciseSet]);
+  }, [websocketClient, roomName, exerciseSet]);
 
   // WATCHING USESTATES
 
