@@ -40,31 +40,31 @@ const SERVERURL = API_URL;
 
 // 몬스터 명에 따른 이미지 매핑
 const monsterImages = {
-  "burgerking": burgerking,
-  "turtleneck": turtleneck,
-  "diabeticlizard": diabeticlizard,
-  "enteritisowl": enteritisowl,
-  "fatiguebat": fatiguebat,
-  "gloomylion": gloomylion,
-  "dryeyecrab": dryeyecrab,
-  "foodpoisoningwhale": foodpoisoningwhale,
-  "lowtemperaturewolf": lowtemperaturewolf,
-  "MigraineMedusa": MigraineMedusa,
-  "mountainsicknesseagle": mountainsicknesseagle,
+  burgerking: burgerking,
+  turtleneck: turtleneck,
+  diabeticlizard: diabeticlizard,
+  enteritisowl: enteritisowl,
+  fatiguebat: fatiguebat,
+  gloomylion: gloomylion,
+  dryeyecrab: dryeyecrab,
+  foodpoisoningwhale: foodpoisoningwhale,
+  lowtemperaturewolf: lowtemperaturewolf,
+  MigraineMedusa: MigraineMedusa,
+  mountainsicknesseagle: mountainsicknesseagle,
 };
 
 const monsterNames = {
-  "burgerking": "비마니우스 3세",
-  "turtleneck": "거북목거북",
-  "diabeticlizard": "당뇨마뱀",
-  "enteritisowl": "뿡엉이",
-  "fatiguebat": "피곤 박쥐",
-  "gloomylion": "우울 사자",
-  "dryeyecrab": "건조하 게",
-  "foodpoisoningwhale": "식중독 고래",
-  "lowtemperaturewolf": "춥개",
-  "MigraineMedusa": "메두통사",
-  "mountainsicknesseagle": "고산증 독수리",
+  burgerking: "비마니우스 3세",
+  turtleneck: "거북목거북",
+  diabeticlizard: "당뇨마뱀",
+  enteritisowl: "뿡엉이",
+  fatiguebat: "피곤 박쥐",
+  gloomylion: "우울 사자",
+  dryeyecrab: "건조하 게",
+  foodpoisoningwhale: "식중독 고래",
+  lowtemperaturewolf: "춥개",
+  MigraineMedusa: "메두통사",
+  mountainsicknesseagle: "고산증 독수리",
 };
 
 function StepProgressBar({ expPercentage }) {
@@ -166,8 +166,8 @@ function Mypage() {
       // ...(userMonsters.bossMonsterResponseDtos || []),
       ...(userMonsters.monsterResponseDtos || []),
     ];
-    console.log("몬스터들 배열...")
-    console.log(monsters)
+    console.log("몬스터들 배열...");
+    console.log(monsters);
 
     return (
       <Grid container spacing={2}>
@@ -295,6 +295,9 @@ function Mypage() {
   }
 
   const expPercentage = (userData.exp / 750) * 100;
+  const currentEmail = localStorage.getItem("curEmail");
+  console.log(currentEmail);
+  const showEditButton = userData.email === currentEmail;
 
   return (
     <FadeAnime>
@@ -332,15 +335,11 @@ function Mypage() {
                           marginBottom: "20px",
                         }}
                       >
-                        <div
-                          style={{ display: "inline", fontWeight: "bold", fontSize: "16px" }}
-                        >
+                        <div style={{ display: "inline", fontWeight: "bold", fontSize: "16px" }}>
                           LV
                         </div>
                         <h2 style={{ margin: "0", padding: "0" }}>&nbsp; {`${userData.level}`}</h2>
-                        <div
-                          style={{ color: "gray", marginLeft: "20px", fontSize: "14px" }}
-                        >
+                        <div style={{ color: "gray", marginLeft: "20px", fontSize: "14px" }}>
                           <AnimatedNumber targetNumber={userData.exp} /> / 750
                         </div>
                       </div>
@@ -352,7 +351,9 @@ function Mypage() {
                     </div>
                   </div>
                   <div className="profile-button-wrapper">
-                    <button onClick={() => navigate("/editprofile")}>정보 수정</button>
+                    {showEditButton && (
+                      <button onClick={() => navigate("/editprofile")}>정보 수정</button>
+                    )}
                   </div>
                 </div>
               </div>
