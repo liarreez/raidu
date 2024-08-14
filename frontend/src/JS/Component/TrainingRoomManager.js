@@ -931,7 +931,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   ]}
                 />
                 <div className="training-stage">
-                <p>{totalCombatLevel}</p>
+                  <p>{totalCombatLevel}</p>
                   <p>스테이지</p>
                 </div>
               </div>
@@ -975,261 +975,259 @@ const TrainingRoomManager = ({ roomData }) => {
                     </>
                   ) : (
                     <>
-                      {isCaptain && firstClick && (
-                        <>
-                          {!isPoseDetect ? (
-                            <button className="loading-button">포즈감지 준비중...</button>
-                          ) : (
-                            <button className="start-button" onClick={sendTest1}>
-                              운동 시작!
-                            </button>
-                          )}
-                        </>
+                      {((isCaptain && !isPoseDetect) || (!isCaptain && !isPoseDetect)) && (
+                        <button className="loading-button">포즈감지 준비중...</button>
+                      )}
+
+                      {(isCaptain && isPoseDetect && firstClick) && (
+                        <button className="start-button" onClick={sendTest1}>
+                          운동 시작!
+                        </button>
                       )}
                       <img className="soldier-gif" src={exerciseSoldier} alt="운동용사" />
                     </>
                   )}
-                </div>
               </div>
             </div>
           </div>
+          </div>
         )}
 
-        <Modal
-          open={openModal}
-          onClose={() => setOpenModal(false)}
-          aria-labelledby="modal-title"
-          aria-describedby="modal-description"
+      <Modal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            // display: 'flex',
+            top: "12.5%",
+            left: "50%",
+            transform: "translate(-50%,0)",
+            width: "80%",
+            height: "70%",
+            bgcolor: "white",
+            // boxShadow: 24,
+            p: 4,
+            bgcolor: "background.Paper",
+            backgroundImage: currentStep === "ending" ? `url(${completeScroll})` : "none",
+            backgroundSize: "auto 100%",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
         >
-          <Box
-            sx={{
-              position: "absolute",
-              // display: 'flex',
-              top: "12.5%",
-              left: "50%",
-              transform: "translate(-50%,0)",
-              width: "80%",
-              height: "70%",
-              bgcolor: "white",
-              // boxShadow: 24,
-              p: 4,
-              bgcolor: "background.Paper",
-              backgroundImage: currentStep === "ending" ? `url(${completeScroll})` : "none",
-              backgroundSize: "auto 100%",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            {/* 중간 정산 화면 */}
-            {currentStep === "middleMotion" && (
+          {/* 중간 정산 화면 */}
+          {currentStep === "middleMotion" && (
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                height: "100%",
+                backgroundColor: "skyblue",
+              }}
+            >
+              <img
+                style={{
+                  width: "40%",
+                }}
+                src={standSoldier}
+                alt="서있는 용사"
+              />
               <div
                 style={{
                   display: "flex",
-                  width: "100%",
+                  flexDirection: "column",
+                  width: "60%",
                   height: "100%",
-                  backgroundColor: "skyblue",
-                }}
-              >
-                <img
-                  style={{
-                    width: "40%",
-                  }}
-                  src={standSoldier}
-                  alt="서있는 용사"
-                />
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "60%",
-                    height: "100%",
-                    backgroundColor: "coral",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "25%",
-                      fontSize: "60px",
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      backgroundColor: "lemonchiffon",
-                      p: 2,
-                    }}
-                  >
-                    <h1>중간 정산</h1>
-                  </div>
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "35%",
-                      fontSize: "50px",
-                      backgroundColor: "lightgreen",
-                    }}
-                  >
-                    <p>여기에는 사람들의 기여도</p>
-                  </div>
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "40%",
-                      fontSize: "40px",
-                      backgroundColor: "lightgray",
-                    }}
-                  >
-                    <p>이 아래에는 그 뭐냐 프로그레스 바</p>
-                  </div>
-                </div>
-              </div>
-            )}
-            {/* 마지막 모션 화면 */}
-            {currentStep === "lastMotion" && <div></div>}
-
-            {/* 마지막 정산 화면 =================================================이슬 */}
-            {currentStep === "ending" && (
-              <div
-                style={{
-                  paddingTop: "130px",
-                  paddingBottom: "100px",
-                  paddingLeft: "190px",
-                  paddingRight: "180px",
+                  backgroundColor: "coral",
                 }}
               >
                 <div
                   style={{
                     width: "100%",
-                    height: "90%",
+                    height: "25%",
+                    fontSize: "60px",
                     display: "flex",
+                    justifyContent: "flex-end",
+                    backgroundColor: "lemonchiffon",
+                    p: 2,
+                  }}
+                >
+                  <h1>중간 정산</h1>
+                </div>
+                <div
+                  style={{
+                    width: "100%",
+                    height: "35%",
+                    fontSize: "50px",
+                    backgroundColor: "lightgreen",
+                  }}
+                >
+                  <p>여기에는 사람들의 기여도</p>
+                </div>
+                <div
+                  style={{
+                    width: "100%",
+                    height: "40%",
+                    fontSize: "40px",
+                    backgroundColor: "lightgray",
+                  }}
+                >
+                  <p>이 아래에는 그 뭐냐 프로그레스 바</p>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* 마지막 모션 화면 */}
+          {currentStep === "lastMotion" && <div></div>}
+
+          {/* 마지막 정산 화면 =================================================이슬 */}
+          {currentStep === "ending" && (
+            <div
+              style={{
+                paddingTop: "130px",
+                paddingBottom: "100px",
+                paddingLeft: "190px",
+                paddingRight: "180px",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: "90%",
+                  display: "flex",
+                }}
+              >
+                <div
+                  style={{
+                    width: "30%",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column" /* 세로 방향으로 자식 요소를 배치 */,
+                    justifyContent: "space-between" /* 자식 요소들 사이에 공간을 분배 */,
+
+                    padding: "10px" /* 여백 설정 (필요에 따라 조정) */,
+                    boxSizing: "border-box" /* 여백과 테두리를 포함하여 전체 너비와 높이 계산 */,
                   }}
                 >
                   <div
                     style={{
-                      width: "30%",
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column" /* 세로 방향으로 자식 요소를 배치 */,
-                      justifyContent: "space-between" /* 자식 요소들 사이에 공간을 분배 */,
-
-                      padding: "10px" /* 여백 설정 (필요에 따라 조정) */,
-                      boxSizing: "border-box" /* 여백과 테두리를 포함하여 전체 너비와 높이 계산 */,
+                      color: "black",
+                      fontSize: "18px",
+                      fontFamily: "WarhavenR",
                     }}
                   >
+                    {isNewMonster ? "NEW!" : ""}
+                  </div>
+                  <img
+                    src={burgerking}
+                    // src={monsterImgUrl}
+                    alt="잡은 몬스터"
+                    className="training-monster-image"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                    }}
+                  />
+                  <div
+                    style={{
+                      color: "black",
+                      fontSize: "20px",
+                      marginTop: "auto" /* 위쪽의 여백을 자동으로 채워서 아래쪽으로 이동 */,
+                      alignSelf: "flex-end" /* 자식 요소를 오른쪽 끝으로 정렬 */,
+                      fontFamily: "WarhavenB",
+                    }}
+                  >
+                    {monsterName}
+                  </div>
+                </div>
+
+                <div
+                  className="training-complte-right"
+                  style={{
+                    width: "70%",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    marginLeft: "15px",
+                    paddingLeft: "20px",
+                    paddingTop: "10px",
+                  }}
+                >
+                  <div className="training-complete-stage">
                     <div
                       style={{
                         color: "black",
-                        fontSize: "18px",
-                        fontFamily: "WarhavenR",
+                        marginBottom: "20px",
+                        fontSize: "37px",
+                        fontFamily: "WarhavenB",
                       }}
                     >
-                      {isNewMonster ? "NEW!" : ""}
+                      {totalCombatLevel} STAGE CLEAR!
                     </div>
-                    <img
-                      src={burgerking}
-                      // src={monsterImgUrl}
-                      alt="잡은 몬스터"
-                      className="training-monster-image"
+                  </div>
+
+                  <div className="training-complte-level">
+                    <div
                       style={{
-                        width: "100%",
-                        height: "auto",
-                        marginTop: "5px",
+                        color: "black",
+                        fontSize: "25px",
+                        fontFamily: "WarhavenR",
                         marginBottom: "5px",
                       }}
-                    />
+                    >
+                      LV. {updatedLevel} {isLevelUp ? "↑" : ""}
+                    </div>
+                    <StepProgressBar expPercentage={updatedExpPercentage}></StepProgressBar>
+                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                      <div style={{ color: "darkslategray", fontSize: "18px" }}>+{gainedExp}</div>
+                    </div>
+                  </div>
+
+                  <div className="training-complte-season-region-score-text">
                     <div
                       style={{
                         color: "black",
                         fontSize: "20px",
-                        marginTop: "auto" /* 위쪽의 여백을 자동으로 채워서 아래쪽으로 이동 */,
-                        alignSelf: "flex-end" /* 자식 요소를 오른쪽 끝으로 정렬 */,
-                        fontFamily: "WarhavenB",
+                        fontFamily: "WarhavenR",
+                        marginBottom: "5px",
                       }}
                     >
-                      {monsterName}
+                      {regionName} 기여도
                     </div>
-                  </div>
-
-                  <div
-                    className="training-complte-right"
-                    style={{
-                      width: "70%",
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      marginLeft: "15px",
-                      paddingLeft: "20px",
-                      paddingTop: "10px",
-                    }}
-                  >
-                    <div className="training-complete-stage">
-                      <div
-                        style={{
-                          color: "black",
-                          marginBottom: "20px",
-                          fontSize: "37px",
-                          fontFamily: "WarhavenB",
-                        }}
-                      >
-                        {totalCombatLevel} STAGE CLEAR!
-                      </div>
-                    </div>
-
-                    <div className="training-complte-level">
-                      <div
-                        style={{
-                          color: "black",
-                          fontSize: "25px",
-                          fontFamily: "WarhavenR",
-                          marginBottom: "5px",
-                        }}
-                      >
-                        LV. {updatedLevel} {isLevelUp ? "↑" : ""}
-                      </div>
-                      <StepProgressBar expPercentage={updatedExpPercentage}></StepProgressBar>
-                      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                        <div style={{ color: "darkslategray", fontSize: "18px" }}>+{gainedExp}</div>
-                      </div>
-                    </div>
-
-                    <div className="training-complte-season-region-score-text">
-                      <div
-                        style={{
-                          color: "black",
-                          fontSize: "20px",
-                          fontFamily: "WarhavenR",
-                          marginBottom: "5px",
-                        }}
-                      >
-                        {regionName} 기여도
-                      </div>
-                      <StepProgressBar
-                        expPercentage={updatedRegionScorePercentage}
-                      ></StepProgressBar>
-                      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                        <div style={{ color: "darkslategray", fontSize: "18px" }}>
-                          +{myTotalCombatPower}
-                        </div>
+                    <StepProgressBar
+                      expPercentage={updatedRegionScorePercentage}
+                    ></StepProgressBar>
+                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                      <div style={{ color: "darkslategray", fontSize: "18px" }}>
+                        +{myTotalCombatPower}
                       </div>
                     </div>
                   </div>
-                </div>
-
-                {/* 나가기 버튼 */}
-                <div
-                  style={{
-                    width: "100%",
-                    height: "10%",
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <button className="btn btn-large btn-danger" onClick={byeBye}>
-                    나가기
-                  </button>
                 </div>
               </div>
-            )}
-            {/*=============================================== 이슬*/}
-            {/* <div style={{
+
+              {/* 나가기 버튼 */}
+              <div
+                style={{
+                  width: "100%",
+                  height: "10%",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <button className="btn btn-large btn-danger" onClick={byeBye}>
+                  나가기
+                </button>
+              </div>
+            </div>
+          )}
+          {/*=============================================== 이슬*/}
+          {/* <div style={{
             display: 'flex',
             flexDirection: 'column',
             p: 4,
@@ -1251,10 +1249,10 @@ const TrainingRoomManager = ({ roomData }) => {
               }
             </div>
           </div> */}
-          </Box>
-        </Modal>
-      </div>
-    </FadeAnime>
+        </Box>
+      </Modal>
+    </div>
+    </FadeAnime >
   );
 };
 
