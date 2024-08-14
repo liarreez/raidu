@@ -1,6 +1,7 @@
 import React from "react";
 import Slider from "react-slick";
-import test from "../../Imgs/test.png";
+import main1 from "../../Imgs/main1.png";
+import main2 from "../../Imgs/main2.png";
 import "../../CSS/HomeSlider.css";
 
 function SimpleSlider() {
@@ -18,13 +19,10 @@ function SimpleSlider() {
     <div className="homeslider-container">
       <Slider {...settings}>
         <div className="homeslider-desc">
-          <img className="homeslider-desc-img" src={test}></img>
+          <img className="homeslider-desc-img" src={main1}></img>
         </div>
         <div className="homeslider-desc">
-          <img className="homeslider-desc-img" src={test}></img>
-        </div>
-        <div className="homeslider-desc">
-          <img className="homeslider-desc-img" src={test}></img>
+          <img className="homeslider-desc-img" src={main2}></img>
         </div>
       </Slider>
     </div>

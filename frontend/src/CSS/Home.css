@@ -51,7 +51,7 @@
     height: 180px;
     box-sizing: border-box;
     background-color: var(--hard-color-black);
-    margin: 20px 0px 20px 0px;
+    margin: Spx 0px 20px 0px;
     color: var(--hard-color-white);
     
     display: flex;
