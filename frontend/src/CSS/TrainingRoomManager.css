@@ -1,5 +1,18 @@
 /* 운동방 css 수정 - 지웅 */
 /* 운동방 전체 틀 */
+#training-background-img {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100vw;
+    min-width: 1100px;
+    height: 100vh;
+    min-height: 700px;
+    overflow: hidden;
+}
+
 .training {
     width: 100vw;
     min-width: 1150px;
@@ -25,7 +38,7 @@
         linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
         url("../../src/Imgs/back.jpg");
     background-size: 
-        75% 90%,
+        80% 90%,
         cover;
     background-position: 
         center center,
@@ -70,6 +83,13 @@
         "other-video";
     gap: 10px;
     padding: 10px;
+
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.2);
+    background-color: var(--hard-color-white);
+
+    position: relative;
+    right: 62px;
 }
 
 .other-video {
@@ -96,6 +116,8 @@
     flex: 1;
     justify-content: center;
     align-items: center;
+    position: relative;
+    right: 25px;
 }
 
 .training-aside {
@@ -120,18 +142,26 @@
 
 .round-box-frame {
     grid-area: round-box-frame;
+    width: 200px;
     display: flex;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
+    box-sizing: border-box;
+    padding: 20px 10px;
+    border-radius: 10px;
+
+    background-color: var(--hard-color-white);
+    
+    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.2);
 }
 
 .round-box {
-    width: 150px;
+    width: 170px;
     height: 50px;
+    box-sizing: border-box;
     background-color: #3E3A3A;
     color: white;
-    padding: 0% 10%;
-    margin-bottom: 10%;
+    padding: 20px 15px;
     border: none;
     border-radius: 4px;
     font-weight: bold;
@@ -141,11 +171,15 @@
     align-items: center;
     justify-content: left;
     border-radius: 8px;
-    transition: background-color 0.3s;
+    transition: 0.3s;
+    margin-bottom: 10px;
 }
 
 .round-box.active {
     background-color: #12D20E;
+    transform: scale(1.1);
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.2);
 }
 
 .training-exercise-image {
@@ -167,14 +201,15 @@
         "soldier-gif soldier-gif"
         "soldier-gif soldier-gif"
     ;
-    margin-top: 10%;
+    width: 200px;
+    height: 250px;
 }
 
 .training-message {
     grid-area: soldier-content;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     font-weight: bold;
     font-family: inherit;
     font-size: 18px;
@@ -182,16 +217,19 @@
 
 .soldier-gif {
     grid-area: soldier-gif;
-    width: 100%;
-    height: 100%;
-    margin-top: 10%;
+    width: 180px;
+    height: 180px;
+    margin: auto;
+    background-color: var(--hard-color-white);
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.2);
 }
 
 .loading-button {
     grid-area: soldier-content;
-    width: 180px;
+    width: 200px;
     height: 40px;
-    background: linear-gradient(to right, #fefb72, #f0bb31);
+    background-color: var(--hard-color-grey);
     color: white;
     border: none;
     border-radius: 4px;
@@ -204,7 +242,7 @@
 
 .start-button {
     grid-area: soldier-content;
-    width: 180px;
+    width: 200px;
     height: 40px;
     background-color: #12D20E;
     color: white;
@@ -214,5 +252,42 @@
     font-family: inherit;
     font-size: 14px;
     cursor: pointer;
-    margin-top: 10%;
+    margin-top: 20px;
+}
+
+.start-button:hover {
+    background-color: var(--hard-color-green-selected);
+}
+
+.training-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    width: 100px;
+    height: 100px;
+    box-sizing: border-box;
+    background-color: var(--hard-color-white);
+    position: relative;
+    top: 41%;
+    box-shadow: 0px 2px 4px 2px rgba(0,0,0,0.2);
+    border-radius: 50%;
+}
+
+.training-stage p {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    color: var(--hard-color-black);
+}
+
+.training-stage p:nth-child(1) {
+    font-size: 30px;
+}
+
+
+.training-stage p:nth-child(2) {
+    font-size: 14px;
 }

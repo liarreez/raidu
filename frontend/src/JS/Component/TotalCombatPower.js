@@ -30,7 +30,7 @@ const TotalCombatPower = ({
   }, [visualParts]);
 
   return (
-    <>
+    <div className='total-combat-power-wrapper'>
       <div className='total-combat-power-label'>{label}</div>
       <div
         className='total-combat-power-container'
@@ -52,7 +52,7 @@ const TotalCombatPower = ({
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
