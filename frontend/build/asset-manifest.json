@@ -1,13 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.b28b04b5.css",
-    "main.js": "/static/js/main.eebbd720.js",
+    "main.css": "/static/css/main.3d862f84.css",
+    "main.js": "/static/js/main.7b20434a.js",
     "static/media/complete_scroll.png": "/static/media/complete_scroll.f14d7e887c4e04907461.png",
     "static/media/dryeyecrab.png": "/static/media/dryeyecrab.72a5434087bceedf3b74.png",
     "static/media/mountainsicknesseagle.png": "/static/media/mountainsicknesseagle.6dfe853132766a76d770.png",
     "static/media/diabeticlizard.png": "/static/media/diabeticlizard.bcc3dc5d49b9d2d57c31.png",
     "static/media/profilehero.png": "/static/media/profilehero.b4e64b6b7de896275d8e.png",
     "static/media/main1.png": "/static/media/main1.764555d9a581fc92cbe3.png",
+    "static/media/main2.png": "/static/media/main2.aa001a8452246a105b0e.png",
     "static/media/MigraineMedusa.png": "/static/media/MigraineMedusa.ac4756cb6a2ff428ff47.png",
     "static/media/enteritisowl.png": "/static/media/enteritisowl.619546c1ea1b5f8222f6.png",
     "static/media/lowtemperaturewolf.png": "/static/media/lowtemperaturewolf.c139075084cacbb26001.png",
@@ -60,11 +61,11 @@
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.b28b04b5.css.map": "/static/css/main.b28b04b5.css.map",
-    "main.eebbd720.js.map": "/static/js/main.eebbd720.js.map"
+    "main.3d862f84.css.map": "/static/css/main.3d862f84.css.map",
+    "main.7b20434a.js.map": "/static/js/main.7b20434a.js.map"
   },
   "entrypoints": [
-    "static/css/main.b28b04b5.css",
-    "static/js/main.eebbd720.js"
+    "static/css/main.3d862f84.css",
+    "static/js/main.7b20434a.js"
   ]
 }

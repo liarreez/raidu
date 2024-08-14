@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import LoginSlider from "../Component/LoginSlider";
@@ -81,7 +81,7 @@ const SignUp = () => {
       })
       .catch(error => {
         console.error(error);
-        if(error.response.data.message === "중복된 이메일입니다!") {
+        if (error.response.data.message === "중복된 이메일입니다!") {
           alert("이미 사용된 이메일입니다!");
         }
         alert("회원가입에 실패했습니다.");
@@ -180,13 +180,13 @@ const Login = () => {
     try {
       console.log("로그인시도: 이메일", email);
       console.log("로그인시도: 비밀번호", password);
-      const response = await axios.post(`${SERVERURL}/api/raidu/users/login`, 
+      const response = await axios.post(`${SERVERURL}/api/raidu/users/login`,
         { "email": email, "password": password });
       console.log(response);
       localStorage.setItem("accessToken", response.data.data.accessToken);
       localStorage.setItem("refreshToken", response.data.data.refreshToken);
       localStorage.setItem("curEmail", email);
-      
+
       console.log("저장된 access토큰 : " + localStorage.getItem("accessToken"));
       console.log("저장된 refresh토큰 : " + localStorage.getItem("refreshToken"));
 
