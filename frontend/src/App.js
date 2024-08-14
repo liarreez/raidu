@@ -84,7 +84,7 @@ function App() {
             } />
 
             {/* 테스트용 운동방 추가 */}
-            <Route path="/trainingTest" element={
+            <Route path="/exercise" element={
               <PrivateRoute>
                 <TrainingRoom />
               </PrivateRoute>

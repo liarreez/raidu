@@ -18,6 +18,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import topgrass from "../../Imgs/topgrass.png";
 import logo from "../../Imgs/logo.png";
+import profile from "../../Imgs/profilehero.png";
 import "../../CSS/TopNav.css";
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
@@ -220,7 +221,7 @@ function ResponsiveAppBar() {
                 )}
                 <Tooltip title="계정 관리">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="프사"/>
+                    <Avatar style={{ border: "1px solid var(--hard-color-black)" }} src={profile} alt="프사"/>
                   </IconButton>
                 </Tooltip>
                 <Menu

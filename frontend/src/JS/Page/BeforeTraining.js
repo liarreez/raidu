@@ -10,7 +10,7 @@ const BeforeTraining = () => {
   const [waitingRoomId, setWaitingRoomId] = useState("");
 
   const goToTrainingRoom = () => {
-    navigate("/trainingTest", {
+    navigate("/exercise", {
       state: {
         // 여기에 대기방에서 설정한 내용들을 적어주시면 됩니다.
         roomId: waitingRoomId,

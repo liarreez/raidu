@@ -69,39 +69,6 @@ const RaidWaitRoom = () => {
 
   const [exerciseSet, setExerciseSet] = useState([]); // 이 부분은 하위 컴포 roominfoform에서만 세팅합니다.
   const exerciseSetRef = useRef([]);
-
-  // 페이지 이탈 시 로직 (미완)
-  // useEffect(() => {
-  //     const handleBeforeUnload = (event) => {
-  //         // 사용자에게 표시할 메시지 설정
-  //         const message = '이 방을 정말로 나갈까요?';
-
-  //         // 브라우저가 사용자에게 이 메시지를 표시할 수 있게 설정
-  //         event.returnValue = message;
-
-  //         // 이 메시지는 대부분의 브라우저에서는 무시되며,
-  //         // 사용자에게는 기본 경고 메시지가 표시될 수 있음
-  //         return message;
-  //     };
-
-  //     // 페이지를 떠날 때 이벤트 리스너 추가
-  //     window.addEventListener('beforeunload', handleBeforeUnload);
-
-  //     // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
-  //     return () => {
-  //         sendTest1(false);
-  //         // DB 작업 추가해야 함
-
-  //         axios.delete(SERVER_URL + '/api/raidu/rooms/' + roomName + '/' + me.email, {}, {
-  //             headers: {
-  //                 'Authorization': `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
-  //             }
-  //         });
-  //         window.removeEventListener('beforeunload', handleBeforeUnload);
-  //     };
-
-  // },[]) // 컴포넌트 언마운트 시 실행됨
-
   const [roomNamed, setRoomNamed] = useState("");
   const [isRoomLocked, setIsRoomLocked] = useState(false);
 
@@ -220,19 +187,33 @@ const RaidWaitRoom = () => {
             hostInfo.email
           ),
           ...guestInfo.map(
-            (each) =>
-              new User(
-                each.nickname,
-                each.monsterBadgeUrl,
-                each.profileImageUrl,
-                each.level,
-                each.bestScore,
-                false,
-                false,
-                each.email
-              )
+          (each) =>
+            new User(
+              each.nickname,
+              each.monsterBadgeUrl,
+              each.profileImageUrl,
+              each.level,
+              each.bestScore,
+              false,
+              false,
+              each.email
+            )
           ),
         ]);
+
+        setMe((prevMe) => {
+          return new User(
+            prevMe.nickname,
+            prevMe.badge,
+            prevMe.profileImage,
+            prevMe.level,
+            prevMe.highestScore,
+            false,
+            prevMe.isCaptain,
+            prevMe.email
+          );
+        });
+
         setRendered(true); // 로드 체크
       });
   };
@@ -523,7 +504,7 @@ const RaidWaitRoom = () => {
         return isAllReady;
       } else return true;
     } else {
-      console.log("모든 운동 종목에 대한 선택을 완료해 주세요.");
+      alert("모든 라운드에 대한 운동 종목 선택을 완료해 주세요.");
       return false;
     }
   };
@@ -558,7 +539,7 @@ const RaidWaitRoom = () => {
 
       // 로딩스피너 보였으면 좋겠어용 ~
     } else {
-      console.log("아직 준비되지 않은 사용자가 있어요.");
+      alert("아직 준비되지 않은 사용자가 있어요.");
     }
   };
 
@@ -574,7 +555,7 @@ const RaidWaitRoom = () => {
     console.log(exerciseInfo);
     console.log(sessionId);
 
-    navigate("/trainingTest", {
+    navigate("/exercise", {
       // roomPk 주고 / userEmail 주고
       state: {
         roomId: sessionId,

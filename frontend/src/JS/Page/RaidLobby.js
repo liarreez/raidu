@@ -187,7 +187,11 @@ const RaidLobby = () => {
       const participants = guestInfo.length;
       maxParticipants - 1 === participants 
       ? 
+<<<<<<< HEAD
       alert('방에 인원이 가득 찼습니다!')
+=======
+      alert('방이 꽉 차서 입장할 수 없어요.')
+>>>>>>> 79eed9dc69ed2e98ad45997d32a710e2d90a2757
       : 
       navigate("/raid/" + id);
     });
