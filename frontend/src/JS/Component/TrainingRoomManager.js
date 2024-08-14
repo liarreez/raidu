@@ -34,6 +34,19 @@ import pushUp from "../../Imgs/pushUp.png";
 import squat from "../../Imgs/squat.png";
 import situp from "../../Imgs/situp.png";
 
+import burgerking from "../../Imgs/burgerking.png";
+import turtleneck from "../../Imgs/turtleneck.png";
+import diabeticlizard from "../../Imgs/diabeticlizard.png";
+import enteritisowl from "../../Imgs/enteritisowl.png";
+import fatiguebat from "../../Imgs/fatiguebat.png";
+import gloomylion from "../../Imgs/gloomylion.png";
+import dryeyecrab from "../../Imgs/dryeyecrab.png";
+import foodpoisoningwhale from "../../Imgs/foodpoisoningwhale.png";
+import lowtemperaturewolf from "../../Imgs/lowtemperaturewolf.png";
+import MigraineMedusa from "../../Imgs/MigraineMedusa.png";
+import mountainsicknesseagle from "../../Imgs/mountainsicknesseagle.png";
+import forgetfulduck from "../../Imgs/forgetfulduck.png";
+
 // 운동명에 따른 이미지 매핑 객체
 const exerciseImages = {
   jumpingJack: jumpingJack,
@@ -49,6 +62,22 @@ const exerciseName = {
   pushUp: "팔굽혀펴기",
   squat: "스쿼트",
   sitUp: "윗몸일으키기",
+};
+
+// 몬스터 명에 따른 이미지 매핑
+const monsterImages = {
+  "비마니우스 3세": burgerking,
+  "거북목거북": turtleneck,
+  "당뇨마뱀": diabeticlizard,
+  "뿡엉이": enteritisowl,
+  "피곤 박쥐": fatiguebat,
+  "우울 사자": gloomylion,
+  "건조하 게": dryeyecrab,
+  "식중독 고래": foodpoisoningwhale,
+  "춥개": lowtemperaturewolf,
+  "메두통사": MigraineMedusa,
+  "고산증 독수리": mountainsicknesseagle,
+  "오?리?": forgetfulduck,
 };
 
 function StepProgressBar({ expPercentage }) {
@@ -88,7 +117,7 @@ const APPLICATION_SERVER_URL = API_URL + "/api/raidu/rooms";
 const TrainingRoomManager = ({ roomData }) => {
   const [isNewMonster, setIsNewMonster] = useState(false);
   const [monsterName, setMonsterName] = useState(null);
-  const [monsterImgUrl, setMonsterImgUrl] = useState(null);
+  // const [monsterImgUrl, setMonsterImgUrl] = useState(null);
   const [isLevelUp, setIsLevelUp] = useState(false);
   const [updatedExp, setUpdatedExp] = useState(0);
   const [updatedLevel, setUpdatedLevel] = useState(0);
@@ -1122,7 +1151,7 @@ const TrainingRoomManager = ({ roomData }) => {
                     {isNewMonster ? "NEW!" : ""}
                   </div>
                   <img
-                    src={burgerking}
+                    src={monsterImages[monsterName]}
                     // src={monsterImgUrl}
                     alt="잡은 몬스터"
                     className="training-monster-image"
