@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { API_URL, ENV } from './config';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
@@ -17,6 +17,9 @@ import RaidWaitRoom from "./JS/Page/RaidWaitRoom.js";
 
 import TrainingRoom from './JS/Page/TrainingRoom.js';
 import BeforeTraining from './JS/Page/BeforeTraining.js';
+
+import mainAudio from './Audios/main.mp3';
+
 // 다른 페이지들을 import 하세요
 
 function PrivateRoute({ children }) {
@@ -25,8 +28,22 @@ function PrivateRoute({ children }) {
 }
 
 function App() {
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    audio.play();
+
+    return () => {
+      audio.pause();
+    };
+  }, []);
+
   return (
     <div className="app">
+      <audio ref={audioRef} loop>
+        <source src={mainAudio} type="audio/mpeg" />
+      </audio>
       <AnimatePresence>
         <Router>
           <Routes>
@@ -70,7 +87,7 @@ function App() {
                 <ConceptBook />
               </PrivateRoute>
             } />
-            
+
             {/* 여기에 추가적인 경로를 설정할것 */}
             <Route path="/raid" element={
               <PrivateRoute>
