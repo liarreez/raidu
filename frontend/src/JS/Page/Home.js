@@ -101,6 +101,7 @@ const Main = () => {
   const [regionScores, setRegionScores] = useState([]);
   const [totalContribute, setTotalContribute] = useState(null);
   const [userCount, setUserCount] = useState(null);
+  const [seasonName, setSeasonName] = useState(null);
 
   console.log(regionScores);
 
@@ -147,6 +148,8 @@ const Main = () => {
         setTotalContribute(response.data.data.totalContribute);
         console.log("유저 수 : " + response.data.data.userCount);
         setUserCount(response.data.data.userCount);
+        console.log("시즌 이름 : " + response.data.data.regionScores[0].seasonName);
+        setSeasonName(response.data.data.regionScores[0].seasonName);
 
       } catch (error) {
         console.error("페이지 정보 불러오기 실패...");
@@ -210,7 +213,7 @@ const Main = () => {
               <FirstRenderer>
                 <SpringAnime>
                   <div className="home-stat-container">
-                    <div className="home-season-title">Season1</div>
+                    <div className="home-season-title">{seasonName}</div>
                     <div className="home-season-content">
                       <div className="content-chart-container">
                         <div className="chart-title">시즌 기여도</div>

@@ -66,6 +66,7 @@ public class MainpageServiceImpl implements MainpageService{
           contributionMap.put("regionId", score.getRegion().getId());
           contributionMap.put("regionName", score.getRegion().getName());
           contributionMap.put("season", score.getSeason().getId());
+          contributionMap.put("seasonName", score.getSeason().getName());
           contributionMap.put("score", score.getScore());
           return contributionMap;
         })
