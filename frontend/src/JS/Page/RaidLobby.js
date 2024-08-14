@@ -187,7 +187,7 @@ const RaidLobby = () => {
       const participants = guestInfo.length;
       maxParticipants - 1 === participants 
       ? 
-      console.log('입장 금지 삐빅 == 여기에 입장 금지 로직 넣어주심 됩니다') 
+      alert('방에 인원이 가득 찼습니다!')
       : 
       navigate("/raid/" + id);
     });

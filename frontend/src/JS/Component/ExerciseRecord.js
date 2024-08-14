@@ -49,7 +49,11 @@ const ExerciseRecord = ({ record }) => {
           </div>
           <div>
             <span>
-              ({Math.round((record.personalCombatPower / record.totalCombatPower) * 100)}%)
+              ({
+                isNaN(Math.round((record.personalCombatPower / record.totalCombatPower) * 100))
+                  ? 0
+                  : Math.round((record.personalCombatPower / record.totalCombatPower) * 100)
+              }%)
             </span>
           </div>
         </div>
