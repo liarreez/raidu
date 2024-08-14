@@ -37,6 +37,11 @@ import MigraineMedusa from "../../Imgs/MigraineMedusa.png";
 import mountainsicknesseagle from "../../Imgs/mountainsicknesseagle.png";
 import forgetfulduck from "../../Imgs/forgetfulduck.png";
 
+import region_cliff from "../../Imgs/region_cliff.jpg";
+import region_desert from "../../Imgs/region_desert.jpg";
+import region_forest from "../../Imgs/region_forest.jpg";
+import region_sea from "../../Imgs/region_sea.jpg";
+
 const SERVERURL = API_URL;
 
 // 몬스터 명에 따른 이미지 매핑

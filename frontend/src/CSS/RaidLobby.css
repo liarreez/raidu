@@ -258,11 +258,14 @@
 .lobby-illust {
     width: 350px;
     height: 315px;
-    border-radius: 8px;
+    border-radius: 40% 20px 40% 20px;
     margin-top: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+
+    box-shadow: 0px 4px 8px 4px rgba(0,0,0,0.2);
 }
 
 .lobby-illust img {

@@ -412,7 +412,7 @@ const RaidWaitRoom = () => {
         websocketClient.send(DESTINATION, message);
       }
     } else {
-      console.log("모든 라운드에 대한 운동 종목 선택을 완료해 주세요.");
+      alert("모든 라운드에 대한 운동 종목 선택을 완료해 주세요.");
     }
   };
 
