@@ -291,3 +291,107 @@
 .training-stage p:nth-child(2) {
     font-size: 14px;
 }
+
+/* ===================== */
+
+.training-finish-wrapper {
+    width: 850px;
+    height: 250px;
+    display: flex;
+    box-sizing: border-box;
+    padding: 10px 0px;
+    border-radius: 10px;
+    background-color: rgba(82, 50, 45, 0.4);
+    outline: 10px dashed rgba(82, 50, 45, 0.4);
+}
+
+.training-finish-monster-info {
+    position: absolute;
+    padding: 0px 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.training-finish-new-indicator {
+    position: absolute;
+    font-size: 30px;
+    font-weight: bold;
+
+    color: #fff;
+    text-shadow:
+        0 0 7px #ffeac0,
+        0 0 10px #ffddb1,
+        0 0 42px rgb(255, 153, 0),
+        0 0 82px rgb(255, 247, 0);
+
+    transition: 0.3s ease-in-out;
+    animation: rotateAnimation 1s infinite alternate ease-in-out;
+}
+
+@keyframes rotateAnimation {
+    0% {
+        transform: rotate(-15deg);
+    }
+    100% {
+        transform: rotate(-5deg);
+    }
+}
+
+.training-finish-monster-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.training-finish-monster-name {
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.training-finish-right-wrapper {
+    position: relative;
+    left: 230px;
+    font-weight: bold;
+    color: var(--hard-color-black);
+}
+
+.training-finish-right-stage {
+    font-weight: bold;
+
+    color: #fff;
+    text-shadow:
+        0 0 7px #ffeac0,
+        0 0 10px #ffddb1,
+        0 0 42px rgb(255, 153, 0),
+        0 0 82px rgb(255, 247, 0);
+}
+
+.training-finish-level-wrapper div:nth-child(1) {
+    color: var(--hard-color-black);
+}
+
+.training-finish-button-wrapper {
+    display: flex;
+}
+
+.training-finish-button-exit {
+    padding: 10px 40px;
+    position: relative;
+    left: 150px;
+    background-color: var(--hard-color-black);
+    color: var(--hard-color-white);
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+}
+
+.training-finish-button-exit:hover {
+    transform: scale(1.1);
+    background-color: var(--hard-color-green);
+}
