@@ -12,8 +12,6 @@ import exerciseSoldier from "../../Imgs/exerciseSoldier.gif";
 import restSoldier from "../../Imgs/restSoldier.gif";
 import standSoldier from "../../Imgs/standSoldier.png";
 
-import burgerking from "../../Imgs/burgerking.png";
-
 import Timer from "./Timer";
 import TimerRest from "./TimerRest";
 
@@ -66,18 +64,33 @@ const exerciseName = {
 
 // 몬스터 명에 따른 이미지 매핑
 const monsterImages = {
-  "비마니우스 3세": burgerking,
-  "거북목거북": turtleneck,
-  "당뇨마뱀": diabeticlizard,
-  "뿡엉이": enteritisowl,
-  "피곤 박쥐": fatiguebat,
-  "우울 사자": gloomylion,
-  "건조하 게": dryeyecrab,
-  "식중독 고래": foodpoisoningwhale,
-  "춥개": lowtemperaturewolf,
-  "메두통사": MigraineMedusa,
-  "고산증 독수리": mountainsicknesseagle,
-  "오?리?": forgetfulduck,
+  burgerking: burgerking,
+  turtleneck: turtleneck,
+  diabeticlizard: diabeticlizard,
+  enteritisowl: enteritisowl,
+  fatiguebat: fatiguebat,
+  gloomylion: gloomylion,
+  dryeyecrab: dryeyecrab,
+  foodpoisoningwhale: foodpoisoningwhale,
+  lowtemperaturewolf: lowtemperaturewolf,
+  MigraineMedusa: MigraineMedusa,
+  mountainsicknesseagle: mountainsicknesseagle,
+  forgetfulduck: forgetfulduck,
+};
+
+const monsterNames = {
+  burgerking: "비마니우스 3세",
+  turtleneck: "거북목거북",
+  diabeticlizard: "당뇨마뱀",
+  enteritisowl: "뿡엉이",
+  fatiguebat: "피곤 박쥐",
+  gloomylion: "우울 사자",
+  dryeyecrab: "건조하 게",
+  foodpoisoningwhale: "식중독 고래",
+  lowtemperaturewolf: "춥개",
+  MigraineMedusa: "메두통사",
+  mountainsicknesseagle: "고산증 독수리",
+  forgetfulduck: "오?리?"
 };
 
 function StepProgressBar({ expPercentage }) {
@@ -117,7 +130,6 @@ const APPLICATION_SERVER_URL = API_URL + "/api/raidu/rooms";
 const TrainingRoomManager = ({ roomData }) => {
   const [isNewMonster, setIsNewMonster] = useState(false);
   const [monsterName, setMonsterName] = useState(null);
-  // const [monsterImgUrl, setMonsterImgUrl] = useState(null);
   const [isLevelUp, setIsLevelUp] = useState(false);
   const [updatedExp, setUpdatedExp] = useState(0);
   const [updatedLevel, setUpdatedLevel] = useState(0);
@@ -782,7 +794,6 @@ const TrainingRoomManager = ({ roomData }) => {
           .then((data) => {
             console.log("불러온 몬스터 데이터:", data);
             setIsNewMonster(data.data.capturedMonster.new);
-            setMonsterImgUrl(data.data.capturedMonster.imageUrl);
             setMonsterName(data.data.capturedMonster.name);
           })
           .catch((error) => {
@@ -1152,7 +1163,6 @@ const TrainingRoomManager = ({ roomData }) => {
                   </div>
                   <img
                     src={monsterImages[monsterName]}
-                    // src={monsterImgUrl}
                     alt="잡은 몬스터"
                     className="training-monster-image"
                     style={{
@@ -1171,7 +1181,7 @@ const TrainingRoomManager = ({ roomData }) => {
                       fontFamily: "WarhavenB",
                     }}
                   >
-                    {monsterName}
+                    {monsterNames[monsterName]}
                   </div>
                 </div>
 
