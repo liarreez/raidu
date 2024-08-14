@@ -1,32 +1,40 @@
 {
   "files": {
-    "main.css": "/static/css/main.04544467.css",
-    "main.js": "/static/js/main.8b47ef49.js",
+    "main.css": "/static/css/main.56ba58d3.css",
+    "main.js": "/static/js/main.f8f1c189.js",
     "static/media/complete_scroll.png": "/static/media/complete_scroll.f14d7e887c4e04907461.png",
     "static/media/dryeyecrab.png": "/static/media/dryeyecrab.72a5434087bceedf3b74.png",
     "static/media/mountainsicknesseagle.png": "/static/media/mountainsicknesseagle.6dfe853132766a76d770.png",
     "static/media/diabeticlizard.png": "/static/media/diabeticlizard.bcc3dc5d49b9d2d57c31.png",
+    "static/media/profilehero.png": "/static/media/profilehero.b4e64b6b7de896275d8e.png",
     "static/media/MigraineMedusa.png": "/static/media/MigraineMedusa.ac4756cb6a2ff428ff47.png",
     "static/media/enteritisowl.png": "/static/media/enteritisowl.619546c1ea1b5f8222f6.png",
     "static/media/lowtemperaturewolf.png": "/static/media/lowtemperaturewolf.c139075084cacbb26001.png",
     "static/media/gloomylion.png": "/static/media/gloomylion.d1d4f7ac11f910eaadb8.png",
+    "static/media/forgetfulduck.png": "/static/media/forgetfulduck.9d327eb87468b5d0f715.png",
     "static/media/monster.gif": "/static/media/monster.274051db64c80eb2b9cd.gif",
     "static/media/foodpoisoningwhale.png": "/static/media/foodpoisoningwhale.5e830b5efaba374f5f54.png",
     "static/media/back.jpg": "/static/media/back.c564ec1c50bfade1739d.jpg",
     "static/media/icon_desert.png": "/static/media/icon_desert.9a324217477905e5da71.png",
     "static/media/fatiguebat.png": "/static/media/fatiguebat.fd7cbce3572dcdc0228a.png",
     "static/media/icon_cliff.png": "/static/media/icon_cliff.97a9eff3836096c10be6.png",
+    "static/media/conceptbook_3.jpg": "/static/media/conceptbook_3.e0b0c66a56d273c8e596.jpg",
     "static/media/region_forest.jpg": "/static/media/region_forest.9b143b4d2c5fd153e11d.jpg",
+    "static/media/conceptbook_1.png": "/static/media/conceptbook_1.37028a0baffc5b996117.png",
     "static/media/region_sea.jpg": "/static/media/region_sea.98e81ff4fc150fc61d72.jpg",
     "static/media/icon_forest.png": "/static/media/icon_forest.4d4cc6bfeed21e6ce823.png",
+    "static/media/conceptbook_5.jpg": "/static/media/conceptbook_5.853f30d523fe26f1ad47.jpg",
     "static/media/region_desert.jpg": "/static/media/region_desert.9d5c31e9208c0ba82ec6.jpg",
     "static/media/icon_sea.png": "/static/media/icon_sea.05a5c085b657493dd66d.png",
     "static/media/region_cliff.jpg": "/static/media/region_cliff.7dd3dee101e57e3dffdd.jpg",
+    "static/media/conceptbook_4.png": "/static/media/conceptbook_4.b9ee905abcd9c052da5f.png",
     "static/media/helmet.gif": "/static/media/helmet.d7a402801f66b37d0c43.gif",
+    "static/media/conceptbook_2.jpg": "/static/media/conceptbook_2.4c3acfc680d3e5b4621b.jpg",
     "static/media/flag.gif": "/static/media/flag.df517efca1c9712687f5.gif",
     "static/media/standSoldier.png": "/static/media/standSoldier.b7d3c2e31d84a7322040.png",
     "static/media/ranking.gif": "/static/media/ranking.2d7306cd3b97c4fb80f8.gif",
     "static/media/login.gif": "/static/media/login.35877fff23ede6b490fd.gif",
+    "static/media/lobby.jpg": "/static/media/lobby.ddb247fa5bb7441d7b65.jpg",
     "static/media/sign.gif": "/static/media/sign.cae3dec744af4e07c50c.gif",
     "static/media/burgerking.png": "/static/media/burgerking.1bfa5cf10bd792e49cfb.png",
     "static/media/document.gif": "/static/media/document.8c7646f88368a9238b58.gif",
@@ -50,11 +58,11 @@
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.04544467.css.map": "/static/css/main.04544467.css.map",
-    "main.8b47ef49.js.map": "/static/js/main.8b47ef49.js.map"
+    "main.56ba58d3.css.map": "/static/css/main.56ba58d3.css.map",
+    "main.f8f1c189.js.map": "/static/js/main.f8f1c189.js.map"
   },
   "entrypoints": [
-    "static/css/main.04544467.css",
-    "static/js/main.8b47ef49.js"
+    "static/css/main.56ba58d3.css",
+    "static/js/main.f8f1c189.js"
   ]
 }
