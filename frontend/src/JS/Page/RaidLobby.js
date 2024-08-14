@@ -14,6 +14,7 @@ import icon_breaktime from "../../Imgs/icon_breaktime.png";
 import icon_counter from "../../Imgs/icon_counter.png";
 import icon_human_fill from "../../Imgs/icon_human_fill.png";
 import icon_human_empty from "../../Imgs/icon_human_empty.png";
+import lobby from "../../Imgs/lobby.jpg"
 import room from "../../Imgs/room.gif";
 
 import raidu from "../../Imgs/button-raidu.png";
@@ -350,7 +351,7 @@ const RaidLobby = () => {
                   </div>
 
                   <div className="lobby-illust">
-                    <img alt="로비 일러스트"></img>
+                    <img alt="로비 일러스트" src={lobby}></img>
                   </div>
                 </div>
               </div>
