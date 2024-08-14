@@ -18,8 +18,6 @@ import RaidWaitRoom from "./JS/Page/RaidWaitRoom.js";
 import TrainingRoom from './JS/Page/TrainingRoom.js';
 import BeforeTraining from './JS/Page/BeforeTraining.js';
 
-import mainAudio from './Audios/main.mp3';
-
 // 다른 페이지들을 import 하세요
 
 function PrivateRoute({ children }) {
@@ -28,22 +26,8 @@ function PrivateRoute({ children }) {
 }
 
 function App() {
-  const audioRef = useRef(null);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    audio.play();
-
-    return () => {
-      audio.pause();
-    };
-  }, []);
-
   return (
     <div className="app">
-      <audio ref={audioRef} loop>
-        <source src={mainAudio} type="audio/mpeg" />
-      </audio>
       <AnimatePresence>
         <Router>
           <Routes>
