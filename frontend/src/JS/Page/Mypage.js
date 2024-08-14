@@ -35,6 +35,7 @@ import foodpoisoningwhale from "../../Imgs/foodpoisoningwhale.png";
 import lowtemperaturewolf from "../../Imgs/lowtemperaturewolf.png";
 import MigraineMedusa from "../../Imgs/MigraineMedusa.png";
 import mountainsicknesseagle from "../../Imgs/mountainsicknesseagle.png";
+import forgetfulduck from "../../Imgs/forgetfulduck.png";
 
 const SERVERURL = API_URL;
 
@@ -51,6 +52,7 @@ const monsterImages = {
   lowtemperaturewolf: lowtemperaturewolf,
   MigraineMedusa: MigraineMedusa,
   mountainsicknesseagle: mountainsicknesseagle,
+  forgetfulduck: forgetfulduck,
 };
 
 const monsterNames = {
@@ -65,6 +67,7 @@ const monsterNames = {
   lowtemperaturewolf: "춥개",
   MigraineMedusa: "메두통사",
   mountainsicknesseagle: "고산증 독수리",
+  forgetfulduck: "오?리?"
 };
 
 function StepProgressBar({ expPercentage }) {
