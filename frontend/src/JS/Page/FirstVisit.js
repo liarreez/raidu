@@ -268,7 +268,7 @@ const FirstVisit = () => {
             />
 
             <button
-              className="modal-button button-gray"
+              className="modal-nickname-button button-gray"
               onClick={checkNickname}
               style={{ fontSize: "12px", padding: "8px" }}
             >
