@@ -145,7 +145,6 @@ const RaidLobby = () => {
       })
       .then((res) => {
         res.status === 204 ? setRoomList([]) : setRoomList(res.data.data.waitingRoomList)
-
       })
       .catch((error) => {
         console.error("방 정보 받아오기 실패!", error);
@@ -172,17 +171,25 @@ const RaidLobby = () => {
       });
   }, []);
 
-  useEffect(() => {
-    console.log(roomList);
-    roomList.map((each) => {
-      console.log(each.title);
-    });
-  }, [roomList]);
-
   const navigate = useNavigate();
 
-  const changeLocation = (e, id) => {
-    navigate("/raid/" + id);
+  const changeLocation = (e, id, maxParticipants) => {
+      return axios
+    .get(SERVER_URL + "/api/raidu/rooms/" + id, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
+        "Content-Type": "application/json",
+      },
+    })
+    .then((res) => {
+      const guestInfo = res.data.data.guestList;
+      const participants = guestInfo.length;
+      maxParticipants - 1 === participants 
+      ? 
+      console.log('입장 금지 삐빅 == 여기에 입장 금지 로직 넣어주심 됩니다') 
+      : 
+      navigate("/raid/" + id);
+    });
   };
 
   const openModal = () => {
@@ -269,7 +276,6 @@ const RaidLobby = () => {
     }
   };
 
-
   return (
     <div className="raidLobby-html">
       <FadeAnime>
@@ -332,7 +338,7 @@ const RaidLobby = () => {
                           <div>
                             <button
                               className="lobby-join-button"
-                              onClick={(e) => changeLocation(e, each.id)}
+                              onClick={(e) => changeLocation(e, each.id, each.maxParticipants)}
                             >
                               <span className="text">입장하기</span>
                             </button>

@@ -370,7 +370,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // 정해둔 마지막 정산 전 애니메이션 시간
   const lastMotionTime = 1;
   // 정해둔 완료 시간(마지막 정산)
-  const endingTime = 100;
+  const endingTime = 20;
   // 현재 라운드
   const [currentRound, setCurrentRound] = useState(0);
   // 처음에 헷갈리지 않도록 만들기 위한 것(시작하였는가? 준비부터 시작되었는가?)
@@ -776,6 +776,10 @@ const TrainingRoomManager = ({ roomData }) => {
       }
 
       setOpenModal(true);
+    } else if (currentStep === 'finish!') {
+
+      byeBye();
+
     } else {
       setOpenModal(false);
     }
