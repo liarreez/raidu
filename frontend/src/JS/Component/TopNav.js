@@ -23,7 +23,7 @@ import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 �
 
 const pages = [
   { name: "레이두", subLevels: ["레이두"] },
-  { name: "가이드", subLevels: ["튜토리얼", "컨셉 북", "운동 백과"] },
+  { name: "가이드", subLevels: ["튜토리얼", "컨셉 북"] },
   { name: "정보", subLevels: ["유저 검색"] },
 ];
 const settings = ["마이페이지", "개인정보 수정", "로그아웃"];

@@ -187,6 +187,21 @@
     margin-top: 10%;
 }
 
+.loading-button {
+    grid-area: soldier-content;
+    width: 180px;
+    height: 40px;
+    background: linear-gradient(to right, #fefb72, #f0bb31);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-family: inherit;
+    font-size: 14px;
+    margin-top: 10%;
+    pointer-events: none;
+}
+
 .start-button {
     grid-area: soldier-content;
     width: 180px;

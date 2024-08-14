@@ -191,13 +191,13 @@ const Main = () => {
 
             <div className="home-button-group">
               <div className="home-button-left" onClick={()=>navigate("/raid")}>
-                <h3>레이드</h3>
-                <img src={raidu} alt="레이드" />
+                <h3>레이두</h3>
+                <img src={raidu} alt="레이두" />
               </div>
 
-              <div className="home-button-right" onClick={()=>navigate("/notfound")}>
-                <h3>운동백과</h3>
-                <img src={training} alt="운동백과" />
+              <div className="home-button-right" onClick={()=>navigate("/tutorial")}>
+                <h3>튜토리얼</h3>
+                <img src={training} alt="튜토리얼" />
               </div>
             </div>
 
