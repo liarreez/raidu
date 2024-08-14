@@ -60,7 +60,7 @@ const chatAreaStyle = (isFocused) => ({
     margin: 'auto',
     overflowY: 'scroll', // 스크롤을 가능하게 설정
     padding: '10px',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#F6F6F6',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
@@ -209,8 +209,8 @@ const RaidWaitRoom_chatting = ({me, chatMessages, sendTest3}) => {
                         },
                       }}
                 />
-                <Button variant="contained" onClick={handleSendMessage} onMouseEnter={() => handleBtnHover(0)} onMouseLeave={() => handleBtnHover(1)} style={ isHover ? sendBtnHoverStyle : sendBtnStyle }>
-                    보내기
+                <Button variant="contained" onClick={handleSendMessage} onMouseEnter={() => handleBtnHover(0)} onMouseLeave={() => handleBtnHover(1)} style={ isHover ? sendBtnHoverStyle : sendBtnStyle } sx={{transition: "0.3s ease-in-out"}}>
+                    채팅창 접기
                 </Button>
             </div>
         </div>
