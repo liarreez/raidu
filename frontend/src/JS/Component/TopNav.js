@@ -126,9 +126,11 @@ function ResponsiveAppBar() {
       navigate("/tutorial");
     } else if (dest === "컨셉 북") {
       navigate("/conceptbook");
-    } else if (dest === "운동 백과") {
-      navigate("/dictionary");
-    } else if (dest === "유저 검색") {
+    }
+    //  else if (dest === "운동 백과") {
+    //   navigate("/dictionary");
+    // } 
+    else if (dest === "유저 검색") {
       navigate("/usersearch");
     }
   };
