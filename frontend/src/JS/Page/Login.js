@@ -185,6 +185,7 @@ const Login = () => {
       console.log(response);
       localStorage.setItem("accessToken", response.data.data.accessToken);
       localStorage.setItem("refreshToken", response.data.data.refreshToken);
+      localStorage.setItem("curEmail", email);
       
       console.log("저장된 access토큰 : " + localStorage.getItem("accessToken"));
       console.log("저장된 refresh토큰 : " + localStorage.getItem("refreshToken"));

@@ -22,7 +22,7 @@ import "../../CSS/TopNav.css";
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
 const pages = [
-  { name: "활동", subLevels: ["레이두"] },
+  { name: "레이두", subLevels: ["레이두"] },
   { name: "가이드", subLevels: ["튜토리얼", "컨셉 북", "운동 백과"] },
   { name: "정보", subLevels: ["유저 검색"] },
 ];
@@ -104,6 +104,7 @@ function ResponsiveAppBar() {
         // 로그아웃 처리 로직 추가해야함
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        localStorage.removeItem("curEmail");
         navigate("/login");
       }
     },

@@ -85,12 +85,15 @@
     width: 400px;
     height: 300px;
     background-color: rgb(212, 212, 212);
-    border-radius: 2px;
+    border-radius: 10px;
     overflow: hidden;
+    box-shadow: 0px 2px 4px 2px rgba(0,0,0,0.2);
     box-sizing: border-box;
 }
 
 .section-image img {
+    width: inherit;
+    height: inherit;
     object-fit: cover;
 }
 
