@@ -1,5 +1,15 @@
 /* 전체 전투력 프로그레스 바 CSS */
 
+.total-combat-power-wrapper {
+  width: 100%;
+  height: 85%;
+  margin-bottom: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+}
+
 .total-combat-power-label {
   font-size: 16px;
   margin-bottom: 8px;
@@ -7,19 +17,19 @@
 }
 
 .total-combat-power-container {
-  width: 20%;
+  width: 30px;
   height: 100%;
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
-  border-radius: 20px;
+  border-radius: 8px;
   overflow: hidden;
   position: relative;
 }
 
 .total-combat-power {
   width: 100%;
-  transition: 2s ease-in-out;
+  transition: 1s ease-in-out;
 }
 
 .total-combat-power-background {

@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import CreateWaitingRoom from '../Component/CreateWaitingRoom';
 // 운동방 참석 및 퇴장 가능한 컴포넌트
 import TrainingRoomManager from '../Component/TrainingRoomManager';
-
+import '../../CSS/TrainingRoomManager.css'
 // 현재 페이지는 대기방 고유 Id를 생성하고,
 // 그걸 바탕으로 닉네임과 함께 방으로 들어가는 로직입니다.
 // 나중에 수정 필요.
@@ -24,9 +24,10 @@ const TrainingRoom = () => {
 
   return (
     <div>
-      <div id="training-background-img"></div>
+      <div id="training-background-img">
       {/* <CreateWaitingRoom setWaitingRoomId={setWaitingRoomId} /> */}
       <TrainingRoomManager roomData={roomData} />
+      </div>
     </div>
   );
 };

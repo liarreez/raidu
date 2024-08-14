@@ -50,8 +50,10 @@ const Timer = ({ currentTime, timerActive, ChangeCurrentTime }) => {
           }}
         />
       </div>
-      <div className='time-number'>
-        <span>{count}</span>
+      <div className='time-number-container'>
+        <div className='time-number'>
+          {count}
+        </div>
       </div>
     </div>
   );
