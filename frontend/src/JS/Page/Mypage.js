@@ -37,12 +37,32 @@ import MigraineMedusa from "../../Imgs/MigraineMedusa.png";
 import mountainsicknesseagle from "../../Imgs/mountainsicknesseagle.png";
 import forgetfulduck from "../../Imgs/forgetfulduck.png";
 
+import profile from "../../Imgs/profilehero.png";
+
+import icon_cliff from "../../Imgs/icon_cliff.png";
+import icon_desert from "../../Imgs/icon_desert.png";
+import icon_forest from "../../Imgs/icon_forest.png";
+import icon_sea from "../../Imgs/icon_sea.png";
 import region_cliff from "../../Imgs/region_cliff.jpg";
 import region_desert from "../../Imgs/region_desert.jpg";
 import region_forest from "../../Imgs/region_forest.jpg";
 import region_sea from "../../Imgs/region_sea.jpg";
 
 const SERVERURL = API_URL;
+
+const userBadgeImages = {
+  "근력의 절벽" : icon_cliff,
+  "민첩의 숲" : icon_forest,
+  "지구력의 사막" : icon_desert,
+  "유연의 해변" : icon_sea
+}
+
+const userBackgroundImages = {
+  "근력의 절벽" : region_cliff,
+  "민첩의 숲" : region_forest,
+  "지구력의 사막" : region_desert,
+  "유연의 해변" : region_sea
+}
 
 // 몬스터 명에 따른 이미지 매핑
 const monsterImages = {
@@ -319,16 +339,16 @@ function Mypage() {
             <div className="mypage-content">
               <div className="content-profile">
                 <div className="profile-background-image">
-                  <img src={test} alt="프로필 배경" />
+                  <img src={userBackgroundImages[userData.regionName]} alt="프로필 배경" />
                 </div>
                 <div className="profile-info">
                   <div className="profile-image-wrapper">
                     <div className="profile-image-group">
                       <div className="profile-image-portrait">
-                        <img src={burgerking} alt="프로필" />
+                        <img src={profile} alt="프로필" />
                       </div>
                       <div className="profile-image-badge">
-                        <img src={burgerking} alt="뱃지" />
+                        <img src={userBadgeImages[userData.regionName]} alt="뱃지" />
                       </div>
                     </div>
                   </div>

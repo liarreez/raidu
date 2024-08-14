@@ -87,19 +87,21 @@
     height: 150px;
     border-radius: 50%;
     overflow: hidden;
-
-    
+    box-sizing: border-box;
+    background-color: #FFFFFF;
     box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    
+    border: 3px solid var(--hard-color-black);
+    justify-content: center;
 }
 
 .profile-image-portrait img {
     object-fit: cover;
     width: inherit;
     height: inherit;
-    border-radius: inherit;
-    box-sizing: border-box;
 
-    border: 3px solid var(--hard-color-black);
 }
 
 .profile-image-badge {
