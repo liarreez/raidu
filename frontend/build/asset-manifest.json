@@ -1,11 +1,20 @@
 {
   "files": {
-    "main.css": "/static/css/main.6db96fd1.css",
-    "main.js": "/static/js/main.aa82ceb1.js",
+    "main.css": "/static/css/main.04544467.css",
+    "main.js": "/static/js/main.8b47ef49.js",
     "static/media/complete_scroll.png": "/static/media/complete_scroll.f14d7e887c4e04907461.png",
-    "static/media/back.jpg": "/static/media/back.6a4fd6d197a02180bf7e.jpg",
+    "static/media/dryeyecrab.png": "/static/media/dryeyecrab.72a5434087bceedf3b74.png",
+    "static/media/mountainsicknesseagle.png": "/static/media/mountainsicknesseagle.6dfe853132766a76d770.png",
+    "static/media/diabeticlizard.png": "/static/media/diabeticlizard.bcc3dc5d49b9d2d57c31.png",
+    "static/media/MigraineMedusa.png": "/static/media/MigraineMedusa.ac4756cb6a2ff428ff47.png",
+    "static/media/enteritisowl.png": "/static/media/enteritisowl.619546c1ea1b5f8222f6.png",
+    "static/media/lowtemperaturewolf.png": "/static/media/lowtemperaturewolf.c139075084cacbb26001.png",
+    "static/media/gloomylion.png": "/static/media/gloomylion.d1d4f7ac11f910eaadb8.png",
     "static/media/monster.gif": "/static/media/monster.274051db64c80eb2b9cd.gif",
+    "static/media/foodpoisoningwhale.png": "/static/media/foodpoisoningwhale.5e830b5efaba374f5f54.png",
+    "static/media/back.jpg": "/static/media/back.c564ec1c50bfade1739d.jpg",
     "static/media/icon_desert.png": "/static/media/icon_desert.9a324217477905e5da71.png",
+    "static/media/fatiguebat.png": "/static/media/fatiguebat.fd7cbce3572dcdc0228a.png",
     "static/media/icon_cliff.png": "/static/media/icon_cliff.97a9eff3836096c10be6.png",
     "static/media/region_forest.jpg": "/static/media/region_forest.9b143b4d2c5fd153e11d.jpg",
     "static/media/region_sea.jpg": "/static/media/region_sea.98e81ff4fc150fc61d72.jpg",
@@ -25,10 +34,10 @@
     "static/media/turtleneck.png": "/static/media/turtleneck.c8f53e4bd4576dc9924c.png",
     "static/media/room.gif": "/static/media/room.7233b33aec9bf55f9f6a.gif",
     "static/media/logo.png": "/static/media/logo.422afe8d9f27949075c4.png",
+    "static/media/restSoldier.gif": "/static/media/restSoldier.08253f4835e222b30a1c.gif",
+    "static/media/exerciseSoldier.gif": "/static/media/exerciseSoldier.f4e269f3c70009bac554.gif",
     "static/media/topgrass.png": "/static/media/topgrass.56247141cd63d1d16ffd.png",
     "static/media/button-training.png": "/static/media/button-training.a7496c8b505cd4327d89.png",
-    "static/media/exerciseSoldier.gif": "/static/media/exerciseSoldier.dc76e4c792375359f181.gif",
-    "static/media/restSoldier.gif": "/static/media/restSoldier.deafcc14057e40139244.gif",
     "static/media/icon_counter.png": "/static/media/icon_counter.43fadac81543f9e6ecae.png",
     "static/media/icon_breaktime.png": "/static/media/icon_breaktime.65f871f23a6290bd73bd.png",
     "static/media/situp.png": "/static/media/situp.5dd5e02296fa4015039f.png",
@@ -41,11 +50,11 @@
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.6db96fd1.css.map": "/static/css/main.6db96fd1.css.map",
-    "main.aa82ceb1.js.map": "/static/js/main.aa82ceb1.js.map"
+    "main.04544467.css.map": "/static/css/main.04544467.css.map",
+    "main.8b47ef49.js.map": "/static/js/main.8b47ef49.js.map"
   },
   "entrypoints": [
-    "static/css/main.6db96fd1.css",
-    "static/js/main.aa82ceb1.js"
+    "static/css/main.04544467.css",
+    "static/js/main.8b47ef49.js"
   ]
 }

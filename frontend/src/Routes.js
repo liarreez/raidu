@@ -20,6 +20,7 @@ class Routes extends React.Component {
           <Route path="/editprofile" component={EditProfile} />
           <Route path="/usersearch" component={UserSearch} />
           <Route path="/firstvisit" component={FirstVisit} />
+          {/* <Route path="/tutorial" component={Tutorial} /> */}
 
           <Route path="*" component={NotFound} />
         </Routes>

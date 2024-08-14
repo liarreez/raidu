@@ -899,19 +899,24 @@ const TrainingRoomManager = ({ roomData }) => {
           <div className="training-frame">
             <div className="video-frame">
               <div className="my-video">{publisher &&
-                <SelfVideo streamManager={publisher}
-                  countPower={countPower}
-                  ChangeCount={ChangeCount}
-                  sendTest2={sendTest2}
-                  currentRound={currentRound} exerciseForRound={exerciseForRound}
-                  myCombatPower={myCombatPower} eachRoundCount={eachRoundCount}
-                  roundWeight={roundWeight} isExercise={isExercise}
-                  UpdateMyTotalCombatPower={UpdateMyTotalCombatPower} myTotalCombatPower={myTotalCombatPower}
-                  addMyCombatPower={addMyCombatPower}
-                  updateEachRoundCount={updateEachRoundCount} updateMyCombatPower={updateMyCombatPower}
-                  changeIsPoseDetect={changeIsPoseDetect}
-
-                />}
+                <SelfVideo
+                streamManager={publisher}
+                countPower={countPower}
+                ChangeCount={ChangeCount}
+                sendTest2={sendTest2}
+                currentRound={currentRound}
+                exerciseForRound={exerciseForRound}
+                myCombatPower={myCombatPower}
+                eachRoundCount={eachRoundCount}
+                roundWeight={roundWeight}
+                isExercise={isExercise}
+                UpdateMyTotalCombatPower={UpdateMyTotalCombatPower}
+                myTotalCombatPower={myTotalCombatPower}
+                addMyCombatPower={addMyCombatPower}
+                updateEachRoundCount={updateEachRoundCount}
+                updateMyCombatPower={updateMyCombatPower}
+                changeIsPoseDetect={changeIsPoseDetect}
+              />}
               </div>
               <div className="other-video">
                 {subscribers.map((sub, i) => (
@@ -975,7 +980,13 @@ const TrainingRoomManager = ({ roomData }) => {
                 ) : (
                   <>
                     {isCaptain && firstClick && (
-                      <button className="start-button" onClick={sendTest1} disabled={!isPoseDetect}>Start</button>
+                      <>
+                        {!isPoseDetect ? (
+                          <button className="loading-button">Loading...</button>
+                        ) : (
+                          <button className="start-button" onClick={sendTest1}>Start</button>
+                        )}
+                      </>
                     )}
                     <img className='soldier-gif' src={exerciseSoldier} alt="운동용사" />
                   </>

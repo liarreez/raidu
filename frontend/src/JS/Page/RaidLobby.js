@@ -116,10 +116,10 @@ const RoomCreationModal = ({
             </div>
 
             <div className="lobby-modal-buttongroup">
-            <button type="button" onClick={clearVals} className="lobby-modal-button-cancel">
-              취소
-            </button>
-            <button type="submit" className="lobby-modal-button-submit">만들기</button>
+              <button type="button" onClick={clearVals} className="lobby-modal-button-cancel">
+                취소
+              </button>
+              <button type="submit" className="lobby-modal-button-submit">만들기</button>
             </div>
           </form>
         </div>
@@ -146,7 +146,7 @@ const RaidLobby = () => {
       })
       .then((res) => {
         res.status === 204 ? setRoomList([]) : setRoomList(res.data.data.waitingRoomList)
-      
+
       })
       .catch((error) => {
         console.error("방 정보 받아오기 실패!", error);
@@ -204,7 +204,12 @@ const RaidLobby = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "title") setTitle(value);
+    if (name === "title")
+      if (value.length <= 20) {
+        setTitle(value);
+      } else {
+        alert("방 제목이 20자를 넘어서는 안됩니다!");
+      }
     else if (name === "maxParticipants") setMaxParticipants(value);
     else if (name === "roundTime") setRoundTime(value);
     else if (name === "restTime") setRestTime(value);
@@ -230,36 +235,40 @@ const RaidLobby = () => {
 
     // 필수 항목 체크
     if (!title || !maxParticipants || !roundTime || !restTime || !totalRounds) {
-        alert("모든 필수 항목을 입력해주세요!");
-        return; // 조건을 충족하지 않으면 폼 제출 중지
+      alert("모든 필수 항목을 입력해주세요!");
+      return; // 조건을 충족하지 않으면 폼 제출 중지
+    }
+    if (title.length > 20) {
+      alert("방 제목이 20자를 넘어서는 안됩니다!")
+      return;
     }
 
     const payload = {
-        title,
-        maxParticipants,
-        roundTime,
-        restTime,
-        totalRounds,
-        isPublic,
-        hostEmail: me.email,
+      title,
+      maxParticipants,
+      roundTime,
+      restTime,
+      totalRounds,
+      isPublic,
+      hostEmail: me.email,
     };
 
     try {
-        const response = await axios.post(SERVER_URL + "/api/raidu/rooms", payload, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
-            },
-        });
-        navigate("/raid/" + response.data.data.roomId, {
-            state: {
-                isCaptain: true,
-            }, // 방을 만들고 들어가면 무조건 방장입니다.
-        });
+      const response = await axios.post(SERVER_URL + "/api/raidu/rooms", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Bearer 토큰을 사용하는 경우
+        },
+      });
+      navigate("/raid/" + response.data.data.roomId, {
+        state: {
+          isCaptain: true,
+        }, // 방을 만들고 들어가면 무조건 방장입니다.
+      });
     } catch (error) {
-        console.error("Error:", error);
+      console.error("Error:", error);
     }
-};
+  };
 
 
   return (
@@ -276,14 +285,14 @@ const RaidLobby = () => {
                 {/* 방 리스트 */}
                 <div className="lobby-list-wrapper">
 
-                  { 
+                  {
                     // 대기방에 표시할 방이 없다면 노출됨 
                     roomList.length === 0 &&
                     <div className="lobby-list-empty">
                       <span>게임을 진행 중인 방이 없어요.</span>
                     </div>
-                  } 
-                  
+                  }
+
                   {roomList.map((each, index) => (
                     <div className="lobby-list-card" key={index}>
                       {/* <Typography
