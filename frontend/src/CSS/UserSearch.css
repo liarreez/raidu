@@ -242,3 +242,9 @@ button:hover {
 .search-result-card button:hover {
     background-color: var(--hard-color-green-selected);
 }
+
+.no-results {
+    margin: auto;
+    color: var(--hard-color-grey);
+    font-weight: bold;
+}

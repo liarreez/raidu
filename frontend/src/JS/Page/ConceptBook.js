@@ -9,6 +9,11 @@ import "../../CSS/ConceptBook.css";
 import "../../CSS/BasicAnime.css";
 //
 import logo from "../../Imgs/logo.png";
+import conceptbook_1 from "../../Imgs/conceptbook_1.png"
+import conceptbook_2 from "../../Imgs/conceptbook_2.jpg"
+import conceptbook_3 from "../../Imgs/conceptbook_3.jpg"
+import conceptbook_4 from "../../Imgs/conceptbook_4.png"
+import conceptbook_5 from "../../Imgs/conceptbook_5.jpg"
 
 // ====================================================== //
 
@@ -32,7 +37,7 @@ const ConceptBook = () => {
                 <Rerenderer>
                   <div className="section-content">
                     <div className="section-image focus-in-contract delay-05s">
-                      <img alt="대충 이미지"></img>
+                      <img alt="컨셉 이미지 1" src={conceptbook_1}></img>
                     </div>
                     <div className="section-text">
                       <div className="focus-in-contract delay-03s">이두왕국의 시작</div>
@@ -67,7 +72,7 @@ const ConceptBook = () => {
                       </div>
                     </div>
                     <div className="section-image focus-in-contract delay-03s">
-                      <img alt="대충 이미지"></img>
+                      <img alt="컨셉 이미지 2" src={conceptbook_2}></img>
                     </div>
                   </div>
                 </Rerenderer>
@@ -77,7 +82,7 @@ const ConceptBook = () => {
                 <Rerenderer>
                   <div className="section-content">
                     <div className="section-image focus-in-contract delay-05s">
-                      <img alt="대충 이미지"></img>
+                      <img alt="컨셉 이미지 3" src={conceptbook_3}></img>
                     </div>
                     <div className="section-text">
                       <div className="focus-in-contract delay-03s">적의 출현</div>
@@ -108,7 +113,7 @@ const ConceptBook = () => {
                       </div>
                     </div>
                     <div className="section-image focus-in-contract delay-03s">
-                      <img alt="대충 이미지"></img>
+                      <img alt="컨셉 이미지 4" src={conceptbook_4}></img>
                     </div>
                   </div>
                 </Rerenderer>
@@ -118,7 +123,7 @@ const ConceptBook = () => {
                 <Rerenderer>
                   <div className="section-content">
                     <div className="section-image focus-in-contract delay-05s">
-                      <img alt="대충 이미지"></img>
+                      <img alt="컨셉 이미지 5" src={conceptbook_5}></img>
                     </div>
                     <div className="section-text">
                       <div className="focus-in-contract delay-03s">레이두 개시!</div>

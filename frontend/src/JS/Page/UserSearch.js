@@ -5,8 +5,9 @@ import TopNav from "../Component/TopNav";
 import SpringAnime from "../Component/SpringAnime";
 import "../../CSS/UserSearch.css";
 import ranking from "../../Imgs/ranking.gif";
-import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
+import { API_URL } from "../../config"; // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 import { useNavigate } from "react-router-dom";
+import FirstRenderer from "../Component/FirstRenderer"
 
 import icon_cliff from "../../Imgs/icon_cliff.png";
 import icon_desert from "../../Imgs/icon_desert.png";
@@ -26,7 +27,7 @@ const Ranking = () => {
       const accessToken = localStorage.getItem("accessToken");
       const response = await axios.get(SERVERURL + `/api/raidu/userpage/list`, {
         params: { nickname: searchTerm },
-        headers: { Authorization: `Bearer ${accessToken}` }
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
       console.log(response);
       if (response.data.status === "OK") {
@@ -96,25 +97,41 @@ const Ranking = () => {
                   users.map((user) => {
                     const regionDetails = getRegionDetails(user.regionId);
                     return (
-                      <div className="search-result-card" key={user.uuid}>
-                        <div>{user.nickname}</div>
-                        <div>
-                          <div style={{display: "flex", flexDirection:"column", alignItems:"center", justifyContent: "center", fontWeight: "bold"}}>
-                            <img className="result-card-img" alt="지역 이미지" src={regionDetails.icon}></img>
-                            {regionDetails.name}
+                      <FirstRenderer>
+                      <SpringAnime from="left">
+                        <div className="search-result-card" key={user.uuid}>
+                          <div>{user.nickname}</div>
+                          <div>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              <img
+                                className="result-card-img"
+                                alt="지역 이미지"
+                                src={regionDetails.icon}
+                              ></img>
+                              {regionDetails.name}
+                            </div>
+                          </div>
+                          <div>{user.currentSeasonUserScore}</div>
+                          <div>
+                            <button
+                              onClick={() => {
+                                console.log(navigate(`/mypage/${user.id}`));
+                              }}
+                            >
+                              마이페이지 방문
+                            </button>
                           </div>
                         </div>
-                        <div>{user.currentSeasonUserScore}</div>
-                        <div>
-                          <button
-                            onClick={() => {
-                              console.log(navigate(`/mypage/${user.id}`));
-                            }}
-                          >
-                            마이페이지 방문
-                          </button>
-                        </div>
-                      </div>
+                      </SpringAnime>
+                      </FirstRenderer>
                     );
                   })
                 )}
