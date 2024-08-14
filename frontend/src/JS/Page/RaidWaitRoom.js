@@ -14,6 +14,8 @@ import logo from "../../Imgs/logo.png";
 import locked from "../../Imgs/lockedicon.png";
 import unlocked from "../../Imgs/unlockedicon.png";
 import out from "../../Imgs/roomouticon.png";
+import level from "../../Imgs/level.png"
+import bestScore from "../../Imgs/bestScore.png"
 
 //=========== import components
 import Participants from "../Component/RaidWaitRoom_participants.js";
@@ -630,12 +632,12 @@ const RaidWaitRoom = () => {
                           <div className="waitroom-card-icon-wrapper">
                             <div className="waitroom-card-icon">
                               <p>최고 점수</p>
-                              <img alt="점수 아이콘"></img>
+                              <img src={bestScore} alt="점수 아이콘"></img>
                               <p>{each.highestScore}</p>
                             </div>
                             <div className="waitroom-card-icon">
                               <p>레벨</p>
-                              <img alt="레벨 아이콘"></img>
+                              <img src={level} alt="레벨 아이콘"></img>
                               <p>{each.level}</p>
                             </div>
 
