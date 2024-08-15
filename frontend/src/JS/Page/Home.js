@@ -103,10 +103,8 @@ const Main = () => {
   const [userCount, setUserCount] = useState(null);
   const [seasonName, setSeasonName] = useState(null);
 
-  console.log(regionScores);
 
 
-  console.log(totalContribute/bossMonsterHp)
 
   useEffect(() => {
     // const fetchUserData = async () => {
@@ -130,30 +128,19 @@ const Main = () => {
     const fetchPageData = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
-        console.log("사용한 토큰 : " + accessToken);
         const response = await axios.get(SERVERURL + "/api/raidu/mainpage", {headers: {"Authorization": `Bearer ${accessToken}`}}); // 여기에 API 주소 넣을 것
-        console.log(response);
         
-        console.log("보스몬스터 설명 : " + response.data.data.bossMonsterDescription);
         setBossMonsterDescription(response.data.data.bossMonsterDescription);        
-        console.log("보스몬스터 HP : " + response.data.data.bossMonsterHp);
         setBossMonsterHp(response.data.data.bossMonsterHp);
-        console.log("보스몬스터 이미지 : " + response.data.data.bossMonsterImg);
         setBossMonsterImg(response.data.data.bossMonsterImg);
-        console.log("보스몬스터 이름 : " + response.data.data.bossMonsterName);
         setBossMonsterName(response.data.data.bossMonsterName);
-        console.log("지역 점수 : " + response.data.data.regionScores);
         setRegionScores(response.data.data.regionScores);
-        console.log("총 기여도 : " + response.data.data.totalContribute);
         setTotalContribute(response.data.data.totalContribute);
-        console.log("유저 수 : " + response.data.data.userCount);
         setUserCount(response.data.data.userCount);
-        console.log("시즌 이름 : " + response.data.data.regionScores[0].seasonName);
         setSeasonName(response.data.data.regionScores[0].seasonName);
 
       } catch (error) {
-        console.error("페이지 정보 불러오기 실패...");
-        console.log(error);
+      //  console.error("페이지 정보 불러오기 실패...");
       }
     };
 

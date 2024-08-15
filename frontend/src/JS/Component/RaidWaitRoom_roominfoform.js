@@ -42,7 +42,6 @@ const RaidWaitRoom_roominfoform = ({roomSet, isCaptain, rounds, roomSetSetter, e
 
     useEffect(() => { // 사용자가 운동 종목 리스트를 변경할 때마다 상위 컴포넌트에 반영함
         exerciseSetSetter(exerciseOption);
-     //   console.log(exerciseOption);
     },[exerciseOption]);
 
     // CALC PART - option values =========================================

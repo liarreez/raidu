@@ -20,8 +20,6 @@ const TrainingRoom = () => {
   // roomInfo = 대기방에서 받아온 정보들이 담긴 객체
   const roomData = { ...location.state }
 
-  console.log(roomData);
-
   return (
     <div>
       <div id="training-background-img">

@@ -97,11 +97,8 @@ const RaidWaitRoom = () => {
       })
       .then((res) => {
         const data = res.data.data.userProfile;
-        console.log(data);
         setMe(
           (prevMe) => {
-            console.log("이용자 정보 초기화");
-            console.log(prevMe);
             const nu = new User(
               data.nickname,
               data.monsterBadgeUrl,
@@ -114,7 +111,6 @@ const RaidWaitRoom = () => {
                 : false,
               data.email
             );
-            console.log(nu);
             return nu;
           }
           // me update 제대로 안 되는 문제 있음
@@ -144,7 +140,6 @@ const RaidWaitRoom = () => {
         setRoomNamed(roomName); // 방 이름 변경 가능하게 하려면 이 부분 수정해야 함. 지금은 pathVal에서 가져온다
       })
       .catch((error) => {
-        console.error("유저 정보 받아오기 실패!", error);
         if (error.response.data.message === "액세스 토큰이 만료되었습니다!") {
           alert("토큰 만료! 다시 로그인 해주세요.");
           navigate("/login");
@@ -225,9 +220,7 @@ const RaidWaitRoom = () => {
   };
 
   const exerciseSetSetter = (list) => {
-    console.log(list);
     setExerciseSet((prevList) => {
-      console.log(prevList);
       exerciseSetRef.current = list;
       return list;
     });
@@ -261,9 +254,6 @@ const RaidWaitRoom = () => {
         await websocketClient.connect();
         const subscription = websocketClient.subscribe("/sub/message/" + roomName, (message) => {
           const parsedMessage = JSON.parse(message.body);
-          console.log("====================");
-          console.log(parsedMessage);
-          console.log("====================");
           switch (parsedMessage.type) {
             case "1":
               parsedMessage.enterType
@@ -293,7 +283,7 @@ const RaidWaitRoom = () => {
           websocketClient.disconnect();
         };
       } catch (error) {
-        console.error("Error caused by websocket connecting process : ", error);
+      //  console.error("Error caused by websocket connecting process : ", error);
       }
     };
     connectWebSocket();
@@ -379,7 +369,7 @@ const RaidWaitRoom = () => {
       });
       websocketClient.send(DESTINATION, message);
     } catch (e) {
-      console.error("Error sending message:", e);
+     // console.error("Error sending message:", e);
     }
   };
 
@@ -443,8 +433,6 @@ const RaidWaitRoom = () => {
   // 레디부터 작업하기
   const updateUserReadyState = (name, readyType) => {
     // 함수형 업데이트를 사용하여 상태 업데이트
-    console.log("before ready");
-    console.log(participantsList);
     setParticipantsList((prevParticipantsList) => {
       const updatedParticipants = prevParticipantsList.map((user) => {
         if (user.nickname === name) {
@@ -463,19 +451,14 @@ const RaidWaitRoom = () => {
         return user;
       });
 
-      console.log(updatedParticipants); // 업데이트된 참가자 목록을 로그로 출력
 
       // 상태 업데이트 후 추가 작업을 처리할 수 있습니다.
       return updatedParticipants; // 새 상태 반환
     });
 
     // `me` 상태를 업데이트
-    console.log(name);
-    console.log(me.nickname);
-    console.log(me);
     if (name === me.nickname) {
       setMe((prevMe) => {
-        console.log(prevMe);
         return new User(
           prevMe.nickname,
           prevMe.badge,
@@ -492,8 +475,6 @@ const RaidWaitRoom = () => {
 
   const checkExerciseOption = () => {
     // '준비하기' 버튼을 누르기 전(1인 게임의 경우 '시작하기' 전) 모든 라운드의 운동 종류 선택이 완료되었는지 체크합니다.
-    console.log("checkExerciseOption : " + exerciseSet.length);
-    console.log("checkExerciseOption : " + roomSet.roundCount);
     return exerciseSet.length == roomSet.roundCount;
   };
 
@@ -515,14 +496,6 @@ const RaidWaitRoom = () => {
     if (checkExerciseOption() === false) {
       alert("모든 라운드에 대한 운동 종목 선택을 완료해 주세요.");
     } else if (checkReadyState()) {
-      console.log("============ PRINTING SETTINGS =============");
-      // 방 정보
-      // 사용자 정보
-      // 선택한 운동 정보 묶어서 보여주기
-      console.log(roomSet);
-      console.log(me);
-      console.log(exerciseSet);
-
       axios
         .post(
           SERVER_URL + "/api/raidu/rooms/sessions",
@@ -551,12 +524,6 @@ const RaidWaitRoom = () => {
     // const exerciseInfo = exerciseSet;
     const exerciseInfo = exerciseSetRef.current;
 
-    console.log("=========TEST=========");
-    console.log(roomInfo);
-    console.log(userInfo);
-    console.log(exerciseInfo);
-    console.log(sessionId);
-
     navigate("/exercise", {
       // roomPk 주고 / userEmail 주고
       state: {
@@ -576,7 +543,7 @@ const RaidWaitRoom = () => {
         alert("운동방 주소가 클립보드에 복사되었습니다!");
       },
       (err) => {
-        console.error("링크 복사에 실패했습니다: ", err);
+      //  console.error("링크 복사에 실패했습니다: ", err);
       }
     );
   };

@@ -14,19 +14,19 @@ export class Socketest {
         UserId: UserIdVal
       },
       debug: function (str) {
-        console.log('STOMP: ' + str);
+        //console.log('STOMP: ' + str);
       },
       onConnect: () => {
-        console.log('Connected to WebSocket');
+       // console.log('Connected to WebSocket');
         this.isConnected = true; // Set connected status to true
       },
       onDisconnect: () => {
-        console.log('Disconnected from WebSocket');
+       // console.log('Disconnected from WebSocket');
         this.isConnected = false; // Set connected status to false
       },
       onStompError: (frame) => {
-        console.error('Broker reported error: ' + frame.headers['message']);
-        console.error('Additional details: ' + frame.body);
+       // console.error('Broker reported error: ' + frame.headers['message']);
+       // console.error('Additional details: ' + frame.body);
       },
     });
   }
@@ -45,8 +45,8 @@ export class Socketest {
       };
 
       this.client.onStompError = (frame) => {
-        console.error('Broker reported error: ' + frame.headers['message']);
-        console.error('Additional details: ' + frame.body);
+       // console.error('Broker reported error: ' + frame.headers['message']);
+       // console.error('Additional details: ' + frame.body);
         reject(new Error('STOMP error: ' + frame.body));
       };
     });
@@ -60,7 +60,7 @@ export class Socketest {
 
   subscribe(destination, callback) {
     if (this.isConnected) {
-      console.log("LISTENING ...", destination);
+    //  console.log("LISTENING ...", destination);
       return this.client.subscribe(destination, callback);
     } else {
       throw new Error('No active STOMP connection');
@@ -69,7 +69,7 @@ export class Socketest {
 
   send(destination, body) {
     if (this.isConnected) {
-      console.log("PUBLISHING ...", destination);
+    //  console.log("PUBLISHING ...", destination);
       this.client.publish({ destination, body });
     } else {
       throw new Error('No active STOMP connection');

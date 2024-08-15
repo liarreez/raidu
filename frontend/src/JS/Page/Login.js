@@ -69,18 +69,14 @@ const SignUp = () => {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-    console.log("Email:", email);
-    console.log("Password:", password);
 
     // 회원가입 API 호출
     signUp({ email, password })
       .then(response => {
-        console.log(response)
         alert("회원가입이 완료되었습니다!")
         handleClose();
       })
       .catch(error => {
-        console.error(error);
         if (error.response.data.message === "중복된 이메일입니다!") {
           alert("이미 사용된 이메일입니다!");
         }
@@ -178,21 +174,15 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      console.log("로그인시도: 이메일", email);
-      console.log("로그인시도: 비밀번호", password);
       const response = await axios.post(`${SERVERURL}/api/raidu/users/login`,
         { "email": email, "password": password });
-      console.log(response);
       localStorage.setItem("accessToken", response.data.data.accessToken);
       localStorage.setItem("refreshToken", response.data.data.refreshToken);
       localStorage.setItem("curEmail", email);
 
-      console.log("저장된 access토큰 : " + localStorage.getItem("accessToken"));
-      console.log("저장된 refresh토큰 : " + localStorage.getItem("refreshToken"));
 
       navigate("/home");
     } catch (error) {
-      console.error("로그인에 실패했습니다:", error);
       alert("로그인에 실패했습니다. 다시 시도해주세요.");
     }
   };

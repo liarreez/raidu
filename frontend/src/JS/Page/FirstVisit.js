@@ -149,7 +149,6 @@ const FirstVisit = () => {
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
-      console.log(response);
 
       if (response.data.message === "Nickname check successfully") {
         setIsNicknameValid(true);
@@ -158,7 +157,6 @@ const FirstVisit = () => {
       }
       setNicknameChecked(true);
     } catch (error) {
-      console.error("닉네임 중복 확인 실패:", error);
       setIsNicknameValid(false);
       setNicknameChecked(true);
     }
@@ -168,18 +166,13 @@ const FirstVisit = () => {
     if (isNicknameValid && nicknameChecked && nicknameLengthValid) {
       try {
         const accessToken = localStorage.getItem("accessToken");
-        console.log("지역/닉네임 설정 - 사용한 토큰 : " + accessToken);
         const response = await axios.post(
           `${SERVERURL}/api/raidu/userpage/register`,
           { nickname: nickname, region: selectedRegion.name },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
-        console.log(response);
       } catch (error) {
-        console.error("유저 정보 불러오기 실패...");
-        console.log(error);
         if (error.response.data.status === "NOT_FOUND") {
-          console.log("첫 방문임...");
           navigate("/firstvisit");
         }
       }

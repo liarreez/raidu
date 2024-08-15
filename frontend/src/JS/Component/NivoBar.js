@@ -5,11 +5,9 @@ import "../../CSS/KeyColor.css";
 const NivoBar = ({ regionScores }) => {
     const handle = {
         barClick: (data) => {
-            console.log(data);
         },
 
         legendClick: (data) => {
-            console.log(data);
         },
     };
 
