@@ -55,22 +55,15 @@ function ResponsiveAppBar() {
     const fetchUserData = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
-        console.log("사용한 토큰 : " + accessToken);
         const response = await axios.get(SERVERURL + "/api/raidu/userpage", {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
-        console.log("내브바  ", response);
-        console.log(response.data.data.userProfile.id);
         setUserData(response.data.data.userProfile);
       } catch (error) {
-        console.error("유저 정보 불러오기 실패...");
-        console.log(error);
         if (error.response.data.status === "NOT_FOUND") {
-          console.log("첫 방문임...");
           navigate("/firstvisit");
         }
         if (error.response.data.message === "액세스 토큰이 만료되었습니다!") {
-          alert("토큰 만료! 다시 로그인 해주세요.");
           navigate("/login");
         }
       }
@@ -95,7 +88,6 @@ function ResponsiveAppBar() {
     (setting) => {
       setAnchorElUser(null);
       if (setting === "마이페이지") {
-        console.log("받은 id값 : " + userData.id);
         navigate(`/mypage/${userData.id}`);
       } else if (setting === "개인정보 수정") {
         navigate("/editprofile");

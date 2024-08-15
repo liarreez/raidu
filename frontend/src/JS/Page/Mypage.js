@@ -137,7 +137,6 @@ function Mypage() {
     setDayRecords((prevRecord) => {
       const nowDateReord = exerciseRoomRecordResponseDtos;
 
-      console.log("제대로 레코드에 넣어줬는가?", nowDateReord);
       return nowDateReord;
     });
   };
@@ -147,19 +146,15 @@ function Mypage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("fetchData 함수 실행 중... id값은 : " + id);
         const accessToken = localStorage.getItem("accessToken");
-        console.log(accessToken);
         const response = await axios.get(SERVERURL + `/api/raidu/userpage/profile/${id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
-        console.log("데이터 수신...");
-        console.log(response);
         setUserData(response.data.data.userProfile);
         setUserMonsters(response.data.data.userMonsters);
         setLoading(false); // 데이터가 로드된 후 로딩 상태를 false로 설정
       } catch (error) {
-        console.error("Error fetching data:", error);
+       // console.error("Error fetching data:", error);
         // if(error.response.data.message === "액세스 토큰이 만료되었습니다!") {
         //   alert("토큰 만료! 다시 로그인 해주세요.");
         //   navigate("/login");
@@ -172,16 +167,14 @@ function Mypage() {
 
   const fetchRecordData = async (selectedDate) => {
     try {
-      console.log(selectedDate);
       const accessToken = localStorage.getItem("accessToken");
       const response = await axios.get(
         `${SERVERURL}/api/raidu/userpage/recordcheck/${id}?time=${selectedDate}`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-      console.log("Record data:", response.data.data.data.exerciseRoomRecordResponseDtos);
       changeRecord(response.data.data.data.exerciseRoomRecordResponseDtos);
     } catch (error) {
-      console.error("Error fetching record data:", error);
+    //  console.error("Error fetching record data:", error);
     }
   };
 
@@ -191,11 +184,9 @@ function Mypage() {
 
     // bossMonsterResponseDtos와 monsterResponseDtos를 결합하여 하나의 배열로 만든다.
     const monsters = [
-      // ...(userMonsters.bossMonsterResponseDtos || []),
+      ...(userMonsters.bossMonsterResponseDtos || []),
       ...(userMonsters.monsterResponseDtos || []),
     ];
-    console.log("몬스터들 배열...");
-    console.log(monsters);
 
     return (
       <Grid container spacing={2}>
@@ -324,7 +315,6 @@ function Mypage() {
 
   const expPercentage = (userData.exp / 750) * 100;
   const currentEmail = localStorage.getItem("curEmail");
-  console.log(currentEmail);
   const showEditButton = userData.email === currentEmail;
 
   return (

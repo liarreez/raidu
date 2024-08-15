@@ -13,7 +13,6 @@ const CreateWaitingRoom = ({ setWaitingRoomId }) => {
   // 유효성 토큰 (로그인이 되었는가 // 나중에 다른 곳에서 받아와야 할 듯!)
   const token = localStorage.getItem('accessToken');
 
-console.log(APPLICATION_SERVER_URL)
 
   // 대기방 고유 Id 생성 로직
   const createWaitingRoomId = async () => {
@@ -27,9 +26,8 @@ console.log(APPLICATION_SERVER_URL)
       const newwaitingRoom = response.data.data.sessionId;
       setWaitingRoom(newwaitingRoom);
       setWaitingRoomId(newwaitingRoom); 
-      console.log("New session ID:", newwaitingRoom);
     } catch (error) {
-      console.error('대기방 만들기에 실패했습니다.', error);
+    //  console.error('대기방 만들기에 실패했습니다.', error);
       throw error;
     }
   };

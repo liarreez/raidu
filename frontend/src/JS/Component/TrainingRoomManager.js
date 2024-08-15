@@ -145,7 +145,6 @@ const TrainingRoomManager = ({ roomData }) => {
     setUpdatedRegionScorePercentage((prevPercent) => {
       const newPercentage = (updatedRegionScore / totalContribute) * 100;
 
-      console.log("NEWPERCE#NTAGE    ", newPercentage);
       return newPercentage;
     });
   };
@@ -156,10 +155,6 @@ const TrainingRoomManager = ({ roomData }) => {
   // 대기방에서 운동방으로 넘어올 때 받은 정보들을 저장해준 후, 운동방을 자동 시작
   useEffect(() => {
     if (!hasJoined) {
-      console.log("방 정보 및 라운드별 가중치 제대로 나오나요?!---------");
-      console.log(roomData);
-      console.log(roomData.roomPk);
-      console.log(roundWeight);
       joinTrainingRoom();
       setHasJoined(true);
     }
@@ -234,8 +229,6 @@ const TrainingRoomManager = ({ roomData }) => {
       // 한국 시간으로 로컬라이징 + 저장 포멧
       const newEndTime = new Date(nowDate + 9 * 60 * 60 * 1000).toISOString().slice(0, 19);
 
-      console.log("-------------------시간---------------------");
-      console.log(nowDate, endTime);
 
       return newEndTime;
     });
@@ -264,9 +257,6 @@ const TrainingRoomManager = ({ roomData }) => {
       roundRecordList[i] = roundRecord;
     }
 
-    console.log(endTime);
-    console.log("제대로 된 레코드 리스트가 나오나요?");
-    console.log(roundRecordList);
 
     setFinishRoundRecordList((prevList) => {
       const newRecord = roundRecordList;
@@ -299,9 +289,7 @@ const TrainingRoomManager = ({ roomData }) => {
   // 자식 컴포넌트(selfVideo) 에서 라운드 별 운동 횟수 변경을 위해 함수 선언
   const updateEachRoundCount = (roundIndex, newCount) => {
     setEachRoundCount((prevState) => {
-      console.log("라운드 카운트를 업데이트 해요");
       const updatedCounts = [...prevState];
-      console.log(updatedCounts);
       if (roundIndex === 0) {
         updatedCounts[roundIndex] = newCount;
       } else {
@@ -317,7 +305,6 @@ const TrainingRoomManager = ({ roomData }) => {
 
   // 자식 컴포넌트(selfVideo) 에서 라운드 별 전투력 변경을 위해 함수 선언
   const updateMyCombatPower = (nowRound, count, weight) => {
-    console.log("라운드 전투력을 업데이트 해요");
     setMyCombatPower[nowRound - 1] = count * weight; // weight = roundWeight[(nowRound) - 1]
   };
   // const updateMyCombatPower = (roundIndex, newPower) => {
@@ -456,10 +443,8 @@ const TrainingRoomManager = ({ roomData }) => {
                 break;
               case "2":
                 addCombatPower(parsedMessage.body);
-                console.log("전투력 올라간다");
                 break;
               default:
-                console.log("?");
             }
             setMessages((prevMessages) => [...prevMessages, parsedMessage]);
           }
@@ -469,7 +454,7 @@ const TrainingRoomManager = ({ roomData }) => {
           websocketClient.disconnect();
         };
       } catch (error) {
-        console.error("Error caused by websocket connecting process : ", error);
+      //  console.error("Error caused by websocket connecting process : ", error);
       }
     };
     connectWebSocket();
@@ -619,7 +604,7 @@ const TrainingRoomManager = ({ roomData }) => {
       setMainStreamManager(publisher);
       setPublisher(publisher);
     } catch (error) {
-      console.error("세션 연결에 실패하였습니다.", error.code, error.message);
+    //  console.error("세션 연결에 실패하였습니다.", error.code, error.message);
     }
   }, [myUserName, inputWaitingRoomId]);
 
@@ -671,7 +656,7 @@ const TrainingRoomManager = ({ roomData }) => {
       );
       return response.data.data.token;
     } catch (error) {
-      console.error("토큰 만들기에 실패하였습니다.", error);
+    //  console.error("토큰 만들기에 실패하였습니다.", error);
       throw error;
     }
   };
@@ -793,13 +778,12 @@ const TrainingRoomManager = ({ roomData }) => {
         // 잡은 몬스터 정보 불러오기
         getMonster()
           .then((data) => {
-            console.log("불러온 몬스터 데이터:", data);
             setIsNewMonster(data.data.capturedMonster.new);
             setMonsterName(data.data.capturedMonster.name);
           })
           .catch((error) => {
             // 에러 처리
-            console.error("몬스터 정보 불러오기 실패:", error);
+           // console.error("몬스터 정보 불러오기 실패:", error);
           });
       }
 
@@ -813,12 +797,9 @@ const TrainingRoomManager = ({ roomData }) => {
 
   useEffect(() => {
     if (isRoundRecordListExist === true) {
-      console.log("기록을 저장합니당1");
-      console.log(finishRoundRecordList);
       // 기록 저장
       record(roomData.roomPk, endTime, finishRoundRecordList, myTotalCombatPower)
         .then((data) => {
-          console.log("기록 후 데이터:", data);
           setUpdatedExp(data.data.updatedExp);
           setUpdatedLevel(data.data.updatedLevel);
           setIsLevelUp(data.data.isLevelUp);
@@ -828,7 +809,7 @@ const TrainingRoomManager = ({ roomData }) => {
           UpdateRegionScore(data.data.updatedRegionScore, data.data.totalContribute);
         })
         .catch((error) => {
-          console.error("기록 저장 실패:", error);
+      //    console.error("기록 저장 실패:", error);
         });
     }
   }, [isRoundRecordListExist]);
@@ -836,8 +817,6 @@ const TrainingRoomManager = ({ roomData }) => {
   // 기록 저장을 위한 API
   const record = async (roomId, endTime, finishRoundRecordList, myTotalCombatPower) => {
     try {
-      console.log("기록을 저장합니당2");
-      console.log(finishRoundRecordList);
       const response = await axios.post(
         `${APPLICATION_SERVER_URL}/${roomId}/complete`,
         {
@@ -858,7 +837,7 @@ const TrainingRoomManager = ({ roomData }) => {
       );
       return response.data;
     } catch (error) {
-      console.error("기록 저장에 실패하였습니다.", error);
+     // console.error("기록 저장에 실패하였습니다.", error);
       throw error;
     }
   };
@@ -879,10 +858,9 @@ const TrainingRoomManager = ({ roomData }) => {
           },
         }
       );
-      console.log("몬스터 데이터:", response.data);
       return response.data;
     } catch (error) {
-      console.error("몬스터 불러오기가 실패하였습니다.", error);
+    //  console.error("몬스터 불러오기가 실패하였습니다.", error);
       throw error;
     }
   };

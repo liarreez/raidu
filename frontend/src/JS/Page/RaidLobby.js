@@ -148,7 +148,6 @@ const RaidLobby = () => {
         res.status === 204 ? setRoomList([]) : setRoomList(res.data.data.waitingRoomList)
       })
       .catch((error) => {
-        console.error("방 정보 받아오기 실패!", error);
 
         if (error.response.data.message === "액세스 토큰이 만료되었습니다!") {
           alert("토큰 만료! 다시 로그인 해주세요.");
@@ -164,7 +163,6 @@ const RaidLobby = () => {
       })
       .then((res) => setMe(res.data.data.userProfile))
       .catch((error) => {
-        console.error("유저 정보 가져오기 실패!", error);
         if (error.response.data.message === "액세스 토큰이 만료되었습니다!") {
           alert("토큰 만료! 다시 로그인 해주세요.");
           navigate("/login");
@@ -222,7 +220,6 @@ const RaidLobby = () => {
     else if (name === "restTime") setRestTime(value);
     else if (name === "totalRounds") setTotalRounds(value);
     else if (name === "isPublic") {
-      console.log(!e.target.checked);
       setIsPublic(!e.target.checked);
     }
   };
@@ -273,7 +270,7 @@ const RaidLobby = () => {
         }, // 방을 만들고 들어가면 무조건 방장입니다.
       });
     } catch (error) {
-      console.error("Error:", error);
+    //  console.error("Error:", error);
     }
   };
 

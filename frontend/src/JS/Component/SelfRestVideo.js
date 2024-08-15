@@ -43,14 +43,12 @@ const SelfRestVideo = (props) => {
       detectorConfig
     );
 
-    console.log("포즈 감지 시작");
     await detectModel(detector, video);
   };
 
   const detectModel = async (detector, video) => {
     const poses = await detector.estimatePoses(video);
     if (poses && poses.length > 0) {
-      // console.log(poses);
       const pose = poses[0];
       processPose(pose);
     }
@@ -73,14 +71,11 @@ const SelfRestVideo = (props) => {
 
   const processPose = (pose) => {
     if (isFullBodyVisible(pose)) {
-      // console.log(selectedExercise);
       setBodyState(true);
 
       if (selectedExercise === "jumpingJack") {
-        //   console.log(selectedExercise);
         countingJumpingJack(pose);
       } else if (selectedExercise === "lunge") {
-        //   console.log(selectedExercise);
         countingLunge(pose);
       }
     } else {
@@ -101,12 +96,10 @@ const SelfRestVideo = (props) => {
   // 카운터 증가 함수
   const updateCount = () => {
     // count++;
-    console.log(count);
     const newCount = count + 1;
     setCount(newCount);
     props.ChangeCount(newCount);
     document.querySelector(".count-box > p").innerText = `Count: ${count}`;
-    // console.log(`Current count: ${count}`);
   };
 
   // 팔벌려뛰기 카운팅 함수
@@ -128,7 +121,6 @@ const SelfRestVideo = (props) => {
 
     if (angle1 < 30 && angle2 < 30 && angle3 > 150 && angle4 > 150 && stageOfJumpingJack === "up") {
       stageOfJumpingJack = "down";
-      // console.log("했다했다");
       updateCount();
     }
     if (
@@ -210,7 +202,6 @@ const SelfRestVideo = (props) => {
 
   // 운동 바꾸는 이벤트
   const handleExerciseChange = (e) => {
-    console.log(e.target.value);
     setSelectedExercise(e.target.value);
     setCount(0);
     props.ChangeCount(0);
@@ -243,11 +234,6 @@ const SelfRestVideo = (props) => {
 
     initializeModel();
   }, [selectedExercise]);
-
-  // useEffect(() => {
-  //   props.ChangeCount(count)
-  //   console.log(`숫자ㅏ 올라가요!!!   ${count}`)
-  // }, [count])
 
   const getNicknameTag = () => {
     return JSON.parse(props.streamManager.stream.connection.data).clientData;

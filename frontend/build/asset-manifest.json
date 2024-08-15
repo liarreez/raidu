@@ -1,8 +1,11 @@
 {
   "files": {
-    "main.css": "/static/css/main.3d862f84.css",
-    "main.js": "/static/js/main.3aeefcf8.js",
+    "main.css": "/static/css/main.9f84a875.css",
+    "main.js": "/static/js/main.824b720f.js",
+    "static/media/login_3.png": "/static/media/login_3.23a8d819a295b5c53e42.png",
+    "static/media/login_2.png": "/static/media/login_2.09d0e33b8d2332cdfe77.png",
     "static/media/complete_scroll.png": "/static/media/complete_scroll.f14d7e887c4e04907461.png",
+    "static/media/login_4.png": "/static/media/login_4.c63ca1d33b685979dc6b.png",
     "static/media/dryeyecrab.png": "/static/media/dryeyecrab.72a5434087bceedf3b74.png",
     "static/media/mountainsicknesseagle.png": "/static/media/mountainsicknesseagle.6dfe853132766a76d770.png",
     "static/media/diabeticlizard.png": "/static/media/diabeticlizard.bcc3dc5d49b9d2d57c31.png",
@@ -15,6 +18,7 @@
     "static/media/gloomylion.png": "/static/media/gloomylion.d1d4f7ac11f910eaadb8.png",
     "static/media/forgetfulduck.png": "/static/media/forgetfulduck.9d327eb87468b5d0f715.png",
     "static/media/monster.gif": "/static/media/monster.274051db64c80eb2b9cd.gif",
+    "static/media/tutorial_3.png": "/static/media/tutorial_3.719c836f95472ddabbde.png",
     "static/media/foodpoisoningwhale.png": "/static/media/foodpoisoningwhale.5e830b5efaba374f5f54.png",
     "static/media/back.jpg": "/static/media/back.c564ec1c50bfade1739d.jpg",
     "static/media/icon_desert.png": "/static/media/icon_desert.9a324217477905e5da71.png",
@@ -25,6 +29,7 @@
     "static/media/conceptbook_1.png": "/static/media/conceptbook_1.37028a0baffc5b996117.png",
     "static/media/region_sea.jpg": "/static/media/region_sea.98e81ff4fc150fc61d72.jpg",
     "static/media/icon_forest.png": "/static/media/icon_forest.4d4cc6bfeed21e6ce823.png",
+    "static/media/tutorial_1.png": "/static/media/tutorial_1.d55174bea530bc5c086d.png",
     "static/media/conceptbook_5.jpg": "/static/media/conceptbook_5.853f30d523fe26f1ad47.jpg",
     "static/media/bestScore.png": "/static/media/bestScore.536f0caed35c05fb58dc.png",
     "static/media/region_desert.jpg": "/static/media/region_desert.9d5c31e9208c0ba82ec6.jpg",
@@ -41,9 +46,11 @@
     "static/media/sign.gif": "/static/media/sign.cae3dec744af4e07c50c.gif",
     "static/media/burgerking.png": "/static/media/burgerking.1bfa5cf10bd792e49cfb.png",
     "static/media/document.gif": "/static/media/document.8c7646f88368a9238b58.gif",
+    "static/media/tutorial_2.png": "/static/media/tutorial_2.786e317ea34ffdb887fd.png",
     "static/media/button-raidu.png": "/static/media/button-raidu.d6bcba065605cefd052f.png",
     "static/media/turtleneck.png": "/static/media/turtleneck.c8f53e4bd4576dc9924c.png",
     "static/media/room.gif": "/static/media/room.7233b33aec9bf55f9f6a.gif",
+    "static/media/login_1.png": "/static/media/login_1.cad3285bd4559733f668.png",
     "static/media/logo.png": "/static/media/logo.422afe8d9f27949075c4.png",
     "static/media/restSoldier.gif": "/static/media/restSoldier.08253f4835e222b30a1c.gif",
     "static/media/exerciseSoldier.gif": "/static/media/exerciseSoldier.f4e269f3c70009bac554.gif",
@@ -61,11 +68,11 @@
     "static/media/slick.ttf": "/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
-    "main.3d862f84.css.map": "/static/css/main.3d862f84.css.map",
-    "main.3aeefcf8.js.map": "/static/js/main.3aeefcf8.js.map"
+    "main.9f84a875.css.map": "/static/css/main.9f84a875.css.map",
+    "main.824b720f.js.map": "/static/js/main.824b720f.js.map"
   },
   "entrypoints": [
-    "static/css/main.3d862f84.css",
-    "static/js/main.3aeefcf8.js"
+    "static/css/main.9f84a875.css",
+    "static/js/main.824b720f.js"
   ]
 }

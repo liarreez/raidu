@@ -33,18 +33,12 @@ const EditProfile = () => {
     const fetchUserData = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
-        console.log("사용한 토큰 : " + accessToken);
         const response = await axios.get(SERVERURL + "/api/raidu/userpage", {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
-        console.log("에딧  ", response);
         setUserData(response.data.data.userProfile);
-        console.log("userData - ID값 : " + userData.id);
       } catch (error) {
-        console.error("유저 정보 불러오기 실패...");
-        console.log(error);
         if (error.response.data.status === "NOT_FOUND") {
-          console.log("첫 방문임...");
           navigate("/firstvisit");
         }
       }
@@ -90,17 +84,13 @@ const EditProfile = () => {
   const handleAuthenticate = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-      console.log(accessToken);
-      console.log("인증 실시... 입력 비번 : " + currentPassword);
       const response = await axios.post(
         SERVERURL + "/api/raidu/userpage/check-password",
         { password: currentPassword },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-      console.log(response);
       setIsAuthenticated(true);
     } catch (error) {
-      console.log(error);
       if (error.response.request.status === 401) {
         alert("올바르지 않은 비밀번호입니다!");
       }
@@ -125,7 +115,6 @@ const EditProfile = () => {
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
-      console.log(response);
 
       if (response.data.message === "Nickname check successfully") {
         setIsNicknameValid(true);
@@ -134,7 +123,6 @@ const EditProfile = () => {
       }
       setNicknameChecked(true);
     } catch (error) {
-      console.error("닉네임 중복 확인 실패:", error);
       setIsNicknameValid(false);
       setNicknameChecked(true);
     }
@@ -154,11 +142,10 @@ const EditProfile = () => {
           { nickname: nickname, password: newPassword },
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
-        console.log(response);
         alert("프로필이 수정되었습니다.");
         navigate(`/mypage/${userData.id}`);
       } catch (error) {
-        console.error("프로필 수정 실패:", error);
+     //   console.error("프로필 수정 실패:", error);
         alert("프로필 수정에 실패했습니다.");
       }
     } else {

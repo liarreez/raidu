@@ -29,14 +29,12 @@ const Ranking = () => {
         params: { nickname: searchTerm },
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      console.log(response);
       if (response.data.status === "OK") {
         setUsers(response.data.data.data);
       } else {
         setUsers([]);
       }
     } catch (error) {
-      console.error(error);
       setUsers([]);
     }
   };
@@ -123,7 +121,7 @@ const Ranking = () => {
                           <div>
                             <button
                               onClick={() => {
-                                console.log(navigate(`/mypage/${user.id}`));
+                                navigate(`/mypage/${user.id}`);
                               }}
                             >
                               마이페이지 방문
