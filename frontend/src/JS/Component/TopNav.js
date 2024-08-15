@@ -23,9 +23,9 @@ import "../../CSS/TopNav.css";
 import { API_URL } from '../../config';  // 두 단계 상위 디렉토리로 이동하여 config.js 파일을 임포트
 
 const pages = [
-  { name: "레이두", subLevels: ["레이두"] },
-  { name: "가이드", subLevels: ["튜토리얼", "컨셉 북"] },
-  { name: "정보", subLevels: ["유저 검색"] },
+  { name: "레이두", path: "/raid" },
+  { name: "컨셉북", path: "/conceptbook" },
+  { name: "유저 검색", path: "/usersearch" },
 ];
 const settings = ["마이페이지", "개인정보 수정", "로그아웃"];
 
@@ -50,8 +50,6 @@ function ResponsiveAppBar() {
   const [userData, setUserData] = React.useState(null);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [anchorElSubMenu, setAnchorElSubMenu] = React.useState(null);
-  const [subMenuItems, setSubMenuItems] = React.useState([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -62,7 +60,7 @@ function ResponsiveAppBar() {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         console.log("내브바  ", response);
-        console.log(response.data.data.userProfile.id)
+        console.log(response.data.data.userProfile.id);
         setUserData(response.data.data.userProfile);
       } catch (error) {
         console.error("유저 정보 불러오기 실패...");
@@ -71,7 +69,7 @@ function ResponsiveAppBar() {
           console.log("첫 방문임...");
           navigate("/firstvisit");
         }
-        if(error.response.data.message === "액세스 토큰이 만료되었습니다!") {
+        if (error.response.data.message === "액세스 토큰이 만료되었습니다!") {
           alert("토큰 만료! 다시 로그인 해주세요.");
           navigate("/login");
         }
@@ -85,24 +83,23 @@ function ResponsiveAppBar() {
     setAnchorElNav(event.currentTarget);
   };
 
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseUserMenu = useCallback(
     (setting) => {
       setAnchorElUser(null);
       if (setting === "마이페이지") {
-        console.log("받은 id값 : " + userData.id)
+        console.log("받은 id값 : " + userData.id);
         navigate(`/mypage/${userData.id}`);
       } else if (setting === "개인정보 수정") {
         navigate("/editprofile");
       } else if (setting === "로그아웃") {
-        // 로그아웃 처리 로직 추가해야함
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("curEmail");
@@ -112,28 +109,9 @@ function ResponsiveAppBar() {
     [navigate, userData]
   );
 
-  const handleOpenSubMenu = (event, subLevels) => {
-    setAnchorElSubMenu(event.currentTarget);
-    setSubMenuItems(subLevels);
-  };
-
-  const handleCloseSubMenu = (dest) => {
-    setAnchorElSubMenu(null);
-    setSubMenuItems([]);
-    // 소메뉴 클릭시 이동하는 경로 모음
-    if (dest === "레이두") {
-      navigate("/raid");
-    } else if (dest === "튜토리얼") {
-      navigate("/tutorial");
-    } else if (dest === "컨셉 북") {
-      navigate("/conceptbook");
-    }
-    //  else if (dest === "운동 백과") {
-    //   navigate("/dictionary");
-    // } 
-    else if (dest === "유저 검색") {
-      navigate("/usersearch");
-    }
+  const handleMenuClick = (path) => {
+    navigate(path);
+    setAnchorElNav(null);
   };
 
   const handleLogoClick = () => {
@@ -181,7 +159,7 @@ function ResponsiveAppBar() {
                   disableScrollLock={true}
                 >
                   {pages.map((page) => (
-                    <MenuItem key={page.name} onClick={(event) => handleOpenSubMenu(event, page.subLevels)}>
+                    <MenuItem key={page.name} onClick={() => handleMenuClick(page.path)}>
                       <Typography textAlign="center">{page.name}</Typography>
                     </MenuItem>
                   ))}
@@ -196,7 +174,7 @@ function ResponsiveAppBar() {
                 {pages.map((page) => (
                   <Button
                     key={page.name}
-                    onClick={(event) => handleOpenSubMenu(event, page.subLevels)}
+                    onClick={() => handleMenuClick(page.path)}
                     sx={{
                       my: "auto",
                       color: "black",
@@ -215,13 +193,13 @@ function ResponsiveAppBar() {
 
               <Box sx={{ flexGrow: 0, display: "flex", alignItems: "center" }}>
                 {userData && (
-                  <Typography variant="h6" sx={{ fontSize:"12px", marginRight:"20px"}}>
+                  <Typography variant="h6" sx={{ fontSize: "12px", marginRight: "20px" }}>
                     {userData.nickname} 님 환영합니다!
                   </Typography>
                 )}
                 <Tooltip title="계정 관리">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar style={{ border: "1px solid var(--hard-color-black)" }} src={profile} alt="프사"/>
+                    <Avatar style={{ border: "1px solid var(--hard-color-black)" }} src={profile} alt="프사" />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -251,29 +229,6 @@ function ResponsiveAppBar() {
             </Toolbar>
           </Container>
         </AppBar>
-
-        <Menu
-          id="submenu-appbar"
-          anchorEl={anchorElSubMenu}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          open={Boolean(anchorElSubMenu)}
-          onClose={handleCloseSubMenu}
-          disableScrollLock={true}
-        >
-          {subMenuItems.map((item) => (
-            <MenuItem key={item} onClick={() => handleCloseSubMenu(item)}>
-              <Typography textAlign="center">{item}</Typography>
-            </MenuItem>
-          ))}
-        </Menu>
       </ThemeProvider>
 
       <div className="nav-image">

@@ -206,6 +206,8 @@
 }
 
 .training-message {
+    margin-top: 20px;
+    margin-bottom: 10px;
     grid-area: soldier-content;
     display: flex;
     align-items: center;

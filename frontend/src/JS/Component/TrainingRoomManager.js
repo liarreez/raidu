@@ -998,6 +998,7 @@ const TrainingRoomManager = ({ roomData }) => {
                   {currentStep === "rest" ? (
                     <>
                       <p className="training-message" align="center">
+                        ~ 지금은 휴식시간입니다 ~ <br />
                         {exerciseForRound[currentRound] === "jumpingJack" ? (
                           <>
                             Next : {exerciseName[exerciseForRound[currentRound]]}
