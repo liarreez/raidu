@@ -72,7 +72,6 @@ public class AdminServiceImpl implements AdminService{
 
         List<UserProfile> userProfileList = userProfileRepository.findDistinctUserProfiles();
         for(UserProfile userProfile: userProfileList){
-            System.out.println(userProfile);
             SeasonUserScore seasonUserScore = SeasonUserScoreCreateRequest.toEntity(season, userProfile, 0);
             seasonUserScoreRepository.save(seasonUserScore);
         }
