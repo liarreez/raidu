@@ -53,6 +53,7 @@ const SelfVideo = (props) => {
 
   // 현재 라운드를 알려주는 변수(props로 가져온 현재 라운드와는 다른 변수이다. < 그 아이를 집어넣을 예정)
   const [nowRound, setnowRound] = useState();
+  const nowRoundRef = useRef();
 
   // 맨 처음 실행 한번만을 확인하기 위해 만든 것
   const [nowStart, setNowStart] = useState(false)
@@ -190,11 +191,11 @@ const SelfVideo = (props) => {
 
 
     // 자신의 현재 점수에서 가중치를 더해준다.
-    props.UpdateMyTotalCombatPower(props.roundWeight[nowRound]);
+    props.UpdateMyTotalCombatPower(props.roundWeight[nowRoundRef.current]);
 
     // 카운트가 올라간걸 웹소켓으로 뿌린다.
     // (보내주는건 운동 가중치 => 해당 운동 가중치를 카운트가 오를 때마다 보내줌)
-    props.sendTest2(props.roundWeight[nowRound]);
+    props.sendTest2(props.roundWeight[nowRoundRef.current]);
 
     const newCombatPower = props.myCombatPower[props.currentRound] + props.roundWeight[props.currentRound]
     // props.ChangeMyCombatPower(props.currentRound, newCombatPower);
@@ -479,6 +480,7 @@ function handleSquatStage(currentSquatStage) {
   useEffect(() => {
 
     setnowRound(props.currentRound);
+    nowRoundRef.current = props.currentRound;
     props.updateEachRoundCount(props.currentRound - 1, props.countPower);
     // props.updateMyCombatPower(props.currentRound, count, props.roundWeight[(props.currentRound) - 1])
 
@@ -519,7 +521,7 @@ function handleSquatStage(currentSquatStage) {
 
   // useEffect(() => {
   //   // 운동 종류에 따라 알림 내용 다르게 하기
-  //   if (selectedExercise === 'jumpingJack') {
+  //   if (selectedExercise === 'jumpingJack') {z
   //     document.querySelector(".warning > p").innerText = `전신이 다 보이도록 멀리 떨어져주세요!`;
   //   } else if (selectedExercise === 'lunge') {
   //     document.querySelector(".warning > p").innerText = `측면이 다 보이도록 멀리 떨어져주세요!`;
