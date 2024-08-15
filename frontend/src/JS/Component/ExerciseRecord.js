@@ -13,7 +13,7 @@ const exerciseImages = {
   lunge: lunge,
   pushUp: pushUp,
   squat: squat,
-  situp: situp,
+  sitUp: situp,
 };
 
 const ExerciseRecord = ({ record }) => {

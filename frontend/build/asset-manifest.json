@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/static/css/main.9f84a875.css",
-    "main.js": "/static/js/main.824b720f.js",
-    "static/media/login_3.png": "/static/media/login_3.23a8d819a295b5c53e42.png",
-    "static/media/login_2.png": "/static/media/login_2.09d0e33b8d2332cdfe77.png",
+    "main.js": "/static/js/main.27adda05.js",
+    "static/media/login_3.png": "/static/media/login_3.24f1e0bf147189efc1e1.png",
+    "static/media/login_2.png": "/static/media/login_2.042821d315af2f300b8e.png",
     "static/media/complete_scroll.png": "/static/media/complete_scroll.f14d7e887c4e04907461.png",
-    "static/media/login_4.png": "/static/media/login_4.c63ca1d33b685979dc6b.png",
     "static/media/dryeyecrab.png": "/static/media/dryeyecrab.72a5434087bceedf3b74.png",
     "static/media/mountainsicknesseagle.png": "/static/media/mountainsicknesseagle.6dfe853132766a76d770.png",
     "static/media/diabeticlizard.png": "/static/media/diabeticlizard.bcc3dc5d49b9d2d57c31.png",
     "static/media/profilehero.png": "/static/media/profilehero.b4e64b6b7de896275d8e.png",
+    "static/media/login_4.png": "/static/media/login_4.49e8d14449b2ec906276.png",
     "static/media/main1.png": "/static/media/main1.764555d9a581fc92cbe3.png",
     "static/media/main2.png": "/static/media/main2.aa001a8452246a105b0e.png",
     "static/media/MigraineMedusa.png": "/static/media/MigraineMedusa.ac4756cb6a2ff428ff47.png",
@@ -47,10 +47,10 @@
     "static/media/burgerking.png": "/static/media/burgerking.1bfa5cf10bd792e49cfb.png",
     "static/media/document.gif": "/static/media/document.8c7646f88368a9238b58.gif",
     "static/media/tutorial_2.png": "/static/media/tutorial_2.786e317ea34ffdb887fd.png",
+    "static/media/login_1.png": "/static/media/login_1.b26d268a5018cc21fec1.png",
     "static/media/button-raidu.png": "/static/media/button-raidu.d6bcba065605cefd052f.png",
     "static/media/turtleneck.png": "/static/media/turtleneck.c8f53e4bd4576dc9924c.png",
     "static/media/room.gif": "/static/media/room.7233b33aec9bf55f9f6a.gif",
-    "static/media/login_1.png": "/static/media/login_1.cad3285bd4559733f668.png",
     "static/media/logo.png": "/static/media/logo.422afe8d9f27949075c4.png",
     "static/media/restSoldier.gif": "/static/media/restSoldier.08253f4835e222b30a1c.gif",
     "static/media/exerciseSoldier.gif": "/static/media/exerciseSoldier.f4e269f3c70009bac554.gif",
@@ -69,10 +69,10 @@
     "static/media/slick.woff": "/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/index.html",
     "main.9f84a875.css.map": "/static/css/main.9f84a875.css.map",
-    "main.824b720f.js.map": "/static/js/main.824b720f.js.map"
+    "main.27adda05.js.map": "/static/js/main.27adda05.js.map"
   },
   "entrypoints": [
     "static/css/main.9f84a875.css",
-    "static/js/main.824b720f.js"
+    "static/js/main.27adda05.js"
   ]
 }
