@@ -1,6 +1,10 @@
 import React from "react";
 import Slider from "react-slick";
 import test from "../../Imgs/test.png";
+import login1 from "../../Imgs/login_1.png";
+import login2 from "../../Imgs/login_2.png";
+import login3 from "../../Imgs/login_3.png";
+import login4 from "../../Imgs/login_4.png";
 import "../../CSS/LoginSlider.css";
 
 function SimpleSlider() {
@@ -18,15 +22,19 @@ function SimpleSlider() {
     <div className="loginslider-container">
       <Slider {...settings}>
         <div className="loginslider-desc">
-          <img className="loginslider-desc-img" src={test}></img>
+          <img className="loginslider-desc-img" src={login1}></img>
           <div className="loginslider-desc-text"></div>
         </div>
         <div className="loginslider-desc">
-          <img className="loginslider-desc-img" src={test}></img>
+          <img className="loginslider-desc-img" src={login2}></img>
           <div className="loginslider-desc-text"></div>
         </div>
         <div className="loginslider-desc">
-          <img className="loginslider-desc-img" src={test}></img>
+          <img className="loginslider-desc-img" src={login3}></img>
+          <div className="loginslider-desc-text"></div>
+        </div>
+        <div className="loginslider-desc">
+          <img className="loginslider-desc-img" src={login4}></img>
           <div className="loginslider-desc-text"></div>
         </div>
       </Slider>

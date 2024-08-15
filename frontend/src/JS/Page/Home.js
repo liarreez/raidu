@@ -193,14 +193,14 @@ const Main = () => {
             {/* <- 레이드 / 운동백과 -> */}
 
             <div className="home-button-group">
-              <div className="home-button-left" onClick={()=>navigate("/raid")}>
-                <h3>레이두</h3>
-                <img src={raidu} alt="레이두" />
+              <div className="home-button-left" onClick={()=>navigate("/conceptbook")}>
+                <h3>컨셉북</h3>
+                <img src={raidu} alt="컨셉북" />
               </div>
 
-              <div className="home-button-right" onClick={()=>navigate("/tutorial")}>
-                <h3>튜토리얼</h3>
-                <img src={training} alt="튜토리얼" />
+              <div className="home-button-right" onClick={()=>navigate("/raid")}>
+                <h3>레이두</h3>
+                <img src={training} alt="레이두" />
               </div>
             </div>
 
