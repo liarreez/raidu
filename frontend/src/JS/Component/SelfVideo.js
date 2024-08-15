@@ -185,9 +185,6 @@ const SelfVideo = (props) => {
     // props.eachRoundCount[props.currentRound] = newCount
     // props.ChangeEachRoundCount(props.currentRound, newCount);
 
-
-
-
     // console.log(props.eachRoundCount, props.eachRoundCount[props.currentRound])
     props.ChangeCount(newCount);
 
@@ -334,24 +331,26 @@ const SelfVideo = (props) => {
 
   // 팔굽혀펴기
   let stageOfPushUp = "up";
+  let elbowAboveNose = false;
   const countingPushUp = (pose) => {
     const rightWrist = pose.keypoints[RIGHT_WRIST];
     const rightElbow = pose.keypoints[RIGHT_ELBOW];
     const rightShoulder = pose.keypoints[RIGHT_SHOULDER];
 
-    const rightHip = pose.keypoints[RIGHT_HIP];
-    const rightKnee = pose.keypoints[RIGHT_KNEE];
-
     const elbowAngle = calculateAngle(rightWrist, rightElbow, rightShoulder);
-    const backAngle = calculateAngle(rightShoulder, rightHip, rightKnee);
+
+    if (pose.keypoints[NOSE].y > pose.keypoints[RIGHT_ELBOW].y) {
+      elbowAboveNose = true;
+    }
 
     if (elbowAngle > 130 && elbowAngle < 230) {
       if (stageOfPushUp === "down") {
         updateCount();
       }
       stageOfPushUp = "up";
+      elbowAboveNose = false;
     }
-    if (elbowAngle > 70 && elbowAngle < 120) {
+    if (elbowAboveNose && elbowAngle > 70 && elbowAngle < 120) {
       stageOfPushUp = "down";
     }
   };
