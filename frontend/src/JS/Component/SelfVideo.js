@@ -455,7 +455,7 @@ function handleSquatStage(currentSquatStage) {
       // props.myCombatPower[(nowRound) - 1] = count * props.roundWeight[(nowRound) - 1];
 
       setCount(0);
-      props.ChangeCount(0);
+      // props.ChangeCount(0);
 
 
       const nextExercise = props.exerciseForRound[nowRound];
