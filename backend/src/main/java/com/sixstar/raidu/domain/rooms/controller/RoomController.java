@@ -89,14 +89,6 @@ public class RoomController {
     @PostMapping("/{roomId}/complete")
     public ResponseEntity<BaseResponse<?>> completeRoom(@PathVariable(name="roomId", required=true) Long roomId, @RequestBody RoomCompleteRequest roomCompleteRequest){
         Map<String, Object> response = roomService.completeRoom(roomId, roomCompleteRequest);
-        System.out.println("컨트롤러   "+ roomCompleteRequest.getRoundRecordList());
-        for(RoundRecordSaveRequest request : roomCompleteRequest.getRoundRecordList()){
-            System.out.println(request.getRoundNumber());
-            System.out.println(request.getDictionaryName());
-            System.out.println(request.getExerciseCount());
-
-        }
-
         return baseResponseService.getSuccessResponse(BaseSuccessResponse.COMPLETE_ROOM_SUCCESS, response);
     }
 

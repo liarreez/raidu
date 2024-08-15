@@ -248,7 +248,6 @@ public class RoomServiceImpl implements RoomService{
 
         Map<String, Object> map = new HashMap<>();
         map.put("sessionId", session.getSessionId());
-        System.out.println("sessionId           "+session.getSessionId());
         return map;
     }
 
@@ -263,8 +262,6 @@ public class RoomServiceImpl implements RoomService{
         Connection connection = session.createConnection(properties);
         Map<String, Object> map = new HashMap<>();
         map.put("token", connection.getToken());
-        System.out.println("token           "+connection.getToken());
-
         return map;
     }
 
@@ -303,11 +300,7 @@ public class RoomServiceImpl implements RoomService{
 
         List<RoundRecord> roundRecordList = request.getRoundRecordList().stream()
                 .map(roundRecordSaveRequest -> {
-                    System.out.println("ROUNDRECORDSAVEREQUEST");
                     Dictionary dictionary = dictionaryRepository.findByName(roundRecordSaveRequest.getDictionaryName());
-                    System.out.println("라운드   "+roundRecordSaveRequest.getRoundNumber());
-                    System.out.println("운동   "+roundRecordSaveRequest.getDictionaryName());
-                    System.out.println("횟수   "+roundRecordSaveRequest.getExerciseCount());
                     return RoundRecordSaveRequest.toEntity(savedExerciseRoomRecord, dictionary, roundRecordSaveRequest);
                 }).toList();
         roundRecordRepository.saveAll(roundRecordList);
@@ -345,8 +338,6 @@ public class RoomServiceImpl implements RoomService{
     @Override
     public Map<String, Object> getCapturedMonster(MonsterCaptureRequest request) {
         List<Monster> monsterList = monsterRepository.findByStageLessThanEqual(request.getStage());
-        System.out.println("EMAIL           "+ request.getEmail() );
-        System.out.println("STAGee          "+ request.getStage());
         Monster capturedMonster = getRandomMonster(monsterList);
         UserProfile userProfile = findUserProfileByEmailOrThrow(request.getEmail());
 

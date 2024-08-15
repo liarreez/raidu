@@ -37,7 +37,6 @@ public class SocketController {
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
     String sessionId = headerAccessor.getSessionId();
     String userId = headerAccessor.getNativeHeader("UserId").get(0);
-    printLog("connect", userId);
     sessions.put(sessionId, userId);
 
   }
@@ -46,7 +45,6 @@ public class SocketController {
   public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
     String sessionId = headerAccessor.getSessionId();
-    printLog("disconnect", sessions.get(sessionId));
     sessions.remove(sessionId);
   }
 
@@ -54,9 +52,7 @@ public class SocketController {
   public void messageRouter(Map<String, Object> params) { // 사용자가 publish하는 모든 메시지를 받습니다. 메시지의 종류에 따라 아래 메서드로 분류합니다.
     String channel = (String) params.get("channel");
     String user = (String) params.get("user");
-    printLog("messagerouter", user);
     simpleMessageSendingOperations.convertAndSend("/sub/message/" +channel, params);
-    System.out.printf("receiver : %s // type : %s\n", channel, params.get("type"));
   }
 
   // 콘솔에 요청 시각, 메서드 출력
